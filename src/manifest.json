@@ -1,0 +1,19 @@
+{
+  "name": "Tomas",
+  "version": "1.0.0",
+  "description": "An improvement on Github",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://github.com/*"],
+      "js": ["content-script.js"]
+    }
+  ],
+  "devtools_page": "devtools.html",
+  "options_page": "options.html",
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
