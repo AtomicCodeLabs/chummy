@@ -13,7 +13,13 @@
     }
   ],
   "devtools_page": "devtools.html",
-  "options_page": "options.html",
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "https://ajax.googleapis.com/",
+    "contextMenus",
+    "storage"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://apis.google.com; object-src 'self'"
 }

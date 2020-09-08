@@ -2,14 +2,15 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
-import App from '../../components/App';
+import App from '../../pages/App';
+import RootStoreContext from '../../config/store/context.ts';
+import rootStore from '../../config/store/root.store.ts';
+import FirebaseProvider from '../../config/firebase';
 
 // eslint-disable-next-line no-restricted-globals
-const position = location.hash;
 const isChrome = navigator.userAgent.indexOf('Firefox') === -1;
 
 let rendered;
-let store;
 let bgConnection;
 let naTimeout;
 let preloadedState;
@@ -20,11 +21,13 @@ function renderDevPanel() {
   const node = document.getElementById('container');
   unmountComponentAtNode(node);
   clearTimeout(naTimeout);
-  // store = configureStore(position, bgConnection, preloadedState);
   render(
-    // <Provider store={store}>
-    <App position={position} />,
-    // </Provider>,
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <RootStoreContext.Provider value={rootStore}>
+      <FirebaseProvider store={rootStore}>
+        <App />
+      </FirebaseProvider>
+    </RootStoreContext.Provider>,
     node
   );
   rendered = true;

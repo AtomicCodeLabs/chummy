@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtensionReloaderPlugin = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const DotenvPlugin = require('dotenv-webpack');
 const path = require('path');
 
 const { NODE_ENV = 'development' } = process.env;
@@ -17,12 +18,20 @@ const base = {
     devpanel: './src/devtools/devpanel/index.js',
     window: './src/devtools/window/index.js'
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  },
   module: {
     rules: [
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.html$/,
@@ -55,9 +64,13 @@ const base = {
       chunks: ['window'],
       filename: 'window.html'
     }),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(NODE_ENV)
+        REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
+        SC_ATTR: JSON.stringify('data-styled-tomas'),
+        REACT_APP_SC_DISABLE_SPEEDY: true,
+        SC_DISABLE_SPEEDY: true
       }
     })
   ]
@@ -66,7 +79,7 @@ const base = {
 const development = {
   ...base,
   mode: 'development',
-  devtool: 'cheap-module-source-map',
+  devtool: 'inline-source-map',
   module: {
     ...base.module
   },
@@ -75,7 +88,8 @@ const development = {
     new webpack.HotModuleReplacementPlugin(),
     new ExtensionReloaderPlugin({
       manifest: path.resolve(__dirname, 'src/manifest.json')
-    })
+    }),
+    new DotenvPlugin({ path: path.resolve(__dirname, '.env.development') })
   ]
 };
 
