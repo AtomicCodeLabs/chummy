@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { toJS } from 'mobx';
 import RootStoreContext from '../config/store/context.ts';
 
 export const useStores = () => {
