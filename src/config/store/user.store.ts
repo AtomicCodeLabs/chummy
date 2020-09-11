@@ -40,13 +40,13 @@ export default class UserStore implements IUserStore {
     credential
   }: {
     user: User;
-    credential: { accessToken: string };
+    credential?: { accessToken: string };
   }): void {
     if (!user) {
       this.user = null;
       return;
     }
-    const { uid, displayName, photoURL } = user;
+    const { uid = null, displayName = null, photoURL = null } = user;
     this.user = {
       uid,
       displayName,

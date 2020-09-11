@@ -13,7 +13,7 @@
   "parser": "babel-eslint",
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "no-console": "warn",
+    "no-console": "off",
     "no-eval": "error",
     "import/first": "error"
   }

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { FirebaseContext } from '../config/firebase';
 
-const useFirebase = () => {
+const useFirebaseDAO = () => {
   return useContext(FirebaseContext);
 };
 
-export default useFirebase;
+export default useFirebaseDAO;

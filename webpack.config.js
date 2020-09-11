@@ -12,6 +12,7 @@ const base = {
   context: __dirname,
   entry: {
     background: './src/background/index.js',
+    backgroundFirebase: './src/background/firebase.js',
     'content-script': './src/content-scripts/index.js',
     options: './src/options/index.js',
     devtools: './src/devtools/index.js',
@@ -36,6 +37,13 @@ const base = {
       {
         test: /\.html$/,
         loader: 'html-loader'
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'images'
+        }
       }
     ]
   },
@@ -45,8 +53,9 @@ const base = {
     new CopyPlugin({
       patterns: [
         { from: './src/manifest.json', to: './manifest.json' },
-        { from: './src/devtools/index.html', to: './devtools.html' },
-        { from: './src/devtools/index.js', to: './devtools.js' }
+        // { from: './src/devtools/index.html', to: './devtools.html' },
+        // { from: './src/devtools/index.js', to: './devtools.js' },
+        { from: './public/icon', to: './icon' }
       ]
     }),
     new HtmlWebpackPlugin({
@@ -54,16 +63,16 @@ const base = {
       chunks: ['options'],
       filename: 'options.html'
     }),
-    new HtmlWebpackPlugin({
-      template: './src/devtools/devpanel/index.html',
-      chunks: ['devpanel'],
-      filename: 'devpanel.html'
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/devtools/window/index.html',
-      chunks: ['window'],
-      filename: 'window.html'
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: './src/devtools/devpanel/index.html',
+    //   chunks: ['devpanel'],
+    //   filename: 'devpanel.html'
+    // }),
+    // new HtmlWebpackPlugin({
+    //   template: './src/devtools/window/index.html',
+    //   chunks: ['window'],
+    //   filename: 'window.html'
+    // }),
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.DefinePlugin({
       'process.env': {

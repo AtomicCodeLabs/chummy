@@ -2,13 +2,21 @@
   "name": "Tomas",
   "version": "1.0.0",
   "description": "An improvement on Github",
+  "browser_action": {
+    "default_icon": {
+      "16": "icon/get_started16.png",
+      "32": "icon/get_started32.png",
+      "48": "icon/get_started48.png",
+      "128": "icon/get_started128.png"
+    }
+  },
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "backgroundFirebase.js"],
     "persistent": false
   },
   "content_scripts": [
     {
-      "matches": ["http://github.com/*"],
+      "matches": ["https://github.com/*", "http://github.com/*"],
       "js": ["content-script.js"]
     }
   ],
@@ -17,9 +25,15 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "https://ajax.googleapis.com/",
+    "declarativeContent",
     "contextMenus",
     "storage"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://apis.google.com; object-src 'self'"
+  "icons": {
+    "16": "icon/get_started16.png",
+    "32": "icon/get_started32.png",
+    "48": "icon/get_started48.png",
+    "128": "icon/get_started128.png"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://apis.google.com; object-src 'self'"
 }
