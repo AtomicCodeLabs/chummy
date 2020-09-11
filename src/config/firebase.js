@@ -21,15 +21,19 @@ class FirebaseDAO {
     });
   }
 
+  // *** Auth API ***
+
   signIn = () => {
     console.log('sign-in message sent');
+    this.userStore.setPending(true);
     chrome.runtime.sendMessage({ action: 'sign-in' }, (response) => {
       if (response) {
         console.log('sign-in message received', response);
         this.userStore.setUser({
-          user: response.user,
-          credential: response.credential
+          user: response.payload.user,
+          credential: response.payload.credential
         });
+        this.userStore.setPending(false);
       }
     });
   };
@@ -39,6 +43,21 @@ class FirebaseDAO {
       console.log('sign-out message received');
       this.userStore.setUser();
     });
+  };
+
+  getCurrentUser = () => {
+    console.log('get-current-user message sent');
+    this.userStore.setPending(true);
+    chrome.runtime.sendMessage({ action: 'get-current-user' }, (response) => {
+      console.log('get-current-user message received');
+      this.userStore.setUser({
+        user: response.payload.user,
+        credential: response.payload.credential
+      });
+
+      this.userStore.setPending(false);
+    });
+    return this.userStore.user;
   };
 }
 
