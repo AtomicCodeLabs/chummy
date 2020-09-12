@@ -5,8 +5,8 @@ enum Language {
   English = 'en_US'
 }
 enum Theme {
-  Light,
-  Dark
+  Light = 'light',
+  Dark = 'dark'
 }
 
 enum SidebarView {
@@ -37,4 +37,12 @@ export default class UiStore implements IUiStore {
   @computed get appIsInSync() {
     return this.pendingRequestCount === 0;
   }
+
+  setTheme = (theme: Theme): void => {
+    this.theme = theme;
+  };
+
+  toggleTheme = (): void => {
+    this.setTheme(this.theme === Theme.Light ? Theme.Dark : Theme.Light);
+  };
 }

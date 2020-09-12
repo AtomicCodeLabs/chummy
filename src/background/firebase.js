@@ -50,12 +50,22 @@ class Firebase {
   signInWithGithub = async () => {
     const response = await this.auth.signInWithPopup(this.githubProvider);
     this.setGithubCredential(response.credential);
+    chrome.storage.sync.set(
+      { apiKey: response.credential, isLoggedIn: true },
+      () => {
+        console.log('Api key stored in chrome storage: ', response.credential);
+      }
+    );
     return response;
   };
 
   signOut = () => {
     this.auth.signOut();
     this.setGithubCredential(null);
+    // eslint-disable-next-line object-shorthand
+    chrome.storage.sync.set({ apiKey: null, isLoggedIn: false }, () => {
+      console.log('Api key removed from chrome storage');
+    });
   };
 
   getCurrentUser = () => ({

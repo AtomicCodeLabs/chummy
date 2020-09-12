@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import useFirebaseDAO, { checkCurrentUser } from '../hooks/firebase';
-import { useUserStore } from '../hooks/store';
+import useFirebaseDAO from '../hooks/firebase';
 
 const Container = styled.div`
   display: flex;
@@ -15,9 +13,7 @@ const Container = styled.div`
 
 export default observer(() => {
   const firebase = useFirebaseDAO();
-  const { isPending } = checkCurrentUser();
-
-  console.log('APP page', isPending);
+  // const { isPending } = checkCurrentUser();
 
   return (
     <Container>

@@ -21,10 +21,11 @@ let app;
 function renderNA() {}
 
 function renderDevPanel() {
-  app = document.createElement('div');
+  document.querySelector('html').style.transition = `margin-left 0.1s`; // gives transition to html during offset
+  app = document.createElement('nav');
   app.id = 'my-extension-root';
-  app.style.display = 'none';
-  document.body.appendChild(app);
+  app.style.display = 'block';
+  document.body.append(app);
 
   unmountComponentAtNode(app);
   clearTimeout(naTimeout);
