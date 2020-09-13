@@ -28,13 +28,15 @@ class Firebase {
     // On auth change, send message to content script tab.
     this.authStateListener = this.auth.onAuthStateChanged((user) => {
       inActiveTab((tabs) => {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: 'auth-state-changed', user },
-          () => {
-            console.log('auth-state-changed message sent');
-          }
-        );
+        if (tabs.length) {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { action: 'auth-state-changed', user },
+            () => {
+              console.log('auth-state-changed message sent');
+            }
+          );
+        }
       });
     });
   }
@@ -78,12 +80,7 @@ const firebaseStore = new Firebase();
 
 // Expose firebase API that content script can query
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(
-    sender.tab
-      ? `from a content script:${sender.tab.url}`
-      : 'from the extension',
-    request
-  );
+  console.log(request.action, 'action triggered');
 
   // Sign In
   if (request.action === 'sign-in') {

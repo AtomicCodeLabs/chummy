@@ -49,13 +49,17 @@ class FirebaseDAO {
     console.log('get-current-user message sent');
     this.userStore.setPending(true);
     chrome.runtime.sendMessage({ action: 'get-current-user' }, (response) => {
-      console.log('get-current-user message received');
-      this.userStore.setUser({
-        user: response.payload.user,
-        credential: response.payload.credential
-      });
+      if (response) {
+        console.log('get-current-user message received');
+        this.userStore.setUser({
+          user: response.payload.user,
+          credential: response.payload.credential
+        });
 
-      this.userStore.setPending(false);
+        this.userStore.setPending(false);
+      } else {
+        console.error('Error getting current user', response.error);
+      }
     });
     return this.userStore.user;
   };

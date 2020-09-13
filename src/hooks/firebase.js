@@ -25,6 +25,7 @@ export const checkCurrentUser = () => {
   // Redirect on userStore.user update
   // TODO: use chrome storage to persist user across different sessions
   useEffect(() => {
+    console.log('check user', user, location);
     if (user) {
       if (location.pathname !== '/') history.push('/');
     } else {

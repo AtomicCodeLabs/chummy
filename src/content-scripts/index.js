@@ -21,7 +21,8 @@ let app;
 function renderNA() {}
 
 function renderDevPanel() {
-  document.querySelector('html').style.transition = `margin-left 0.1s`; // gives transition to html during offset
+  // gives transition to html during offset
+  document.querySelector('html').style.transition = `margin 0.1s`;
   app = document.createElement('nav');
   app.id = 'my-extension-root';
   app.style.display = 'block';

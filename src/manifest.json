@@ -11,7 +11,11 @@
     }
   },
   "background": {
-    "scripts": ["background.js", "backgroundFirebase.js"],
+    "scripts": [
+      "background.js",
+      "background.firebase.js",
+      "background.storage.js"
+    ],
     "persistent": false
   },
   "content_scripts": [
