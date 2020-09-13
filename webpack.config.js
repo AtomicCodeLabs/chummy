@@ -35,9 +35,14 @@ const base = {
         use: 'ts-loader',
         exclude: /node_modules/
       },
+      { test: /\.css$/, use: 'css-loader' },
       {
         test: /\.html$/,
         loader: 'html-loader'
+      },
+      {
+        test: /\.svg$/,
+        use: '@svgr/webpack'
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
@@ -54,8 +59,10 @@ const base = {
     new CopyPlugin({
       patterns: [
         { from: './src/manifest.json', to: './manifest.json' },
-        // { from: './src/devtools/index.html', to: './devtools.html' },
-        // { from: './src/devtools/index.js', to: './devtools.js' },
+        {
+          from: './src/content-scripts/index.css',
+          to: './content-script.css'
+        },
         { from: './public/icon', to: './icon' }
       ]
     }),

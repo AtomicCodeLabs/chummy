@@ -1,0 +1,15 @@
+html {
+  transition: margin 0.1s;
+}
+
+body {
+  transition: width 0.1s;
+}
+
+.gh-header-shadow {
+  display: none !important;
+}
+
+.gh-header-sticky {
+  display: none !important;
+}

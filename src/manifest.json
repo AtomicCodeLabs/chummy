@@ -2,7 +2,7 @@
   "name": "Tomas",
   "version": "1.0.0",
   "description": "An improvement on Github",
-  "browser_action": {
+  "page_action": {
     "default_icon": {
       "16": "icon/get_started16.png",
       "32": "icon/get_started32.png",
@@ -20,8 +20,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://github.com/*", "http://github.com/*"],
-      "js": ["content-script.js"]
+      "matches": ["*://github.com/*"],
+      "js": ["content-script.js"],
+      "css": ["content-script.css"]
     }
   ],
   "devtools_page": "devtools.html",
@@ -31,7 +32,8 @@
     "activeTab",
     "declarativeContent",
     "contextMenus",
-    "storage"
+    "storage",
+    "*://github.com/*"
   ],
   "icons": {
     "16": "icon/get_started16.png",

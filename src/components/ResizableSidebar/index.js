@@ -1,48 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Rnd } from 'react-rnd';
 import { observer } from 'mobx-react-lite';
-import styled from 'styled-components';
 
-import { backgroundColor, textColor } from '../constants/theme';
-import { EXTENSION_WIDTH, SIDE_TAB_WIDTH } from '../constants/sizes';
-import { useUiStore } from '../hooks/store';
+import { Container, SideTab, SideTabButton, Expandable } from './style';
+import { EXTENSION_WIDTH, SIDE_TAB } from '../../constants/sizes';
+import { useUiStore } from '../../hooks/store';
+import { getScrollBarWidth } from '../../helpers/util';
 
-const Container = styled.div`
-  background-color: green;
-  width: ${SIDE_TAB_WIDTH}px;
-  height: 100vh;
-  z-index: 10000;
-
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-`;
-
-const SideTab = styled.div`
-  background-color: lightblue;
-  width: ${SIDE_TAB_WIDTH}px;
-  z-index: 9999;
-  overflow: hidden;
-`;
-
-const Expandable = styled(Rnd)`
-  background-color: ${backgroundColor};
-  color: ${textColor};
-  z-index: 9998;
-  overflow: hidden;
-`;
+import FilesIcon from '../../icons/light/files.svg';
+import SearchIcon from '../../icons/light/search.svg';
+import SourceControlIcon from '../../icons/light/source-control.svg';
+import SettingsIcon from '../../icons/light/settings-gear.svg';
 
 const ResizableSidebar = observer(({ children }) => {
   const uiStore = useUiStore();
   const { sidebarWidth, isSidebarMinimized } = uiStore;
   const [extensionWidth, setExtensionWidth] = useState(sidebarWidth);
+  const scrollbarWidth = getScrollBarWidth();
 
   // Give html margin-left of extension's width
+  // Adjust body width
   useEffect(() => {
     document.querySelector('html').style.marginLeft = `${
-      extensionWidth + SIDE_TAB_WIDTH
+      extensionWidth + SIDE_TAB.WIDTH
     }px`;
+    document.querySelector('body').style.minWidth = `calc(100vw - ${
+      extensionWidth + SIDE_TAB.WIDTH + scrollbarWidth
+    }px)`;
   }, [extensionWidth]);
 
   // Keep local width in sync with width in uiStore/storage
@@ -54,9 +38,24 @@ const ResizableSidebar = observer(({ children }) => {
 
   return (
     <Container>
-      {!isSidebarMinimized && <SideTab>Hello</SideTab>}
+      {!isSidebarMinimized && (
+        <SideTab>
+          <SideTabButton>
+            <FilesIcon />
+          </SideTabButton>
+          <SideTabButton>
+            <SearchIcon />
+          </SideTabButton>
+          <SideTabButton>
+            <SourceControlIcon />
+          </SideTabButton>
+          <SideTabButton>
+            <SettingsIcon />
+          </SideTabButton>
+        </SideTab>
+      )}
       <Expandable
-        position={{ x: SIDE_TAB_WIDTH, y: 0 }}
+        position={{ x: SIDE_TAB.WIDTH, y: 0 }}
         size={{ width: extensionWidth, height: '100vh' }}
         minWidth={EXTENSION_WIDTH.MIN}
         maxWidth={EXTENSION_WIDTH.MAX}

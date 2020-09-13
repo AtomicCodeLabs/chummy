@@ -4,6 +4,9 @@ export const EXTENSION_WIDTH = {
   MAX: 500
 };
 
-export const SIDE_TAB_WIDTH = 50;
+export const SIDE_TAB = {
+  WIDTH: 50,
+  BUTTON: { HEIGHT: 60, HIGHLIGHT_WIDTH: 3 }
+};
 
 export const TAB_HEIGHT = 50;
