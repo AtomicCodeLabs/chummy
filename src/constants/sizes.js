@@ -6,7 +6,7 @@ export const EXTENSION_WIDTH = {
 
 export const SIDE_TAB = {
   WIDTH: 50,
-  BUTTON: { HEIGHT: 60, HIGHLIGHT_WIDTH: 3 }
+  BUTTON: { HEIGHT: 55, HIGHLIGHT_WIDTH: 3 }
 };
 
 export const TAB_HEIGHT = 50;

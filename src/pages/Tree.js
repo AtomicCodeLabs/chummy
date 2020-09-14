@@ -18,6 +18,7 @@ export default observer(() => {
       ) : (
         <>
           Hello {JSON.stringify(user)}
+          Welcome to the tree page
           <button
             onClick={() => {
               firebase.signOut();

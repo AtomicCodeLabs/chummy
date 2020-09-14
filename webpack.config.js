@@ -41,10 +41,6 @@ const base = {
         loader: 'html-loader'
       },
       {
-        test: /\.svg$/,
-        use: '@svgr/webpack'
-      },
-      {
         test: /\.(png|jpe?g|gif)$/i,
         loader: 'file-loader',
         options: {

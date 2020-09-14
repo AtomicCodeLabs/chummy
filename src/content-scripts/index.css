@@ -4,6 +4,7 @@ html {
 
 body {
   transition: width 0.1s;
+  overflow-x: hidden; /* some elements overflowing off right side */
 }
 
 .gh-header-shadow {

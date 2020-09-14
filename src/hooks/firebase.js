@@ -26,11 +26,12 @@ export const checkCurrentUser = () => {
   // TODO: use chrome storage to persist user across different sessions
   useEffect(() => {
     console.log('check user', user, location);
-    if (user) {
-      if (location.pathname !== '/') history.push('/');
-    } else {
-      // eslint-disable-next-line no-lonely-if
+    if (!user) {
       if (location.pathname !== '/signin') history.push('/signin');
+    } else {
+      // If coming from sign in page, go to tree
+      // eslint-disable-next-line no-lonely-if
+      if (location.pathname === '/signin') history.push('/');
     }
   }, [user]);
 

@@ -1,6 +1,6 @@
 /* global chrome */
 /* eslint-disable no-unused-vars */
-import React, { Component } from 'react';
+import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import App from '../pages/App';
 import RootStoreContext from '../config/store/context.ts';

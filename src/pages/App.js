@@ -4,10 +4,15 @@ import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
 
 // eslint-disable-next-line import/no-named-as-default
 import ThemeProvider from '../config/theme/context';
-import ResizableSidebar from '../components/ResizableSidebar';
-import SignIn from './SignIn';
-import Tree from './Tree';
 import { backgroundColor, textColor } from '../constants/theme';
+
+import ResizableSidebar from '../components/ResizableSidebar';
+import Tree from './Tree';
+import Search from './Search';
+import Vcs from './Vcs';
+import Account from './Account';
+import Settings from './Settings';
+import SignIn from './SignIn';
 
 // Split into left sidebar and right sidebar.
 // Both are horizontal resizable containers -
@@ -37,11 +42,23 @@ export default () => {
               <Route path="/signin">
                 <SignIn />
               </Route>
-              <Route path="/minimized">
+              <Route exact path="/">
                 <Tree />
               </Route>
-              <Route path="/">
-                <Tree />
+              <Route path="/search">
+                <Search />
+              </Route>
+              <Route path="/vcs">
+                <Vcs />
+              </Route>
+              <Route path="/account">
+                <Account />
+              </Route>
+              <Route path="/settings">
+                <Settings />
+              </Route>
+              <Route path="/minimized">
+                <></>
               </Route>
             </Switch>
           </ResizableSidebar>

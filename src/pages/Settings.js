@@ -14,5 +14,5 @@ const Container = styled.div`
 export default observer(() => {
   checkCurrentUser();
 
-  return <Container>Search Page</Container>;
+  return <Container>Settings Page</Container>;
 });

@@ -1,8 +1,16 @@
 import theme from 'styled-theming';
 
+export const PRIMARY_COLOR = '#24292D';
+
+export const WHITE = '#ffffff';
+
+export const GRAY = '#888888';
+
+export const BORDER_GRAY = '#E1E4E8';
+
 export const backgroundColor = theme('theme', {
-  light: '#ffb3fa',
-  dark: '#2d1296'
+  light: '#ffffff',
+  dark: '#24292D'
 });
 
 export const textColor = theme('theme', {
