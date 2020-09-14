@@ -39,6 +39,7 @@ export default class UiStore implements IUiStore {
 
   @observable sidebarView = SidebarView.Project;
 
+  // Last seen sidebar width, not 0 when sidebar is minimized
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
 
   @observable isSidebarMinimized = false;
@@ -88,7 +89,10 @@ export default class UiStore implements IUiStore {
     this.sidebarWidth = width;
   };
 
-  toggleSidebar = () => {
-    this.isSidebarMinimized = !this.isSidebarMinimized;
+  openSidebar = () => {
+    this.isSidebarMinimized = false;
+  };
+  closeSidebar = () => {
+    this.isSidebarMinimized = true;
   };
 }

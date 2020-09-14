@@ -9,20 +9,26 @@ import PropTypes from 'prop-types';
 
 import { XIcon } from '@primer/octicons-react';
 
-const ContainerButton = styled(Link)``;
+const ContainerButton = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-const IconButton = ({ style = {}, size = 22, Icon, ...buttonProps }) => {
+  /* width: 100%; */
+  height: 100%;
+`;
+
+const LinkButton = ({ style = {}, size = 22, Icon, ...buttonProps }) => {
   return (
     <ContainerButton style={style} {...buttonProps}>
       <Suspense fallback={<XIcon />}>{cloneElement(Icon, { size })}</Suspense>
     </ContainerButton>
   );
 };
-IconButton.propTypes = {
+LinkButton.propTypes = {
   style: PropTypes.object,
   size: PropTypes.number,
-  Icon: PropTypes.element.isRequired,
-  to: PropTypes.string.isRequired
+  Icon: PropTypes.element.isRequired
 };
 
-export default IconButton;
+export default LinkButton;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import {
-  FileIcon,
+  CodeIcon,
   SearchIcon,
   GitBranchIcon,
   GearIcon,
@@ -29,9 +29,25 @@ import IconButton from '../IconButton';
 const ResizableSidebar = observer(({ children }) => {
   const uiStore = useUiStore();
   const { pathname } = useLocation();
+  const history = useHistory();
   const { sidebarWidth, isSidebarMinimized } = uiStore;
+
   const [extensionWidth, setExtensionWidth] = useState(sidebarWidth);
   const scrollbarWidth = getScrollBarWidth();
+
+  const openSidebar = () => {
+    if (!isSidebarMinimized) return;
+    // maximize it
+    setExtensionWidth(uiStore.sidebarWidth);
+    uiStore.openSidebar();
+  };
+  const closeSidebar = () => {
+    if (isSidebarMinimized) return;
+    // maximize it
+    setExtensionWidth(0);
+    uiStore.closeSidebar();
+    history.push('/minimized');
+  };
 
   // Give html margin-left of extension's width
   // Adjust body width
@@ -53,20 +69,36 @@ const ResizableSidebar = observer(({ children }) => {
     <Container>
       <SideTab>
         <SideTabButton active={pathname === '/'}>
-          <IconButton Icon={<FileIcon />} to="/" />
+          <IconButton Icon={<CodeIcon />} to="/" onClick={openSidebar} />
         </SideTabButton>
         <SideTabButton active={pathname === '/search'}>
-          <IconButton Icon={<SearchIcon />} to="/search" />
+          <IconButton
+            Icon={<SearchIcon />}
+            to="/search"
+            onClick={openSidebar}
+          />
         </SideTabButton>
         <SideTabButton active={pathname === '/vcs'}>
-          <IconButton Icon={<GitBranchIcon />} to="/vcs" />
+          <IconButton
+            Icon={<GitBranchIcon />}
+            to="/vcs"
+            onClick={openSidebar}
+          />
         </SideTabButton>
         <FlexGrow />
         <SideTabButton active={pathname === '/account'}>
-          <IconButton Icon={<PersonIcon />} to="/account" />
+          <IconButton
+            Icon={<PersonIcon />}
+            to="/account"
+            onClick={openSidebar}
+          />
         </SideTabButton>
         <SideTabButton active={pathname === '/settings'}>
-          <IconButton Icon={<GearIcon />} to="/settings" />
+          <IconButton
+            Icon={<GearIcon />}
+            to="/settings"
+            onClick={openSidebar}
+          />
         </SideTabButton>
       </SideTab>
       {!isSidebarMinimized && (
@@ -101,6 +133,13 @@ const ResizableSidebar = observer(({ children }) => {
               Icon={<ChevronLeftIcon />}
               size={16}
               style={{ transform: 'scale(1.3 )' }}
+              onClick={() => {
+                if (isSidebarMinimized) {
+                  openSidebar();
+                } else {
+                  closeSidebar();
+                }
+              }}
             />
           </ExpandingContainerMinimizer>
         </ExpandingContainer>

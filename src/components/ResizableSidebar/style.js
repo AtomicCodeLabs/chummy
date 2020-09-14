@@ -33,10 +33,6 @@ export const SideTab = styled.div`
 `;
 
 export const SideTabButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   height: ${SIDE_TAB.BUTTON.HEIGHT}px;
 
   border-left: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px solid
@@ -48,6 +44,9 @@ export const SideTabButton = styled.div`
   }
 
   &:hover {
+    svg {
+      fill: ${WHITE};
+    }
   }
 `;
 
