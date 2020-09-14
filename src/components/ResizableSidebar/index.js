@@ -52,13 +52,16 @@ const ResizableSidebar = observer(({ children }) => {
   // Give html margin-left of extension's width
   // Adjust body width
   useEffect(() => {
+    console.log('isSidebarMinimized', isSidebarMinimized);
     document.querySelector('html').style.marginLeft = `${
-      extensionWidth + SIDE_TAB.WIDTH
+      (isSidebarMinimized ? 0 : extensionWidth) + SIDE_TAB.WIDTH
     }px`;
     document.querySelector('body').style.minWidth = `calc(100vw - ${
-      extensionWidth + SIDE_TAB.WIDTH + scrollbarWidth
+      (isSidebarMinimized ? 0 : extensionWidth) +
+      SIDE_TAB.WIDTH +
+      scrollbarWidth
     }px)`;
-  }, [extensionWidth]);
+  }, [extensionWidth, isSidebarMinimized]);
 
   // Keep local width in sync with width in uiStore/storage
   useEffect(() => {

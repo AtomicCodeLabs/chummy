@@ -1,6 +1,6 @@
 import theme from 'styled-theming';
 
-export const PRIMARY_COLOR = '#24292D';
+export const PRIMARY_COLOR = '#24292e';
 
 export const WHITE = '#ffffff';
 

@@ -54,20 +54,29 @@ export default class UiStore implements IUiStore {
 
   init = () => {
     // Get and set previous sessions' settings
-    const keys: string[] = ['language', 'theme', 'sidebarView', 'sidebarWidth'];
+    const keys: string[] = [
+      'language',
+      'theme',
+      'sidebarView',
+      'sidebarWidth',
+      'isSidebarMinimized'
+    ];
     getFromChromeStorage(keys, (items: { [key: string]: any }) => {
       console.log('got items', items);
       if (items.language) this.language = items.language;
       if (items.theme) this.theme = items.theme;
       if (items.sidebarView) this.sidebarView = items.sidebarView;
       if (items.sidebarWidth) this.sidebarWidth = items.sidebarWidth;
+      if (items.isSidebarMinimized)
+        this.isSidebarMinimized = items.isSidebarMinimized;
 
       // Set defaults but don't overwrite previous
       setInChromeStorage({
         language: this.language,
         theme: this.theme,
         sidebarView: this.sidebarView,
-        sidebarWidth: this.sidebarWidth
+        sidebarWidth: this.sidebarWidth,
+        isSidebarMinimized: this.isSidebarMinimized
       });
       chrome.storage.sync.get(null, function callback(items) {
         console.log(items);
@@ -90,9 +99,11 @@ export default class UiStore implements IUiStore {
   };
 
   openSidebar = () => {
+    setInChromeStorage({ isSidebarMinimized: false });
     this.isSidebarMinimized = false;
   };
   closeSidebar = () => {
+    setInChromeStorage({ isSidebarMinimized: true });
     this.isSidebarMinimized = true;
   };
 }
