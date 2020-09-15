@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { checkCurrentUser } from '../hooks/firebase';
 
 const Container = styled.div`
   display: flex;
@@ -12,7 +11,7 @@ const Container = styled.div`
 `;
 
 export default observer(() => {
-  checkCurrentUser();
+  console.log('ACCOUNT PAGE');
 
-  return <Container>Accounts Page</Container>;
+  return <Container>Account Page</Container>;
 });

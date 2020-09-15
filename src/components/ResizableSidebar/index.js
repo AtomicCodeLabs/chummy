@@ -12,7 +12,7 @@ import {
 } from '@primer/octicons-react';
 
 import { EXTENSION_WIDTH, SIDE_TAB } from '../../constants/sizes';
-import { useUiStore } from '../../hooks/store';
+import { useUiStore, useUserStore } from '../../hooks/store';
 import { getScrollBarWidth } from '../../helpers/util';
 import {
   Container,
@@ -28,6 +28,7 @@ import IconButton from '../IconButton';
 
 const ResizableSidebar = observer(({ children }) => {
   const uiStore = useUiStore();
+  const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
   const history = useHistory();
   const { sidebarWidth, isSidebarMinimized } = uiStore;
@@ -52,7 +53,6 @@ const ResizableSidebar = observer(({ children }) => {
   // Give html margin-left of extension's width
   // Adjust body width
   useEffect(() => {
-    console.log('isSidebarMinimized', isSidebarMinimized);
     document.querySelector('html').style.marginLeft = `${
       (isSidebarMinimized ? 0 : extensionWidth) + SIDE_TAB.WIDTH
     }px`;
@@ -68,17 +68,25 @@ const ResizableSidebar = observer(({ children }) => {
     setExtensionWidth(sidebarWidth);
   }, [sidebarWidth]);
 
+  console.log('IS Logged in', isLoggedIn);
+
   return (
     <Container>
       <SideTab>
         <SideTabButton active={pathname === '/'}>
-          <IconButton Icon={<CodeIcon />} to="/" onClick={openSidebar} />
+          <IconButton
+            Icon={<CodeIcon />}
+            to="/"
+            onClick={openSidebar}
+            disabled={!isLoggedIn}
+          />
         </SideTabButton>
         <SideTabButton active={pathname === '/search'}>
           <IconButton
             Icon={<SearchIcon />}
             to="/search"
             onClick={openSidebar}
+            disabled={!isLoggedIn}
           />
         </SideTabButton>
         <SideTabButton active={pathname === '/vcs'}>
@@ -86,6 +94,7 @@ const ResizableSidebar = observer(({ children }) => {
             Icon={<GitBranchIcon />}
             to="/vcs"
             onClick={openSidebar}
+            disabled={!isLoggedIn}
           />
         </SideTabButton>
         <FlexGrow />
@@ -94,6 +103,7 @@ const ResizableSidebar = observer(({ children }) => {
             Icon={<PersonIcon />}
             to="/account"
             onClick={openSidebar}
+            disabled={!isLoggedIn}
           />
         </SideTabButton>
         <SideTabButton active={pathname === '/settings'}>
@@ -101,6 +111,7 @@ const ResizableSidebar = observer(({ children }) => {
             Icon={<GearIcon />}
             to="/settings"
             onClick={openSidebar}
+            disabled={!isLoggedIn}
           />
         </SideTabButton>
       </SideTab>

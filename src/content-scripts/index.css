@@ -1,9 +1,9 @@
 html {
-  transition: margin 0.1s;
+  /* transition: margin 0.1s ease; */
 }
 
 body {
-  transition: width 0.1s;
+  /* transition: width 0.1s ease; */
   overflow-x: hidden; /* some elements overflowing off right side */
 }
 

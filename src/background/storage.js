@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   else if (request.action === 'get-store') {
     chrome.storage.sync.get(request.payload, (items) => {
       console.log(request.payload, 'values retrieved from storage', items);
-      sendResponse({ action: 'sign-in', payload: items });
+      sendResponse({ action: 'get-store', payload: items });
     });
   }
 

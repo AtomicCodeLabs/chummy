@@ -6,8 +6,7 @@ import App from '../pages/App';
 import RootStoreContext from '../config/store/context.ts';
 import rootStore from '../config/store/root.store.ts';
 import FirebaseProvider from '../config/firebase';
-
-console.log('CS');
+import OctoProvider from '../config/octokit';
 
 // eslint-disable-next-line no-restricted-globals
 const isChrome = navigator.userAgent.indexOf('Firefox') === -1;
@@ -31,9 +30,14 @@ function renderDevPanel() {
   render(
     // eslint-disable-next-line react/jsx-props-no-spreading
     <RootStoreContext.Provider value={rootStore}>
-      <FirebaseProvider store={rootStore}>
-        <App />
-      </FirebaseProvider>
+      {/* MobX store for general data */}
+      <OctoProvider store={rootStore}>
+        {/* Github DAO for making requests */}
+        <FirebaseProvider store={rootStore}>
+          {/* Firebase store for auth */}
+          <App />
+        </FirebaseProvider>
+      </OctoProvider>
     </RootStoreContext.Provider>,
     app
   );

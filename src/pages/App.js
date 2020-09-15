@@ -11,8 +11,8 @@ import Tree from './Tree';
 import Search from './Search';
 import Vcs from './Vcs';
 import Account from './Account';
+import AccountSignIn from './AccountSignIn';
 import Settings from './Settings';
-import SignIn from './SignIn';
 
 // Split into left sidebar and right sidebar.
 // Both are horizontal resizable containers -
@@ -39,9 +39,6 @@ export default () => {
         <ExtensionRootContainer>
           <ResizableSidebar>
             <Switch>
-              <Route path="/signin">
-                <SignIn />
-              </Route>
               <Route exact path="/">
                 <Tree />
               </Route>
@@ -53,6 +50,9 @@ export default () => {
               </Route>
               <Route path="/account">
                 <Account />
+              </Route>
+              <Route path="/account-sign-in">
+                <AccountSignIn />
               </Route>
               <Route path="/settings">
                 <Settings />

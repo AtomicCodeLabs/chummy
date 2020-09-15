@@ -35,13 +35,7 @@ export default class UserStore implements IUserStore {
   /**
    * Sync user store with firebase auth store.
    */
-  setUser({
-    user,
-    credential
-  }: {
-    user: User;
-    credential?: { accessToken: string };
-  }): void {
+  setUser({ user, credential }: { user: User; credential?: string }): void {
     if (!user) {
       this.user = null;
       return;
@@ -51,7 +45,7 @@ export default class UserStore implements IUserStore {
       uid,
       displayName,
       photoURL,
-      apiKey: credential?.accessToken || this.user?.apiKey
+      apiKey: credential || this.user?.apiKey
     };
   }
 
@@ -61,5 +55,13 @@ export default class UserStore implements IUserStore {
   setPending(isPending: boolean): void {
     this.isPending = isPending;
     this.uiStore.pendingRequestCount += isPending ? 1 : -1;
+  }
+
+  /**
+   * Is user authenticated?
+   */
+
+  @computed get isLoggedIn() {
+    return !!this.user;
   }
 }

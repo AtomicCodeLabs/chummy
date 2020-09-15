@@ -55,6 +55,10 @@ export default class FileStore implements IFileStore {
     // });
   }
 
+  setRepositoryFiles(files: any) {
+    console.log(files);
+  }
+
   /**
    * Get one file
    */

@@ -31,7 +31,10 @@ class Firebase {
         if (tabs.length) {
           chrome.tabs.sendMessage(
             tabs[0].id,
-            { action: 'auth-state-changed', user },
+            {
+              action: 'auth-state-changed',
+              payload: user
+            },
             () => {
               console.log('auth-state-changed message sent');
             }
@@ -43,19 +46,23 @@ class Firebase {
 
   // *** Class Methods ***
 
-  setGithubCredential = (apiKey) => {
-    this.githubCredential = apiKey;
+  setGithubApiKey = (apiKey) => {
+    this.githubApiKey = apiKey;
   };
 
   // *** Auth API ***
 
   signInWithGithub = async () => {
     const response = await this.auth.signInWithPopup(this.githubProvider);
-    this.setGithubCredential(response.credential);
+    console.log('SIGN IN WITH GITHUB', response);
+    this.setGithubApiKey(response.credential?.accessToken);
     chrome.storage.sync.set(
-      { apiKey: response.credential, isLoggedIn: true },
+      { apiKey: response.credential?.accessToken, isLoggedIn: true },
       () => {
-        console.log('Api key stored in chrome storage: ', response.credential);
+        console.log(
+          'Api key stored in chrome storage: ',
+          response.credential?.accessToken
+        );
       }
     );
     return response;
@@ -63,7 +70,7 @@ class Firebase {
 
   signOut = () => {
     this.auth.signOut();
-    this.setGithubCredential(null);
+    this.setGithubApiKey(null);
     // eslint-disable-next-line object-shorthand
     chrome.storage.sync.set({ apiKey: null, isLoggedIn: false }, () => {
       console.log('Api key removed from chrome storage');
@@ -71,8 +78,8 @@ class Firebase {
   };
 
   getCurrentUser = () => ({
-    credential: this.githubCredential,
-    user: this.auth.currentUser
+    user: this.auth.currentUser,
+    credential: this.githubCredential
   });
 }
 
@@ -90,8 +97,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       let payload;
       let error;
       try {
-        payload = await firebaseStore.signInWithGithub();
-        console.log('payload', payload);
+        const response = await firebaseStore.signInWithGithub();
+        console.log('response', response);
+        payload = {
+          user: response.user,
+          credential: response.credential.accessToken
+        };
         success = true;
       } catch (e) {
         error = e;
