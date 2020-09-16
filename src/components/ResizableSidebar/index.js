@@ -69,8 +69,6 @@ const ResizableSidebar = observer(({ children }) => {
     setExtensionWidth(sidebarWidth);
   }, [sidebarWidth]);
 
-  console.log('IS Logged in', isLoggedIn);
-
   return (
     <Container>
       <SideTab>

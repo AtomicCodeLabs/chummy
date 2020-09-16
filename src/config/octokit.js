@@ -56,17 +56,28 @@ class OctoDAO {
     }
     const response = await this.graphqlAuth(
       `
-        query lastIssues($owner: String!, $repo: String!, $num: Int = 3) {
-          repository(owner: $owner, name: $repo) {
-            issues(last: $num) {
-              edges {
-                node {
-                  title
+      query RepoFiles($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          defaultBranchRef {
+            target {
+              ... on Commit {
+                tree {
+                  entries {
+                    name
+                    object {
+                      ... on Tree {
+                        entries {
+                          name
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         }
+      }
       `,
       {
         owner,
