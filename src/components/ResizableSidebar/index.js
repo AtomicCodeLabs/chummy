@@ -41,6 +41,7 @@ const ResizableSidebar = observer(({ children }) => {
     // maximize it
     setExtensionWidth(uiStore.sidebarWidth);
     uiStore.openSidebar();
+    if (!isLoggedIn) history.push('/account-sign-in');
   };
   const closeSidebar = () => {
     if (isSidebarMinimized) return;

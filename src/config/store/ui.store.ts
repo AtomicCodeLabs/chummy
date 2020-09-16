@@ -78,9 +78,6 @@ export default class UiStore implements IUiStore {
         sidebarWidth: this.sidebarWidth,
         isSidebarMinimized: this.isSidebarMinimized
       });
-      chrome.storage.sync.get(null, function callback(items) {
-        console.log(items);
-      });
     });
   };
 

@@ -17,7 +17,7 @@ class FirebaseDAO {
       // console.log('response received', response);
       console.assert(response.action === 'auth-state-changed');
       if (response.action === 'auth-state-changed') {
-        console.log('auth-state-changed message received', response);
+        // console.log('auth-state-changed message received', response);
         // Set user
         this.userStore.setUser({
           user: response.payload.user

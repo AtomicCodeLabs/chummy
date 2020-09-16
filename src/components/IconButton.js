@@ -31,13 +31,12 @@ const LinkButton = ({
   const history = useHistory();
   const location = useLocation();
   const navigateToPage = () => {
-    console.log('NAV', location.pathname, to);
+    onClick();
+
     if (disabled) return;
     if (!to) return;
     if (location.pathname === to) return;
     history.push(to);
-
-    onClick();
   };
 
   return (
@@ -51,10 +50,10 @@ LinkButton.propTypes = {
   size: PropTypes.number,
   Icon: PropTypes.element.isRequired,
   // eslint-disable-next-line react/no-typos
-  disabled: PropTypes.boolean,
+  disabled: PropTypes.bool,
   to: PropTypes.string,
   // eslint-disable-next-line react/no-typos
-  onClick: PropTypes.function
+  onClick: PropTypes.func
 };
 
 export default LinkButton;

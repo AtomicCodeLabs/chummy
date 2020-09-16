@@ -25,7 +25,7 @@ export const checkCurrentUser = () => {
   // Redirect on userStore.user update
   // TODO: use chrome storage to persist user across different sessions
   useEffect(() => {
-    console.log('user changed in checkCurrentUser', user, location);
+    // console.log('user changed in checkCurrentUser', user, location);
     if (!isLoggedIn) {
       // If not on sign in page but not logged in.
       if (location.pathname !== '/account-sign-in')
