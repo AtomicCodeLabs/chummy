@@ -39,11 +39,10 @@ class FirebaseDAO {
       if (response) {
         // console.log('sign-in message received', response);
         this.userStore.setUser({
-          user: response.payload.user,
-          credential: response.payload.credential
+          user: response.payload.user
         });
         this.userStore.setPending(false);
-        this.octoDAO.authenticate();
+        this.octoDAO.authenticate(response.payload.user?.apiKey);
       }
     });
     this.userStore.setPending(false);
@@ -66,10 +65,11 @@ class FirebaseDAO {
         this.userStore.setUser({
           user: response.payload.user
         });
+        console.log('get current user, just set user store');
+        this.octoDAO.authenticate(response.payload.user?.apiKey);
         this.userStore.setPending(false);
-        this.octoDAO.authenticate();
       } else {
-        console.error('Error getting current user', response.error);
+        console.error('Error getting current user', response?.error);
       }
     });
     this.userStore.setPending(false);

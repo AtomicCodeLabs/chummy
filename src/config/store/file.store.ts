@@ -1,25 +1,25 @@
-import { observable, computed } from 'mobx';
+import { observable, computed, values } from 'mobx';
 import { IUiStore } from './ui.store';
 import { IRootStore } from './root.store';
 import { IUserStore } from './user.store';
+import { object } from 'prop-types';
 
 enum NodeType {
-  File,
-  Folder
+  File = 'blob',
+  Folder = 'tree'
 }
 
 interface Node {
-  id: string;
+  oid: string;
   name: string;
   type: NodeType;
-  sha: string;
-  isOpen?: boolean;
+  path: string;
 }
 
 export interface IFileStore {
   uiStore: IUiStore;
   userStore: IUserStore;
-  nodes: Node[];
+  nodes: Map<string, Node>;
   openFiles: Node[];
   isPending: boolean;
 }
@@ -29,7 +29,7 @@ export default class FileStore implements IFileStore {
 
   userStore: IUserStore;
 
-  @observable.shallow nodes: Node[] = [];
+  @observable nodes: Map<string, Node> = new Map();
 
   @observable.shallow openFiles: Node[] = [];
 
@@ -38,31 +38,21 @@ export default class FileStore implements IFileStore {
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
     this.userStore = rootStore.userStore; // Store that can resolve users
-
-    this.getFiles();
   }
 
-  /**
-   * Fetches all files from github repository
-   */
-  getFiles() {
-    this.isPending = true;
-    this.uiStore.pendingRequestCount += 1;
-    // this.transportLayer.fetchTodos().then((fetchedTodos) => {
-    //   fetchedTodos.forEach((json) => this.updateTodoFromServer(json));
-    //   this.isLoading = false;
-    //   this.uiStore.pendingRequestCount -= 1;
-    // });
-  }
-
-  setRepositoryFiles(files: any) {
-    console.log(files);
-  }
+  // setRepositoryNodes(files: object[]) {
+  //   // Add each node to dictionary for constant time access
+  //   files.forEach((n: object, index: number)=>{
+  //     // Key will be treeoid
+  //     this.nodes.set()
+  //   })
+  // }
 
   /**
    * Get one file
    */
   getFile(id: string): Node {
+    // @ts-ignore
     return this.files.find((n) => n.id === id);
   }
 
@@ -70,33 +60,27 @@ export default class FileStore implements IFileStore {
    * Get only files
    */
   @computed get files() {
-    return this.nodes.filter((n) => n.type === NodeType.File);
+    return values(this.nodes).filter(
+      // @ts-ignore
+      (n: Node, i: number, a: Node[]) => n.type === NodeType.File
+    );
   }
 
   /**
    * Get only folders
    */
   @computed get folders() {
-    return this.nodes.filter((n: Node) => n.type === NodeType.Folder);
+    // @ts-ignore
+    return values(this.nodes).filter((n: Node) => n.type === NodeType.Folder);
   }
 
   /**
    * Open a file as a new tab.
    */
-  openFileTab(id: string): void {
-    if (!this.openFiles.filter((n: Node) => n.id === id)) {
-      this.openFiles = [...this.openFiles, this.getFile(id)];
-    }
-  }
+  openFileTab(id: string): void {}
 
   /**
    * Close a file tab.
    */
-  closeFileTab(id: string): void {
-    const nonmatchingFiles = this.openFiles.filter((n: Node) => n.id !== id);
-    if (nonmatchingFiles.length !== this.openFiles.length) {
-      // openfiles contains file with this ide
-      this.openFiles = nonmatchingFiles;
-    }
-  }
+  closeFileTab(id: string): void {}
 }

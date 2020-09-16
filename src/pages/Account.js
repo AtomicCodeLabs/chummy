@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
+import useFirebaseDAO from '../hooks/firebase';
 
 const Container = styled.div`
   display: flex;
@@ -12,6 +13,19 @@ const Container = styled.div`
 
 export default observer(() => {
   console.log('ACCOUNT PAGE');
+  const firebase = useFirebaseDAO();
 
-  return <Container>Account Page</Container>;
+  return (
+    <Container>
+      Account Page
+      <button
+        type="button"
+        onClick={() => {
+          firebase.signOut();
+        }}
+      >
+        Sign out
+      </button>
+    </Container>
+  );
 });

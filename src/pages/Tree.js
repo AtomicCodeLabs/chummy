@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import useFirebaseDAO, { checkCurrentUser } from '../hooks/firebase';
+import { checkCurrentUser } from '../hooks/firebase';
 import useOctoDAO from '../hooks/octokit';
 
 const Container = styled.div`
@@ -10,34 +10,33 @@ const Container = styled.div`
 `;
 
 export default observer(() => {
-  console.log('TREE PAGE');
-  const firebase = useFirebaseDAO();
-  const { user } = checkCurrentUser();
+  checkCurrentUser();
+  const [nodes, setNodes] = useState();
   const octoDAO = useOctoDAO();
 
   useEffect(() => {
-    const getRepository = async () => {
-      octoDAO.getRepository('octokit', 'graphql.js');
+    const getRepositoryRootNodes = async () => {
+      const responseNodes = await octoDAO.getRepositoryRootNodes(
+        'alexkim205',
+        'WORKWITH'
+      );
+      setNodes(responseNodes);
     };
 
-    console.log('TRY TO GET REPO');
     if (octoDAO) {
-      getRepository();
+      getRepositoryRootNodes();
     }
   }, [octoDAO?.graphqlAuth]);
 
   return (
     <Container>
-      Hello {JSON.stringify(user)}
-      Welcome to the tree page
-      <button
-        onClick={() => {
-          firebase.signOut();
-        }}
-        type="button"
-      >
-        Sign out
-      </button>
+      {nodes &&
+        nodes.map((n) => (
+          <div key={n.oid}>
+            {n.name}
+            <br />
+          </div>
+        ))}
     </Container>
   );
 });

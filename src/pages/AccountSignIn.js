@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import useFirebaseDAO, { checkCurrentUser } from '../hooks/firebase';
-import { useUserStore } from '../hooks/store';
 
 const Container = styled.div`
   display: flex;
@@ -12,16 +11,31 @@ const Container = styled.div`
   align-items: center;
 `;
 
+const SplashIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 2px dotted lightgray;
+`;
+
 export default observer(() => {
   console.log('ACCOUNT SIGNIN PAGE');
   const firebase = useFirebaseDAO();
-  const { isLoggedIn } = useUserStore();
+  const [isSplashScreen, setSplashScreen] = useState(true);
   checkCurrentUser();
+
+  // Set splash screen for 2 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashScreen(false);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <Container>
-      {isLoggedIn ? (
-        'Account Page'
+      {isSplashScreen ? (
+        <SplashIcon />
       ) : (
         <button
           onClick={() => {

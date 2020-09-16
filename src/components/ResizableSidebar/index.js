@@ -13,6 +13,7 @@ import {
 
 import { EXTENSION_WIDTH, SIDE_TAB } from '../../constants/sizes';
 import { useUiStore, useUserStore } from '../../hooks/store';
+import { getSidebarHeaderTitle, isPageWithHeader } from './util';
 import { getScrollBarWidth } from '../../helpers/util';
 import {
   Container,
@@ -20,6 +21,7 @@ import {
   SideTabButton,
   FlexGrow,
   ExpandingContainer,
+  ExpandingContainerHeader,
   ExpandingContainerContent,
   ExpandingContainerDivider,
   ExpandingContainerMinimizer
@@ -139,6 +141,11 @@ const ResizableSidebar = observer(({ children }) => {
             uiStore.setSidebarWidth(ref.offsetWidth); // set ui store
           }}
         >
+          {isPageWithHeader(pathname) && (
+            <ExpandingContainerHeader>
+              {getSidebarHeaderTitle(pathname)}
+            </ExpandingContainerHeader>
+          )}
           <ExpandingContainerContent>{children}</ExpandingContainerContent>
           <ExpandingContainerDivider />
           <ExpandingContainerMinimizer>

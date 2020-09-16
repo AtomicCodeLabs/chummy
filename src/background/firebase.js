@@ -23,7 +23,7 @@ class Firebase {
 
     this.auth = firebase.auth();
     this.githubProvider = new firebase.auth.GithubAuthProvider();
-    this.githubCredential = null; // Keep API key to make requests with on hand
+    this.githubApiKey = null; // Keep API key to make requests with on hand
 
     // On auth change, send message to content script tab.
     this.authStateListener = this.auth.onAuthStateChanged((user) => {
@@ -41,6 +41,15 @@ class Firebase {
           );
         }
       });
+    });
+
+    // If user hasn't signed out yet, apiKey will still be in
+    // chrome storage. Use that for future requests.
+    chrome.storage.sync.get(['apiKey'], (items) => {
+      console.log('hydrating github api key');
+      if (items.apiKey) {
+        this.setGithubApiKey(items.apiKey);
+      }
     });
   }
 
@@ -77,10 +86,24 @@ class Firebase {
     });
   };
 
-  getCurrentUser = () => ({
-    user: this.auth.currentUser,
-    credential: this.githubCredential
-  });
+  getCurrentUser = () => {
+    const { uid, displayName, photoURL } = this.auth.currentUser;
+    console.log(
+      'get-current-user payload',
+      uid,
+      displayName,
+      photoURL,
+      this.githubApiKey
+    );
+    return {
+      user: {
+        uid,
+        displayName,
+        photoURL,
+        apiKey: this.githubApiKey
+      }
+    };
+  };
 }
 
 const firebaseStore = new Firebase();
@@ -97,12 +120,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       let payload;
       let error;
       try {
-        const response = await firebaseStore.signInWithGithub();
-        console.log('response', response);
-        payload = {
-          user: response.user,
-          credential: response.credential.accessToken
-        };
+        await firebaseStore.signInWithGithub();
+        payload = firebaseStore.getCurrentUser();
         success = true;
       } catch (e) {
         error = e;

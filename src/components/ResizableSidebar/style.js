@@ -65,6 +65,19 @@ export const ExpandingContainer = styled(Rnd)`
   flex-direction: column;
 `;
 
+export const ExpandingContainerHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 1rem;
+
+  background-color: ${backgroundColor};
+  height: 40px;
+  color: ${textColor};
+  font-size: 0.8rem;
+  text-transform: uppercase;
+`;
+
 export const ExpandingContainerContent = styled.div`
   flex: 1;
 `;
