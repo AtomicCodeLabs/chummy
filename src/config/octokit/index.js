@@ -73,7 +73,6 @@ class OctoDAO {
         path: treePath,
         children: files
       };
-      console.log('ENTRIED', response?.repository?.object?.entries);
       this.fileStore.setRepositoryNodes(branch, parent, files);
       return response?.repository?.object?.entries;
     } catch (error) {

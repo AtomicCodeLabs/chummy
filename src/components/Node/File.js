@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding-left: ${({ level }) => 15 * level}px;
+  padding-left: ${({ level }) => 30 * level}px;
+  /* margin-left: ${({ level }) => -30 * level}px; */
 `;
 
-const File = ({ data, level }) => {
-  return <Container level={level}>{data.name}</Container>;
+const File = ({ data, level, order }) => {
+  console.log(order);
+  return (
+    <Container className="node" level={level}>
+      {data.name}
+    </Container>
+  );
 };
 
 File.propTypes = {
@@ -17,6 +23,7 @@ File.propTypes = {
     type: PropTypes.oneOf(['blob', 'tree']).isRequired,
     path: PropTypes.string.isRequired
   }).isRequired,
+  order: PropTypes.number.isRequired,
   level: PropTypes.number
 };
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
+import { Scrollbars } from 'react-custom-scrollbars';
 import {
   CodeIcon,
   SearchIcon,
@@ -146,7 +147,16 @@ const ResizableSidebar = observer(({ children }) => {
               {getSidebarHeaderTitle(pathname)}
             </ExpandingContainerHeader>
           )}
-          <ExpandingContainerContent>{children}</ExpandingContainerContent>
+          <ExpandingContainerContent>
+            <Scrollbars
+              style={{ width: '100%', height: '100%' }}
+              autoHideTimeout={500}
+              autoHide
+            >
+              {children}
+            </Scrollbars>
+          </ExpandingContainerContent>
+
           <ExpandingContainerDivider />
           <ExpandingContainerMinimizer>
             <IconButton

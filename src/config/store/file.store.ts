@@ -75,7 +75,7 @@ export default class FileStore implements IFileStore {
       this.nodes.set(`${branch}:${n.path}`, n);
     });
 
-    console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
+    // console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
   }
 
   /**

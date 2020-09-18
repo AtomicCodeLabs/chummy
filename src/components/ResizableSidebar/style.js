@@ -80,6 +80,7 @@ export const ExpandingContainerHeader = styled.div`
 
 export const ExpandingContainerContent = styled.div`
   flex: 1;
+  white-space: nowrap;
 `;
 
 export const ExpandingContainerDivider = styled.div`

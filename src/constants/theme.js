@@ -2,6 +2,10 @@ import theme from 'styled-theming';
 
 export const PRIMARY_COLOR = '#24292e';
 
+export const DARK = '#232323';
+
+export const LIGHT_DARK = '#2d2d2d';
+
 export const WHITE = '#ffffff';
 
 export const GRAY = '#888888';
