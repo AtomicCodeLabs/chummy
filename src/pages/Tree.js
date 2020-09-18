@@ -1,42 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { observer } from 'mobx-react-lite';
 import { checkCurrentUser } from '../hooks/firebase';
-import useOctoDAO from '../hooks/octokit';
+import getFolderFiles from '../hooks/getFolderFiles';
+import Node from '../components/Node';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export default observer(() => {
+export default () => {
   checkCurrentUser();
-  const [nodes, setNodes] = useState();
-  const octoDAO = useOctoDAO();
-
-  useEffect(() => {
-    const getRepositoryRootNodes = async () => {
-      const responseNodes = await octoDAO.getRepositoryRootNodes(
-        'alexkim205',
-        'WORKWITH'
-      );
-      setNodes(responseNodes);
-    };
-
-    if (octoDAO) {
-      getRepositoryRootNodes();
-    }
-  }, [octoDAO?.graphqlAuth]);
+  const nodes = getFolderFiles('alexkim205', 'WORKWITH', 'HEAD', '');
 
   return (
     <Container>
       {nodes &&
         nodes.map((n) => (
-          <div key={n.oid}>
-            {n.name}
-            <br />
-          </div>
+          <Node
+            owner="alexkim205"
+            repo="WORKWITH"
+            branch="HEAD"
+            data={n}
+            key={n.oid}
+          />
         ))}
     </Container>
   );
-});
+};

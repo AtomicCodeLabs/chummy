@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import useFirebaseDAO from '../hooks/firebase';
+import useFirebaseDAO, { checkCurrentUser } from '../hooks/firebase';
 
 const Container = styled.div`
   display: flex;
@@ -14,6 +14,7 @@ const Container = styled.div`
 export default observer(() => {
   console.log('ACCOUNT PAGE');
   const firebase = useFirebaseDAO();
+  checkCurrentUser();
 
   return (
     <Container>

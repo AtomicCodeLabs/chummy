@@ -2,10 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from '@octokit/graphql';
 
-import {
-  formQueryGetRepositoryDefaultBranchRootNodes,
-  formQueryGetRepositorySpecificBranchRootNodes
-} from './queries';
+import { formQueryGetRepositorySpecificBranchRootNodes } from './queries';
 
 let isInitialized = false;
 
@@ -51,117 +48,44 @@ class OctoDAO {
   isAuthenticated = () => !!this.graphqlAuth;
 
   // Repo API
-  getRepositoryRootNodes = async (owner, repo, branch = 'master') => {
-    console.log('Getting ', owner, repo, branch, 'root files');
+  getRepositoryNodes = async (owner, repo, branch = 'HEAD', treePath = '') => {
+    console.log('Getting ', owner, repo, branch, treePath, 'root files');
     if (!this.isAuthenticated()) {
       console.error('Octokit is not authenticated.');
       return null;
     }
 
-    // If branch is specified, look for specific branch, otherwise look at default
-    if (branch === 'master') {
-      const query = formQueryGetRepositoryDefaultBranchRootNodes();
-      try {
-        const response = await this.graphqlAuth(
-          `
-          query GetRepositoryDefaultBranchRootNodes($owner: String!, $repo: String!) {
-            repository(owner: $owner, name: $repo) {
-              ${query}
-            }
-          }
-          `,
-          {
-            owner,
-            repo
-          }
-        );
-        // this.fileStore.setRepositoryNodes(
-        //   response?.repository?.defaultBranchRef?.target?.history?.nodes[0].tree
-        //     ?.entries
-        // );
-        return response?.repository?.defaultBranchRef?.target?.history?.nodes[0]
-          .tree?.entries;
-      } catch (error) {
-        console.error(
-          'Error getting default branch repository root nodes.',
-          owner,
-          repo,
-          branch,
-          error
-        );
-      }
-    } else {
-      const query = formQueryGetRepositorySpecificBranchRootNodes(branch);
-      try {
-        const response = await this.graphqlAuth(
-          `
-          query GetRepositorySpecificBranchRootNodes($owner: String!, $repo: String!) {
-            repository(owner: $owner, name: $repo) {
-              ${query}
-            }
-          }
-          `,
-          {
-            owner,
-            repo
-          }
-        );
-        // this.fileStore.setRepositoryNodes(
-        //   response?.repository?.object?.entries
-        // );
-        return response?.repository?.object?.entries;
-      } catch (error) {
-        console.error(
-          'Error getting specific branch repository root nodes.',
-          owner,
-          repo,
-          branch,
-          error
-        );
-      }
-    }
-    return null;
-  };
+    const isRepositoryRoot = treePath === '';
 
-  getRepositoryNodesAtLevel = async (owner, repo, branch, level = 0) => {
-    console.log('Getting ', owner, repo, branch, level, 'level files');
-    if (!this.isAuthenticated()) {
-      console.error('Octokit is not authenticated.');
-      return null;
-    }
-    const response = await this.graphqlAuth(
-      `
-      query RepositoryFilesOfSubtree($owner: String!, $repo: String!) {
-        repository(owner: $owner, name: $repo) {
-          defaultBranchRef {
-            id
-            target {
-              ... on Commit {
-                id
-                history(first: 1) {
-                  nodes {
-                    tree {
-                      entries {
-                        name
-                        oid
-                        path
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+    try {
+      const response = await this.graphqlAuth(
+        formQueryGetRepositorySpecificBranchRootNodes(branch, treePath),
+        {
+          owner,
+          repo
         }
-      }
-      `,
-      {
+      );
+      const files = response?.repository?.object?.entries;
+      const parent = {
+        oid: null,
+        name: null,
+        type: isRepositoryRoot ? 'root' : 'tree',
+        path: treePath,
+        children: files
+      };
+      console.log('ENTRIED', response?.repository?.object?.entries);
+      this.fileStore.setRepositoryNodes(branch, parent, files);
+      return response?.repository?.object?.entries;
+    } catch (error) {
+      console.error(
+        'Error getting specific branch repository root nodes.',
         owner,
-        repo
-      }
-    );
-    this.fileStore.setRepositoryNodes(response);
-    return response;
+        repo,
+        branch,
+        error
+      );
+      return null;
+    }
   };
 }
 

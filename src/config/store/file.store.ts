@@ -1,12 +1,13 @@
-import { observable, computed, values } from 'mobx';
+import { observable, toJS } from 'mobx';
 import { IUiStore } from './ui.store';
 import { IRootStore } from './root.store';
 import { IUserStore } from './user.store';
-import { object } from 'prop-types';
+import Node from '../../components/Node';
 
 enum NodeType {
   File = 'blob',
-  Folder = 'tree'
+  Folder = 'tree',
+  Root = 'root'
 }
 
 interface Node {
@@ -14,12 +15,22 @@ interface Node {
   name: string;
   type: NodeType;
   path: string;
+  children?: Node[];
 }
 
 export interface IFileStore {
   uiStore: IUiStore;
   userStore: IUserStore;
+
+  /* Map to store only root nodes. There may be multiple for different branches */
+  rootNodeKeys: Map<string, string>;
+
+  /* Map to store all nodes. Used to fetch nodes in constant time.
+   * <key> branch:nodePath i.e HEAD/frontend/hello-world.js
+   * <value> Node
+   */
   nodes: Map<string, Node>;
+
   openFiles: Node[];
   isPending: boolean;
 }
@@ -28,6 +39,8 @@ export default class FileStore implements IFileStore {
   uiStore: IUiStore;
 
   userStore: IUserStore;
+
+  @observable rootNodeKeys: Map<string, string> = new Map();
 
   @observable nodes: Map<string, Node> = new Map();
 
@@ -40,38 +53,59 @@ export default class FileStore implements IFileStore {
     this.userStore = rootStore.userStore; // Store that can resolve users
   }
 
-  // setRepositoryNodes(files: object[]) {
-  //   // Add each node to dictionary for constant time access
-  //   files.forEach((n: object, index: number)=>{
-  //     // Key will be treeoid
-  //     this.nodes.set()
-  //   })
-  // }
+  setRepositoryNodes(branch: string, parent: Node, files: Node[]) {
+    // Add parent node to rootNodes if it's a root node.
+    if (parent.type === NodeType.Root) {
+      this.rootNodeKeys.set(branch, `${branch}:`);
+    }
 
-  /**
-   * Get one file
-   */
-  getFile(id: string): Node {
-    // @ts-ignore
-    return this.files.find((n) => n.id === id);
+    // Add parent node to nodes if it doesn't exist yet, else just add children
+    const foundNode = this.nodes.get(`${branch}:${parent.path}`);
+    if (foundNode) {
+      this.nodes.set(`${branch}:${parent.path}`, {
+        ...foundNode,
+        children: files
+      });
+    } else {
+      this.nodes.set(`${branch}:${parent.path}`, parent);
+    }
+
+    // Add children nodes to map
+    files.forEach((n: Node, i: number) => {
+      this.nodes.set(`${branch}:${n.path}`, n);
+    });
+
+    console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
   }
 
   /**
-   * Get only files
+   * Get only root level nodes
    */
-  @computed get files() {
-    return values(this.nodes).filter(
-      // @ts-ignore
-      (n: Node, i: number, a: Node[]) => n.type === NodeType.File
-    );
+  getRootNodes() {
+    let rootNodes: Node[] = [];
+    this.nodes.forEach((n: Node, key: string) => {
+      if (key.match(/^[^:]*(:\s*)$/g)) {
+        // regex matches for nothing after colon (:)
+        rootNodes.push(n);
+      }
+    });
+    return rootNodes;
   }
 
   /**
-   * Get only folders
+   * Clear map
    */
-  @computed get folders() {
-    // @ts-ignore
-    return values(this.nodes).filter((n: Node) => n.type === NodeType.Folder);
+  clearNodes = () => {
+    this.nodes.clear();
+  };
+
+  /**
+   * Get a node
+   * @param branch
+   * @param path
+   */
+  getNode(branch: string, path: string): Node {
+    return this.nodes.get(`${branch}:${path}`);
   }
 
   /**
