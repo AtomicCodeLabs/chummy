@@ -17,6 +17,7 @@ const FolderContentContainer = styled.div`
 
 const Folder = ({ owner, repo, branch, data, level, order }) => {
   const nodes = getFolderFiles(owner, repo, branch, data.path);
+  console.log(order);
 
   return (
     <>
