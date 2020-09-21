@@ -7,9 +7,10 @@ import {
   WHITE,
   PRIMARY_COLOR,
   GRAY,
-  BORDER_GRAY
+  BORDER_GRAY,
+  ACCENT_COLOR
 } from '../../constants/theme';
-import { SIDE_TAB } from '../../constants/sizes';
+import { SIDE_TAB, HEADER } from '../../constants/sizes';
 
 export const Container = styled.div`
   background-color: ${PRIMARY_COLOR};
@@ -72,15 +73,38 @@ export const ExpandingContainerHeader = styled.div`
   padding-left: 1rem;
 
   background-color: ${backgroundColor};
-  height: 40px;
+  height: ${HEADER.HEIGHT}px;
   color: ${textColor};
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 `;
 
 export const ExpandingContainerContent = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  white-space: nowrap;
+
+  /* // For some reason, drag cursor disappears after first drag */
+  /* // https://github.com/nathancahill/split/issues/99 */
+  .gutter-container {
+    background-color: transparent;
+    width: 100%;
+    position: absolute;
+    height: 0;
+    left: 16px;
+    cursor: row-resize;
+
+    .custom-gutter {
+      position: relative;
+      height: inherit;
+      top: -10px;
+      transition: background-color 0.2s ease;
+    }
+
+    &:hover {
+      background-color: ${ACCENT_COLOR};
+    }
+  }
 `;
 
 export const ExpandingContainerDivider = styled.div`

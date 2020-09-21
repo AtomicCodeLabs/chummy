@@ -49,7 +49,7 @@ class OctoDAO {
 
   // Repo API
   getRepositoryNodes = async (owner, repo, branch = 'HEAD', treePath = '') => {
-    console.log('Getting ', owner, repo, branch, treePath, 'root files');
+    // console.log('Getting ', owner, repo, branch, treePath, 'root files');
     if (!this.isAuthenticated()) {
       console.error('Octokit is not authenticated.');
       return null;

@@ -9,4 +9,12 @@ export const SIDE_TAB = {
   BUTTON: { HEIGHT: 55, HIGHLIGHT_WIDTH: 3 }
 };
 
+export const HEADER = {
+  HEIGHT: 40
+};
+
+export const NODE = {
+  HEIGHT: 19
+};
+
 export const TAB_HEIGHT = 50;

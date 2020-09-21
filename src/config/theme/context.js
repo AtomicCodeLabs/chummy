@@ -28,7 +28,7 @@ export const ThemeProvider = observer(({ children }) => {
 });
 
 ThemeProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.element.isRequired
 };
 
 export default ThemeProvider;

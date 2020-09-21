@@ -19,6 +19,11 @@ enum SidebarView {
   'Open Files'
 }
 
+enum ExplorerSection {
+  OpenFiles = 'openFiles',
+  Files = 'files'
+}
+
 export interface IUiStore {
   language: Language;
   theme: Theme;
@@ -28,6 +33,12 @@ export interface IUiStore {
   sidebarView: SidebarView;
   sidebarWidth: number;
   isSidebarMinimized: boolean;
+
+  // Tree Page
+  isTreeSectionMinimized: {
+    [ExplorerSection.OpenFiles]: boolean;
+    [ExplorerSection.Files]: boolean;
+  };
 }
 
 export default class UiStore implements IUiStore {
@@ -43,6 +54,11 @@ export default class UiStore implements IUiStore {
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
 
   @observable isSidebarMinimized = false;
+
+  @observable isTreeSectionMinimized = {
+    [ExplorerSection.OpenFiles]: false,
+    [ExplorerSection.Files]: false
+  };
 
   constructor(rootStore: IRootStore) {
     this.init();
@@ -99,8 +115,17 @@ export default class UiStore implements IUiStore {
     setInChromeStorage({ isSidebarMinimized: false });
     this.isSidebarMinimized = false;
   };
+
   closeSidebar = () => {
     setInChromeStorage({ isSidebarMinimized: true });
     this.isSidebarMinimized = true;
+  };
+
+  toggleTreeSection = (sectionName: ExplorerSection) => {
+    console.log('SECTION', sectionName);
+    this.isTreeSectionMinimized = {
+      ...this.isTreeSectionMinimized,
+      [sectionName]: !this.isTreeSectionMinimized[sectionName]
+    };
   };
 }
