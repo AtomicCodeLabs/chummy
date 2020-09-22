@@ -62,8 +62,6 @@ export default () => {
               </Route>
             </Switch>
           </ResizableSidebar>
-          {/* <ResizeHandle />
-          <Right></Right> */}
         </ExtensionRootContainer>
       </ThemeProvider>
     </Router>

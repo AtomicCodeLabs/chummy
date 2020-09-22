@@ -33,7 +33,7 @@ chrome.pageAction.onClicked.addListener(() => {
 const displayPageAction = (tabId, changeInfo, tab) => {
   const regex = new RegExp(/^(http|https):\/\/github\.com(\/[^/]+){2,}$/);
   const match = regex.exec(tab.url);
-  
+
   // We only display the Page Action if we are inside a tab that matches
   if (changeInfo.status === 'complete') {
     // eslint-disable-next-line no-extra-boolean-cast

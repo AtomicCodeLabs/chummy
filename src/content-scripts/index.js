@@ -15,10 +15,7 @@ import './index.css';
 // eslint-disable-next-line no-restricted-globals
 const isChrome = navigator.userAgent.indexOf('Firefox') === -1;
 
-let rendered;
-let bgConnection;
 let naTimeout;
-let preloadedState;
 let app;
 const scrollbarWidth = getScrollBarWidth();
 
@@ -46,12 +43,14 @@ function renderDevPanel() {
     </RootStoreContext.Provider>,
     app
   );
-  rendered = true;
 }
 
 function init() {
   renderNA();
-  if (!rendered) renderDevPanel();
+  const extensionLoaded = document.querySelector('#my-extension-root');
+  if (!extensionLoaded) {
+    renderDevPanel();
+  }
 }
 
 init();
