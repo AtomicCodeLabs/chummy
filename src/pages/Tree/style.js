@@ -36,6 +36,7 @@ export const SectionName = styled.div`
   font-size: 0.75rem;
   line-height: ${NODE.HEIGHT}px;
   font-weight: bold;
+  user-select: none;
 `;
 
 export const SectionContent = styled.div`

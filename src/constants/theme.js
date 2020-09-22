@@ -29,9 +29,29 @@ export const backgroundAlternatingLightColor = theme('theme', {
   dark: LIGHT_DARK
 });
 
+export const backgroundHighlightColor = theme('theme', {
+  light: '#d4e9ff',
+  dark: '#145596'
+});
+
 export const textColor = theme('theme', {
   light: '#000',
   dark: '#fff'
+});
+
+export const nodeTextColor = theme('theme', {
+  light: '#24292e',
+  dark: '#e3ded7'
+});
+
+export const folderIconColor = theme('theme', {
+  light: '#79b8ff',
+  dark: '#79b8ff'
+});
+
+export const nodeIconColor = theme('theme', {
+  light: '#6a737d',
+  dark: '#e3ded7'
 });
 
 export const highlightColor = theme('theme', {

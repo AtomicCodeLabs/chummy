@@ -10,7 +10,7 @@ import {
   BORDER_GRAY,
   ACCENT_COLOR
 } from '../../constants/theme';
-import { SIDE_TAB, HEADER } from '../../constants/sizes';
+import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
 
 export const Container = styled.div`
   background-color: ${PRIMARY_COLOR};
@@ -91,18 +91,17 @@ export const ExpandingContainerContent = styled.div`
     width: 100%;
     position: absolute;
     height: 0;
-    left: 16px;
+    left: 16px; /* Magic number that works */
     cursor: row-resize;
+    border-top: 1px ${BORDER_GRAY} solid;
 
     .custom-gutter {
       position: relative;
       height: inherit;
-      top: -10px;
-      transition: background-color 0.2s ease;
-    }
-
-    &:hover {
-      background-color: ${ACCENT_COLOR};
+      top: -${RESIZE_GUTTER.HEIGHT}px;
+      &:hover {
+        border-bottom: 1px ${ACCENT_COLOR} solid;
+      }
     }
   }
 `;

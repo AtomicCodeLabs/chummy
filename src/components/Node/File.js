@@ -9,7 +9,7 @@ const File = ({ data, level }) => {
     <StyledNode.Container className="node">
       <StyledNode.Spacer level={level} />
       <StyledNode.Icon>
-        <FileIcon size={16} />
+        <FileIcon size={14} verticalAlign="middle" />
       </StyledNode.Icon>
       <StyledNode.Name>{data.name}</StyledNode.Name>
     </StyledNode.Container>

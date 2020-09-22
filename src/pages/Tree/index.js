@@ -14,7 +14,7 @@ import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore } from '../../hooks/store';
 import getFolderFiles from '../../hooks/getFolderFiles';
 import Node from '../../components/Node';
-import { NODE } from '../../constants/sizes';
+import { NODE, RESIZE_GUTTER } from '../../constants/sizes';
 
 export default observer(() => {
   checkCurrentUser();
@@ -65,7 +65,9 @@ export default observer(() => {
       gutterStyle={(dimension, gutterSize) => ({
         height: `${gutterSize}px`
       })}
-      gutterSize={!openFilesIsMinimized && !filesIsMinimized ? 10 : 0}
+      gutterSize={
+        !openFilesIsMinimized && !filesIsMinimized ? RESIZE_GUTTER.HEIGHT : 0
+      }
       onDragStart={() => setIsDragging(true)}
       onDragEnd={(sizes) => {
         setIsDragging(false);

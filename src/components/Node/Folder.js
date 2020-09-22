@@ -7,6 +7,7 @@ import getFolderFiles from '../../hooks/getFolderFiles';
 import Node from '.';
 import StyledNode from './Base';
 import OpenCloseChevron from '../OpenCloseChevron';
+import { folderIconColor } from '../../constants/theme';
 
 const Folder = ({ owner, repo, branch, data, level }) => {
   const [open, setOpen] = useState(false);
@@ -17,13 +18,14 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
         <StyledNode.Spacer level={level} />
         <OpenCloseChevron open={open} />
-        <StyledNode.Icon>
-          <FileDirectoryIcon size={16} />
+        <StyledNode.Icon fill={folderIconColor}>
+          <FileDirectoryIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
         <StyledNode.Name>{data.name}</StyledNode.Name>
       </StyledNode.Container>
       <>
-        {nodes &&
+        {open &&
+          nodes &&
           nodes.map((node) => (
             <Node
               key={node.oid}

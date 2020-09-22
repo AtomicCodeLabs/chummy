@@ -17,4 +17,8 @@ export const NODE = {
   HEIGHT: 19
 };
 
+export const RESIZE_GUTTER = {
+  HEIGHT: 5
+};
+
 export const TAB_HEIGHT = 50;
