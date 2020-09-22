@@ -7,6 +7,10 @@ import RootStoreContext from '../config/store/context.ts';
 import rootStore from '../config/store/root.store.ts';
 import FirebaseProvider from '../config/firebase';
 import OctoProvider from '../config/octokit';
+import { getFromChromeStorage } from '../config/store/util.ts';
+import { SIDE_TAB } from '../constants/sizes';
+import { getScrollBarWidth } from '../helpers/util';
+import './index.css';
 
 // eslint-disable-next-line no-restricted-globals
 const isChrome = navigator.userAgent.indexOf('Firefox') === -1;
@@ -16,6 +20,7 @@ let bgConnection;
 let naTimeout;
 let preloadedState;
 let app;
+const scrollbarWidth = getScrollBarWidth();
 
 function renderNA() {}
 
@@ -45,7 +50,6 @@ function renderDevPanel() {
 }
 
 function init() {
-  console.log('INIT');
   renderNA();
   if (!rendered) renderDevPanel();
 }
@@ -55,14 +59,33 @@ init();
 function toggle() {
   if (app.style.display === 'none') {
     app.style.display = 'block';
+
+    // Reset previous width
+    getFromChromeStorage(
+      ['isSidebarMinimized', 'sidebarWidth'],
+      ({ isSidebarMinimized, sidebarWidth }) => {
+        document.querySelector('html').style.marginLeft = `${
+          (isSidebarMinimized ? 0 : sidebarWidth) + SIDE_TAB.WIDTH
+        }px`;
+        document.querySelector('body').style.minWidth = `calc(100vw - ${
+          (isSidebarMinimized ? 0 : sidebarWidth) +
+          SIDE_TAB.WIDTH +
+          scrollbarWidth
+        }px)`;
+      }
+    );
   } else {
     app.style.display = 'none';
+
+    // Reset extensionless state
+    document.querySelector('html').style.marginLeft = 0;
+    document.querySelector('body').style.minWidth = '100vw';
   }
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('got message');
-  if (request.message === 'clicked_browser_action') {
+  console.log('got message', request);
+  if (request.message === 'clicked_page_action') {
     toggle();
   }
 });

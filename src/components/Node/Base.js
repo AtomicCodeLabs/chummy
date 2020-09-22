@@ -35,7 +35,7 @@ const Icon = styled.div`
   margin-right: 0.3rem;
 
   svg {
-    fill: ${({ fill }) => fill || nodeIconColor};
+    fill: ${({ iconFill }) => iconFill || nodeIconColor};
   }
 `;
 

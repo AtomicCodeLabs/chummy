@@ -18,7 +18,7 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
         <StyledNode.Spacer level={level} />
         <OpenCloseChevron open={open} />
-        <StyledNode.Icon fill={folderIconColor}>
+        <StyledNode.Icon iconFill={folderIconColor}>
           <FileDirectoryIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
         <StyledNode.Name>{data.name}</StyledNode.Name>

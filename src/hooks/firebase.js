@@ -14,10 +14,12 @@ export const checkCurrentUser = () => {
   const history = useHistory();
   const location = useLocation();
   const { user, isPending, isLoggedIn } = useUserStore();
+  console.log('Checking current user');
 
   // Check if user is signed in or not
   useEffect(() => {
     if (firebase && !isLoggedIn) {
+      console.log('getting current user');
       firebase.getCurrentUser();
     }
   }, [firebase]);
@@ -25,7 +27,7 @@ export const checkCurrentUser = () => {
   // Redirect on userStore.user update
   // TODO: use chrome storage to persist user across different sessions
   useEffect(() => {
-    // console.log('user changed in checkCurrentUser', user, location);
+    console.log('user changed in checkCurrentUser', user, location, isLoggedIn);
     if (!isLoggedIn) {
       // If not on sign in page but not logged in.
       if (location.pathname !== '/account-sign-in')
