@@ -1,5 +1,4 @@
 /* global chrome */
-console.log('background-outside');
 
 // Rules set when extension is installed
 chrome.runtime.onInstalled.addListener(() => {

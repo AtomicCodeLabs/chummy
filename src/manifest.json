@@ -11,6 +11,7 @@
   "background": {
     "scripts": [
       "background.js",
+      "background.app.js",
       "background.firebase.js",
       "background.storage.js"
     ],

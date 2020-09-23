@@ -1,5 +1,5 @@
 // http://www.alexandre-gomes.com/?p=115
-export const getScrollBarWidth = () => {
+const getScrollBarWidth = () => {
   const inner = document.createElement('p');
   inner.style.width = '100%';
   inner.style.height = '200px';
@@ -25,4 +25,4 @@ export const getScrollBarWidth = () => {
   return w1 - w2;
 };
 
-export const FILLER = 0;
+export default getScrollBarWidth;

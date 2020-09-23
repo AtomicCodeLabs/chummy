@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
@@ -14,7 +14,7 @@ import {
 import { EXTENSION_WIDTH, SIDE_TAB } from '../../constants/sizes';
 import { useUiStore, useUserStore } from '../../hooks/store';
 import { getSidebarHeaderTitle, isPageWithHeader } from './util';
-import { getScrollBarWidth } from '../../helpers/util';
+import getScrollBarWidth from '../../hooks/getScrollBarWidth';
 import {
   Container,
   SideTab,
@@ -29,47 +29,43 @@ import {
 import IconButton from '../IconButton';
 
 const ResizableSidebar = observer(({ children }) => {
-  const uiStore = useUiStore();
+  const {
+    sidebarWidth,
+    isSidebarMinimized,
+    setSidebarWidth,
+    openSidebar,
+    closeSidebar
+  } = useUiStore();
   const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
   const history = useHistory();
-  const { sidebarWidth, isSidebarMinimized } = uiStore;
-
-  const [extensionWidth, setExtensionWidth] = useState(sidebarWidth);
   const scrollbarWidth = getScrollBarWidth();
 
-  const openSidebar = () => {
+  // Parent DOM elements to compute once
+  const $html = document.querySelector('html');
+  const $body = document.querySelector('body');
+
+  const open = () => {
     if (!isSidebarMinimized) return;
-    // maximize it
-    setExtensionWidth(uiStore.sidebarWidth);
-    uiStore.openSidebar();
+    openSidebar();
     if (!isLoggedIn) history.push('/account-sign-in');
   };
-  const closeSidebar = () => {
+  const close = () => {
     if (isSidebarMinimized) return;
-    // maximize it
-    setExtensionWidth(0);
-    uiStore.closeSidebar();
+    closeSidebar();
     history.push('/minimized');
   };
 
   // Give html margin-left of extension's width
   // Adjust body width
   useEffect(() => {
-    document.querySelector('html').style.marginLeft = `${
-      (isSidebarMinimized ? 0 : extensionWidth) + SIDE_TAB.WIDTH
+    $html.style.marginLeft = `${
+      (isSidebarMinimized ? 0 : sidebarWidth) + SIDE_TAB.WIDTH
     }px`;
-    document.querySelector('body').style.minWidth = `calc(100vw - ${
-      (isSidebarMinimized ? 0 : extensionWidth) +
-      SIDE_TAB.WIDTH +
-      scrollbarWidth
+    $body.style.minWidth = `calc(100vw - ${
+      (isSidebarMinimized ? 0 : sidebarWidth) + SIDE_TAB.WIDTH + scrollbarWidth
     }px)`;
-  }, [extensionWidth, isSidebarMinimized]);
-
-  // Keep local width in sync with width in uiStore/storage
-  useEffect(() => {
-    setExtensionWidth(sidebarWidth);
-  }, [sidebarWidth]);
+  }, [sidebarWidth, isSidebarMinimized]);
 
   return (
     <Container>
@@ -119,7 +115,7 @@ const ResizableSidebar = observer(({ children }) => {
       {!isSidebarMinimized && (
         <ExpandingContainer
           position={{ x: SIDE_TAB.WIDTH, y: 0 }}
-          size={{ width: extensionWidth, height: '100vh' }}
+          size={{ width: sidebarWidth, height: '100vh' }}
           minWidth={EXTENSION_WIDTH.MIN}
           maxWidth={EXTENSION_WIDTH.MAX}
           enableResizing={{
@@ -135,10 +131,10 @@ const ResizableSidebar = observer(({ children }) => {
           disableDragging
           bounds=".my-extension-root"
           onResize={(_e, _direction, ref) => {
-            setExtensionWidth(ref.offsetWidth); // set local component state
+            setSidebarWidth(ref.offsetWidth);
           }}
           onResizeStop={(_e, _direction, ref) => {
-            uiStore.setSidebarWidth(ref.offsetWidth); // set ui store
+            setSidebarWidth(ref.offsetWidth, true); // set ui store
           }}
         >
           {isPageWithHeader(pathname) && (
@@ -155,9 +151,9 @@ const ResizableSidebar = observer(({ children }) => {
               style={{ transform: 'scale(1.3 )' }}
               onClick={() => {
                 if (isSidebarMinimized) {
-                  openSidebar();
+                  open();
                 } else {
-                  closeSidebar();
+                  close();
                 }
               }}
             />

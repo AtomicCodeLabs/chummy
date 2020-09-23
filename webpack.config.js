@@ -12,6 +12,7 @@ const base = {
   context: __dirname,
   entry: {
     background: './src/background/index.js',
+    'background.app': './src/background/app.js',
     'background.firebase': './src/background/firebase.js',
     'background.storage': './src/background/storage.js',
     'content-script': './src/content-scripts/index.js',

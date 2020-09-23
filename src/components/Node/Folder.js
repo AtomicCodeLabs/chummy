@@ -5,7 +5,7 @@ import { FileDirectoryIcon } from '@primer/octicons-react';
 import getFolderFiles from '../../hooks/getFolderFiles';
 // eslint-disable-next-line import/no-cycle
 import Node from '.';
-import StyledNode from './Base';
+import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
 import { folderIconColor } from '../../constants/theme';
 

@@ -7,6 +7,7 @@ import ThemeProvider from '../config/theme/context';
 import { backgroundColor, textColor } from '../constants/theme';
 
 import ResizableSidebar from '../components/ResizableSidebar';
+import Tabbar from '../components/Tabbar';
 import Tree from './Tree';
 import Search from './Search';
 import Vcs from './Vcs';
@@ -62,6 +63,7 @@ export default () => {
               </Route>
             </Switch>
           </ResizableSidebar>
+          <Tabbar />
         </ExtensionRootContainer>
       </ThemeProvider>
     </Router>

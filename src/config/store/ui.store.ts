@@ -34,6 +34,9 @@ export interface IUiStore {
   sidebarWidth: number;
   isSidebarMinimized: boolean;
 
+  // Tabbar
+  isTabbarMinimized: boolean;
+
   // Tree Page
   isTreeSectionMinimized: {
     [ExplorerSection.OpenFiles]: boolean;
@@ -54,6 +57,8 @@ export default class UiStore implements IUiStore {
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
 
   @observable isSidebarMinimized = false;
+
+  @observable isTabbarMinimized = false;
 
   @observable isTreeSectionMinimized = {
     [ExplorerSection.OpenFiles]: false,
@@ -106,8 +111,8 @@ export default class UiStore implements IUiStore {
     this.setTheme(this.theme === Theme.Light ? Theme.Dark : Theme.Light);
   };
 
-  setSidebarWidth = (width: number): void => {
-    setInChromeStorage({ sidebarWidth: width });
+  setSidebarWidth = (width: number, setInChrome: boolean = false): void => {
+    if (setInChrome) setInChromeStorage({ sidebarWidth: width });
     this.sidebarWidth = width;
   };
 

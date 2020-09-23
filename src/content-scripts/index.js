@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+
 import App from '../pages/App';
 import RootStoreContext from '../config/store/context.ts';
 import rootStore from '../config/store/root.store.ts';
@@ -9,7 +10,7 @@ import FirebaseProvider from '../config/firebase';
 import OctoProvider from '../config/octokit';
 import { getFromChromeStorage } from '../config/store/util.ts';
 import { SIDE_TAB } from '../constants/sizes';
-import { getScrollBarWidth } from '../helpers/util';
+import getScrollBarWidth from '../hooks/getScrollBarWidth';
 import './index.css';
 
 // eslint-disable-next-line no-restricted-globals

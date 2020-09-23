@@ -110,8 +110,6 @@ const firebaseStore = new Firebase();
 
 // Expose firebase API that content script can query
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request.action, 'action triggered');
-
   // Sign In
   if (request.action === 'sign-in') {
     console.log('sign-in action triggered');

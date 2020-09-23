@@ -2,8 +2,6 @@
 
 // Expose chrome storage API that content script can query
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request.action, 'action triggered');
-
   // Sign In
   if (request.action === 'set-store') {
     chrome.storage.sync.set(request.payload, () => {

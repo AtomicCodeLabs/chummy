@@ -31,7 +31,10 @@ export interface IFileStore {
    */
   nodes: Map<string, Node>;
 
+  currentNode: Node;
+
   openFiles: Node[];
+
   isPending: boolean;
 }
 
@@ -43,6 +46,8 @@ export default class FileStore implements IFileStore {
   @observable rootNodeKeys: Map<string, string> = new Map();
 
   @observable nodes: Map<string, Node> = new Map();
+
+  @observable currentNode: Node;
 
   @observable.shallow openFiles: Node[] = [];
 
@@ -75,7 +80,7 @@ export default class FileStore implements IFileStore {
       this.nodes.set(`${branch}:${n.path}`, n);
     });
 
-    // console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
+    console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
   }
 
   /**
