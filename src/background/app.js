@@ -1,14 +1,30 @@
 /* global chrome */
+const url = require('url');
+const path = require('path');
 const { parseUrl, isGithubRepoUrl } = require('./util');
 
 // Respond to requests to redirect a tab
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Redirect tab page (when file node is clicked)
   if (request.action === 'redirect') {
-    chrome.tabs.sendMessage(request.payload.window.tabId, {
-      action: 'redirect-content-script',
-      payload: request.payload
-    });
+    const {
+      payload: { window, base, filepath, openInNewTab }
+    } = request;
+    // Open a new tab
+    if (openInNewTab) {
+      chrome.tabs.create({
+        windowId: window.windowId,
+        url: url.resolve('https://github.com/', path.join(base, filepath)),
+        active: false
+      });
+    }
+    // Send redirect event to active tab
+    else {
+      chrome.tabs.sendMessage(window.tabId, {
+        action: 'redirect-content-script',
+        payload: request.payload
+      });
+    }
 
     sendResponse();
   }
@@ -62,10 +78,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 let tabIdsToCreate = new Set();
 // eslint-disable-next-line prefer-const
 let tabIdsToRemoveToTab = {};
+// Add initially open tabs to tabIdsToRemoveToTab in case they are removed
+chrome.windows.getAll(
+  { windowTypes: ['normal'], populate: true },
+  (windows) => {
+    windows.forEach(({ tabs }) => {
+      tabs.forEach(({ id, url: tabUrl, title }) => {
+        tabIdsToRemoveToTab[id] = { id, tabUrl, title };
+      });
+    });
+  }
+);
 
-const sendOpenRepositoryUpdatesMessage = ({ id, url, title }, status) => {
-  const isGRUrl = isGithubRepoUrl(url);
-  const parsedRepoInfo = parseUrl(url, title, id);
+const sendOpenRepositoryUpdatesMessage = (
+  { id, url: tabUrl, title },
+  status
+) => {
+  const isGRUrl = isGithubRepoUrl(tabUrl);
+  const parsedRepoInfo = parseUrl(tabUrl, title, id);
   if (!isGRUrl || !parsedRepoInfo) {
     return;
   }

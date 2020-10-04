@@ -24,7 +24,7 @@ const Branch = observer(({ repo, branch, currentBranch }) => {
         branch.tabId === currentBranch.tabId
       }
     >
-      <StyledNode.Spacer level={1} />
+      <StyledNode.LeftSpacer level={1} />
       <StyledNode.Icon>
         <GitBranchIcon size={14} verticalAlign="middle" />
       </StyledNode.Icon>

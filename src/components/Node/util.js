@@ -1,9 +1,14 @@
 /* global chrome */
 
-export const redirectTo = (base, filepath, currentWindowTab) => {
+export const redirectTo = (
+  base,
+  filepath,
+  currentWindowTab,
+  openInNewTab = false
+) => {
   chrome.runtime.sendMessage({
     action: 'redirect',
-    payload: { window: currentWindowTab, base, filepath }
+    payload: { window: currentWindowTab, base, filepath, openInNewTab }
   });
 };
 

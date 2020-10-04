@@ -27,7 +27,7 @@ const Container = styled.div`
   }
 `;
 
-const Spacer = styled.div`
+const LeftSpacer = styled.div`
   display: flex;
   width: ${({ level }) => 30 * level}px;
   min-width: ${({ level }) => 30 * level}px;
@@ -37,8 +37,8 @@ const Icon = styled.div`
   /* rotate a right caret icon */
   /* line-height: ${NODE.HEIGHT}px; */
   display: flex;
-  margin-left: 0.2rem;
-  margin-right: 0.3rem;
+  margin-left: ${({ marginLeft }) => marginLeft || '0.2rem'};
+  margin-right: ${({ marginRight }) => marginRight || '0.3rem'};
 
   svg {
     fill: ${({ iconFill }) => iconFill || nodeIconColor};
@@ -52,9 +52,14 @@ const Name = styled.div`
   color: ${nodeTextColor};
 `;
 
+const MiddleSpacer = styled.div`
+  flex: 1;
+`;
+
 export default {
   Container,
-  Spacer,
+  LeftSpacer,
   Icon,
-  Name
+  Name,
+  MiddleSpacer
 };

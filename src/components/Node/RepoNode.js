@@ -21,7 +21,7 @@ const RepoNode = ({ repo, currentBranch }) => {
           repo.name === currentBranch.repo.name
         }
       >
-        <StyledNode.Spacer level={0} />
+        <StyledNode.LeftSpacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>
           <RepoIcon size={14} verticalAlign="middle" />

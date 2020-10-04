@@ -168,7 +168,7 @@ export default observer(() => {
           zIndex={2}
         >
           <OpenCloseChevron open={!openFilesIsMinimized} />
-          <SectionName>Open Repositories</SectionName>
+          <SectionName>Open Tabs</SectionName>
         </SectionNameContainer>
         <Scrollbars
           style={{
