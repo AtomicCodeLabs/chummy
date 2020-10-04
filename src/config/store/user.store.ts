@@ -1,23 +1,10 @@
 import { observable, computed, toJS } from 'mobx';
 import { Context, useReducer } from 'react';
-import { IUiStore } from './ui.store';
-import { IFileStore } from './file.store';
-import { IRootStore } from './root.store';
 
-interface User {
-  uid: string;
-  displayName: string;
-  photoURL: string;
-  apiKey: string;
-}
-
-export interface IUserStore {
-  uiStore: IUiStore;
-  fileStore: IFileStore;
-
-  user: User;
-  isPending: boolean;
-}
+import IRootStore from './I.root.store';
+import IUserStore, { User } from './I.user.store';
+import IUiStore from './I.ui.store';
+import IFileStore from './I.file.store';
 
 export default class UserStore implements IUserStore {
   uiStore: IUiStore;

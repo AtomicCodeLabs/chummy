@@ -22,7 +22,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.storage.onChanged.addListener(() => {
-  console.log('ON STORAGE CHANGE');
   chrome.storage.sync.get(null, function callback(items) {
     console.log(items);
   });

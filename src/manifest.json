@@ -2,7 +2,7 @@
   "name": "Tomas",
   "version": "1.0.0",
   "description": "An improvement on Github",
-  "page_action": {
+  "browser_action": {
     "default_icon": {
       "16": "icon/default16.png",
       "32": "icon/default32.png"
@@ -17,9 +17,16 @@
     ],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*"],
+      "js": ["content-script.js"]
+    }
+  ],
   "devtools_page": "devtools.html",
   "manifest_version": 2,
   "permissions": [
+    "windows",
     "tabs",
     "activeTab",
     "declarativeContent",

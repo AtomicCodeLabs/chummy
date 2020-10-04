@@ -12,7 +12,6 @@ export const useTheme = () => useContext(ThemeToggleContext);
 
 export const ThemeProvider = observer(({ children }) => {
   const uiStore = useUiStore();
-  console.log('UISTORE', uiStore, uiStore.theme);
 
   const toggle = () => {
     uiStore.toggleTheme();

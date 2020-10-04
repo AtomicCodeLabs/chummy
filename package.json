@@ -56,7 +56,6 @@
     "react": "^16.13.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
-    "react-rnd": "^10.2.2",
     "react-router-dom": "^5.2.0",
     "react-split": "^2.0.9",
     "regenerator-runtime": "^0.13.7",

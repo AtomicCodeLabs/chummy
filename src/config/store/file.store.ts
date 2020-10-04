@@ -1,125 +1,119 @@
 import { observable, toJS } from 'mobx';
-import { IUiStore } from './ui.store';
-import { IRootStore } from './root.store';
-import { IUserStore } from './user.store';
-import Node from '../../components/Node';
 
-enum NodeType {
-  File = 'blob',
-  Folder = 'tree',
-  Root = 'root'
-}
-
-interface Node {
-  oid: string;
-  name: string;
-  type: NodeType;
-  path: string;
-  children?: Node[];
-}
-
-export interface IFileStore {
-  uiStore: IUiStore;
-  userStore: IUserStore;
-
-  /* Map to store only root nodes. There may be multiple for different branches */
-  rootNodeKeys: Map<string, string>;
-
-  /* Map to store all nodes. Used to fetch nodes in constant time.
-   * <key> branch:nodePath i.e HEAD/frontend/hello-world.js
-   * <value> Node
-   */
-  nodes: Map<string, Node>;
-
-  currentNode: Node;
-
-  openFiles: Node[];
-
-  isPending: boolean;
-}
+import IRootStore from './I.root.store';
+import IUiStore from './I.ui.store';
+import IUserStore from './I.user.store';
+import IFileStore, { Node, Branch, Repo, WindowTab } from './I.file.store';
+import { objectMap } from '../../utils';
 
 export default class FileStore implements IFileStore {
   uiStore: IUiStore;
-
   userStore: IUserStore;
-
-  @observable rootNodeKeys: Map<string, string> = new Map();
-
-  @observable nodes: Map<string, Node> = new Map();
-
-  @observable currentNode: Node;
-
-  @observable.shallow openFiles: Node[] = [];
-
   @observable isPending: boolean = true;
+
+  /* Window/Tab Section */
+  currentWindowTab: WindowTab;
+
+  /* Tree Section */
+  cachedNodes: Map<string, Node> = new Map();
+  @observable openRepos: Map<string, Repo> = new Map();
+  @observable currentBranch: Branch;
+
+  /* VCS Section */
+  @observable currentRepo: Repo;
 
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
     this.userStore = rootStore.userStore; // Store that can resolve users
   }
 
-  setRepositoryNodes(branch: string, parent: Node, files: Node[]) {
-    // Add parent node to rootNodes if it's a root node.
-    if (parent.type === NodeType.Root) {
-      this.rootNodeKeys.set(branch, `${branch}:`);
-    }
-
+  setNode(node: Node) {
     // Add parent node to nodes if it doesn't exist yet, else just add children
-    const foundNode = this.nodes.get(`${branch}:${parent.path}`);
-    if (foundNode) {
-      this.nodes.set(`${branch}:${parent.path}`, {
-        ...foundNode,
-        children: files
-      });
-    } else {
-      this.nodes.set(`${branch}:${parent.path}`, parent);
+    const key = `${node.repo.owner}:${node.repo.name}:${node.branch.name}:${node.path}`;
+    const foundNode = this.cachedNodes.get(key);
+    // console.log('Setting node', key, foundNode, toJS(this.cachedNodes));
+    if (!foundNode) {
+      this.cachedNodes.set(key, node);
     }
-
-    // Add children nodes to map
-    files.forEach((n: Node, i: number) => {
-      this.nodes.set(`${branch}:${n.path}`, n);
-    });
-
-    console.log('After adding to maps', this.getRootNodes(), toJS(this.nodes));
   }
 
-  /**
-   * Get only root level nodes
-   */
-  getRootNodes() {
-    let rootNodes: Node[] = [];
-    this.nodes.forEach((n: Node, key: string) => {
-      if (key.match(/^[^:]*(:\s*)$/g)) {
-        // regex matches for nothing after colon (:)
-        rootNodes.push(n);
-      }
-    });
-    return rootNodes;
+  getNode(owner: string, repo: string, branch: string, path: string): Node {
+    const key = `${owner}:${repo}:${branch}:${path}`;
+    // console.log('Getting node', key, toJS(this.cachedNodes));
+    return this.cachedNodes.get(key);
   }
 
-  /**
-   * Clear map
-   */
-  clearNodes = () => {
-    this.nodes.clear();
+  clearCachedNodes = () => {
+    this.cachedNodes.clear();
   };
 
-  /**
-   * Get a node
-   * @param branch
-   * @param path
-   */
-  getNode(branch: string, path: string): Node {
-    return this.nodes.get(`${branch}:${path}`);
-  }
+  setCurrentWindowTab = (windowId: number, tabId: number) => {
+    this.currentWindowTab = {
+      windowId,
+      tabId
+    };
+  };
 
-  /**
-   * Open a file as a new tab.
-   */
+  setOpenRepos = (repos: Repo[]) => {
+    repos.forEach((repo) => this.addOpenRepo(repo));
+  };
+
+  addOpenRepo = (repo: Repo) => {
+    const key = `${repo.owner}:${repo.name}`;
+    const foundRepo = this.openRepos.get(key);
+
+    if (!foundRepo) {
+      // Create new entry
+      this.openRepos.set(key, {
+        ...repo,
+        branches: objectMap(
+          repo.branches,
+          (k: string, v: Branch) => `${k}#${v.tabId}`
+        )
+      });
+    } else {
+      // Add branches to existing repo
+      Object.values(repo.branches).forEach((branch) => {
+        const branchKey = `${branch.name}#${branch.tabId}`;
+        foundRepo.branches[branchKey] = branch;
+      });
+    }
+  };
+
+  removeOpenRepo = (repo: Repo) => {
+    const key = `${repo.owner}:${repo.name}`;
+    const foundRepo = this.openRepos.get(key);
+
+    if (foundRepo) {
+      // Remove branches from existing repo
+      Object.values(repo.branches).forEach((branch) => {
+        const branchKey = `${branch.name}#${branch.tabId}`;
+        delete foundRepo.branches[branchKey];
+      });
+      // If no branches left, remove open repo entry
+      if (Object.keys(foundRepo.branches).length === 0) {
+        this.openRepos.delete(key);
+      }
+    }
+  };
+
+  // updateOpenRepo = (repo: Repo) => {
+  //   const key = `${repo.owner}:${repo.name}`;
+  //   const foundRepo = this.openRepos.get(key);
+  //   if (foundRepo) {
+  //     // Update branches from existing repo
+  //     Object.values(repo.branches).forEach((branch) => {
+  //       const branchKey = `${branch.name}#${branch.tabId}`;
+  //       foundRepo.branches[branchKey] = branch;
+  //     });
+  //   }
+  // };
+
+  setCurrentBranch = (branch: Branch) => {
+    this.currentBranch = branch;
+  };
+
   openFileTab(id: string): void {}
 
-  /**
-   * Close a file tab.
-   */
   closeFileTab(id: string): void {}
 }

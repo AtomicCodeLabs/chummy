@@ -1,25 +1,22 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import { FileIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
+import { useFileStore } from '../../hooks/store';
 import { redirectTo } from './util';
-import getCurrentTabRepositoryInfo from '../../hooks/getCurrentTabRepositoryInfo';
 
-const File = ({ data, level }) => {
+const File = observer(({ owner, repo, branch, data, level }) => {
+  const { currentWindowTab } = useFileStore();
+
   const handleClick = () => {
-    getCurrentTabRepositoryInfo((currentRepoInfo) => {
-      if (currentRepoInfo) {
-        const { user, repository, branch, url } = currentRepoInfo;
-        console.log(
-          'handling file click',
-          `${user}/${repository}/blob/${branch}/${data.path}`,
-          url
-        );
-        // Redirect to file page
-        redirectTo(`${user}/${repository}/blob/${branch}/${data.path}`);
-      }
-    });
+    // Redirect to file page
+    redirectTo(
+      `/${owner}/${repo}`,
+      `/blob/${branch.name}/${data.path}`,
+      currentWindowTab
+    );
   };
 
   return (
@@ -31,9 +28,16 @@ const File = ({ data, level }) => {
       <StyledNode.Name>{data.name}</StyledNode.Name>
     </StyledNode.Container>
   );
-};
+});
 
 File.propTypes = {
+  owner: PropTypes.string.isRequired,
+  repo: PropTypes.string.isRequired,
+  branch: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    tabId: PropTypes.number.isRequired,
+    type: PropTypes.oneOf(['blob', 'tree']).isRequired
+  }).isRequired,
   data: PropTypes.shape({
     oid: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

@@ -12,7 +12,6 @@ const Container = styled.div`
 `;
 
 export default observer(() => {
-  console.log('ACCOUNT PAGE');
   const firebase = useFirebaseDAO();
   checkCurrentUser();
 

@@ -1,8 +1,10 @@
 /* global chrome */
 
+import { parseUrl, isGithubRepoUrl } from './util';
+import { EXTENSION_WIDTH } from '../constants/sizes';
+
 // Rules set when extension is installed
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('background');
   chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
     chrome.declarativeContent.onPageChanged.addRules([
       {
@@ -18,36 +20,55 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 // Called when the user clicks on the extension icon
-chrome.pageAction.onClicked.addListener(() => {
-  console.log('clicked');
-  // Send a message to the active tab
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {
-      message: 'clicked_page_action'
+chrome.browserAction.onClicked.addListener(() => {
+  chrome.windows.create(
+    {
+      url: chrome.runtime.getURL('popup.html'),
+      type: 'popup',
+      width: EXTENSION_WIDTH.INITIAL
+    },
+    (win) => {
+      // Store extension window id in storage
+      chrome.storage.sync.set({ currentWindowId: win.id }, () => {
+        console.log('Current window id stored', win.id);
+      });
+    }
+  );
+});
+
+const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
+  const isGRUrl = isGithubRepoUrl(tabUrl);
+  chrome.runtime.sendMessage({
+    action: 'active-tab-changed',
+    payload: {
+      ...(isGRUrl && parseUrl(tabUrl, tabTitle, tabId)),
+      isGithubRepoUrl: isGRUrl,
+      windowId,
+      tabId
+    }
+  });
+};
+
+// Emit change tab/window/focus event to change content
+chrome.tabs.onActivated.addListener(({ windowId, tabId }) => {
+  chrome.tabs.get(tabId, ({ url, title }) => {
+    sendContentChangedMessage(windowId, tabId, title, url);
+  });
+});
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  // If window is the same as extension window, don't do anything
+  chrome.storage.sync.get(['currentWindowId'], ({ currentWindowId }) => {
+    // console.log('Current window id retrieved from storage', windowId, currentWindowId);
+    if (
+      windowId === currentWindowId ||
+      windowId === chrome.windows.WINDOW_ID_NONE
+    ) {
+      return;
+    }
+    chrome.tabs.query({ active: true, windowId }, (tabs) => {
+      const { url, id: tabId, title: tabTitle } = tabs[0];
+
+      sendContentChangedMessage(windowId, tabId, tabTitle, url);
     });
   });
 });
-
-const displayPageAction = (tabId, changeInfo, tab) => {
-  const regex = new RegExp(/^(http|https):\/\/github\.com(\/[^/]+){2,}$/);
-  const match = regex.exec(tab.url);
-
-  // We only display the Page Action if we are inside a tab that matches
-  if (changeInfo.status === 'complete') {
-    // eslint-disable-next-line no-extra-boolean-cast
-    if (!!match) {
-      console.log('showing page action');
-      chrome.pageAction.setIcon({ tabId, path: 'icon/up16.png' });
-      // Inject content script
-      chrome.tabs.executeScript({
-        file: 'content-script.js'
-      });
-    } else {
-      console.log('hiding page action');
-      chrome.pageAction.setIcon({ tabId, path: 'icon/down16.png' });
-    }
-  }
-};
-
-chrome.tabs.onUpdated.addListener(displayPageAction);

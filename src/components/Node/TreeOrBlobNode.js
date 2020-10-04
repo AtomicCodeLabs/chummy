@@ -5,12 +5,18 @@ import File from './File';
 // eslint-disable-next-line import/no-cycle
 import Folder from './Folder';
 
-const Node = ({ owner, repo, branch, data, level }) => {
+const TreeOrBlobNode = ({ owner, repo, branch, data, level }) => {
   const isFile = data.type === 'blob';
   return (
     <>
       {isFile ? (
-        <File data={data} level={level} />
+        <File
+          owner={owner}
+          repo={repo}
+          branch={branch}
+          data={data}
+          level={level}
+        />
       ) : (
         <Folder
           owner={owner}
@@ -24,10 +30,14 @@ const Node = ({ owner, repo, branch, data, level }) => {
   );
 };
 
-Node.propTypes = {
+TreeOrBlobNode.propTypes = {
   owner: PropTypes.string.isRequired,
   repo: PropTypes.string.isRequired,
-  branch: PropTypes.string.isRequired,
+  branch: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    tabId: PropTypes.number.isRequired,
+    type: PropTypes.oneOf(['blob', 'tree']).isRequired
+  }).isRequired,
   data: PropTypes.shape({
     oid: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -37,8 +47,8 @@ Node.propTypes = {
   level: PropTypes.number
 };
 
-Node.defaultProps = {
+TreeOrBlobNode.defaultProps = {
   level: 0
 };
 
-export default Node;
+export default TreeOrBlobNode;

@@ -14,10 +14,7 @@ class FirebaseDAO {
 
     // Add listener for auth changes and store
     chrome.runtime.onMessage.addListener((response) => {
-      // console.log('response received', response);
-      console.assert(response.action === 'auth-state-changed');
       if (response.action === 'auth-state-changed') {
-        // console.log('auth-state-changed message received', response);
         // Set user
         this.userStore.setUser({
           user: response.payload.user

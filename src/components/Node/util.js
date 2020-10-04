@@ -1,18 +1,15 @@
 /* global chrome */
 
-export const redirectTo = (slug) => {
-  chrome.runtime.sendMessage(
-    { action: 'redirect', slug }
-    // (response) => {
-    // if (response) {
-    //   const jsRepoPjaxContainer = document.querySelector(
-    //     '#js-repo-pjax-container'
-    //   );
-    //   console.log('IN RESPONSE', response.payload);
-    //   jsRepoPjaxContainer.innerHTML = response.payload.html;
-    // }
-    // }
-  );
+export const redirectTo = (base, filepath, currentWindowTab) => {
+  chrome.runtime.sendMessage({
+    action: 'redirect',
+    payload: { window: currentWindowTab, base, filepath }
+  });
 };
 
-export const FILLER = 0;
+export const changeActiveTab = (destinationTabId) => {
+  chrome.runtime.sendMessage({
+    action: 'change-active-tab',
+    payload: { destinationTabId }
+  });
+};

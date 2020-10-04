@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 // eslint-disable-next-line import/no-named-as-default
-import ThemeProvider from '../config/theme/context';
 import { backgroundColor, textColor } from '../constants/theme';
 
 import ResizableSidebar from '../components/ResizableSidebar';
-import Tabbar from '../components/Tabbar';
 import Tree from './Tree';
 import Search from './Search';
 import Vcs from './Vcs';
@@ -35,37 +33,32 @@ const ExtensionRootContainer = styled.div`
 
 export default () => {
   return (
-    <Router>
-      <ThemeProvider>
-        <ExtensionRootContainer>
-          <ResizableSidebar>
-            <Switch>
-              <Route exact path="/">
-                <Tree />
-              </Route>
-              <Route path="/search">
-                <Search />
-              </Route>
-              <Route path="/vcs">
-                <Vcs />
-              </Route>
-              <Route path="/account">
-                <Account />
-              </Route>
-              <Route path="/account-sign-in">
-                <AccountSignIn />
-              </Route>
-              <Route path="/settings">
-                <Settings />
-              </Route>
-              <Route path="/minimized">
-                <></>
-              </Route>
-            </Switch>
-          </ResizableSidebar>
-          <Tabbar />
-        </ExtensionRootContainer>
-      </ThemeProvider>
-    </Router>
+    <ExtensionRootContainer>
+      <ResizableSidebar>
+        <Switch>
+          <Route exact path="/">
+            <Tree />
+          </Route>
+          <Route path="/search">
+            <Search />
+          </Route>
+          <Route path="/vcs">
+            <Vcs />
+          </Route>
+          <Route path="/account">
+            <Account />
+          </Route>
+          <Route path="/account-sign-in">
+            <AccountSignIn />
+          </Route>
+          <Route path="/settings">
+            <Settings />
+          </Route>
+          <Route path="/minimized">
+            <></>
+          </Route>
+        </Switch>
+      </ResizableSidebar>
+    </ExtensionRootContainer>
   );
 };

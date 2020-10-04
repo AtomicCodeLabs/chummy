@@ -19,7 +19,6 @@ const SplashIcon = styled.div`
 `;
 
 export default observer(() => {
-  console.log('ACCOUNT SIGNIN PAGE');
   const firebase = useFirebaseDAO();
   const [isSplashScreen, setSplashScreen] = useState(true);
   checkCurrentUser();

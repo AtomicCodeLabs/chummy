@@ -1,12 +1,10 @@
-import UiStore, { IUiStore } from './ui.store';
-import FileStore, { IFileStore } from './file.store';
-import UserStore, { IUserStore } from './user.store';
-
-export interface IRootStore {
-  uiStore: IUiStore;
-  fileStore: IFileStore;
-  userStore: IUserStore;
-}
+import IRootStore from './I.root.store';
+import UiStore from './ui.store';
+import IUiStore from './I.ui.store';
+import FileStore from './file.store';
+import IFileStore from './I.file.store';
+import UserStore from './user.store';
+import IUserStore from './I.user.store';
 
 export class RootStore implements IRootStore {
   uiStore: IUiStore;

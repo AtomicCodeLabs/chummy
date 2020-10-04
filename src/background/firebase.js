@@ -63,7 +63,6 @@ class Firebase {
 
   signInWithGithub = async () => {
     const response = await this.auth.signInWithPopup(this.githubProvider);
-    console.log('SIGN IN WITH GITHUB', response);
     this.setGithubApiKey(response.credential?.accessToken);
     chrome.storage.sync.set(
       { apiKey: response.credential?.accessToken, isLoggedIn: true },
@@ -88,13 +87,6 @@ class Firebase {
 
   getCurrentUser = () => {
     const { uid, displayName, photoURL } = this.auth.currentUser;
-    console.log(
-      'get-current-user payload',
-      uid,
-      displayName,
-      photoURL,
-      this.githubApiKey
-    );
     return {
       user: {
         uid,

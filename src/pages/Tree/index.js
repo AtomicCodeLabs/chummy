@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Split from 'react-split';
@@ -10,11 +11,18 @@ import {
   SectionContent
 } from './style';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
+import Node from '../../components/Node/TreeOrBlobNode';
 import { checkCurrentUser } from '../../hooks/firebase';
-import { useUiStore } from '../../hooks/store';
-import getFolderFiles from '../../hooks/getFolderFiles';
-import Node from '../../components/Node';
+import { useUiStore, useFileStore } from '../../hooks/store';
+import useOctoDAO from '../../hooks/octokit';
 import { NODE, RESIZE_GUTTER } from '../../constants/sizes';
+import { onActiveTabChange } from '../../utils/tabs';
+import {
+  getOpenRepositories,
+  onUpdateOpenRepositories,
+  transformOpenRepo
+} from '../../utils/repository';
+import RepoNode from '../../components/Node/RepoNode';
 
 export default observer(() => {
   checkCurrentUser();
@@ -25,10 +33,21 @@ export default observer(() => {
     },
     toggleTreeSection
   } = useUiStore();
-  const [heights, setHeights] = useState([50, 50]);
+  const {
+    openRepos,
+    setOpenRepos,
+    addOpenRepo,
+    removeOpenRepo,
+    currentBranch,
+    setCurrentBranch,
+    setCurrentWindowTab
+  } = useFileStore();
+  const octoDAO = useOctoDAO();
+  const [heights, setHeights] = useState([20, 80]);
   const [isDragging, setIsDragging] = useState(false);
-  const nodes = getFolderFiles('alexkim205', 'WORKWITH', 'HEAD', '');
+  const [nodes, setNodes] = useState([]);
 
+  // Resize sidebar sections logic
   useEffect(() => {
     // If only first tab is open, expand second
     if (!openFilesIsMinimized && filesIsMinimized) {
@@ -42,11 +61,73 @@ export default observer(() => {
     else if (openFilesIsMinimized && filesIsMinimized) {
       setHeights([0, 0]);
     }
-    // If both open, set both to 50
+    // If both open, set first to 20 and second to 80
     else if (!openFilesIsMinimized && !filesIsMinimized) {
-      setHeights([50, 50]);
+      setHeights([20, 80]);
     }
   }, [openFilesIsMinimized, filesIsMinimized]);
+
+  // On Tab Change listener set currentBranch
+  useEffect(() => {
+    const removeListener = onActiveTabChange(
+      ({ owner, repo, branch, isGithubRepoUrl, windowId }) => {
+        if (isGithubRepoUrl) {
+          const newCurrentBranch = {
+            name: branch.name,
+            type: 'tree',
+            tabId: branch.tabId,
+            repo: { owner, name: repo, type: 'tree' }
+          };
+          setCurrentBranch(newCurrentBranch);
+          setCurrentWindowTab(windowId, branch.tabId);
+        } else {
+          setCurrentBranch(null);
+        }
+      }
+    );
+    return removeListener;
+  }, []);
+
+  // On Open repositories update, add, remove, or update openRepos
+  useEffect(() => {
+    const removeListener = onUpdateOpenRepositories({
+      create: ({ repo }) => addOpenRepo(transformOpenRepo(repo)),
+      remove: ({ repo }) => removeOpenRepo(transformOpenRepo(repo))
+    });
+    return removeListener;
+  }, []);
+
+  // Get all open repositories on startup
+  useEffect(() => {
+    if (openRepos.size === 0) {
+      getOpenRepositories((repoMap) => {
+        const reposToSet = Object.values(repoMap)
+          .flat()
+          .map((r) => transformOpenRepo(r));
+        setOpenRepos(reposToSet);
+      });
+    }
+  }, [openRepos]);
+
+  // Get current repository's files
+  useEffect(() => {
+    const getBranchNodes = async () => {
+      if (!currentBranch) {
+        // If null (on tab that's not github)
+        return;
+      }
+      const responseNodes = await octoDAO.getRepositoryNodes(
+        currentBranch.repo.owner,
+        currentBranch.repo.name,
+        currentBranch,
+        ''
+      );
+      setNodes(responseNodes);
+    };
+    if (octoDAO) {
+      getBranchNodes();
+    }
+  }, [octoDAO?.graphqlAuth, currentBranch]);
 
   return (
     <Split
@@ -88,7 +169,7 @@ export default observer(() => {
           zIndex={2}
         >
           <OpenCloseChevron open={!openFilesIsMinimized} />
-          <SectionName>Open Files</SectionName>
+          <SectionName>Open Repositories</SectionName>
         </SectionNameContainer>
         <Scrollbars
           style={{
@@ -99,15 +180,9 @@ export default observer(() => {
           autoHide
         >
           <SectionContent>
-            {nodes &&
-              nodes.map((n) => (
-                <Node
-                  owner="alexkim205"
-                  repo="WORKWITH"
-                  branch="HEAD"
-                  data={n}
-                  key={n.oid}
-                />
+            {openRepos &&
+              Array.from(openRepos).map(([, repo], i) => (
+                <RepoNode key={i} repo={repo} />
               ))}
           </SectionContent>
         </Scrollbars>
@@ -131,12 +206,13 @@ export default observer(() => {
           autoHide
         >
           <SectionContent>
-            {nodes &&
+            {currentBranch &&
+              nodes &&
               nodes.map((n) => (
                 <Node
-                  owner="alexkim205"
-                  repo="WORKWITH"
-                  branch="HEAD"
+                  owner={currentBranch.repo.owner}
+                  repo={currentBranch.repo.name}
+                  branch={currentBranch}
                   data={n}
                   key={n.oid}
                 />

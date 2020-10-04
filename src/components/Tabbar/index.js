@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { useUiStore } from '../../hooks/store';
 import { SIDE_TAB, TOP_TAB } from '../../constants/sizes';
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: row;

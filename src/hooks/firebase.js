@@ -14,7 +14,6 @@ export const checkCurrentUser = () => {
   const history = useHistory();
   const location = useLocation();
   const { user, isPending, isLoggedIn } = useUserStore();
-  console.log('Checking current user');
 
   // Check if user is signed in or not
   useEffect(() => {

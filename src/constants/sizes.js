@@ -3,7 +3,7 @@
  */
 
 export const EXTENSION_WIDTH = {
-  INITIAL: 200,
+  INITIAL: 350,
   MIN: 150,
   MAX: 500
 };

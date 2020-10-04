@@ -1,8 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from '@octokit/graphql';
+import { toJS } from 'mobx';
 
 import { formQueryGetRepositorySpecificBranchRootNodes } from './queries';
+import { sortFiles } from '../../utils';
 
 let isInitialized = false;
 
@@ -48,33 +50,53 @@ class OctoDAO {
   isAuthenticated = () => !!this.graphqlAuth;
 
   // Repo API
-  getRepositoryNodes = async (owner, repo, branch = 'HEAD', treePath = '') => {
-    // console.log('Getting ', owner, repo, branch, treePath, 'root files');
+  getRepositoryNodes = async (owner, repo, branch, treePath = '') => {
     if (!this.isAuthenticated()) {
       console.error('Octokit is not authenticated.');
       return null;
     }
 
-    const isRepositoryRoot = treePath === '';
+    // If the surface level nodes for this path already exist in the file store, don't make api request
+    const foundNode = this.fileStore.getNode(
+      owner,
+      repo,
+      branch.name,
+      treePath
+    );
+    if (foundNode?.children) {
+      return foundNode.children;
+    }
 
     try {
       const response = await this.graphqlAuth(
-        formQueryGetRepositorySpecificBranchRootNodes(branch, treePath),
+        formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath),
         {
           owner,
           repo
         }
       );
-      const files = response?.repository?.object?.entries;
-      const parent = {
+      // Sort files before storing
+      const entries = response?.repository?.object?.entries;
+      if (!entries) {
+        return null;
+      }
+      const files = [...entries].sort(sortFiles);
+      const node = {
         oid: null,
+        id: null,
         name: null,
-        type: isRepositoryRoot ? 'root' : 'tree',
+        type: 'tree',
         path: treePath,
-        children: files
+        children: files,
+        repo: {
+          owner,
+          name: repo,
+          type: 'tree'
+        },
+        branch
       };
-      this.fileStore.setRepositoryNodes(branch, parent, files);
-      return response?.repository?.object?.entries;
+      this.fileStore.setNode(node);
+      return files;
     } catch (error) {
       console.error(
         'Error getting specific branch repository root nodes.',

@@ -16,10 +16,8 @@ const base = {
     'background.firebase': './src/background/firebase.js',
     'background.storage': './src/background/storage.js',
     'content-script': './src/content-scripts/index.js',
-    options: './src/options/index.js',
-    devtools: './src/devtools/index.js',
-    devpanel: './src/devtools/devpanel/index.js',
-    window: './src/devtools/window/index.js'
+    popup: './src/popup/index.js',
+    options: './src/options/index.js'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
@@ -56,12 +54,22 @@ const base = {
     new CopyPlugin({
       patterns: [
         { from: './src/manifest.json', to: './manifest.json' },
-        {
-          from: './src/content-scripts/index.css',
-          to: './content-script.css'
-        },
+        // {
+        //   from: './src/content-scripts/index.css',
+        //   to: './content-script.css'
+        // },
+        // {
+        //   from: './src/popup/index.html',
+        //   to: './popup.html'
+        // },
         { from: './public/icon', to: './icon' }
       ]
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/popup/index.html',
+      chunks: ['popup'],
+      filename: 'popup.html',
+      cache: false
     }),
     new HtmlWebpackPlugin({
       template: './src/options/index.html',

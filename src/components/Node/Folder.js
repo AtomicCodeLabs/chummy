@@ -4,14 +4,17 @@ import { FileDirectoryIcon } from '@primer/octicons-react';
 
 import getFolderFiles from '../../hooks/getFolderFiles';
 // eslint-disable-next-line import/no-cycle
-import Node from '.';
+import Node from './TreeOrBlobNode';
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
 import { folderIconColor } from '../../constants/theme';
 
 const Folder = ({ owner, repo, branch, data, level }) => {
   const [open, setOpen] = useState(false);
-  const nodes = getFolderFiles(owner, repo, branch, data.path);
+  const nodes = getFolderFiles(
+    { owner, repo, branch, treePath: data.path },
+    open
+  );
 
   return (
     <>
@@ -26,9 +29,9 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       <>
         {open &&
           nodes &&
-          nodes.map((node) => (
+          nodes.map((node, i) => (
             <Node
-              key={node.oid}
+              key={i}
               owner={owner}
               repo={repo}
               branch={branch}
@@ -44,7 +47,11 @@ const Folder = ({ owner, repo, branch, data, level }) => {
 Folder.propTypes = {
   owner: PropTypes.string.isRequired,
   repo: PropTypes.string.isRequired,
-  branch: PropTypes.string.isRequired,
+  branch: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    tabId: PropTypes.number.isRequired,
+    type: PropTypes.oneOf(['blob', 'tree']).isRequired
+  }).isRequired,
   data: PropTypes.shape({
     oid: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

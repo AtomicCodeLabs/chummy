@@ -1,4 +1,3 @@
-import { Rnd } from 'react-rnd';
 import styled from 'styled-components';
 
 import {
@@ -14,7 +13,7 @@ import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
 
 export const Container = styled.div`
   background-color: ${PRIMARY_COLOR};
-  width: ${SIDE_TAB.WIDTH}px;
+  width: 100%;
   height: 100vh;
   z-index: 10000;
 
@@ -25,7 +24,8 @@ export const Container = styled.div`
 
 export const SideTab = styled.div`
   background-color: ${PRIMARY_COLOR};
-  width: ${SIDE_TAB.WIDTH}px;
+  width: ${({ isSidebarMinimized }) =>
+    isSidebarMinimized ? '100%' : `${SIDE_TAB.WIDTH}px`};
   z-index: 9999;
   overflow: hidden;
 
@@ -55,15 +55,20 @@ export const FlexGrow = styled.div`
   flex: 1;
 `;
 
-export const ExpandingContainer = styled(Rnd)`
-  background-color: ${backgroundColor};
-  border-right: 1px solid ${BORDER_GRAY};
-  color: ${textColor};
-  z-index: 9998;
-  overflow: hidden;
-
+export const ExpandingContainer = styled.div`
   display: flex !important;
   flex-direction: column;
+  overflow: hidden;
+  width: ${({ isSidebarMinimized }) =>
+    isSidebarMinimized ? '0' : `calc(100vw - ${SIDE_TAB.WIDTH}px)`};
+  height: 100vh;
+  position: absolute;
+  z-index: 9998;
+  left: ${SIDE_TAB.WIDTH}px;
+  top: 0;
+
+  background-color: ${backgroundColor};
+  color: ${textColor};
 `;
 
 export const ExpandingContainerHeader = styled.div`
@@ -91,7 +96,7 @@ export const ExpandingContainerContent = styled.div`
     width: 100%;
     position: absolute;
     height: 0;
-    left: 16px; /* Magic number that works */
+    /* left: 16px; Magic number that works */
     cursor: row-resize;
     border-top: 1px ${BORDER_GRAY} solid;
 
@@ -110,14 +115,4 @@ export const ExpandingContainerDivider = styled.div`
   height: 1px;
   width: 100%;
   background-color: ${BORDER_GRAY};
-`;
-
-export const ExpandingContainerMinimizer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  padding: 0.5rem 1rem;
-  height: ${SIDE_TAB.WIDTH}px;
-  width: 100%;
 `;
