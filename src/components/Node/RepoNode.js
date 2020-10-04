@@ -6,13 +6,21 @@ import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
 import Branch from './Branch';
 
-const RepoNode = ({ repo }) => {
+const RepoNode = ({ repo, currentBranch }) => {
   const [open, setOpen] = useState(false);
   const hasBranches = !!Object.keys(repo.branches).length;
 
   return (
     <>
-      <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
+      <StyledNode.Container
+        className="node"
+        onClick={() => setOpen(!open)}
+        isActive={
+          currentBranch &&
+          repo.owner === currentBranch.repo.owner &&
+          repo.name === currentBranch.repo.name
+        }
+      >
         <StyledNode.Spacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>
@@ -25,8 +33,13 @@ const RepoNode = ({ repo }) => {
       <>
         {open &&
           hasBranches &&
-          Object.values(repo.branches).map((branch, i) => (
-            <Branch key={i} branch={branch} />
+          Object.values(repo.branches).map((branch) => (
+            <Branch
+              key={`${branch.name}#${branch.tabId}`}
+              repo={repo}
+              branch={branch}
+              currentBranch={currentBranch}
+            />
           ))}
       </>
     </>
@@ -43,7 +56,19 @@ RepoNode.propTypes = {
       })
     ),
     type: PropTypes.oneOf(['blob', 'tree']).isRequired
-  }).isRequired
+  }).isRequired,
+  currentBranch: PropTypes.shape({
+    name: PropTypes.string,
+    repo: PropTypes.shape({
+      owner: PropTypes.string,
+      name: PropTypes.string,
+      type: PropTypes.oneOf(['blob', 'tree'])
+    })
+  })
+};
+
+RepoNode.defaultProps = {
+  currentBranch: null
 };
 
 export default RepoNode;

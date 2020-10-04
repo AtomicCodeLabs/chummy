@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import {
@@ -13,7 +13,6 @@ import {
 import { useUiStore, useUserStore } from '../../hooks/store';
 import useWindowSize from '../../hooks/useWindowSize';
 import { getSidebarHeaderTitle, isPageWithHeader } from './util';
-import getScrollBarWidth from '../../hooks/getScrollBarWidth';
 import {
   Container,
   SideTab,
@@ -21,8 +20,7 @@ import {
   FlexGrow,
   ExpandingContainer,
   ExpandingContainerHeader,
-  ExpandingContainerContent,
-  ExpandingContainerDivider
+  ExpandingContainerContent
 } from './style';
 import IconButton from '../IconButton';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
@@ -31,8 +29,7 @@ const ResizableSidebar = observer(({ children }) => {
   const { isSidebarMinimized, openSidebar, closeSidebar } = useUiStore();
   const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
-  const history = useHistory();
-  const windowSize = useWindowSize({
+  useWindowSize({
     keepStoreUpdated: true,
     responsive: {
       underCallback: () => {

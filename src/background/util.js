@@ -22,7 +22,7 @@ export const parseUrl = (url, title, tabId = null) => {
 
   // [alexkim205, tomaso, tree?/blob?, filePath?]
   const parsedRepoInfo = urlObject.pathname.slice(1).split('/');
-  
+
   let payloadRepoInfo = {};
   const isAtRootAndMaster =
     parsedRepoInfo.length === 2 ||
@@ -43,7 +43,7 @@ export const parseUrl = (url, title, tabId = null) => {
     // just the url if the branch name has /'s
     const regexedTitle = title.match(new RegExp('(?: at )((?:[^ · ]*))'));
     // Get everything in between " at " and " . "; fallback to getting url from url
-    const branchName = regexedTitle ? regexedTitle[1]: parsedRepoInfo[3]; 
+    const branchName = regexedTitle ? regexedTitle[1] : parsedRepoInfo[3];
     const parsedWithoutBranch = urlObject.pathname
       .slice(1)
       .replace(`/${branchName}`, '') // remove branch from url to get

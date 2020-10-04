@@ -29,9 +29,9 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       <>
         {open &&
           nodes &&
-          nodes.map((node, i) => (
+          nodes.map((node) => (
             <Node
-              key={i}
+              key={node.path}
               owner={owner}
               repo={repo}
               branch={branch}

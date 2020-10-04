@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Split from 'react-split';
@@ -181,8 +180,12 @@ export default observer(() => {
         >
           <SectionContent>
             {openRepos &&
-              Array.from(openRepos).map(([, repo], i) => (
-                <RepoNode key={i} repo={repo} />
+              Array.from(openRepos).map(([, repo]) => (
+                <RepoNode
+                  key={`${repo.owner}/${repo.name}`}
+                  repo={repo}
+                  currentBranch={currentBranch}
+                />
               ))}
           </SectionContent>
         </Scrollbars>
@@ -214,7 +217,7 @@ export default observer(() => {
                   repo={currentBranch.repo.name}
                   branch={currentBranch}
                   data={n}
-                  key={n.oid}
+                  key={n.path}
                 />
               ))}
           </SectionContent>

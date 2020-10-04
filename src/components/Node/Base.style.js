@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { NODE } from '../../constants/sizes';
 import {
   backgroundHighlightColor,
@@ -15,6 +15,12 @@ const Container = styled.div`
   padding-left: 0.8rem;
 
   cursor: pointer;
+
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      background-color: ${backgroundHighlightColor} !important;
+    `}
 
   &:hover {
     background-color: ${backgroundHighlightColor} !important;

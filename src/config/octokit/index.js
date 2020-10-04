@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from '@octokit/graphql';
-import { toJS } from 'mobx';
 
 import { formQueryGetRepositorySpecificBranchRootNodes } from './queries';
 import { sortFiles } from '../../utils';
