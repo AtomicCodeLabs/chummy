@@ -18,3 +18,11 @@ export const changeActiveTab = (destinationTabId) => {
     payload: { destinationTabId }
   });
 };
+
+export const parseFilePath = (filePath) => {
+  if (!filePath) return { parentPath: null, fileName: null };
+  const parsed = filePath.split('/');
+  const parentPath = parsed.slice(0, -1).join('/');
+  const fileName = parsed.slice(-1);
+  return { parentPath, fileName };
+};

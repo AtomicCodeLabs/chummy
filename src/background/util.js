@@ -33,9 +33,8 @@ export const parseUrl = (url, title, tabId = null) => {
       url,
       owner: parsedRepoInfo[0],
       repo: parsedRepoInfo[1],
-      branch: { name: 'master', tabId },
-      type: 'tree',
-      file: null
+      branch: { name: 'master', tabId, tabFile: null },
+      type: 'tree'
     };
   } else {
     // tabTitle looks like "G-Desktop-Suite/gsuite.rb at revert-68-code-quality-66-prettify · alexkim205/G-Desktop-Suite"
@@ -47,14 +46,18 @@ export const parseUrl = (url, title, tabId = null) => {
     const parsedWithoutBranch = urlObject.pathname
       .slice(1)
       .replace(`/${branchName}`, '') // remove branch from url to get
-      .split('/'); // [alexkim205, tomaso, tree?/blob?, filePath?]
+      .split('/'); // [alexkim205, tomaso, tree?/blob?, filePath?[*?/*]]
+    const parsedFilePath = parsedWithoutBranch.slice(3).join('/');
     payloadRepoInfo = {
       url,
       owner: parsedRepoInfo[0],
       repo: parsedRepoInfo[1],
-      branch: { name: branchName, tabId },
-      type: parsedWithoutBranch[2],
-      file: parsedWithoutBranch[3]
+      branch: {
+        name: branchName,
+        tabId,
+        tabFilePath: parsedFilePath
+      },
+      type: parsedWithoutBranch[2]
     };
   }
 

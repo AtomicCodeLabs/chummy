@@ -1,4 +1,4 @@
-import { observable, toJS } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 import IRootStore from './I.root.store';
 import IUiStore from './I.ui.store';
@@ -27,38 +27,79 @@ export default class FileStore implements IFileStore {
     this.userStore = rootStore.userStore; // Store that can resolve users
   }
 
-  setNode(node: Node) {
+  @action.bound setNode(node: Node) {
     // Add parent node to nodes if it doesn't exist yet, else just add children
     const key = `${node.repo.owner}:${node.repo.name}:${node.branch.name}:${node.path}`;
     const foundNode = this.cachedNodes.get(key);
     // console.log('Setting node', key, foundNode, toJS(this.cachedNodes));
     if (!foundNode) {
       this.cachedNodes.set(key, node);
+    } else {
+      // If it was already added, preserve open state
+      this.cachedNodes.set(key, { ...node, isOpen: foundNode.isOpen });
     }
+    // Add skeleton children to keep track of open state
+    node.children.forEach((childNode) => {
+      this.cachedNodes.set(
+        `${node.repo.owner}:${node.repo.name}:${node.branch.name}:${childNode.path}`,
+        { ...childNode, isOpen: false }
+      );
+    });
   }
 
-  getNode(owner: string, repo: string, branch: string, path: string): Node {
-    const key = `${owner}:${repo}:${branch}:${path}`;
-    // console.log('Getting node', key, toJS(this.cachedNodes));
+  @action.bound getNode(
+    owner: string,
+    repo: string,
+    branch: Branch,
+    path: string
+  ): Node {
+    const key = `${owner}:${repo}:${branch.name}:${path}`;
     return this.cachedNodes.get(key);
   }
 
-  clearCachedNodes = () => {
+  @action.bound openNode(
+    owner: string,
+    repo: string,
+    branch: Branch,
+    path: string
+  ): void {
+    const key = `${owner}:${repo}:${branch.name}:${path}`;
+    const foundNode = this.cachedNodes.get(key);
+    if (foundNode) {
+      this.cachedNodes.set(key, { ...foundNode, isOpen: true });
+    }
+  }
+
+  @action.bound closeNode(
+    owner: string,
+    repo: string,
+    branch: Branch,
+    path: string
+  ): void {
+    const key = `${owner}:${repo}:${branch.name}:${path}`;
+    const foundNode = this.cachedNodes.get(key);
+    if (foundNode) {
+      this.cachedNodes.set(key, { ...foundNode, isOpen: false });
+    }
+  }
+
+  @action.bound clearCachedNodes = () => {
     this.cachedNodes.clear();
   };
 
-  setCurrentWindowTab = (windowId: number, tabId: number) => {
+  @action.bound setCurrentWindowTab = (windowId: number, tabId: number) => {
     this.currentWindowTab = {
       windowId,
       tabId
     };
   };
 
-  setOpenRepos = (repos: Repo[]) => {
+  @action.bound setOpenRepos = (repos: Repo[]) => {
+    this.openRepos.clear();
     repos.forEach((repo) => this.addOpenRepo(repo));
   };
 
-  addOpenRepo = (repo: Repo) => {
+  @action.bound addOpenRepo = (repo: Repo) => {
     const key = `${repo.owner}:${repo.name}`;
     const foundRepo = this.openRepos.get(key);
 
@@ -80,7 +121,7 @@ export default class FileStore implements IFileStore {
     }
   };
 
-  removeOpenRepo = (repo: Repo) => {
+  @action.bound removeOpenRepo = (repo: Repo) => {
     const key = `${repo.owner}:${repo.name}`;
     const foundRepo = this.openRepos.get(key);
 
@@ -109,7 +150,7 @@ export default class FileStore implements IFileStore {
   //   }
   // };
 
-  setCurrentBranch = (branch: Branch) => {
+  @action.bound setCurrentBranch = (branch: Branch) => {
     this.currentBranch = branch;
   };
 

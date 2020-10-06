@@ -3,7 +3,8 @@ import { NODE } from '../../constants/sizes';
 import {
   backgroundHighlightColor,
   nodeTextColor,
-  nodeIconColor
+  nodeIconColor,
+  nodeLighterTextColor
 } from '../../constants/theme';
 
 const Container = styled.div`
@@ -50,6 +51,15 @@ const Name = styled.div`
   font-size: 0.83rem;
   user-select: none;
   color: ${nodeTextColor};
+  white-space: nowrap;
+`;
+
+const SubName = styled.div`
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  user-select: none;
+  color: ${nodeLighterTextColor};
+  white-space: nowrap;
 `;
 
 const MiddleSpacer = styled.div`
@@ -61,5 +71,6 @@ export default {
   LeftSpacer,
   Icon,
   Name,
+  SubName,
   MiddleSpacer
 };

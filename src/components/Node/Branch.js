@@ -1,16 +1,17 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import { GitBranchIcon } from '@primer/octicons-react';
+import { FileIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { changeActiveTab } from './util';
+import { changeActiveTab, parseFilePath } from './util';
 
-const Branch = observer(({ repo, branch, currentBranch }) => {
+const Branch = observer(({ branch, currentBranch }) => {
   const handleClick = () => {
     // Redirect to file page
     changeActiveTab(branch.tabId);
   };
+  const { parentPath, fileName } = parseFilePath(branch.tabFilePath);
 
   return (
     <StyledNode.Container
@@ -18,17 +19,20 @@ const Branch = observer(({ repo, branch, currentBranch }) => {
       onClick={handleClick}
       isActive={
         currentBranch &&
-        repo.owner === currentBranch.repo.owner &&
-        repo.name === currentBranch.repo.name &&
-        branch.name === currentBranch.name &&
+        // repo.owner === currentBranch.repo.owner &&
+        // repo.name === currentBranch.repo.name &&
+        // branch.name === currentBranch.name &&
         branch.tabId === currentBranch.tabId
       }
     >
       <StyledNode.LeftSpacer level={1} />
       <StyledNode.Icon>
-        <GitBranchIcon size={14} verticalAlign="middle" />
+        <FileIcon size={14} verticalAlign="middle" />
       </StyledNode.Icon>
-      <StyledNode.Name>{branch.name}</StyledNode.Name>
+      <StyledNode.Name>{fileName}</StyledNode.Name>
+      <StyledNode.SubName>
+        {branch.name}/{parentPath}
+      </StyledNode.SubName>
     </StyledNode.Container>
   );
 });

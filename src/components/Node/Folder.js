@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FileDirectoryIcon } from '@primer/octicons-react';
 
@@ -8,17 +8,33 @@ import Node from './TreeOrBlobNode';
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
 import { folderIconColor } from '../../constants/theme';
+import { useFileStore } from '../../hooks/store';
 
 const Folder = ({ owner, repo, branch, data, level }) => {
+  const { openNode, closeNode, getNode } = useFileStore();
   const [open, setOpen] = useState(false);
   const nodes = getFolderFiles(
     { owner, repo, branch, treePath: data.path },
     open
   );
 
+  useEffect(() => {
+    setOpen(getNode(owner, repo, branch, data.path)?.isOpen || false);
+  }, [getNode(owner, repo, branch, data.path)]);
+
+  const handleClick = () => {
+    if (open) {
+      closeNode(owner, repo, branch, data.path);
+      setOpen(false);
+    } else {
+      openNode(owner, repo, branch, data.path);
+      setOpen(true);
+    }
+  };
+
   return (
     <>
-      <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
+      <StyledNode.Container className="node" onClick={handleClick}>
         <StyledNode.LeftSpacer level={level} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon iconFill={folderIconColor}>

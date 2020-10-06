@@ -44,6 +44,11 @@ export const nodeTextColor = theme('theme', {
   dark: '#e3ded7'
 });
 
+export const nodeLighterTextColor = theme('theme', {
+  light: '#404952',
+  dark: '#bab6b1'
+});
+
 export const folderIconColor = theme('theme', {
   light: '#79b8ff',
   dark: '#79b8ff'

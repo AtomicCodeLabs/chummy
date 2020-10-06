@@ -12,15 +12,7 @@ const RepoNode = ({ repo, currentBranch }) => {
 
   return (
     <>
-      <StyledNode.Container
-        className="node"
-        onClick={() => setOpen(!open)}
-        isActive={
-          currentBranch &&
-          repo.owner === currentBranch.repo.owner &&
-          repo.name === currentBranch.repo.name
-        }
-      >
+      <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
         <StyledNode.LeftSpacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>

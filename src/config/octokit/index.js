@@ -56,12 +56,7 @@ class OctoDAO {
     }
 
     // If the surface level nodes for this path already exist in the file store, don't make api request
-    const foundNode = this.fileStore.getNode(
-      owner,
-      repo,
-      branch.name,
-      treePath
-    );
+    const foundNode = this.fileStore.getNode(owner, repo, branch, treePath);
     if (foundNode?.children) {
       return foundNode.children;
     }
@@ -87,6 +82,7 @@ class OctoDAO {
         type: 'tree',
         path: treePath,
         children: files,
+        isOpen: true, // if request is made, this node is open
         repo: {
           owner,
           name: repo,

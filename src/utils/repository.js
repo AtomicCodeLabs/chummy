@@ -20,22 +20,15 @@ export const transformOpenRepo = ({ owner, repo: name, branch }) => {
   };
 };
 
-export const onUpdateOpenRepositories = ({
-  create = () => {},
-  remove = () => {}
-}) => {
+export const repoMapToArray = (repoMap) =>
+  Object.values(repoMap)
+    .flat()
+    .map((r) => transformOpenRepo(r));
+
+export const onUpdateOpenRepositories = (callback = () => {}) => {
   const toCall = (request) => {
     if (request.action === 'tab-updated') {
-      switch (request.payload.status) {
-        case 'create':
-          create(request.payload);
-          break;
-        case 'remove':
-          remove(request.payload);
-          break;
-        default:
-          break;
-      }
+      callback(request.payload);
     }
   };
   chrome.runtime.onMessage.addListener(toCall);

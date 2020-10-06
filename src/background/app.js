@@ -7,6 +7,7 @@ const { parseUrl, isGithubRepoUrl } = require('./util');
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Redirect tab page (when file node is clicked)
   if (request.action === 'redirect') {
+    console.log(request);
     const {
       payload: { window, base, filepath, openInNewTab }
     } = request;
@@ -34,8 +35,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.tabs.get(request.payload.destinationTabId, (tab) => {
       // Activate tab
       chrome.tabs.update(tab.id, { active: true });
-      // Activate window
-      // chrome.windows.update(tab.windowId, { focused: true });
+      // Draw attention to window
+      // chrome.windows.update(tab.windowId, { drawAttention: true });
     });
   }
 
@@ -90,67 +91,115 @@ chrome.windows.getAll(
   }
 );
 
-const sendOpenRepositoryUpdatesMessage = (
-  { id, url: tabUrl, title },
-  status
-) => {
-  const isGRUrl = isGithubRepoUrl(tabUrl);
-  const parsedRepoInfo = parseUrl(tabUrl, title, id);
-  if (!isGRUrl || !parsedRepoInfo) {
-    return;
-  }
-  const { owner, repo } = parsedRepoInfo;
-  chrome.runtime.sendMessage({
-    action: 'tab-updated',
-    payload: {
-      key: `${owner}/${repo}`,
-      status,
-      repo: parsedRepoInfo
+// const sendOpenRepositoryUpdatesMessage = (
+//   { id, url: tabUrl, title },
+//   status
+// ) => {
+//   const isGRUrl = isGithubRepoUrl(tabUrl);
+//   const parsedRepoInfo = parseUrl(tabUrl, title, id);
+//   if (!isGRUrl || !parsedRepoInfo) {
+//     return;
+//   }
+//   const { owner, repo } = parsedRepoInfo;
+//   chrome.runtime.sendMessage({
+//     action: 'tab-updated',
+//     payload: {
+//       key: `${owner}/${repo}`,
+//       status,
+//       repo: parsedRepoInfo
+//     }
+//   });
+// };
+
+const sendOpenRepositoryUpdatesMessage = () => {
+  chrome.windows.getAll(
+    { windowTypes: ['normal'], populate: true },
+    (windows) => {
+      // eslint-disable-next-line prefer-const
+      let openRepositories = {}; // <key: repo, value: [<files>]>
+
+      windows.forEach(({ tabs }) => {
+        tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
+          const parsedRepoInfo = parseUrl(tabUrl, tabTitle, tabId);
+          if (parsedRepoInfo) {
+            const { owner, repo } = parsedRepoInfo;
+            const currentRepoData = openRepositories[`${owner}/${repo}`];
+            openRepositories[`${owner}/${repo}`] = [
+              ...(currentRepoData || []),
+              parsedRepoInfo
+            ];
+          }
+        });
+      });
+
+      console.log('SEND TAB UPDATE', {
+        action: 'tab-updated',
+        payload: openRepositories
+      });
+      chrome.runtime.sendMessage({
+        action: 'tab-updated',
+        payload: openRepositories
+      });
     }
-  });
+  );
 };
+
 chrome.tabs.onCreated.addListener((tab) => {
   tabIdsToCreate.add(tab.id);
 });
-chrome.tabs.onRemoved.addListener((tabId) => {
-  // Remove
-  if (tabIdsToRemoveToTab[tabId]) {
-    sendOpenRepositoryUpdatesMessage(tabIdsToRemoveToTab[tabId], 'remove');
-  }
+chrome.tabs.onRemoved.addListener(() => {
+  sendOpenRepositoryUpdatesMessage();
 });
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
-    // Create or Update once tab is loaded
-    if (tabIdsToCreate.has(tabId)) {
-      // Create
-      sendOpenRepositoryUpdatesMessage(tab, 'create');
-      // If tab with url to be updated is the active tab, also send a 'active-tab-changed' message
-      if (tab.active) {
-        const isGRUrl = isGithubRepoUrl(tab.url);
-        chrome.runtime.sendMessage({
-          action: 'active-tab-changed',
-          payload: {
-            ...(isGRUrl && parseUrl(tab.url, tab.title, tabId)),
-            isGithubRepoUrl: isGRUrl,
-            windowId: tab.windowId,
-            tabId
-          }
-        });
+  console.log(changeInfo);
+  sendOpenRepositoryUpdatesMessage();
+  // Also send active tab change event so that current branch & window/tab
+  // can be updated on frontend
+  if (tab.active && changeInfo.url) {
+    console.log('SEND ACTIVE TAB CHANGE ON URL CHANGE', tab, changeInfo);
+    const isGRUrl = isGithubRepoUrl(tab.url);
+    chrome.runtime.sendMessage({
+      action: 'active-tab-changed',
+      payload: {
+        ...(isGRUrl && parseUrl(tab.url, tab.title, tabId)),
+        isGithubRepoUrl: isGRUrl,
+        windowId: tab.windowId,
+        tabId
       }
-      // Cleanup
-      tabIdsToCreate.delete(tabId);
-    }
+    });
   }
-  // Add to update queue while tabs are loading
-  else if (changeInfo.url) {
-    if (
-      tabIdsToRemoveToTab[tabId] &&
-      tab.url !== tabIdsToRemoveToTab[tabId].url
-    ) {
-      sendOpenRepositoryUpdatesMessage(tabIdsToRemoveToTab[tabId], 'remove');
-    }
-    tabIdsToCreate.add(tabId);
-  }
+  // if (changeInfo.status === 'complete') {
+  //   // Create or Update once tab is loaded
+  //   if (tabIdsToCreate.has(tabId)) {
+  //     // Create
+  //     sendOpenRepositoryUpdatesMessage(tab, 'create');
+  //     // If tab with url to be updated is the active tab, also send a 'active-tab-changed' message
+  //     if (tab.active) {
+  //       const isGRUrl = isGithubRepoUrl(tab.url);
+  //       chrome.runtime.sendMessage({
+  //         action: 'active-tab-changed',
+  //         payload: {
+  //           ...(isGRUrl && parseUrl(tab.url, tab.title, tabId)),
+  //           isGithubRepoUrl: isGRUrl,
+  //           windowId: tab.windowId,
+  //           tabId
+  //         }
+  //       });
+  //     }
+  //     // Cleanup
+  //     tabIdsToCreate.delete(tabId);
+  //   }
+  // }
+  // // Add to update queue while tabs are loading
+  // else if (changeInfo.url) {
+  //   if (
+  //     tabIdsToRemoveToTab[tabId] &&
+  //     tab.url !== tabIdsToRemoveToTab[tabId].url
+  //   ) {
+  //     sendOpenRepositoryUpdatesMessage(tabIdsToRemoveToTab[tabId], 'remove');
+  //   }
+  //   tabIdsToCreate.add(tabId);
+  // }
 
-  tabIdsToRemoveToTab[tabId] = { id: tabId, url: tab.url, title: tab.title };
+  // tabIdsToRemoveToTab[tabId] = { id: tabId, url: tab.url, title: tab.title };
 });

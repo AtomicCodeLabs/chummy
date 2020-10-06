@@ -14,6 +14,7 @@ export interface Node {
   children?: Node[];
   repo: Repo;
   branch: Branch;
+  isOpen?: boolean;
 }
 
 export interface Branch {
@@ -21,7 +22,10 @@ export interface Branch {
   name: string;
   nodes?: Node[];
   type: NodeType;
+
+  // For currentBranch with tab information for openRepos
   tabId?: number;
+  tabFilePath?: string;
 }
 
 export interface Repo {
