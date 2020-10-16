@@ -1,6 +1,6 @@
 /* global chrome */
 
-import { parseUrl, isGithubRepoUrl } from './util';
+import { UrlParser } from './util';
 import { EXTENSION_WIDTH } from '../constants/sizes';
 
 // Rules set when extension is installed
@@ -37,12 +37,12 @@ chrome.browserAction.onClicked.addListener(() => {
 });
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
-  const isGRUrl = isGithubRepoUrl(tabUrl);
+  const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
   chrome.runtime.sendMessage({
     action: 'active-tab-changed',
     payload: {
-      ...(isGRUrl && parseUrl(tabUrl, tabTitle, tabId)),
-      isGithubRepoUrl: isGRUrl,
+      ...parsed,
+      isGithubRepoUrl: Object.keys(parsed).length !== 0,
       windowId,
       tabId
     }

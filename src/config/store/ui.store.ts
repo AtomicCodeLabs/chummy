@@ -28,7 +28,7 @@ export default class UiStore implements IUiStore {
   @observable isTabbarMinimized = false;
 
   @observable isTreeSectionMinimized = {
-    [ExplorerSection.OpenFiles]: false,
+    [ExplorerSection.OpenTabs]: false,
     [ExplorerSection.Files]: false
   };
 

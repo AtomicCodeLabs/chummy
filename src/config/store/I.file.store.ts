@@ -6,6 +6,18 @@ export enum NodeType {
   Tree = 'tree'
 }
 
+export enum SubpageType {
+  REPOSITORY = 'repository',
+  ISSUES = 'issues',
+  PULLS = 'pulls',
+  ACTIONS = 'actions',
+  PROJECTS = 'projects',
+  WIKI = 'wiki',
+  SECURITY = 'security',
+  PULSE = 'pulse',
+  SETTINGS = 'settings'
+}
+
 export interface Node {
   oid: string;
   name: string;
@@ -17,22 +29,35 @@ export interface Node {
   isOpen?: boolean;
 }
 
-export interface Branch {
-  repo?: Repo;
+export interface Tab {
   name: string;
-  nodes?: Node[];
-  type: NodeType;
-
-  // For currentBranch with tab information for openRepos
-  tabId?: number;
-  tabFilePath?: string;
+  tabId: number;
+  tabTitle?: string;
 }
 
 export interface Repo {
   owner: string;
   name: string;
-  branches?: { [key: string]: Branch };
+  tabs?: { [key: string]: Tab };
   type: NodeType;
+  isOpen?: boolean;
+}
+
+export interface Branch extends Tab {
+  repo?: Repo;
+  name: string;
+  nodes?: Node[];
+  type: NodeType;
+  subpage: SubpageType;
+
+  // For currentBranch with tab information for openRepos
+  nodeName?: string;
+}
+
+export interface PullRequest extends Tab {
+  repo?: Repo;
+  author?: string;
+  subpage: SubpageType;
 }
 
 export interface WindowTab {

@@ -53,17 +53,19 @@ export default observer(() => {
   // On Tab Change listener set currentBranch
   useEffect(() => {
     const removeListener = onActiveTabChange(
-      ({ owner, repo, branch, isGithubRepoUrl, windowId }) => {
+      ({ owner, repo, tab, isGithubRepoUrl, windowId }) => {
         if (isGithubRepoUrl) {
+          setCurrentWindowTab(windowId, tab.tabId);
+          // Only set current branch if tab update is repo subpage
           const newCurrentBranch = {
             repo: { owner, name: repo, type: 'tree' },
-            name: branch.name,
+            name: tab.name,
             type: 'tree',
-            tabId: branch.tabId,
-            tabFilePath: branch.tabFilePath
+            tabId: tab.tabId,
+            nodeName: tab.nodeName
           };
+          console.log('seetcurrentbranch', newCurrentBranch, owner, repo, tab);
           setCurrentBranch(newCurrentBranch);
-          setCurrentWindowTab(windowId, branch.tabId);
         } else {
           setCurrentBranch(null);
         }
@@ -108,7 +110,7 @@ export default observer(() => {
       {/* Open Files (Tabs) Section */}
       <SectionContainer isDragging={isDragging}>
         <SectionNameContainer
-          onClick={() => toggleTreeSection('openFiles')}
+          onClick={() => toggleTreeSection('openTabs')}
           zIndex={2}
         >
           <OpenCloseChevron open={!openFilesIsMinimized} />

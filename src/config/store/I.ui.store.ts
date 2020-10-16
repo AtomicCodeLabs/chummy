@@ -15,7 +15,7 @@ export enum SidebarView {
 }
 
 export enum ExplorerSection {
-  OpenFiles = 'openFiles',
+  OpenTabs = 'openTabs',
   Files = 'files'
 }
 
@@ -34,7 +34,7 @@ export default interface IUiStore {
 
   // Tree Page
   isTreeSectionMinimized: {
-    [ExplorerSection.OpenFiles]: boolean;
+    [ExplorerSection.OpenTabs]: boolean;
     [ExplorerSection.Files]: boolean;
   };
 }

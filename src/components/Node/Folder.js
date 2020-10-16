@@ -7,6 +7,7 @@ import getFolderFiles from '../../hooks/getFolderFiles';
 import Node from './TreeOrBlobNode';
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
+import Spinner from '../Spinner';
 import { folderIconColor } from '../../constants/theme';
 import { useFileStore } from '../../hooks/store';
 
@@ -44,16 +45,23 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       </StyledNode.Container>
       <>
         {open &&
-          nodes &&
-          nodes.map((node) => (
-            <Node
-              key={node.path}
-              owner={owner}
-              repo={repo}
-              branch={branch}
-              data={node}
-              level={level + 1}
-            />
+          (nodes.length ? (
+            nodes.map((node) => (
+              <Node
+                key={node.path}
+                owner={owner}
+                repo={repo}
+                branch={branch}
+                data={node}
+                level={level + 1}
+              />
+            ))
+          ) : (
+            <StyledNode.Container className="node">
+              <StyledNode.LeftSpacer level={level} marginRight="14px" />
+              <Spinner size={12} marginRight="0.25rem" marginLeft="0.1rem" />
+              <StyledNode.Name>Loading...</StyledNode.Name>
+            </StyledNode.Container>
           ))}
       </>
     </>

@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { RepoIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
+import Tab from './Tab';
 import OpenCloseChevron from '../OpenCloseChevron';
-import Branch from './Branch';
+import { useFileStore } from '../../hooks/store';
 
 const RepoNode = ({ repo, currentBranch }) => {
+  const { openOpenRepo, closeOpenRepo, getOpenRepo } = useFileStore();
   const [open, setOpen] = useState(false);
-  const hasBranches = !!Object.keys(repo.branches).length;
+  const hasTabs = !!Object.keys(repo.tabs).length;
+
+  useEffect(() => {
+    setOpen(getOpenRepo(repo.owner, repo.name)?.isOpen || false);
+  }, [getOpenRepo(repo.owner, repo.name)]);
+
+  const handleClick = () => {
+    if (open) {
+      closeOpenRepo(repo.owner, repo.name);
+      setOpen(false);
+    } else {
+      openOpenRepo(repo.owner, repo.name);
+      setOpen(true);
+    }
+  };
 
   return (
     <>
-      <StyledNode.Container className="node" onClick={() => setOpen(!open)}>
+      <StyledNode.Container className="node" onClick={handleClick}>
         <StyledNode.LeftSpacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>
@@ -24,12 +40,12 @@ const RepoNode = ({ repo, currentBranch }) => {
       </StyledNode.Container>
       <>
         {open &&
-          hasBranches &&
-          Object.values(repo.branches).map((branch) => (
-            <Branch
-              key={`${branch.name}#${branch.tabId}`}
+          hasTabs &&
+          Object.values(repo.tabs).map((tab) => (
+            <Tab
+              key={`${tab.name}#${tab.tabId}`}
               repo={repo}
-              branch={branch}
+              tab={tab}
               currentBranch={currentBranch}
             />
           ))}
@@ -42,7 +58,7 @@ RepoNode.propTypes = {
   repo: PropTypes.shape({
     owner: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    branches: PropTypes.objectOf(
+    tabs: PropTypes.objectOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired
       })

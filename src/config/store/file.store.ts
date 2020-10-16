@@ -3,7 +3,7 @@ import { observable, action, toJS } from 'mobx';
 import IRootStore from './I.root.store';
 import IUiStore from './I.ui.store';
 import IUserStore from './I.user.store';
-import IFileStore, { Node, Branch, Repo, WindowTab } from './I.file.store';
+import IFileStore, { Node, Branch, Repo, WindowTab, Tab } from './I.file.store';
 import { objectMap } from '../../utils';
 
 export default class FileStore implements IFileStore {
@@ -12,7 +12,7 @@ export default class FileStore implements IFileStore {
   @observable isPending: boolean = true;
 
   /* Window/Tab Section */
-  currentWindowTab: WindowTab;
+  @observable currentWindowTab: WindowTab;
 
   /* Tree Section */
   cachedNodes: Map<string, Node> = new Map();
@@ -95,8 +95,14 @@ export default class FileStore implements IFileStore {
   };
 
   @action.bound setOpenRepos = (repos: Repo[]) => {
-    this.openRepos.clear();
+    // this.openRepos.clear();
+    this.cleanupOpenRepos(repos);
     repos.forEach((repo) => this.addOpenRepo(repo));
+  };
+
+  @action.bound getOpenRepo = (owner: string, name: string) => {
+    const key = `${owner}:${name}`;
+    return this.openRepos.get(key);
   };
 
   @action.bound addOpenRepo = (repo: Repo) => {
@@ -107,32 +113,52 @@ export default class FileStore implements IFileStore {
       // Create new entry
       this.openRepos.set(key, {
         ...repo,
-        branches: objectMap(
-          repo.branches,
-          (k: string, v: Branch) => `${k}#${v.tabId}`
-        )
+        tabs: objectMap(repo.tabs, (k: string, v: Tab) => v.tabId),
+        isOpen: false
       });
     } else {
       // Add branches to existing repo
-      Object.values(repo.branches).forEach((branch) => {
-        const branchKey = `${branch.name}#${branch.tabId}`;
-        foundRepo.branches[branchKey] = branch;
+      Object.values(repo.tabs).forEach((tab) => {
+        const tabKey = tab.tabId;
+        foundRepo.tabs[tabKey] = tab;
       });
     }
   };
 
-  @action.bound removeOpenRepo = (repo: Repo) => {
+  @action.bound cleanupOpenRepos = (repos: Repo[]) => {
+    // Loop through all the open repos and remove the tabs that aren't open
+    let openTabIds = new Set();
+    repos.forEach((r: Repo) =>
+      Object.values(r.tabs).forEach((t: Branch) => openTabIds.add(t.tabId))
+    );
+
+    this.openRepos.forEach((r: Repo) =>
+      Object.values(r.tabs).forEach((t: Tab) => {
+        if (!openTabIds.has(t.tabId)) {
+          const repoKey = `${r.owner}:${r.name}`;
+          // If not an open tab, remove it.
+          delete this.openRepos.get(repoKey).tabs[t.tabId];
+          // If no tabs left, remove open repo entry.
+          if (Object.keys(this.openRepos.get(repoKey).tabs).length === 0) {
+            this.openRepos.delete(repoKey);
+          }
+        }
+      })
+    );
+  };
+
+  @action.bound removeOpenRepoTab = (repo: Repo) => {
     const key = `${repo.owner}:${repo.name}`;
     const foundRepo = this.openRepos.get(key);
 
     if (foundRepo) {
       // Remove branches from existing repo
-      Object.values(repo.branches).forEach((branch) => {
-        const branchKey = `${branch.name}#${branch.tabId}`;
-        delete foundRepo.branches[branchKey];
+      Object.values(repo.tabs).forEach((tab) => {
+        const tabKey = tab.tabId;
+        delete foundRepo.tabs[tabKey];
       });
       // If no branches left, remove open repo entry
-      if (Object.keys(foundRepo.branches).length === 0) {
+      if (Object.keys(foundRepo.tabs).length === 0) {
         this.openRepos.delete(key);
       }
     }
@@ -149,6 +175,25 @@ export default class FileStore implements IFileStore {
   //     });
   //   }
   // };
+
+  // Set open repo to open state (expanded)
+  @action.bound openOpenRepo = (owner: string, name: string) => {
+    const key = `${owner}:${name}`;
+    const foundRepo = this.openRepos.get(key);
+    if (foundRepo) {
+      this.openRepos.set(key, { ...foundRepo, isOpen: true });
+    }
+  };
+
+  // Set open repo to closed state (minimized)
+  @action.bound closeOpenRepo = (owner: string, name: string) => {
+    console.log('close, openrepo', owner, name);
+    const key = `${owner}:${name}`;
+    const foundRepo = this.openRepos.get(key);
+    if (foundRepo) {
+      this.openRepos.set(key, { ...foundRepo, isOpen: false });
+    }
+  };
 
   @action.bound setCurrentBranch = (branch: Branch) => {
     this.currentBranch = branch;

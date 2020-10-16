@@ -4,51 +4,47 @@ import PropTypes from 'prop-types';
 import { FileIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { changeActiveTab, parseFilePath } from './util';
+import { changeActiveTab, processTabInformation } from './util';
 
-const Branch = observer(({ branch, currentBranch }) => {
+const Tab = observer(({ tab, currentBranch }) => {
   const handleClick = () => {
     // Redirect to file page
-    changeActiveTab(branch.tabId);
+    changeActiveTab(tab.tabId);
   };
-  const { parentPath, fileName } = parseFilePath(branch.tabFilePath);
+  const { primaryText, secondaryText, subpageText } = processTabInformation(
+    tab
+  );
 
   return (
     <StyledNode.Container
       className="node"
       onClick={handleClick}
-      isActive={
-        currentBranch &&
-        // repo.owner === currentBranch.repo.owner &&
-        // repo.name === currentBranch.repo.name &&
-        // branch.name === currentBranch.name &&
-        branch.tabId === currentBranch.tabId
-      }
+      isActive={currentBranch && tab.tabId === currentBranch.tabId}
     >
       <StyledNode.LeftSpacer level={1} />
       <StyledNode.Icon>
         <FileIcon size={14} verticalAlign="middle" />
       </StyledNode.Icon>
-      <StyledNode.Name>{fileName}</StyledNode.Name>
+      <StyledNode.Name>{primaryText}</StyledNode.Name>
       <StyledNode.SubName>
-        {branch.name}/{parentPath}
+        <span className="subpage">{subpageText}</span>/{secondaryText}
       </StyledNode.SubName>
     </StyledNode.Container>
   );
 });
 
-Branch.propTypes = {
+Tab.propTypes = {
   repo: PropTypes.shape({
     owner: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    branches: PropTypes.objectOf(
+    tabs: PropTypes.objectOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired
       })
     ),
     type: PropTypes.oneOf(['blob', 'tree']).isRequired
   }).isRequired,
-  branch: PropTypes.shape({
+  tab: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
   currentBranch: PropTypes.shape({
@@ -61,8 +57,8 @@ Branch.propTypes = {
   })
 };
 
-Branch.defaultProps = {
+Tab.defaultProps = {
   currentBranch: null
 };
 
-export default Branch;
+export default Tab;

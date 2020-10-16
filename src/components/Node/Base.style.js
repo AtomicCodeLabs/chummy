@@ -4,7 +4,7 @@ import {
   backgroundHighlightColor,
   nodeTextColor,
   nodeIconColor,
-  nodeLighterTextColor
+  nodeLightestTextColor
 } from '../../constants/theme';
 
 const Container = styled.div`
@@ -32,6 +32,7 @@ const LeftSpacer = styled.div`
   display: flex;
   width: ${({ level }) => 30 * level}px;
   min-width: ${({ level }) => 30 * level}px;
+  margin-right: ${({ marginRight }) => marginRight || '0'};
 `;
 
 const Icon = styled.div`
@@ -56,10 +57,14 @@ const Name = styled.div`
 
 const SubName = styled.div`
   margin-left: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   user-select: none;
-  color: ${nodeLighterTextColor};
+  color: ${nodeLightestTextColor};
   white-space: nowrap;
+
+  span.subpage {
+    color: ${nodeTextColor};
+  }
 `;
 
 const MiddleSpacer = styled.div`

@@ -1,7 +1,7 @@
 /* global chrome */
 const url = require('url');
 const path = require('path');
-const { parseUrl, isGithubRepoUrl } = require('./util');
+const { UrlParser } = require('./util');
 
 // Respond to requests to redirect a tab
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -51,13 +51,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         windows.forEach(({ tabs }) => {
           tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
-            const parsedRepoInfo = parseUrl(tabUrl, tabTitle, tabId);
-            if (parsedRepoInfo) {
-              const { owner, repo } = parsedRepoInfo;
+            const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
+            console.log('PARSED', parsed);
+            if (Object.keys(parsed).length !== 0) {
+              const { owner, repo } = parsed;
               const currentRepoData = openRepositories[`${owner}/${repo}`];
               openRepositories[`${owner}/${repo}`] = [
                 ...(currentRepoData || []),
-                parsedRepoInfo
+                parsed
               ];
             }
           });
@@ -120,22 +121,18 @@ const sendOpenRepositoryUpdatesMessage = () => {
 
       windows.forEach(({ tabs }) => {
         tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
-          const parsedRepoInfo = parseUrl(tabUrl, tabTitle, tabId);
-          if (parsedRepoInfo) {
-            const { owner, repo } = parsedRepoInfo;
+          const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
+          if (Object.keys(parsed).length !== 0) {
+            const { owner, repo } = parsed;
             const currentRepoData = openRepositories[`${owner}/${repo}`];
             openRepositories[`${owner}/${repo}`] = [
               ...(currentRepoData || []),
-              parsedRepoInfo
+              parsed
             ];
           }
         });
       });
-
-      console.log('SEND TAB UPDATE', {
-        action: 'tab-updated',
-        payload: openRepositories
-      });
+      console.log('Sending tab updated', openRepositories);
       chrome.runtime.sendMessage({
         action: 'tab-updated',
         payload: openRepositories
@@ -156,13 +153,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // Also send active tab change event so that current branch & window/tab
   // can be updated on frontend
   if (tab.active && changeInfo.url) {
-    console.log('SEND ACTIVE TAB CHANGE ON URL CHANGE', tab, changeInfo);
-    const isGRUrl = isGithubRepoUrl(tab.url);
+    const parsed = new UrlParser(tab.url, tab.title, tabId).parse();
     chrome.runtime.sendMessage({
       action: 'active-tab-changed',
       payload: {
-        ...(isGRUrl && parseUrl(tab.url, tab.title, tabId)),
-        isGithubRepoUrl: isGRUrl,
+        ...parsed,
+        isGithubRepoUrl: Object.keys(parsed).length !== 0,
         windowId: tab.windowId,
         tabId
       }
