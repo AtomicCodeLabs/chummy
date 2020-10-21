@@ -47,6 +47,8 @@
   },
   "dependencies": {
     "@octokit/graphql": "^4.5.4",
+    "@octokit/plugin-throttling": "^3.3.1",
+    "@octokit/rest": "^18.0.6",
     "@primer/octicons-react": "^11.0.0",
     "core-js": "^3.6.5",
     "firebase": "^7.19.1",
@@ -56,6 +58,7 @@
     "react": "^16.13.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.9.5",
     "react-router-dom": "^5.2.0",
     "react-split": "^2.0.9",
     "regenerator-runtime": "^0.13.7",

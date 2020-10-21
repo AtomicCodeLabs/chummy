@@ -8,20 +8,20 @@ import {
   SectionNameContainer,
   SectionName,
   SectionContent
-} from './style';
+} from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
-import OpenTabsSection from '../../components/TabSections/OpenTabs';
+import OpenTabsSection from '../../components/TreeSections/OpenTabs';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import { NODE, RESIZE_GUTTER } from '../../constants/sizes';
 import { onActiveTabChange } from '../../utils/tabs';
-import FilesSection from '../../components/TabSections/Files';
+import FilesSection from '../../components/TreeSections/Files';
 
 export default observer(() => {
   checkCurrentUser();
   const {
     isTreeSectionMinimized: {
-      openFiles: openFilesIsMinimized,
+      openTabs: openTabsIsMinimized,
       files: filesIsMinimized
     },
     toggleTreeSection
@@ -33,22 +33,22 @@ export default observer(() => {
   // Resize sidebar sections logic
   useEffect(() => {
     // If only first tab is open, expand second
-    if (!openFilesIsMinimized && filesIsMinimized) {
+    if (!openTabsIsMinimized && filesIsMinimized) {
       setHeights([100, 0]);
     }
     // If only second tab is open, expand first
-    else if (openFilesIsMinimized && !filesIsMinimized) {
+    else if (openTabsIsMinimized && !filesIsMinimized) {
       setHeights([0, 100]);
     }
     // If both closed, collapse both
-    else if (openFilesIsMinimized && filesIsMinimized) {
+    else if (openTabsIsMinimized && filesIsMinimized) {
       setHeights([0, 0]);
     }
     // If both open, set first to 20 and second to 80
-    else if (!openFilesIsMinimized && !filesIsMinimized) {
+    else if (!openTabsIsMinimized && !filesIsMinimized) {
       setHeights([20, 80]);
     }
-  }, [openFilesIsMinimized, filesIsMinimized]);
+  }, [openTabsIsMinimized, filesIsMinimized]);
 
   // On Tab Change listener set currentBranch
   useEffect(() => {
@@ -92,7 +92,7 @@ export default observer(() => {
         height: `${gutterSize}px`
       })}
       gutterSize={
-        !openFilesIsMinimized && !filesIsMinimized ? RESIZE_GUTTER.HEIGHT : 0
+        !openTabsIsMinimized && !filesIsMinimized ? RESIZE_GUTTER.HEIGHT : 0
       }
       onDragStart={() => setIsDragging(true)}
       onDragEnd={(sizes) => {
@@ -113,7 +113,7 @@ export default observer(() => {
           onClick={() => toggleTreeSection('openTabs')}
           zIndex={2}
         >
-          <OpenCloseChevron open={!openFilesIsMinimized} />
+          <OpenCloseChevron open={!openTabsIsMinimized} />
           <SectionName>Open Tabs</SectionName>
         </SectionNameContainer>
         <Scrollbars

@@ -19,7 +19,7 @@ export const SectionContainer = styled.div`
         `}
 `;
 
-export const SectionNameContainer = styled.div`
+export const  SectionNameContainer = styled.div`
   display: flex;
   flex-direction: row;
   cursor: pointer;
@@ -46,6 +46,7 @@ export const SectionContent = styled.div`
   left: 0;
   right: 0;
   min-width: fit-content;
+  height: 100%;
 
   div.node:nth-of-type(even) {
     background-color: ${backgroundAlternatingLightColor};

@@ -1,73 +1,62 @@
 /* global chrome */
 import { observable, computed } from 'mobx';
 
-import IRootStore from './I.root.store';
 import IUiStore, {
   Language,
   Theme,
   SidebarView,
-  ExplorerSection
+  ExplorerSection,
+  UiStorePropsArray,
+  UiStoreKeys
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
 
 export default class UiStore implements IUiStore {
   @observable language = Language.English;
-
   @observable theme = Theme.Light;
-
   @observable pendingRequestCount = 0;
-
   @observable sidebarView = SidebarView.Project;
-
-  // Last seen sidebar width, not 0 when sidebar is minimized
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
-
   @observable isSidebarMinimized = false;
-
   @observable isTabbarMinimized = false;
-
   @observable isTreeSectionMinimized = {
     [ExplorerSection.OpenTabs]: false,
     [ExplorerSection.Files]: false
   };
+  @observable isSearchSectionMinimized = true;
+  @observable selectedQuery: string = null;
+  @observable selectedOpenRepo: string = null;
+  @observable selectedLanguage: string = null;
 
-  constructor(rootStore: IRootStore) {
+  constructor() {
     this.init();
   }
+
+  // Initialize
+  init = () => {
+    // Get keys of IUiStore
+    const keys: UiStorePropsArray = UiStoreKeys;
+
+    // Get and set previous sessions' settings
+    getFromChromeStorage(keys, (items: { [key: string]: any }) => {
+      // Set each key
+      keys.forEach((key) => {
+        if (items[key]) {
+          (this[key] as any) = items[key];
+        }
+      });
+
+      // Set defaults but don't overwrite previous
+      setInChromeStorage(
+        keys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
+      );
+    });
+  };
 
   @computed get appIsInSync() {
     return this.pendingRequestCount === 0;
   }
-
-  init = () => {
-    // Get and set previous sessions' settings
-    const keys: string[] = [
-      'language',
-      'theme',
-      'sidebarView',
-      'sidebarWidth',
-      'isSidebarMinimized'
-    ];
-    getFromChromeStorage(keys, (items: { [key: string]: any }) => {
-      console.log('got items', items);
-      if (items.language) this.language = items.language;
-      if (items.theme) this.theme = items.theme;
-      if (items.sidebarView) this.sidebarView = items.sidebarView;
-      if (items.sidebarWidth) this.sidebarWidth = items.sidebarWidth;
-      if (items.isSidebarMinimized)
-        this.isSidebarMinimized = items.isSidebarMinimized;
-
-      // Set defaults but don't overwrite previous
-      setInChromeStorage({
-        language: this.language,
-        theme: this.theme,
-        sidebarView: this.sidebarView,
-        sidebarWidth: this.sidebarWidth,
-        isSidebarMinimized: this.isSidebarMinimized
-      });
-    });
-  };
 
   setTheme = (theme: Theme): void => {
     setInChromeStorage({ theme: theme });
@@ -100,5 +89,24 @@ export default class UiStore implements IUiStore {
       ...this.isTreeSectionMinimized,
       [sectionName]: !this.isTreeSectionMinimized[sectionName]
     };
+  };
+
+  toggleSearchSection = () => {
+    this.isSearchSectionMinimized = !this.isSearchSectionMinimized;
+    setInChromeStorage({
+      isSearchSectionMinimized: this.isSearchSectionMinimized
+    });
+  };
+
+  setSelectedQuery = (selectedQuery: string) => {
+    this.selectedQuery = selectedQuery;
+  };
+
+  setSelectedOpenRepo = (selectedOpenRepo: string) => {
+    this.selectedOpenRepo = selectedOpenRepo;
+  };
+
+  setSelectedLanguage = (selectedLanguage: string) => {
+    this.selectedLanguage = selectedLanguage;
   };
 }
