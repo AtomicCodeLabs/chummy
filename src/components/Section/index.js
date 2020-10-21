@@ -19,7 +19,7 @@ export const SectionContainer = styled.div`
         `}
 `;
 
-export const  SectionNameContainer = styled.div`
+export const SectionNameContainer = styled.div`
   display: flex;
   flex-direction: row;
   cursor: pointer;
