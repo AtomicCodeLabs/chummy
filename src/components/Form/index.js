@@ -40,11 +40,20 @@ export const Form = styled.form`
     &:not(:last-child) {
       margin-bottom: 0.15rem;
     }
+    &.is-technically-last {
+      margin-bottom: 0 !important;
+    }
   }
 `;
 
 export const Label = styled.label`
   font-size: 0.75rem;
+`;
+
+export const HideContainer = styled.div`
+  display: ${({ isHidden }) => (isHidden ? 'none' : 'flex')};
+  flex-direction: column;
+  flex: 1;
 `;
 
 export const Input = styled.input`

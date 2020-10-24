@@ -165,7 +165,6 @@ const Select = (props) => {
         <ReactSelect
           onBlur={onBlur}
           onChange={(option) => {
-            console.log('ON CHANGe', option);
             rhfOnChange(option);
             rsOnChange(option);
           }}

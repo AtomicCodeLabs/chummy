@@ -49,8 +49,8 @@ export const textColor = theme('theme', {
   dark: '#fff'
 });
 
-export const NODE_TEXT_COLOR_LIGHT = '#24292e'
-export const NODE_TEXT_COLOR_DARK = '#e3ded7'
+export const NODE_TEXT_COLOR_LIGHT = '#24292e';
+export const NODE_TEXT_COLOR_DARK = '#e3ded7';
 export const nodeTextColor = theme('theme', {
   light: NODE_TEXT_COLOR_LIGHT,
   dark: NODE_TEXT_COLOR_DARK

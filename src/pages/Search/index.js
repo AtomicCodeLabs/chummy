@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useState, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
-import { toJS } from 'mobx';
 
 import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
@@ -10,6 +9,7 @@ import {
   SearchContainer,
   IconContainer,
   Form,
+  HideContainer,
   Input
 } from '../../components/Form';
 import Select from '../../components/Form/Select';
@@ -41,12 +41,6 @@ export default observer(() => {
         label: `${repo.owner}/${repo.name}`
       })),
     [openRepos.size]
-  );
-
-  console.log(
-    'first',
-    toJS(selectedOpenRepo),
-    repoOptions.filter((o) => o.value === selectedOpenRepo)
   );
 
   const { control, register, watch, handleSubmit } = useForm({
@@ -95,53 +89,52 @@ export default observer(() => {
         </IconContainer>
         <Form onSubmit={handleSubmit(onSearch)}>
           <Input
-            className="search-section-field"
+            className={`search-section-field ${
+              isSearchSectionMinimized && 'is-technically-last'
+            }`}
             type="text"
             placeholder="Search"
             id="query"
             name="query"
             ref={register({ required: true })}
           />
-          {!isSearchSectionMinimized && (
-            <>
-              {/* <Label htmlFor="repository">repository</Label> */}
-              <Select
-                className="search-section-field"
-                name="repository"
-                placeholder="Repository"
-                control={control}
-                rules={{ required: true }}
-                options={repoOptions}
-                onChange={(option) => {
-                  console.log('set selected open repo', option);
-                  setSelectedOpenRepo(option.value);
-                }}
-              />
-              {/* <Label htmlFor="language">language</Label> */}
-              <Suspense
-                fallback={
-                  <Select
-                    className="search-section-field"
-                    name="language"
-                    placeholder="Language"
-                    control={control}
-                    options={{ value: '', label: 'Loading...' }}
-                  />
-                }
-              >
-                <LanguagesSelect
+          <HideContainer isHidden={isSearchSectionMinimized}>
+            {/* <Label htmlFor="repository">repository</Label> */}
+            <Select
+              className="search-section-field"
+              name="repository"
+              placeholder="Repository"
+              control={control}
+              rules={{ required: true }}
+              options={repoOptions}
+              onChange={(option) => {
+                setSelectedOpenRepo(option.value);
+              }}
+            />
+            {/* <Label htmlFor="language">language</Label> */}
+            <Suspense
+              fallback={
+                <Select
                   className="search-section-field"
                   name="language"
                   placeholder="Language"
                   control={control}
-                  onChange={(option) => {
-                    console.log('set selected language', option);
-                    setSelectedLanguage(option.value);
-                  }}
+                  options={{ value: '', label: 'Loading...' }}
                 />
-              </Suspense>
-            </>
-          )}
+              }
+            >
+              <LanguagesSelect
+                className="search-section-field"
+                name="language"
+                placeholder="Language"
+                control={control}
+                onChange={(option) => {
+                  console.log('set selected language', option);
+                  setSelectedLanguage(option.value);
+                }}
+              />
+            </Suspense>
+          </HideContainer>
         </Form>
       </SearchContainer>
       <Scrollbars
