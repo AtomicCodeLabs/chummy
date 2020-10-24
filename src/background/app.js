@@ -21,10 +21,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     // Send redirect event to active tab
     else {
-      chrome.tabs.sendMessage(window.tabId, {
-        action: 'redirect-content-script',
-        payload: request.payload
-      });
+      // Instead of triggering a content script which is unreliable when it doesn't load
+      // on the page correctly all the time. Inject listener and then send message
+      chrome.tabs.executeScript(
+        window.tabId,
+        { file: 'background.redirect.inject.js' },
+        () => {
+          chrome.tabs.sendMessage(window.tabId, {
+            action: 'redirect-content-script',
+            payload: request.payload
+          });
+        }
+      );
     }
 
     sendResponse();

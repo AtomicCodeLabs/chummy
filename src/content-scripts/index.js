@@ -1,9 +1,6 @@
 import { isGithubRepoUrl } from './util';
-import { redirectPageListeners } from './redirectPage';
 
-const initListeners = () => {
-  redirectPageListeners();
-};
+const initListeners = () => {};
 
 const checkUrl = () => {
   // eslint-disable-next-line no-restricted-globals

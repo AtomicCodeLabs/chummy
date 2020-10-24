@@ -1,12 +1,15 @@
 /* global chrome */
 
-console.log('REDIRECT PAGE LOADED');
+console.log('REDIRECT PAGE LOADED BG');
 
 // eslint-disable-next-line import/prefer-default-export
-export const redirectPageListeners = () => {
-  chrome.runtime.onMessage.addListener((request) => {
+const redirectPageListeners = () => {
+  chrome.runtime.onMessage.addListener(function redirectListener(request) {
     // Make a ajax redirect request
     if (request.action === 'redirect-content-script') {
+      // Garbage collect event listener (listen at most once)
+      chrome.runtime.onMessage.removeListener(redirectListener);
+
       const {
         payload: { base, filepath }
       } = request;
@@ -29,3 +32,5 @@ export const redirectPageListeners = () => {
     }
   });
 };
+
+redirectPageListeners();

@@ -95,6 +95,13 @@ class OctoDAO {
     }
 
     try {
+      console.log(
+        branch.name,
+        treePath,
+        owner,
+        repo,
+        formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath)
+      );
       const response = await this.graphqlAuth(
         formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath),
         {
@@ -102,6 +109,7 @@ class OctoDAO {
           repo
         }
       );
+      console.log('OCTOKIT RESPONSE', response);
       // Sort files before storing
       const entries = response?.repository?.object?.entries;
       if (!entries) {
