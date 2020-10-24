@@ -25,6 +25,16 @@ export const NODE = {
   HEIGHT: 19
 };
 
+export const INPUT = {
+  HEIGHT: 30,
+  SELECT: {
+    HEIGHT: 30,
+    OPTION: {
+      HEIGHT: 15
+    }
+  }
+};
+
 export const RESIZE_GUTTER = {
   HEIGHT: 5
 };

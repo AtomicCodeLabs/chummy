@@ -1,26 +1,33 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 
-import { Select, Option } from '../../components/Form';
+import Select from '../../components/Form/Select';
 import { popularLanguages, otherLanguages } from '../../constants/languages';
 
-const LanguagesSelect = React.forwardRef((props, ref) => (
-  <Select id="language" name="language" ref={ref} {...props}>
-    <optgroup key="popular" label="Popular">
-      {popularLanguages.map((language) => (
-        <Option value={language.name} key={language.language_id}>
-          {language.name}
-        </Option>
-      ))}
-    </optgroup>
-    <optgroup key="other" label="Everything else">
-      {otherLanguages.map((language) => (
-        <Option value={language.name} key={language.language_id}>
-          {language.name}
-        </Option>
-      ))}
-    </optgroup>
-  </Select>
-));
+const LanguagesSelect = (props) => (
+  <Select
+    {...props}
+    defaultValue={{ value: '', label: 'All languages' }}
+    options={[
+      { value: '', label: 'All languages' },
+      {
+        label: 'Popular',
+        options: popularLanguages.map((lang) => ({
+          ...lang,
+          label: lang.name,
+          value: lang.name
+        }))
+      },
+      {
+        label: 'Everything else',
+        options: otherLanguages.map((lang) => ({
+          ...lang,
+          label: lang.name,
+          value: lang.name
+        }))
+      }
+    ]}
+  />
+);
 
 export default LanguagesSelect;

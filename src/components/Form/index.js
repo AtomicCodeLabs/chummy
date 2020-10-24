@@ -1,15 +1,46 @@
 import styled from 'styled-components';
-import { NODE } from '../../constants/sizes';
+
+import { INPUT } from '../../constants/sizes';
+import {
+  fieldColor,
+  backgroundHighlightColor,
+  ACCENT_COLOR,
+  nodeTextColor
+} from '../../constants/theme';
 
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: row;
+  padding: 0.5rem;
+`;
+
+export const IconContainer = styled.div`
+  display: flex;
+  padding: auto 0.05rem;
+  margin-right: 0.15rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${fieldColor};
+  }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  .react-select-optimized-option {
+    &:hover {
+      background-color: ${backgroundHighlightColor};
+    }
+  }
+
+  .search-section-field {
+    &:not(:last-child) {
+      margin-bottom: 0.15rem;
+    }
+  }
 `;
 
 export const Label = styled.label`
@@ -17,15 +48,37 @@ export const Label = styled.label`
 `;
 
 export const Input = styled.input`
-  background-color: lightblue;
-  height: ${NODE.HEIGHT}px;
+  // Reset styles
+  border: none;
+  background-image: none;
+  box-sizing: border-box;
+  outline: none;
+  box-shadow: none;
+
+  font-size: 0.75rem;
+  background-color: ${fieldColor};
+  height: ${INPUT.HEIGHT}px;
+  padding: 0.2rem calc(0.3rem + 2px); // To be compatible with react-select
+  transition: box-shadow 100ms;
+  color: ${nodeTextColor};
+  &:focus {
+    box-shadow: 0 0 0 1px ${ACCENT_COLOR};
+  }
 `;
 
-export const Select = styled.select`
-  background-color: lightcyan;
-`;
+// export const Select = styled.select`
+//   // Reset styles
+//   border: none;
+//   background-image: none;
+//   -webkit-box-shadow: none;
+//   -moz-box-shadow: none;
+//   box-shadow: none;
+//   outline: none;
+//   &:focus {
+//     outline: none;
+//   }
 
-export const Option = styled.option`
-  background-color: lightgreen;
-  height: ${NODE.HEIGHT}px;
-`;
+//   background-color: lightcyan;
+//   height: ${NODE.HEIGHT}px;
+//   padding: 0.1rem 0.2rem;
+// `;

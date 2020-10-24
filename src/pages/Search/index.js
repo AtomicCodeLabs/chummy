@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
@@ -8,12 +8,11 @@ import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
 import {
   SearchContainer,
+  IconContainer,
   Form,
-  Label,
-  Input,
-  Select,
-  Option
+  Input
 } from '../../components/Form';
+import Select from '../../components/Form/Select';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
@@ -33,11 +32,32 @@ export default observer(() => {
     selectedLanguage,
     setSelectedLanguage
   } = useUiStore();
-  const { register, watch, handleSubmit } = useForm({
+
+  // @computed repo options
+  const repoOptions = useMemo(
+    () =>
+      Array.from(openRepos).map(([repoId, repo]) => ({
+        value: repoId,
+        label: `${repo.owner}/${repo.name}`
+      })),
+    [openRepos.size]
+  );
+
+  console.log(
+    'first',
+    toJS(selectedOpenRepo),
+    repoOptions.filter((o) => o.value === selectedOpenRepo)
+  );
+
+  const { control, register, watch, handleSubmit } = useForm({
     defaultValues: {
       query: selectedQuery || '',
-      repository: selectedOpenRepo || '',
-      language: selectedLanguage || ''
+      repository: selectedOpenRepo
+        ? repoOptions.filter((o) => o.value === selectedOpenRepo) // https://stackoverflow.com/questions/43495696/how-to-set-a-default-value-in-react-select
+        : repoOptions.length && repoOptions[0],
+      language: selectedLanguage
+        ? { label: selectedLanguage, value: selectedLanguage }
+        : ''
     }
   });
 
@@ -51,12 +71,11 @@ export default observer(() => {
 
   const onSearch = () => console.log('searching');
 
-  // Call api when user stop's typing
+  // Call api when user stops typing
   useEffect(() => {
     if (debouncedQuery) {
       setIsSearching(true);
       setSelectedQuery(debouncedQuery);
-      console.log('setting query', debouncedQuery);
       // TODO make api call
       onSearch();
       setIsSearching(false);
@@ -65,56 +84,59 @@ export default observer(() => {
     }
   }, [debouncedQuery]);
 
-  console.log(
-    'rendered search',
-    toJS(openRepos),
-    toJS(selectedOpenRepo),
-    toJS(selectedLanguage)
-  );
-
   return (
     <>
       <SearchContainer>
-        <OpenCloseChevron
-          open={!isSearchSectionMinimized}
-          onClick={toggleSearchSection}
-        />
+        <IconContainer>
+          <OpenCloseChevron
+            open={!isSearchSectionMinimized}
+            onClick={toggleSearchSection}
+          />
+        </IconContainer>
         <Form onSubmit={handleSubmit(onSearch)}>
           <Input
+            className="search-section-field"
             type="text"
             placeholder="Search"
+            id="query"
             name="query"
             ref={register({ required: true })}
           />
           {!isSearchSectionMinimized && (
             <>
-              <Label htmlFor="repository">repository</Label>
+              {/* <Label htmlFor="repository">repository</Label> */}
               <Select
-                id="repository"
+                className="search-section-field"
                 name="repository"
-                ref={register({ required: true })}
-                onChange={(e) => {
-                  setSelectedOpenRepo(e.target.value);
+                placeholder="Repository"
+                control={control}
+                rules={{ required: true }}
+                options={repoOptions}
+                onChange={(option) => {
+                  console.log('set selected open repo', option);
+                  setSelectedOpenRepo(option.value);
                 }}
-              >
-                {Array.from(openRepos).map(([repoId, repo]) => (
-                  <Option value={repoId} key={repoId}>
-                    {repo.owner}/{repo.name}
-                  </Option>
-                ))}
-              </Select>
-              <Label htmlFor="language">language</Label>
+              />
+              {/* <Label htmlFor="language">language</Label> */}
               <Suspense
                 fallback={
-                  <Select id="language" name="language">
-                    <Option value="">Loading...</Option>
-                  </Select>
+                  <Select
+                    className="search-section-field"
+                    name="language"
+                    placeholder="Language"
+                    control={control}
+                    options={{ value: '', label: 'Loading...' }}
+                  />
                 }
               >
                 <LanguagesSelect
-                  ref={register}
-                  onChange={(e) => {
-                    setSelectedLanguage(e.target.value);
+                  className="search-section-field"
+                  name="language"
+                  placeholder="Language"
+                  control={control}
+                  onChange={(option) => {
+                    console.log('set selected language', option);
+                    setSelectedLanguage(option.value);
                   }}
                 />
               </Suspense>
