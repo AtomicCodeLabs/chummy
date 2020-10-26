@@ -33,7 +33,7 @@ const useWindowSize = ({
       // Call onResizeEnd callback if width doesn't change after 150ms
       if (keepStoreUpdated) {
         resizeEndTimeout = setTimeout(() => {
-          setSidebarWidth(newSize);
+          setSidebarWidth(newSize.width, keepStoreUpdated);
         }, 500);
       }
       // Call responsive callback if width dips below maxWidth

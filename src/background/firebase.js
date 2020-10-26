@@ -24,6 +24,7 @@ class Firebase {
     this.auth = firebase.auth();
     this.githubProvider = new firebase.auth.GithubAuthProvider();
     this.githubProvider.addScope('repo'); // add for private repo access
+    this.githubProvider.addScope('user'); // add for user information
     this.githubApiKey = null; // Keep API key to make requests with on hand
 
     // On auth change, send message to content script tab.

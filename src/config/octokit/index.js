@@ -146,7 +146,7 @@ class OctoDAO {
   };
 
   // Search API
-  searchCode = async (owner, repo, listOfSearchTerms, language = null) => {
+  searchCode = async (owner, repo, query, language = null) => {
     if (!this.isAuthenticated()) {
       console.error('Octokit is not authenticated.');
       return null;
@@ -154,21 +154,21 @@ class OctoDAO {
 
     // TODO some caching
     try {
-      const q = formSearchQuery(owner, repo, listOfSearchTerms, language);
-      console.log('Constructed query', q);
+      const q = formSearchQuery(owner, repo, query, language);
       // https://docs.github.com/en/free-pro-team@latest/rest/reference/search#search-code
       const response = await this.restAuth.request('GET /search/code', {
-        accept: 'application/vnd.github.v3.text-match+json',
+        headers: {
+          accept: 'application/vnd.github.v3.text-match+json'
+        },
         q
       });
-      console.log(response);
-      return response;
+      return response?.data?.items;
     } catch (error) {
       console.error(
         'Error searching code.',
         owner,
         repo,
-        listOfSearchTerms,
+        query,
         language,
         error
       );

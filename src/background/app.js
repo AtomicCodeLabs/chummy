@@ -7,7 +7,6 @@ const { UrlParser } = require('./util');
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Redirect tab page (when file node is clicked)
   if (request.action === 'redirect') {
-    console.log(request);
     const {
       payload: { window, base, filepath, openInNewTab }
     } = request;
@@ -38,13 +37,40 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse();
   }
 
+  // Redirect url (when url is provided)
+  if (request.action === 'redirect-to-url') {
+    const {
+      payload: { url: redirectUrl }
+    } = request;
+    // Open a new tab
+    chrome.tabs.create({
+      // windowId: window.windowId, // defaults to the last current window
+      url: redirectUrl,
+      active: false
+    });
+    sendResponse();
+  }
+
   // Change active tab (when branch node is clicked)
   else if (request.action === 'change-active-tab') {
     chrome.tabs.get(request.payload.destinationTabId, (tab) => {
       // Activate tab
-      chrome.tabs.update(tab.id, { active: true });
+      chrome.tabs.update(tab.id, { active: true }, () => {
+        // Send active-tab-changed action to set current branch
+        const parsed = new UrlParser(tab.url, tab.title, tab.id).parse();
+        chrome.runtime.sendMessage({
+          action: 'active-tab-changed',
+          payload: {
+            ...parsed,
+            isGithubRepoUrl: Object.keys(parsed).length !== 0,
+            windowId: tab.windowId,
+            tabId: tab.id
+          }
+        });
+        // To let frontend know when tab updates have been made.
+        sendResponse({ action: 'change-active-tab', complete: true });
+      });
       // Draw attention to window
-      // chrome.windows.update(tab.windowId, { drawAttention: true });
     });
   }
 
@@ -60,7 +86,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         windows.forEach(({ tabs }) => {
           tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
             const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-            console.log('PARSED', parsed);
             if (Object.keys(parsed).length !== 0) {
               const { owner, repo } = parsed;
               const currentRepoData = openRepositories[`${owner}/${repo}`];

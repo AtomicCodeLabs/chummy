@@ -18,9 +18,7 @@ export const formQueryGetRepositorySpecificBranchRootNodes = (
   }
 `;
 
-export const formSearchQuery = (owner, repo, listOfSearchTerms, language) =>
-  `${listOfSearchTerms.join('+')}+repo:${owner}/${repo}${
-    language && `+language:${language}`
-  }`;
+export const formSearchQuery = (owner, repo, query, language) =>
+  `${query}+repo:${owner}/${repo}${language && `+language:${language}`}`;
 
 export const placeholder = 'placeholder';

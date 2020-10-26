@@ -1,3 +1,4 @@
+/* global chrome */
 /* eslint-disable no-unused-vars */
 export const sortFiles = (a, b) => {
   // Sort by file type
@@ -18,3 +19,20 @@ export const objectMap = (
   Object.fromEntries(
     Object.entries(obj).map(([k, v], i) => [fnKey(k, v, i), fnValue(v, k, i)])
   );
+
+export const isBlank = (o) => {
+  if (o.constructor === Object) {
+    return Object.entries(o).length === 0;
+  }
+  if (o.constructor === String) {
+    return !o || o.trim().length === 0;
+  }
+  return false;
+};
+
+export const redirectToUrl = (url) => {
+  chrome.runtime.sendMessage({
+    action: 'redirect-to-url',
+    payload: { url }
+  });
+};

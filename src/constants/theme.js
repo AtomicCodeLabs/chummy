@@ -61,9 +61,16 @@ export const invertedNodeTextColor = theme('theme', {
   dark: '#24292e'
 });
 
+export const NODE_LIGHTEST_TEXT_COLOR_LIGHT = '#56626e';
+export const NODE_LIGHTEST_TEXT_COLOR_DARK = '#bab6b1';
 export const nodeLightestTextColor = theme('theme', {
-  light: '#56626e',
-  dark: '#bab6b1'
+  light: NODE_LIGHTEST_TEXT_COLOR_LIGHT,
+  dark: NODE_LIGHTEST_TEXT_COLOR_DARK
+});
+
+export const textHighlightColor = theme('theme', {
+  light: '#fff200',
+  dark: '#fff200'
 });
 
 export const folderIconColor = theme('theme', {

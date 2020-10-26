@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 
-import { INPUT } from '../../constants/sizes';
 import {
   fieldColor,
   backgroundHighlightColor,
-  ACCENT_COLOR,
-  nodeTextColor
+  nodeLightestTextColor
 } from '../../constants/theme';
 
-export const SearchContainer = styled.div`
+export const FormContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding: 0.5rem;
+`;
+
+export const FormResultsDescriptionContainer = styled.div`
+  color: ${nodeLightestTextColor};
+  font-size: 0.75rem;
+  padding: 0 0.5rem 0.5rem calc(14px + 0.5rem + 0.15rem); // to line up with search inputs
 `;
 
 export const IconContainer = styled.div`
@@ -55,39 +59,3 @@ export const HideContainer = styled.div`
   flex-direction: column;
   flex: 1;
 `;
-
-export const Input = styled.input`
-  // Reset styles
-  border: none;
-  background-image: none;
-  box-sizing: border-box;
-  outline: none;
-  box-shadow: none;
-
-  font-size: 0.75rem;
-  background-color: ${fieldColor};
-  height: ${INPUT.HEIGHT}px;
-  padding: 0.2rem calc(0.3rem + 2px); // To be compatible with react-select
-  transition: box-shadow 100ms;
-  color: ${nodeTextColor};
-  &:focus {
-    box-shadow: 0 0 0 1px ${ACCENT_COLOR};
-  }
-`;
-
-// export const Select = styled.select`
-//   // Reset styles
-//   border: none;
-//   background-image: none;
-//   -webkit-box-shadow: none;
-//   -moz-box-shadow: none;
-//   box-shadow: none;
-//   outline: none;
-//   &:focus {
-//     outline: none;
-//   }
-
-//   background-color: lightcyan;
-//   height: ${NODE.HEIGHT}px;
-//   padding: 0.1rem 0.2rem;
-// `;

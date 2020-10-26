@@ -1,7 +1,7 @@
 /* global chrome */
 
 import { UrlParser } from './util';
-import { EXTENSION_WIDTH } from '../constants/sizes';
+import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
 
 // Rules set when extension is installed
 chrome.runtime.onInstalled.addListener(() => {
@@ -21,19 +21,41 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // Called when the user clicks on the extension icon
 chrome.browserAction.onClicked.addListener(() => {
-  chrome.windows.create(
-    {
-      url: chrome.runtime.getURL('popup.html'),
-      type: 'popup',
-      width: EXTENSION_WIDTH.INITIAL
-    },
-    (win) => {
-      // Store extension window id in storage
-      chrome.storage.sync.set({ currentWindowId: win.id }, () => {
-        console.log('Current window id stored', win.id);
-      });
-    }
-  );
+  // Get current window, and calculate new dimensions
+  chrome.windows.getCurrent((currentWin) => {
+    // Get isSidebarMinimized and sidebarWidth from storage
+    chrome.storage.sync.get(['isSidebarMinimized', 'sidebarWidth'], (items) => {
+      let lastWindowWidth = EXTENSION_WIDTH.INITIAL;
+      if (items.isSidebarMinimized) {
+        lastWindowWidth = SIDE_TAB.WIDTH + 13;
+      } else if (items.sidebarWidth) {
+        lastWindowWidth = items.sidebarWidth;
+      }
+      const newWidth = lastWindowWidth
+      // Create new window
+      chrome.windows.create(
+        {
+          url: chrome.runtime.getURL('popup.html'),
+          type: 'popup',
+          top: currentWin.top,
+          left: currentWin.left - newWidth,
+          width: newWidth, // Take over max half of original width
+          height: currentWin.height
+        },
+        (win) => {
+          // Update old (previously current) window with new top, left, and width
+          chrome.windows.update(currentWin.id, {
+            left: currentWin.left,
+            width: currentWin.width
+          });
+          // Store extension window id in storage
+          chrome.storage.sync.set({ currentWindowId: win.id }, () => {
+            console.log('Current window id stored', win.id);
+          });
+        }
+      );
+    });
+  });
 });
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {

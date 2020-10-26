@@ -33,10 +33,13 @@ export const SectionNameContainer = styled.div`
 
 export const SectionName = styled.div`
   text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.75rem;
   line-height: ${NODE.HEIGHT}px;
   font-weight: bold;
   user-select: none;
+  overflow: hidden;
 `;
 
 export const SectionContent = styled.div`

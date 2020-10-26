@@ -39,18 +39,16 @@ const File = observer(({ owner, repo, branch, data, level }) => {
       onMouseLeave={() => setShowNewTab(false)}
     >
       <StyledNode.LeftSpacer level={level} />
-      <StyledNode.Icon>
-        <FileIcon size={14} verticalAlign="middle" />
-      </StyledNode.Icon>
-      <StyledNode.Name>{data.name}</StyledNode.Name>
-      {showNewTab && (
-        <>
-          <StyledNode.MiddleSpacer />
-          <StyledNode.Icon marginRight="1.5rem" ref={newTabEl}>
-            <LinkExternalIcon size={14} verticalAlign="middle" />
-          </StyledNode.Icon>
-        </>
+      {showNewTab ? (
+        <StyledNode.Icon ref={newTabEl}>
+          <LinkExternalIcon size={14} verticalAlign="middle" />
+        </StyledNode.Icon>
+      ) : (
+        <StyledNode.Icon>
+          <FileIcon size={14} verticalAlign="middle" />
+        </StyledNode.Icon>
       )}
+      <StyledNode.Name>{data.name}</StyledNode.Name>
     </StyledNode.Container>
   );
 });

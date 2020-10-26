@@ -19,6 +19,9 @@ export default class FileStore implements IFileStore {
   @observable openRepos: Map<string, Repo> = new Map();
   @observable currentBranch: Branch;
 
+  /* Search Section */
+  @observable openSearchResultFiles: Set<string> = new Set();
+
   /* VCS Section */
   @observable currentRepo: Repo;
 
@@ -202,4 +205,20 @@ export default class FileStore implements IFileStore {
   openFileTab(id: string): void {}
 
   closeFileTab(id: string): void {}
+
+  @action.bound openOpenSearchResultFile = (filePath: string) => {
+    this.openSearchResultFiles.add(filePath);
+  };
+
+  @action.bound closeOpenSearchResultFile = (filePath: string) => {
+    this.openSearchResultFiles.delete(filePath);
+  };
+
+  @action.bound clearOpenSearchResultFiles = () => {
+    this.openSearchResultFiles.clear();
+  };
+
+  @action.bound isOpenSearchResultFileOpen = (filePath: string) => {
+    return this.openSearchResultFiles.has(filePath);
+  };
 }

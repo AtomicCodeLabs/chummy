@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
@@ -19,14 +19,22 @@ import {
   SideTabButton,
   FlexGrow,
   ExpandingContainer,
-  ExpandingContainerHeader,
-  ExpandingContainerContent
+  ExpandingContainerHeaderContainer,
+  ExpandingContainerContent,
+  ExpandingContainerHeaderSpacer,
+  ExpandingContainerHeaderIcon
 } from './style';
 import IconButton from '../IconButton';
+import Spinner from '../Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
 
 const ResizableSidebar = observer(({ children }) => {
-  const { isSidebarMinimized, openSidebar, closeSidebar } = useUiStore();
+  const {
+    isPending,
+    isSidebarMinimized,
+    openSidebar,
+    closeSidebar
+  } = useUiStore();
   const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
   useWindowSize({
@@ -34,13 +42,11 @@ const ResizableSidebar = observer(({ children }) => {
     responsive: {
       underCallback: () => {
         // Close sidebar
-        console.log('under');
         closeSidebar(); // Set UI State
         // history.push('/minimized'); // Redirect
       },
       overCallback: () => {
         // Open sidebar
-        console.log('over');
         openSidebar(); // Set UI State
         // if (!isLoggedIn) {
         //   history.push('/account-sign-in'); // Redirect
@@ -57,6 +63,10 @@ const ResizableSidebar = observer(({ children }) => {
       window.resizeTo(EXTENSION_WIDTH.INITIAL, window.outerHeight);
     }
   };
+
+  const sidebarHeaderTitle = useMemo(() => getSidebarHeaderTitle(pathname), [
+    pathname
+  ]);
 
   return (
     <Container>
@@ -105,9 +115,15 @@ const ResizableSidebar = observer(({ children }) => {
       </SideTab>
       <ExpandingContainer isSidebarMinimized={isSidebarMinimized}>
         {isPageWithHeader(pathname) && (
-          <ExpandingContainerHeader>
-            {getSidebarHeaderTitle(pathname)}
-          </ExpandingContainerHeader>
+          <ExpandingContainerHeaderContainer>
+            {sidebarHeaderTitle}
+            <ExpandingContainerHeaderSpacer />
+            {isPending === sidebarHeaderTitle && isPending !== 'None' && (
+              <ExpandingContainerHeaderIcon>
+                <Spinner />
+              </ExpandingContainerHeaderIcon>
+            )}
+          </ExpandingContainerHeaderContainer>
         )}
         <ExpandingContainerContent>{children}</ExpandingContainerContent>
         {/* <ExpandingContainerDivider /> */}

@@ -1,13 +1,14 @@
 /* global chrome */
-import { observable, computed } from 'mobx';
+import { observable, computed, action, toJS } from 'mobx';
 
 import IUiStore, {
   Language,
   Theme,
   SidebarView,
-  ExplorerSection,
+  TreeSection,
   UiStorePropsArray,
-  UiStoreKeys
+  UiStoreKeys,
+  SectionName
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
@@ -16,13 +17,13 @@ export default class UiStore implements IUiStore {
   @observable language = Language.English;
   @observable theme = Theme.Light;
   @observable pendingRequestCount = 0;
+  @observable isPending = SectionName.None;
   @observable sidebarView = SidebarView.Project;
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
   @observable isSidebarMinimized = false;
-  @observable isTabbarMinimized = false;
   @observable isTreeSectionMinimized = {
-    [ExplorerSection.OpenTabs]: false,
-    [ExplorerSection.Files]: false
+    [TreeSection.OpenTabs]: false,
+    [TreeSection.Files]: false
   };
   @observable isSearchSectionMinimized = true;
   @observable selectedQuery: string = null;
@@ -58,6 +59,10 @@ export default class UiStore implements IUiStore {
     return this.pendingRequestCount === 0;
   }
 
+  setPending = (pendingState: SectionName): void => {
+    this.isPending = pendingState;
+  };
+
   setTheme = (theme: Theme): void => {
     setInChromeStorage({ theme: theme });
     this.theme = theme;
@@ -84,7 +89,7 @@ export default class UiStore implements IUiStore {
     this.isSidebarMinimized = true;
   };
 
-  toggleTreeSection = (sectionName: ExplorerSection) => {
+  toggleTreeSection = (sectionName: TreeSection) => {
     this.isTreeSectionMinimized = {
       ...this.isTreeSectionMinimized,
       [sectionName]: !this.isTreeSectionMinimized[sectionName]

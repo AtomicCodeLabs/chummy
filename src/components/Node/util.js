@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* global chrome */
 
 export const redirectTo = (
@@ -12,12 +13,33 @@ export const redirectTo = (
   });
 };
 
-export const changeActiveTab = (destinationTabId) => {
+export const redirectToUrl = (url) => {
   chrome.runtime.sendMessage({
-    action: 'change-active-tab',
-    payload: { destinationTabId }
+    action: 'redirect-to-url',
+    payload: { url }
   });
 };
+
+export const changeActiveTab = async (destinationTabId) =>
+  new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      {
+        action: 'change-active-tab',
+        payload: { destinationTabId }
+      },
+      (response) => {
+        console.log(response)
+        if (response?.complete) {
+          resolve();
+        } else {
+          console.error(
+            `Error changing active tab: ${JSON.stringify(response)}`
+          );
+          reject();
+        }
+      }
+    );
+  });
 
 export const parseFilePath = (filePath) => {
   if (!filePath) return { parentPath: '', fileName: '/' };
@@ -58,5 +80,54 @@ export const processTabInformation = (tab) => {
     primaryText: '/',
     secondaryText: '',
     subpageText: subpage
+  };
+};
+
+export const getMatchFragment = (fragment, matchStart, matchEnd) => {
+  const flankedFrag = `\n${fragment}\n`;
+  // Let's say max characters on either side of the match is 50. Beginning
+  // and end truncated with ellipses, with match in the center.
+
+  // Get two surrounding words on each side. If new line, stop
+  // collecting word on that side.
+  let whitespaceLeft = 2;
+  let truncatedLeft = false;
+  let whitespaceRight = 2;
+  let truncatedRight = false;
+  let l = matchStart;
+  let r = matchEnd;
+  for (; l > 0; l--) {
+    if (flankedFrag[l] === '\n' || whitespaceLeft === 0) {
+      break;
+    }
+    if (matchStart === ' ') {
+      whitespaceLeft--;
+    }
+  }
+  for (; r < flankedFrag.length; r++) {
+    if (flankedFrag[r] === '\n' || whitespaceRight === 0) {
+      break;
+    }
+    if (matchStart === ' ') {
+      whitespaceRight--;
+    }
+  }
+
+  // Truncate to 50 on both sides
+  if (matchStart - l > 50) {
+    l = matchStart - 50;
+    truncatedLeft = true;
+  }
+  if (r - matchEnd > 50) {
+    r = matchEnd + 50;
+    truncatedRight = true;
+  }
+
+  return {
+    matchFragment: `${truncatedLeft ? '...' : ''}${flankedFrag.slice(l, r)}${
+      truncatedRight ? '...' : ''
+    }`,
+    start: matchStart - l + 1 + (truncatedLeft ? 3 : 0),
+    end: matchEnd - l + 1 + (truncatedLeft ? 3 : 0)
   };
 };

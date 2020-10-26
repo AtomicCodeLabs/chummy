@@ -64,7 +64,6 @@ export default observer(() => {
             tabId: tab.tabId,
             nodeName: tab.nodeName
           };
-          console.log('seetcurrentbranch', newCurrentBranch, owner, repo, tab);
           setCurrentBranch(newCurrentBranch);
         } else {
           setCurrentBranch(null);

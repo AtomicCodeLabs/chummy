@@ -14,9 +14,18 @@ export enum SidebarView {
   'Open Files'
 }
 
-export enum ExplorerSection {
+export enum TreeSection {
   OpenTabs = 'openTabs',
   Files = 'files'
+}
+
+export enum SectionName {
+  Tree = 'Explorer',
+  Search = 'Search',
+  VCS = 'Source Control',
+  Account = 'Account',
+  Settings = 'Settings',
+  None = 'None'
 }
 
 // UiStore
@@ -24,6 +33,7 @@ class CUiStore {
   language: Language = Language.English;
   theme: Theme = Theme.Light;
   pendingRequestCount: number = 0;
+  isPending: SectionName = SectionName.None;
 
   // Sidebar
   sidebarView: SidebarView = null;
@@ -32,11 +42,11 @@ class CUiStore {
 
   // Tree Page
   isTreeSectionMinimized: {
-    [ExplorerSection.OpenTabs]: boolean;
-    [ExplorerSection.Files]: boolean;
+    [TreeSection.OpenTabs]: boolean;
+    [TreeSection.Files]: boolean;
   } = {
-    [ExplorerSection.OpenTabs]: false,
-    [ExplorerSection.Files]: false
+    [TreeSection.OpenTabs]: false,
+    [TreeSection.Files]: false
   };
 
   // Search Page

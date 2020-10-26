@@ -7,7 +7,8 @@ import {
   PRIMARY_COLOR,
   GRAY,
   BORDER_GRAY,
-  ACCENT_COLOR
+  ACCENT_COLOR,
+  nodeIconColor
 } from '../../constants/theme';
 import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
 
@@ -71,7 +72,7 @@ export const ExpandingContainer = styled.div`
   color: ${textColor};
 `;
 
-export const ExpandingContainerHeader = styled.div`
+export const ExpandingContainerHeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -82,6 +83,20 @@ export const ExpandingContainerHeader = styled.div`
   color: ${textColor};
   font-size: 0.75rem;
   text-transform: uppercase;
+`;
+
+export const ExpandingContainerHeaderSpacer = styled.div`
+  flex: 1;
+`;
+
+export const ExpandingContainerHeaderIcon = styled.div`
+  display: flex;
+  margin-left: ${({ marginLeft }) => marginLeft || '0.5rem'};
+  margin-right: ${({ marginRight }) => marginRight || '0.5rem'};
+
+  svg {
+    fill: ${({ iconFill }) => iconFill || nodeIconColor};
+  }
 `;
 
 export const ExpandingContainerContent = styled.div`

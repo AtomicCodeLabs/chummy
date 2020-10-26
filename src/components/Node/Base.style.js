@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { NODE } from '../../constants/sizes';
 import {
   backgroundHighlightColor,
+  textHighlightColor,
   nodeTextColor,
   nodeIconColor,
   nodeLightestTextColor
@@ -53,6 +54,14 @@ const Name = styled.div`
   user-select: none;
   color: ${nodeTextColor};
   white-space: nowrap;
+
+  span.highlight {
+    background-color: ${textHighlightColor};
+  }
+
+  span.italic {
+    font-style: italic;
+  }
 `;
 
 const SubName = styled.div`
@@ -71,11 +80,17 @@ const MiddleSpacer = styled.div`
   flex: 1;
 `;
 
+const StickyRight = styled.div`
+  position: sticky;
+  right: 0.5rem;
+`;
+
 export default {
   Container,
   LeftSpacer,
   Icon,
   Name,
   SubName,
-  MiddleSpacer
+  MiddleSpacer,
+  StickyRight
 };

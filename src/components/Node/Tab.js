@@ -5,11 +5,15 @@ import { FileIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
 import { changeActiveTab, processTabInformation } from './util';
+import { useUiStore } from '../../hooks/store';
 
 const Tab = observer(({ tab, currentBranch }) => {
-  const handleClick = () => {
+  const { setPending } = useUiStore();
+  const handleClick = async () => {
     // Redirect to file page
-    changeActiveTab(tab.tabId);
+    setPending('Explorer');
+    await changeActiveTab(tab.tabId);
+    setPending('None');
   };
   const { primaryText, secondaryText, subpageText } = processTabInformation(
     tab

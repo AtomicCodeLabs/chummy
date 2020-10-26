@@ -18,7 +18,9 @@ import {
   FIELD_COLOR_LIGHT,
   FIELD_COLOR_DARK,
   NODE_TEXT_COLOR_LIGHT,
-  NODE_TEXT_COLOR_DARK
+  NODE_TEXT_COLOR_DARK,
+  NODE_LIGHTEST_TEXT_COLOR_DARK,
+  NODE_LIGHTEST_TEXT_COLOR_LIGHT
 } from '../../constants/theme';
 
 const StyledOptionContainer = styled.div`
@@ -35,6 +37,9 @@ const StyledOptionContainer = styled.div`
   padding: 0.2rem calc(0.6rem + 4px);
   font-size: 0.75rem;
   cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   ${({ isSelected, ...props }) =>
     !isSelected &&
@@ -104,7 +109,15 @@ const Select = (props) => {
       }),
       dropdownIndicator: (base) => ({
         ...base,
-        padding: 0
+        padding: 0,
+        cursor: 'pointer',
+        color:
+          mode === 'light'
+            ? NODE_LIGHTEST_TEXT_COLOR_LIGHT
+            : NODE_LIGHTEST_TEXT_COLOR_DARK,
+        '&:hover': {
+          color: mode === 'light' ? NODE_TEXT_COLOR_LIGHT : NODE_TEXT_COLOR_DARK
+        }
       }),
       indicatorContainer: (base) => ({
         ...base,
@@ -117,7 +130,10 @@ const Select = (props) => {
         display: 'none'
       }),
       singleValue: (base) => ({
-        ...base
+        ...base,
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
       }),
       valueContainer: (base) => ({
         ...base,

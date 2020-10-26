@@ -17,18 +17,12 @@ const FilesSection = observer(() => {
         // If null (on tab that's not github)
         return;
       }
-      console.log(
-        currentBranch.repo.owner,
-        currentBranch.repo.name,
-        currentBranch
-      );
       const responseNodes = await octoDAO.getRepositoryNodes(
         currentBranch.repo.owner,
         currentBranch.repo.name,
         currentBranch,
         ''
       );
-      console.log('Response nodes', responseNodes);
       setNodes(responseNodes);
     };
     if (octoDAO) {
