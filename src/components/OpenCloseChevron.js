@@ -1,38 +1,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ChevronRightIcon } from '@primer/octicons-react';
-import { NODE } from '../constants/sizes';
-import { nodeIconColor } from '../constants/theme';
+import { nodeIconColor, fieldColor } from '../constants/theme';
+import { ICON } from '../constants/sizes';
+import useTheme from '../hooks/useTheme';
 
 const Container = styled.div`
-  /* width: 14px;
-  height: 14px; */
-  /* line-height: ${NODE.HEIGHT}px; */
   display: flex;
+  justify-content: center;
   align-items: center;
+  cursor: pointer;
+  margin-right: ${ICON.SIDE_MARGIN}px;
+
   svg {
     fill: ${nodeIconColor};
+    transition: transform 100ms;
     transform: rotate(${({ open }) => (open ? 90 : 0)}deg);
   }
+
+  ${({ highlightOnHover }) =>
+    highlightOnHover &&
+    css`
+      &:hover {
+        background-color: ${fieldColor};
+      }
+    `}
 `;
 
-const OpenCloseChevron = ({ open, onClick }) => {
+const OpenCloseChevron = ({ open, onClick, highlightOnHover }) => {
+  const { spacing } = useTheme();
   return (
-    <Container open={open} onClick={onClick}>
-      <ChevronRightIcon size={14} verticalAlign="middle" />
+    <Container
+      open={open}
+      onClick={onClick}
+      highlightOnHover={highlightOnHover}
+    >
+      <ChevronRightIcon
+        size={ICON.SIZE({ theme: { spacing } })}
+        verticalAlign="middle"
+      />
     </Container>
   );
 };
 
 OpenCloseChevron.propTypes = {
   open: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  highlightOnHover: PropTypes.bool
 };
 
 OpenCloseChevron.defaultProps = {
   open: false,
-  onClick: () => {}
+  onClick: () => {},
+  highlightOnHover: false
 };
 
 export default OpenCloseChevron;

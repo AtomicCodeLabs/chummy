@@ -1,14 +1,14 @@
-/* global chrome */
+const browser = require('webextension-polyfill');
 
-console.log('REDIRECT PAGE LOADED BG');
+console.log('LOADED');
 
 // eslint-disable-next-line import/prefer-default-export
 const redirectPageListeners = () => {
-  chrome.runtime.onMessage.addListener(function redirectListener(request) {
+  browser.runtime.onMessage.addListener(function redirectListener(request) {
     // Make a ajax redirect request
     if (request.action === 'redirect-content-script') {
       // Garbage collect event listener (listen at most once)
-      chrome.runtime.onMessage.removeListener(redirectListener);
+      browser.runtime.onMessage.removeListener(redirectListener);
 
       const {
         payload: { base, filepath }

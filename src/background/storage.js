@@ -1,28 +1,42 @@
-/* global chrome */
+import browser from 'webextension-polyfill';
 
 // Expose chrome storage API that content script can query
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+const storeAccessListener = async (request) => {
   // Sign In
   if (request.action === 'set-store') {
-    chrome.storage.sync.set(request.payload, () => {
-      console.log('Keys stored in chrome storage', request.payload);
-      sendResponse();
-    });
+    try {
+      await browser.storage.sync.set(request.payload);
+    } catch (error) {
+      console.error('Error setting store', error);
+    }
+    return null;
   }
 
   // Sign Out
-  else if (request.action === 'get-store') {
-    chrome.storage.sync.get(request.payload, (items) => {
-      console.log(request.payload, 'values retrieved from storage', items);
-      sendResponse({ action: 'get-store', payload: items });
-    });
+  if (request.action === 'get-store') {
+    try {
+      const items = await browser.storage.sync.get(request.payload);
+      return { action: 'get-store', payload: items };
+    } catch (error) {
+      console.error('Error getting store', error);
+      return null;
+    }
   }
 
-  return true; // necessary to indicate content script to wait for async
+  return null;
+};
+browser.runtime.onMessage.addListener((request) => {
+  if (['set-store', 'get-store'].includes(request.action)) {
+    return storeAccessListener(request);
+  }
 });
 
-chrome.storage.onChanged.addListener(() => {
-  chrome.storage.sync.get(null, function callback(items) {
-    console.log(items);
-  });
+// For debugging purposes
+browser.storage.onChanged.addListener(async () => {
+  try {
+    const items = await browser.storage.sync.get(null);
+    console.log('DEBUG', items);
+  } catch (error) {
+    console.error('Error getting store changes for debugging', error);
+  }
 });

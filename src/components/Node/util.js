@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-/* global chrome */
+import browser from 'webextension-polyfill';
 
 export const redirectTo = (
   base,
@@ -7,39 +7,33 @@ export const redirectTo = (
   currentWindowTab,
   openInNewTab = false
 ) => {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'redirect',
     payload: { window: currentWindowTab, base, filepath, openInNewTab }
   });
 };
 
 export const redirectToUrl = (url) => {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'redirect-to-url',
     payload: { url }
   });
 };
 
-export const changeActiveTab = async (destinationTabId) =>
-  new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(
-      {
-        action: 'change-active-tab',
-        payload: { destinationTabId }
-      },
-      (response) => {
-        console.log(response)
-        if (response?.complete) {
-          resolve();
-        } else {
-          console.error(
-            `Error changing active tab: ${JSON.stringify(response)}`
-          );
-          reject();
-        }
-      }
-    );
-  });
+export const changeActiveTab = async (destinationTabId) => {
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'change-active-tab',
+      payload: { destinationTabId }
+    });
+    if (response?.complete) {
+      return true;
+    }
+  } catch (error) {
+    console.error('Error changing active tab', error);
+    return false;
+  }
+};
 
 export const parseFilePath = (filePath) => {
   if (!filePath) return { parentPath: '', fileName: '/' };

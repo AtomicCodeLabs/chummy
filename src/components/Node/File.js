@@ -5,9 +5,12 @@ import { FileIcon, LinkExternalIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
 import { useFileStore } from '../../hooks/store';
+import useTheme from '../../hooks/useTheme';
 import { redirectTo } from './util';
+import { ICON } from '../../constants/sizes';
 
 const File = observer(({ owner, repo, branch, data, level }) => {
+  const { spacing } = useTheme();
   const [showNewTab, setShowNewTab] = useState(false);
   const newTabEl = useRef(null);
   const { currentWindowTab } = useFileStore();
@@ -41,11 +44,17 @@ const File = observer(({ owner, repo, branch, data, level }) => {
       <StyledNode.LeftSpacer level={level} />
       {showNewTab ? (
         <StyledNode.Icon ref={newTabEl}>
-          <LinkExternalIcon size={14} verticalAlign="middle" />
+          <LinkExternalIcon
+            size={ICON.SIZE({ theme: { spacing } })}
+            verticalAlign="middle"
+          />
         </StyledNode.Icon>
       ) : (
         <StyledNode.Icon>
-          <FileIcon size={14} verticalAlign="middle" />
+          <FileIcon
+            size={ICON.SIZE({ theme: { spacing } })}
+            verticalAlign="middle"
+          />
         </StyledNode.Icon>
       )}
       <StyledNode.Name>{data.name}</StyledNode.Name>

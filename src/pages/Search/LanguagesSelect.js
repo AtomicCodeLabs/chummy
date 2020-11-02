@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 
-import Select from '../../components/Form/Select';
+import { ControlledSelect } from '../../components/Form/Select';
 import { popularLanguages, otherLanguages } from '../../constants/languages';
 
 const LanguagesSelect = (props) => (
-  <Select
+  <ControlledSelect
     {...props}
     defaultValue={{ value: '', label: 'All languages' }}
     options={[

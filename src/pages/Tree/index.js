@@ -12,8 +12,9 @@ import {
 import OpenCloseChevron from '../../components/OpenCloseChevron';
 import OpenTabsSection from '../../components/TreeSections/OpenTabs';
 import { checkCurrentUser } from '../../hooks/firebase';
+import useTheme from '../../hooks/useTheme';
 import { useUiStore, useFileStore } from '../../hooks/store';
-import { NODE, RESIZE_GUTTER } from '../../constants/sizes';
+import { RESIZE_GUTTER, NODE } from '../../constants/sizes';
 import { onActiveTabChange } from '../../utils/tabs';
 import FilesSection from '../../components/TreeSections/Files';
 
@@ -27,6 +28,7 @@ export default observer(() => {
     toggleTreeSection
   } = useUiStore();
   const { setCurrentBranch, setCurrentWindowTab } = useFileStore();
+  const { spacing } = useTheme();
   const [heights, setHeights] = useState([20, 80]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -78,7 +80,7 @@ export default observer(() => {
       direction="vertical"
       sizes={heights}
       style={{ height: '100%' }}
-      minSize={NODE.HEIGHT}
+      minSize={NODE.HEIGHT({ theme: { spacing } })}
       gutter={(index, direction) => {
         const gutterContainer = document.createElement('div');
         gutterContainer.className = `gutter gutter-${direction} gutter-container`;

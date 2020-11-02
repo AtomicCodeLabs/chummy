@@ -1,66 +1,163 @@
-/* global chrome */
-
-import { UrlParser } from './util';
-import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
+import browser from 'webextension-polyfill';
+import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
+import {
+  getSidebarWidth,
+  isCurrentWindow,
+  UrlParser,
+  isExtensionOpen
+} from './util';
 
 // Rules set when extension is installed
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-    chrome.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: { hostEquals: 'github.com' }
-          })
-        ],
-        actions: [new chrome.declarativeContent.ShowPageAction()]
-      }
-    ]);
-  });
+const onInstalledListener = async () => {
+  await browser.declarativeContent.onPageChanged
+    .removeRules(undefined)
+    .catch((error) => console.error('Error removing page rules', error));
+  browser.declarativeContent.onPageChanged.addRules([
+    {
+      conditions: [
+        new browser.declarativeContent.PageStateMatcher({
+          pageUrl: { hostEquals: 'github.com' }
+        })
+      ],
+      actions: [new browser.declarativeContent.ShowPageAction()]
+    }
+  ]);
+};
+browser.runtime.onInstalled.addListener(() => {
+  onInstalledListener();
 });
 
 // Called when the user clicks on the extension icon
-chrome.browserAction.onClicked.addListener(() => {
-  // Get current window, and calculate new dimensions
-  chrome.windows.getCurrent((currentWin) => {
+const onBrowserActionClickedListener = async () => {
+  try {
+    // Get current window, and calculate new dimensions
+    const currentWin = await browser.windows.getCurrent();
     // Get isSidebarMinimized and sidebarWidth from storage
-    chrome.storage.sync.get(['isSidebarMinimized', 'sidebarWidth'], (items) => {
-      let lastWindowWidth = EXTENSION_WIDTH.INITIAL;
-      if (items.isSidebarMinimized) {
-        lastWindowWidth = SIDE_TAB.WIDTH + 13;
-      } else if (items.sidebarWidth) {
-        lastWindowWidth = items.sidebarWidth;
-      }
-      const newWidth = lastWindowWidth
-      // Create new window
-      chrome.windows.create(
-        {
-          url: chrome.runtime.getURL('popup.html'),
-          type: 'popup',
-          top: currentWin.top,
-          left: currentWin.left - newWidth,
-          width: newWidth, // Take over max half of original width
-          height: currentWin.height
-        },
-        (win) => {
-          // Update old (previously current) window with new top, left, and width
-          chrome.windows.update(currentWin.id, {
-            left: currentWin.left,
-            width: currentWin.width
-          });
-          // Store extension window id in storage
-          chrome.storage.sync.set({ currentWindowId: win.id }, () => {
-            console.log('Current window id stored', win.id);
-          });
-        }
-      );
+    const {
+      isSidebarMinimized,
+      sidebarWidth
+    } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
+    if (await isExtensionOpen()) {
+      console.log('extensioon isopne');
+      return;
+    }
+    const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+
+    // Create new window
+    const win = await browser.windows.create({
+      url: browser.runtime.getURL('popup.html'),
+      type: 'popup',
+      top: currentWin.top,
+      left: Math.floor(currentWin.left - newWidth),
+      width: newWidth, // Take over max half of original width
+      height: currentWin.height
     });
-  });
+    await browser.windows.update(currentWin.id, {
+      left: currentWin.left,
+      width: currentWin.width
+    });
+    // Store extension window id in storage
+    await browser.storage.sync.set({ currentWindowId: win.id });
+  } catch (error) {
+    console.error('Error opening extension popup', error);
+  }
+};
+browser.browserAction.onClicked.addListener(() => {
+  onBrowserActionClickedListener();
+});
+
+// On popup window close, set currentWindowId to -1.
+const onWindowRemoveListener = async (windowId) => {
+  try {
+    const { currentWindowId } = await browser.storage.sync.get([
+      'currentWindowId'
+    ]);
+    if (isCurrentWindow(windowId, currentWindowId)) {
+      await browser.storage.sync.set({
+        currentWindowId: NO_WINDOW_EXTENSION_ID
+      });
+      console.log(
+        'Current window closed and stored id',
+        NO_WINDOW_EXTENSION_ID
+      );
+    }
+  } catch (error) {
+    console.error('Error resetting currentWindowId', error);
+  }
+};
+browser.windows.onRemoved.addListener((windowId) => {
+  onWindowRemoveListener(windowId);
+});
+
+// On window focus change or window resize, update the popup window so that
+// it follows the current window. If the sticky window setting stored in
+// chrome storage is off, ignore these events
+const updatePopupBounds = async (mainWindow) => {
+  try {
+    // Retrieve saved settings
+    const {
+      currentWindowId,
+      isStickyWindow,
+      isSidebarMinimized,
+      sidebarWidth
+    } = await browser.storage.sync.get([
+      'currentWindowId',
+      'isStickyWindow',
+      'isSidebarMinimized',
+      'sidebarWidth'
+    ]);
+
+    // Ignore current window or if isStickyWindow is false
+    if (
+      !mainWindow ||
+      currentWindowId === NO_WINDOW_EXTENSION_ID ||
+      isCurrentWindow(mainWindow.id, currentWindowId) ||
+      !isStickyWindow
+    ) {
+      return;
+    }
+
+    // Get window
+    const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+    await browser.windows.update(currentWindowId, {
+      top: mainWindow.top,
+      left: Math.floor(mainWindow.left - newWidth),
+      height: mainWindow.height
+      // alwaysOnTop: true
+    });
+  } catch (error) {
+    console.error('Error updating popup bounds', error);
+  }
+};
+
+// Called when active window is changed
+const onFocusChangeListener = async (windowId) => {
+  try {
+    const { currentWindowId } = await browser.storage.sync.get([
+      'currentWindowId'
+    ]);
+    // Ignore current window or if isStickyWindow is false
+    if (isCurrentWindow(windowId, currentWindowId)) {
+      return;
+    }
+    const window = await browser.windows.get(windowId);
+    updatePopupBounds(window);
+  } catch (error) {
+    console.error('Error on retrieving currentWindowId', error);
+  }
+};
+browser.windows.onFocusChanged.addListener((windowId) => {
+  onFocusChangeListener(windowId);
+});
+
+// Called when active window is dragged or resized
+browser.windows.onBoundsChanged.addListener((window) => {
+  updatePopupBounds(window);
 });
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
   const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'active-tab-changed',
     payload: {
       ...parsed,
@@ -72,25 +169,36 @@ const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
 };
 
 // Emit change tab/window/focus event to change content
-chrome.tabs.onActivated.addListener(({ windowId, tabId }) => {
-  chrome.tabs.get(tabId, ({ url, title }) => {
+const onTabActivatedListener = async ({ windowId, tabId }) => {
+  try {
+    const { url, title } = await browser.tabs.get(tabId);
     sendContentChangedMessage(windowId, tabId, title, url);
-  });
+  } catch (error) {
+    console.error('Error on tab activate', error);
+  }
+};
+browser.tabs.onActivated.addListener((tabInfo) => {
+  onTabActivatedListener(tabInfo);
 });
-chrome.windows.onFocusChanged.addListener((windowId) => {
-  // If window is the same as extension window, don't do anything
-  chrome.storage.sync.get(['currentWindowId'], ({ currentWindowId }) => {
+const onFocusChangedListener = async (windowId) => {
+  try {
+    // If window is the same as extension window, don't do anything
+    const { currentWindowId } = await browser.storage.sync.get([
+      'currentWindowId'
+    ]);
+
     // console.log('Current window id retrieved from storage', windowId, currentWindowId);
-    if (
-      windowId === currentWindowId ||
-      windowId === chrome.windows.WINDOW_ID_NONE
-    ) {
+    if (isCurrentWindow(windowId, currentWindowId)) {
       return;
     }
-    chrome.tabs.query({ active: true, windowId }, (tabs) => {
-      const { url, id: tabId, title: tabTitle } = tabs[0];
+    const tabs = await browser.tabs.query({ active: true, windowId });
+    const { url, id: tabId, title: tabTitle } = tabs[0];
 
-      sendContentChangedMessage(windowId, tabId, tabTitle, url);
-    });
-  });
+    sendContentChangedMessage(windowId, tabId, tabTitle, url);
+  } catch (error) {
+    console.error('Error on tab focus change', error);
+  }
+};
+browser.windows.onFocusChanged.addListener((windowId) => {
+  onFocusChangedListener(windowId);
 });

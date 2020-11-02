@@ -1,20 +1,73 @@
 /* eslint-disable camelcase */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-globals */
-/* global chrome */
+import browser from 'webextension-polyfill';
+import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
 import {
   SUBPAGES,
   GITHUB_REGEX,
   REPO_TITLE_REGEX,
   generate_ISSUE_TITLE_REGEX,
-  generate_PULL_TITLE_REGEX
+  generate_PULL_TITLE_REGEX,
+  NO_WINDOW_EXTENSION_ID
 } from './constants.ts';
 
 // eslint-disable-next-line import/prefer-default-export
-export const inActiveTab = (callback) => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+export const inActiveTab = async (callback) => {
+  try {
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true
+    });
     callback(tabs);
-  });
+  } catch (error) {
+    console.error('Error finding active tab', error);
+  }
+};
+
+export const isExtensionOpen = async () => {
+  try {
+    const { currentWindowId } = await browser.storage.sync.get([
+      'currentWindowId'
+    ]);
+    if (currentWindowId === NO_WINDOW_EXTENSION_ID) {
+      return false;
+    }
+
+    // If currentWindowId is not NO_WINDOW_EXTENSION_ID, check if
+    // window exists. If it doesn't, reset currentWindowId to
+    // NO_WINDOW_EXTENSION_ID and return false.
+    const windows = await browser.windows.getAll();
+    const allWindowIds = windows.map((w) => w.id);
+    if (!allWindowIds.includes(currentWindowId)) {
+      // Reset currentWindowId
+      browser.storage.sync.set({ currentWindowId: NO_WINDOW_EXTENSION_ID });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Error checking if extension is open', error);
+    return false;
+  }
+};
+
+export const isCurrentWindow = (windowId, currentWindowId) => {
+  console.log(windowId, currentWindowId);
+  return (
+    currentWindowId !== NO_WINDOW_EXTENSION_ID &&
+    (windowId === currentWindowId ||
+      windowId === browser.windows.WINDOW_ID_NONE)
+  );
+};
+
+export const getSidebarWidth = (isSidebarMinimized, sidebarWidth) => {
+  let lastWindowWidth = EXTENSION_WIDTH.INITIAL;
+  if (isSidebarMinimized) {
+    lastWindowWidth = SIDE_TAB.WIDTH + 13;
+  } else if (sidebarWidth) {
+    lastWindowWidth = sidebarWidth;
+  }
+  return lastWindowWidth;
 };
 
 export const isGithubRepoUrl = (url) => {

@@ -1,4 +1,4 @@
-/* global chrome */
+import browser from 'webextension-polyfill';
 
 export const onActiveTabChange = (callback = () => {}) => {
   const toCall = (request) => {
@@ -6,9 +6,9 @@ export const onActiveTabChange = (callback = () => {}) => {
       callback(request.payload);
     }
   };
-  chrome.runtime.onMessage.addListener(toCall);
+  browser.runtime.onMessage.addListener(toCall);
 
-  return () => chrome.runtime.onMessage.removeListener(toCall);
+  return () => browser.runtime.onMessage.removeListener(toCall);
 };
 
 export const FILLER = 0;

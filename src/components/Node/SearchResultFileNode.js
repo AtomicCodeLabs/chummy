@@ -70,7 +70,9 @@ const SearchResultFileNode = ({
           <FileIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
         <StyledNode.Name>{name}</StyledNode.Name>
-        <StyledNode.SubName>{parentPath}</StyledNode.SubName>
+        <StyledNode.SubName variant="smallFont">
+          {parentPath}
+        </StyledNode.SubName>
       </StyledNode.Container>
       {renderMatches()}
     </>

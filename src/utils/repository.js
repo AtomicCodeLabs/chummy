@@ -1,15 +1,18 @@
-/* global chrome */
+import browser from 'webextension-polyfill';
 
 // eslint-disable-next-line import/prefer-default-export
-export const getOpenRepositories = (callback = () => {}) =>
-  chrome.runtime.sendMessage(
-    { action: 'get-open-repositories' },
-    (response) => {
-      if (response) {
-        callback(response.payload);
-      }
+export const getOpenRepositories = async (callback = () => {}) => {
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'get-open-repositories'
+    });
+    if (response) {
+      callback(response.payload);
     }
-  );
+  } catch (error) {
+    console.error('Error getting open repositories', error);
+  }
+};
 
 export const transformOpenRepo = (p) => {
   const { owner, repo: name, tab } = p;
@@ -32,7 +35,7 @@ export const onUpdateOpenRepositories = (callback = () => {}) => {
       callback(request.payload);
     }
   };
-  chrome.runtime.onMessage.addListener(toCall);
+  browser.runtime.onMessage.addListener(toCall);
 
-  return () => chrome.runtime.onMessage.removeListener(toCall);
+  return () => browser.runtime.onMessage.removeListener(toCall);
 };

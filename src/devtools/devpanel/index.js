@@ -1,7 +1,8 @@
-/* global chrome */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import browser from 'webextension-polyfill';
+
 import App from '../../pages/App';
 import RootStoreContext from '../../config/store/context.ts';
 import rootStore from '../../config/store/root.store.ts';
@@ -35,19 +36,7 @@ function renderDevPanel() {
 
 function init(id) {
   renderNA();
-  bgConnection = chrome.runtime.connect({
-    name: id ? id.toString() : undefined
-  });
-  // bgConnection.onMessage.addListener((message) => {
-  //   if (message.type === 'NA') {
-  //     if (message.id === id) renderNA();
-  //     else store.dispatch({ type: REMOVE_INSTANCE, id: message.id });
-  //   } else {
-  //     if (!rendered) renderDevPanel();
-  //     store.dispatch(message);
-  //   }
-  // });
   if (!rendered) renderDevPanel();
 }
 
-init(chrome.devtools.inspectedWindow.tabId);
+init(browser.devtools.inspectedWindow.tabId);

@@ -1,5 +1,5 @@
 /* global chrome */
-import { observable, computed, action, toJS } from 'mobx';
+import { observable, computed } from 'mobx';
 
 import IUiStore, {
   Language,
@@ -8,7 +8,8 @@ import IUiStore, {
   TreeSection,
   UiStorePropsArray,
   UiStoreKeys,
-  SectionName
+  SectionName,
+  Spacing
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
@@ -16,8 +17,10 @@ import { getFromChromeStorage, setInChromeStorage } from './util';
 export default class UiStore implements IUiStore {
   @observable language = Language.English;
   @observable theme = Theme.Light;
+  @observable spacing = Spacing.Comfortable;
   @observable pendingRequestCount = 0;
   @observable isPending = SectionName.None;
+  @observable isStickyWindow = false;
   @observable sidebarView = SidebarView.Project;
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
   @observable isSidebarMinimized = false;
@@ -64,8 +67,19 @@ export default class UiStore implements IUiStore {
   };
 
   setTheme = (theme: Theme): void => {
-    setInChromeStorage({ theme: theme });
+    setInChromeStorage({ theme });
     this.theme = theme;
+  };
+
+  setSpacing = (spacing: Spacing): void => {
+    setInChromeStorage({ spacing });
+    this.spacing = spacing;
+  };
+
+  setIsStickyWindow = (isStickyWindow: boolean): void => {
+    console.log('sticky', isStickyWindow);
+    setInChromeStorage({ isStickyWindow });
+    this.isStickyWindow = isStickyWindow;
   };
 
   toggleTheme = (): void => {

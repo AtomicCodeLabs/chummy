@@ -6,8 +6,11 @@ import StyledNode from './Base.style';
 import Tab from './Tab';
 import OpenCloseChevron from '../OpenCloseChevron';
 import { useFileStore } from '../../hooks/store';
+import useTheme from '../../hooks/useTheme';
+import { ICON } from '../../constants/sizes';
 
 const RepoNode = ({ repo, currentBranch }) => {
+  const { spacing } = useTheme();
   const { openOpenRepo, closeOpenRepo, getOpenRepo } = useFileStore();
   const [open, setOpen] = useState(false);
   const hasTabs = !!Object.keys(repo.tabs).length;
@@ -32,7 +35,10 @@ const RepoNode = ({ repo, currentBranch }) => {
         <StyledNode.LeftSpacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>
-          <RepoIcon size={14} verticalAlign="middle" />
+          <RepoIcon
+            size={ICON.SIZE({ theme: { spacing } })}
+            verticalAlign="middle"
+          />
         </StyledNode.Icon>
         <StyledNode.Name>
           {repo.owner}/{repo.name}

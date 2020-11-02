@@ -1,24 +1,61 @@
 import theme from 'styled-theming';
 
-export const PRIMARY_COLOR = '#24292D';
+import {
+  PRIMARY_COLOR,
+  ACCENT_COLOR,
+  DARK,
+  LIGHT_DARK,
+  WHITE,
+  BLACK,
+  BACKGROUND_HIGHLIGHT_COLOR_DARK,
+  BACKGROUND_HIGHLIGHT_COLOR_LIGHT,
+  BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK,
+  NODE_LIGHTEST_TEXT_COLOR_DARK,
+  NODE_LIGHTEST_TEXT_COLOR_LIGHT,
+  NODE_TEXT_COLOR_DARK,
+  NODE_TEXT_COLOR_LIGHT,
+  FIELD_COLOR_DARK,
+  FIELD_COLOR_LIGHT
+} from './colors';
 
-export const ACCENT_COLOR = '#4078c0';
+export const fieldMargin = theme('spacing', {
+  compact: 3,
+  cozy: 5,
+  comfortable: 6
+});
 
-export const DARK = '#232323';
+export const indentPadding = theme('spacing', {
+  compact: '1.3rem',
+  cozy: '1.6rem',
+  comfortable: '1.8rem'
+});
 
-export const LIGHT_DARK = '#2d2d2d';
+export const fontSize = theme('spacing', {
+  compact: '0.75rem',
+  cozy: '0.8rem',
+  comfortable: '0.83rem'
+});
 
-export const WHITE = '#ffffff';
+export const textSpacing = theme('spacing', {
+  compact: '0.35rem',
+  cozy: '0.5rem',
+  comfortable: '0.55rem'
+});
 
-export const BLACK = '#000000';
+export const lineHeight = theme('spacing', {
+  compact: '0.9rem',
+  cozy: '1.2rem',
+  comfortable: '1.3rem'
+});
 
-export const GRAY = '#888888';
-
-export const BORDER_GRAY = '#E1E4E8';
+export const sideBarColor = theme('theme', {
+  light: PRIMARY_COLOR,
+  dark: FIELD_COLOR_DARK
+});
 
 export const backgroundColor = theme('theme', {
   light: WHITE,
-  dark: PRIMARY_COLOR
+  dark: DARK
 });
 
 export const backgroundAlternatingDarkColor = theme('theme', {
@@ -31,17 +68,14 @@ export const backgroundAlternatingLightColor = theme('theme', {
   dark: LIGHT_DARK
 });
 
-export const BACKGROUND_HIGHLIGHT_COLOR_LIGHT = '#d4e9ff';
-export const BACKGROUND_HIGHLIGHT_COLOR_DARK = '#145596';
 export const backgroundHighlightColor = theme('theme', {
   light: BACKGROUND_HIGHLIGHT_COLOR_LIGHT,
-  dark: BACKGROUND_HIGHLIGHT_COLOR_DARK
+  dark: BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK
 });
 
-export const BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK = '#2b5387';
 export const backgroundHighlightDarkColor = theme('theme', {
   light: ACCENT_COLOR,
-  dark: BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK
+  dark: BACKGROUND_HIGHLIGHT_COLOR_DARK
 });
 
 export const textColor = theme('theme', {
@@ -49,23 +83,19 @@ export const textColor = theme('theme', {
   dark: '#fff'
 });
 
-export const NODE_TEXT_COLOR_LIGHT = '#24292e';
-export const NODE_TEXT_COLOR_DARK = '#e3ded7';
 export const nodeTextColor = theme('theme', {
   light: NODE_TEXT_COLOR_LIGHT,
   dark: NODE_TEXT_COLOR_DARK
 });
 
-export const invertedNodeTextColor = theme('theme', {
-  light: '#e3ded7',
-  dark: '#24292e'
-});
-
-export const NODE_LIGHTEST_TEXT_COLOR_LIGHT = '#56626e';
-export const NODE_LIGHTEST_TEXT_COLOR_DARK = '#bab6b1';
-export const nodeLightestTextColor = theme('theme', {
+export const nodeLightTextColor = theme('theme', {
   light: NODE_LIGHTEST_TEXT_COLOR_LIGHT,
   dark: NODE_LIGHTEST_TEXT_COLOR_DARK
+});
+
+export const invertedNodeTextColor = theme('theme', {
+  light: '#e3ded7',
+  dark: '#e3ded7'
 });
 
 export const textHighlightColor = theme('theme', {
@@ -103,8 +133,6 @@ export const shadowColor = theme('theme', {
   dark: 'rgba(0, 0, 0, 0.5)'
 });
 
-export const FIELD_COLOR_LIGHT = '#DCDCDC';
-export const FIELD_COLOR_DARK = '#56626e';
 export const fieldColor = theme('theme', {
   light: FIELD_COLOR_LIGHT,
   dark: FIELD_COLOR_DARK

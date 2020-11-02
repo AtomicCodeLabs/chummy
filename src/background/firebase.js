@@ -1,5 +1,5 @@
-/* global chrome */
 import firebase from 'firebase/app';
+import browser from 'webextension-polyfill';
 import 'firebase/auth';
 import 'regenerator-runtime/runtime'; // for async/await to work
 import 'core-js/stable'; // or a more selective import such as "core-js/es/array"
@@ -29,26 +29,23 @@ class Firebase {
 
     // On auth change, send message to content script tab.
     this.authStateListener = this.auth.onAuthStateChanged((user) => {
-      inActiveTab((tabs) => {
+      inActiveTab(async (tabs) => {
         if (tabs.length) {
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            {
+          try {
+            await browser.tabs.sendMessage(tabs[0].id, {
               action: 'auth-state-changed',
               payload: user
-            },
-            () => {
-              console.log('auth-state-changed message sent');
-            }
-          );
+            });
+          } catch (error) {
+            console.error('Error sending auth state change message', error);
+          }
         }
       });
     });
 
     // If user hasn't signed out yet, apiKey will still be in
     // chrome storage. Use that for future requests.
-    chrome.storage.sync.get(['apiKey'], (items) => {
-      console.log('hydrating github api key');
+    browser.storage.sync.get(['apiKey']).then((items) => {
       if (items.apiKey) {
         this.setGithubApiKey(items.apiKey);
       }
@@ -64,30 +61,38 @@ class Firebase {
   // *** Auth API ***
 
   signInWithGithub = async () => {
-    const response = await this.auth.signInWithPopup(this.githubProvider);
-    this.setGithubApiKey(response.credential?.accessToken);
-    chrome.storage.sync.set(
-      { apiKey: response.credential?.accessToken, isLoggedIn: true },
-      () => {
-        console.log(
-          'Api key stored in chrome storage: ',
-          response.credential?.accessToken
-        );
-      }
-    );
+    let response = null;
+    try {
+      response = await this.auth.signInWithPopup(this.githubProvider);
+      this.setGithubApiKey(response.credential?.accessToken);
+      await browser.storage.sync.set({
+        apiKey: response.credential?.accessToken,
+        isLoggedIn: true
+      });
+      console.log(
+        'Api key stored in chrome storage: ',
+        response.credential?.accessToken
+      );
+    } catch (error) {
+      console.error('Error signing in with Github', error);
+    }
     return response;
   };
 
-  signOut = () => {
-    this.auth.signOut();
-    this.setGithubApiKey(null);
-    // eslint-disable-next-line object-shorthand
-    chrome.storage.sync.set({ apiKey: null, isLoggedIn: false }, () => {
+  signOut = async () => {
+    try {
+      this.auth.signOut();
+      this.setGithubApiKey(null);
+      // eslint-disable-next-line object-shorthand
+      await browser.storage.sync.set({ apiKey: null, isLoggedIn: false });
       console.log('Api key removed from chrome storage');
-    });
+    } catch (error) {
+      console.error('Error signing out', error);
+    }
   };
 
   getCurrentUser = () => {
+    console.log('currentuser', this.auth.currentUser);
     const { uid, displayName, photoURL } = this.auth.currentUser;
     return {
       user: {
@@ -103,43 +108,41 @@ class Firebase {
 const firebaseStore = new Firebase();
 
 // Expose firebase API that content script can query
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+const firebaseAccessListener = async (request) => {
   // Sign In
   if (request.action === 'sign-in') {
-    console.log('sign-in action triggered');
-    (async () => {
-      let success = false;
-      let payload;
-      let error;
-      try {
-        await firebaseStore.signInWithGithub();
-        payload = firebaseStore.getCurrentUser();
-        success = true;
-      } catch (e) {
-        error = e;
-      } finally {
-        sendResponse({
-          action: 'sign-in',
-          ...(success ? { payload } : { error })
-        });
-      }
-    })();
+    let success = false;
+    let payload;
+    let error;
+    try {
+      await firebaseStore.signInWithGithub();
+      payload = firebaseStore.getCurrentUser();
+      success = true;
+    } catch (e) {
+      error = e;
+    }
+    return {
+      action: 'sign-in',
+      ...(success ? { payload } : { error })
+    };
   }
-
   // Sign Out
-  else if (request.action === 'sign-out') {
-    console.log('sign-out action triggered');
+  if (request.action === 'sign-out') {
     firebaseStore.signOut();
-    sendResponse();
+    return null;
   }
   // Get current user
-  else if (request.action === 'get-current-user') {
+  if (request.action === 'get-current-user') {
     console.log('get-current-user action triggered');
-    sendResponse({
+    return {
       action: 'get-current-user',
       payload: firebaseStore.getCurrentUser()
-    });
+    };
   }
-
-  return true; // necessary to indicate content script to wait for async
+  return null;
+};
+browser.runtime.onMessage.addListener((request) => {
+  if (['sign-in', 'sign-out', 'get-current-user'].includes(request.action)) {
+    return firebaseAccessListener(request);
+  }
 });

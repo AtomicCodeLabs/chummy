@@ -1,20 +1,40 @@
 import styled, { css } from 'styled-components';
-import { NODE } from '../../constants/sizes';
+import theme from 'styled-theming';
+import { BLACK } from '../../constants/colors';
+import { ICON } from '../../constants/sizes';
 import {
   backgroundHighlightColor,
   textHighlightColor,
   nodeTextColor,
   nodeIconColor,
-  nodeLightestTextColor
+  nodeLightTextColor,
+  fontSize,
+  indentPadding
 } from '../../constants/theme';
+
+const nodePadding = theme('spacing', {
+  compact: css`
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    padding-left: 0.8rem;
+  `,
+  cozy: css`
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    padding-left: 0.8rem;
+  `,
+  comfortable: css`
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.8rem;
+  `
+});
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 0.1rem;
-  padding-bottom: 0.1rem;
-  padding-left: 0.8rem;
+  ${nodePadding}
 
   cursor: pointer;
 
@@ -31,17 +51,27 @@ const Container = styled.div`
 
 const LeftSpacer = styled.div`
   display: flex;
-  width: ${({ level }) => 30 * level}px;
-  min-width: ${({ level }) => 30 * level}px;
+  width: calc(
+    ${({ level, ...props }) =>
+      `(1.5 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
+        props
+      )}px`}
+  );
+  min-width: calc(
+    ${({ level, ...props }) =>
+      `(1.5 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
+        props
+      )}px`}
+  );
   margin-right: ${({ marginRight }) => marginRight || '0'};
 `;
 
 const Icon = styled.div`
-  /* rotate a right caret icon */
-  /* line-height: ${NODE.HEIGHT}px; */
   display: flex;
-  margin-left: ${({ marginLeft }) => marginLeft || '0.2rem'};
-  margin-right: ${({ marginRight }) => marginRight || '0.3rem'};
+  /* margin-left: ${({ marginLeft, ...props }) =>
+    marginLeft || `${ICON.SIDE_MARGIN(props)}px`}; */
+  margin-right: ${({ marginRight, ...props }) =>
+    marginRight || `${ICON.SIDE_MARGIN(props)}px`};
 
   svg {
     fill: ${({ iconFill }) => iconFill || nodeIconColor};
@@ -49,13 +79,13 @@ const Icon = styled.div`
 `;
 
 const Name = styled.div`
-  /* line-height: ${NODE.HEIGHT}px; */
-  font-size: 0.83rem;
+  font-size: ${fontSize};
   user-select: none;
   color: ${nodeTextColor};
   white-space: nowrap;
 
   span.highlight {
+    color: ${BLACK};
     background-color: ${textHighlightColor};
   }
 
@@ -66,9 +96,9 @@ const Name = styled.div`
 
 const SubName = styled.div`
   margin-left: 0.5rem;
-  font-size: 0.7rem;
+  font-size: ${fontSize};
   user-select: none;
-  color: ${nodeLightestTextColor};
+  color: ${nodeLightTextColor};
   white-space: nowrap;
 
   span.subpage {

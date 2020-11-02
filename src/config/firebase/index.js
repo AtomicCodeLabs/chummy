@@ -1,6 +1,6 @@
-/* global chrome */
 import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import browser from 'webextension-polyfill';
 
 import useOctoDAO from '../../hooks/octokit';
 
@@ -13,7 +13,7 @@ class FirebaseDAO {
     this.userStore = store.userStore; // mobx
 
     // Add listener for auth changes and store
-    chrome.runtime.onMessage.addListener((response) => {
+    browser.runtime.onMessage.addListener((response) => {
       if (response.action === 'auth-state-changed') {
         // Set user
         this.userStore.setUser({
@@ -29,46 +29,49 @@ class FirebaseDAO {
 
   // *** Auth API ***
 
-  signIn = () => {
+  signIn = async () => {
     // console.log('sign-in message sent');
     this.userStore.setPending(true);
-    chrome.runtime.sendMessage({ action: 'sign-in' }, (response) => {
-      if (response) {
-        // console.log('sign-in message received', response);
-        this.userStore.setUser({
-          user: response.payload.user
-        });
-        this.userStore.setPending(false);
-        this.octoDAO.authenticate(response.payload.user?.apiKey);
-      }
-    });
+    const response = await browser.runtime
+      .sendMessage({ action: 'sign-in' })
+      .catch((e) => console.error('Error signing in', e));
+    console.log('RESPONSE', response);
+    if (response) {
+      console.log('sign-in message received', response);
+      this.userStore.setUser({
+        user: response.payload.user
+      });
+      this.userStore.setPending(false);
+      this.octoDAO.authenticate(response.payload.user?.apiKey);
+    }
     this.userStore.setPending(false);
   };
 
   signOut = () => {
-    chrome.runtime.sendMessage({ action: 'sign-out' }, () => {
-      // console.log('sign-out message received');
-      this.userStore.setUser({});
-      this.octoDAO.unauthenticate();
-    });
+    browser.runtime.sendMessage({ action: 'sign-out' });
+    this.userStore.setUser({});
+    this.octoDAO.unauthenticate();
   };
 
-  getCurrentUser = () => {
+  getCurrentUser = async () => {
     // console.log('get-current-user message sent');
     this.userStore.setPending(true);
-    chrome.runtime.sendMessage({ action: 'get-current-user' }, (response) => {
-      if (response) {
-        console.log('get-current-user message received', response);
-        this.userStore.setUser({
-          user: response.payload.user
-        });
-        console.log('get current user, just set user store');
-        this.octoDAO.authenticate(response.payload.user?.apiKey);
-        this.userStore.setPending(false);
-      } else {
-        console.error('Error getting current user', response?.error);
-      }
-    });
+
+    const response = await browser.runtime
+      .sendMessage({
+        action: 'get-current-user'
+      })
+      .catch((e) => console.error('Error getting current user', e));
+    if (response) {
+      this.userStore.setUser({
+        user: response.payload.user
+      });
+      this.octoDAO.authenticate(response.payload.user?.apiKey);
+      this.userStore.setPending(false);
+    } else {
+      console.error('Error getting current user', response?.error);
+    }
+
     this.userStore.setPending(false);
   };
 }

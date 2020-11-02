@@ -1,6 +1,7 @@
 /**
  * Global Sizes
  */
+import theme from 'styled-theming';
 
 export const EXTENSION_WIDTH = {
   INITIAL: 350,
@@ -22,15 +23,44 @@ export const HEADER = {
 };
 
 export const NODE = {
-  HEIGHT: 19
+  HEIGHT: theme('spacing', {
+    compact: 19,
+    cozy: 25,
+    comfortable: 30
+  })
+};
+
+export const ICON = {
+  SIZE: theme('spacing', {
+    compact: 14,
+    cozy: 16,
+    comfortable: 18
+  }),
+  SIDE_MARGIN: theme('spacing', {
+    compact: 3,
+    cozy: 4,
+    comfortable: 5
+  })
 };
 
 export const INPUT = {
-  HEIGHT: 30,
+  HEIGHT: theme('spacing', {
+    compact: 30,
+    cozy: 35,
+    comfortable: 40
+  }),
   SELECT: {
-    HEIGHT: 30,
+    HEIGHT: theme('spacing', {
+      compact: 30,
+      cozy: 35,
+      comfortable: 40
+    }),
     OPTION: {
-      HEIGHT: 15
+      HEIGHT: theme('spacing', {
+        compact: 15,
+        cozy: 18,
+        comfortable: 20
+      })
     }
   }
 };

@@ -3,17 +3,16 @@ import styled from 'styled-components';
 import {
   backgroundColor,
   textColor,
-  WHITE,
-  PRIMARY_COLOR,
-  GRAY,
-  BORDER_GRAY,
-  ACCENT_COLOR,
-  nodeIconColor
+  nodeIconColor,
+  sideBarColor,
+  fontSize,
+  indentPadding
 } from '../../constants/theme';
+import { WHITE, GRAY, BORDER_GRAY, ACCENT_COLOR } from '../../constants/colors';
 import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
 
 export const Container = styled.div`
-  background-color: ${PRIMARY_COLOR};
+  background-color: ${backgroundColor};
   width: 100%;
   height: 100vh;
   z-index: 10000;
@@ -24,7 +23,7 @@ export const Container = styled.div`
 `;
 
 export const SideTab = styled.div`
-  background-color: ${PRIMARY_COLOR};
+  background-color: ${sideBarColor};
   width: ${({ isSidebarMinimized }) =>
     isSidebarMinimized ? '100%' : `${SIDE_TAB.WIDTH}px`};
   z-index: 9999;
@@ -76,12 +75,12 @@ export const ExpandingContainerHeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 1rem;
+  padding-left: ${indentPadding};
 
   background-color: ${backgroundColor};
   height: ${HEADER.HEIGHT}px;
   color: ${textColor};
-  font-size: 0.75rem;
+  font-size: ${fontSize};
   text-transform: uppercase;
 `;
 

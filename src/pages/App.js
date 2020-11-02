@@ -7,7 +7,7 @@ import Tree from './Tree';
 import Search from './Search';
 import Vcs from './Vcs';
 import Account from './Account';
-import AccountSignIn from './AccountSignIn';
+import AccountSignIn from './Account/SignIn';
 import Settings from './Settings';
 
 // Split into left sidebar and right sidebar.

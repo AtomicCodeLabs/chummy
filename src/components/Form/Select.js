@@ -2,8 +2,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useMemo } from 'react';
-import styled, { ThemeContext, css } from 'styled-components';
+import React, { useMemo } from 'react';
+import styled, { css } from 'styled-components';
 import ReactSelect, { createFilter } from 'react-select';
 import { Controller } from 'react-hook-form';
 
@@ -12,16 +12,14 @@ import {
   backgroundColor,
   backgroundHighlightColor,
   backgroundHighlightDarkColor,
-  ACCENT_COLOR,
   nodeTextColor,
   invertedNodeTextColor,
-  FIELD_COLOR_LIGHT,
-  FIELD_COLOR_DARK,
-  NODE_TEXT_COLOR_LIGHT,
-  NODE_TEXT_COLOR_DARK,
-  NODE_LIGHTEST_TEXT_COLOR_DARK,
-  NODE_LIGHTEST_TEXT_COLOR_LIGHT
+  fontSize,
+  fieldColor,
+  nodeLightTextColor
 } from '../../constants/theme';
+import { ACCENT_COLOR } from '../../constants/colors';
+import useTheme from '../../hooks/useTheme';
 
 const StyledOptionContainer = styled.div`
   display: flex;
@@ -35,7 +33,7 @@ const StyledOptionContainer = styled.div`
     isSelected ? `${invertedNodeTextColor(props)}` : `${nodeTextColor(props)}`};
   height: ${INPUT.SELECT.OPTION.HEIGHT}px;
   padding: 0.2rem calc(0.6rem + 4px);
-  font-size: 0.75rem;
+  font-size: ${fontSize};
   cursor: pointer;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -86,16 +84,15 @@ const Option = (props) => {
   );
 };
 
-// React Hook Form wrapper around React Select
-const Select = (props) => {
-  const { theme: mode } = useContext(ThemeContext);
+export const Select = (props) => {
+  const { theme: mode, spacing } = useTheme();
+  const STPayload = { theme: { theme: mode, spacing } };
   const customReactSelectStyles = useMemo(
     () => ({
       control: (base) => ({
         ...base,
-        backgroundColor:
-          mode === 'light' ? FIELD_COLOR_LIGHT : FIELD_COLOR_DARK,
-        height: INPUT.SELECT.HEIGHT,
+        backgroundColor: fieldColor(STPayload),
+        height: INPUT.SELECT.HEIGHT(STPayload),
         minHeight: 'auto',
         padding: '0.2rem 0.3rem',
         border: 0,
@@ -104,20 +101,20 @@ const Select = (props) => {
       }),
       input: (base) => ({
         ...base,
-        minHeight: 'auto',
-        color: mode === 'light' ? NODE_TEXT_COLOR_LIGHT : NODE_TEXT_COLOR_DARK
+        minHeight: 'auto'
       }),
       dropdownIndicator: (base) => ({
         ...base,
         padding: 0,
         cursor: 'pointer',
-        color:
-          mode === 'light'
-            ? NODE_LIGHTEST_TEXT_COLOR_LIGHT
-            : NODE_LIGHTEST_TEXT_COLOR_DARK,
+        color: nodeLightTextColor(STPayload),
         '&:hover': {
-          color: mode === 'light' ? NODE_TEXT_COLOR_LIGHT : NODE_TEXT_COLOR_DARK
+          color: nodeTextColor(STPayload)
         }
+      }),
+      placeholder: (base) => ({
+        ...base,
+        color: nodeTextColor(STPayload)
       }),
       indicatorContainer: (base) => ({
         ...base,
@@ -133,7 +130,8 @@ const Select = (props) => {
         ...base,
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        color: nodeTextColor(STPayload)
       }),
       valueContainer: (base) => ({
         ...base,
@@ -146,20 +144,46 @@ const Select = (props) => {
         hyphens: 'auto',
         marginTop: 0,
         textAlign: 'left',
-        wordWrap: 'break-word'
+        wordWrap: 'break-word',
+        backgroundColor: fieldColor(STPayload)
       }),
       menuList: (base) => ({
         ...base,
         // kill the white space on first and last option
         padding: 0
       }),
+      group: (base) => ({
+        ...base,
+        backgroundColor: backgroundColor(STPayload)
+      }),
       groupHeading: (base) => ({
         ...base,
         padding: '0.2rem calc(0.3rem + 2px)'
       })
     }),
-    [mode]
+    [mode, spacing]
   );
+
+  return (
+    <ReactSelect
+      filterOption={createFilter({ ignoreAccents: false })}
+      components={{ Option }}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 0,
+        colors: {
+          ...theme.colors,
+          primary: ACCENT_COLOR
+        }
+      })}
+      styles={customReactSelectStyles}
+      {...props}
+    />
+  );
+};
+
+// React Hook Form wrapper around React Select
+export const ControlledSelect = (props) => {
   const {
     name,
     control,
@@ -178,30 +202,17 @@ const Select = (props) => {
       onFocus={onFocus}
       defaultValue={defaultValue}
       render={({ onChange: rhfOnChange, onBlur, value }) => (
-        <ReactSelect
+        <Select
+          name={name}
           onBlur={onBlur}
           onChange={(option) => {
             rhfOnChange(option);
             rsOnChange(option);
           }}
-          name={name}
-          filterOption={createFilter({ ignoreAccents: false })}
-          components={{ Option }}
-          theme={(theme) => ({
-            ...theme,
-            borderRadius: 0,
-            colors: {
-              ...theme.colors,
-              primary: ACCENT_COLOR
-            }
-          })}
           value={value}
-          styles={customReactSelectStyles}
           {...reactSelectProps}
         />
       )}
     />
   );
 };
-
-export default Select;

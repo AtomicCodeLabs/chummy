@@ -1,19 +1,23 @@
-/* global chrome */
+import { browser } from 'webextension-polyfill-ts';
 
 export const setInChromeStorage = (object: { [key: string]: any }) => {
-  chrome.runtime.sendMessage({ action: 'set-store', payload: object });
+  browser.runtime.sendMessage({ action: 'set-store', payload: object });
 };
 
-export const getFromChromeStorage = (keys: string[], callback: Function) => {
-  chrome.runtime.sendMessage(
-    { action: 'get-store', payload: keys },
-    (response) => {
-      if (response.payload) {
-        console.log('get-store message received', response);
-        callback(response.payload);
-      } else {
-        console.error('Error getting store', response, keys);
-      }
+export const getFromChromeStorage = async (
+  keys: string[],
+  callback: Function
+) => {
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'get-store',
+      payload: keys
+    });
+    if (response?.payload) {
+      console.log('get-store message received', response);
+      callback(response.payload);
     }
-  );
+  } catch (error) {
+    console.error('Error getting store', keys, error);
+  }
 };

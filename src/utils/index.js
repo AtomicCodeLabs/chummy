@@ -1,4 +1,5 @@
-/* global chrome */
+import browser from 'webextension-polyfill';
+
 /* eslint-disable no-unused-vars */
 export const sortFiles = (a, b) => {
   // Sort by file type
@@ -21,6 +22,7 @@ export const objectMap = (
   );
 
 export const isBlank = (o) => {
+  if (!o) return true;
   if (o.constructor === Object) {
     return Object.entries(o).length === 0;
   }
@@ -31,7 +33,7 @@ export const isBlank = (o) => {
 };
 
 export const redirectToUrl = (url) => {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'redirect-to-url',
     payload: { url }
   });

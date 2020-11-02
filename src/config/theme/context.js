@@ -1,27 +1,17 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext } from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { useUiStore } from '../../hooks/store';
 
-const ThemeToggleContext = createContext({
-  toggle: () => {}
-});
-
-export const useTheme = () => useContext(ThemeToggleContext);
+export const ThemeToggleContext = createContext();
 
 export const ThemeProvider = observer(({ children }) => {
-  const uiStore = useUiStore();
-
-  const toggle = () => {
-    uiStore.toggleTheme();
-  };
+  const { theme, spacing } = useUiStore();
 
   return (
-    <ThemeToggleContext.Provider value={{ toggle }}>
-      <SCThemeProvider theme={{ theme: uiStore.theme }}>
-        {children}
-      </SCThemeProvider>
+    <ThemeToggleContext.Provider>
+      <SCThemeProvider theme={{ theme, spacing }}>{children}</SCThemeProvider>
     </ThemeToggleContext.Provider>
   );
 });

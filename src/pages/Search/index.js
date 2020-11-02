@@ -13,14 +13,14 @@ import { QuestionIcon } from '@primer/octicons-react';
 import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
 import {
+  HeaderContainer,
   FormContainer,
   FormResultsDescriptionContainer,
-  IconContainer,
   Form,
   HideContainer
 } from '../../components/Form';
 import Input from '../../components/Form/Input';
-import Select from '../../components/Form/Select';
+import { ControlledSelect } from '../../components/Form/Select';
 import { checkCurrentUser } from '../../hooks/firebase';
 import useOctoDAO from '../../hooks/octokit';
 import { useUiStore, useFileStore } from '../../hooks/store';
@@ -37,7 +37,6 @@ export default observer(() => {
   const octoDAO = useOctoDAO();
   const { openRepos, clearOpenSearchResultFiles } = useFileStore();
   const {
-    isPending,
     setPending,
     isSearchSectionMinimized,
     toggleSearchSection,
@@ -48,6 +47,7 @@ export default observer(() => {
     selectedLanguage,
     setSelectedLanguage
   } = useUiStore();
+  const [atScrollTop, setAtScrollTop] = useState(true); // to render shadow under search box
 
   // @computed repo options
   const repoOptions = useMemo(
@@ -87,7 +87,6 @@ export default observer(() => {
 
   // Search API call
   const onSearch = useCallback(async () => {
-    console.log('searching...', debouncedQuery, repository, language);
     setPending('Search');
     const parsedRepo = repository.value.split(':'); // alexkim205:master
     const responseNodes = await octoDAO.searchCode(
@@ -114,88 +113,96 @@ export default observer(() => {
 
   return (
     <>
-      <FormContainer>
-        <IconContainer>
+      <HeaderContainer hasShadow={!atScrollTop}>
+        <FormContainer>
           <OpenCloseChevron
             open={!isSearchSectionMinimized}
             onClick={toggleSearchSection}
+            highlightOnHover
           />
-        </IconContainer>
-        <Form onSubmit={handleSubmit(onSearch)}>
-          <Input
-            className="search-section-field"
-            type="text"
-            placeholder="Search"
-            id="query"
-            name="query"
-            ref={register({ required: true })}
-            icon={
-              <ExternalLink to={GITHUB_URLS.SEARCH_QUERY}>
-                <QuestionIcon size={14} verticalAlign="middle" />
-              </ExternalLink>
-            }
-          />
-          {/* <Label htmlFor="repository">repository</Label> */}
-          <Select
-            className={`search-section-field ${
-              isSearchSectionMinimized && 'is-technically-last'
-            }`}
-            name="repository"
-            placeholder="Repository"
-            control={control}
-            rules={{ required: true }}
-            options={repoOptions}
-            onChange={(option) => {
-              setSelectedOpenRepo(option.value);
-            }}
-          />
-          <HideContainer isHidden={isSearchSectionMinimized}>
-            {/* <Label htmlFor="language">language</Label> */}
-            <Suspense
-              fallback={
-                <Select
+          <Form onSubmit={handleSubmit(onSearch)}>
+            <Input
+              className="search-section-field"
+              type="text"
+              placeholder="Search"
+              id="query"
+              name="query"
+              ref={register({ required: true })}
+              icon={
+                <ExternalLink to={GITHUB_URLS.SEARCH_QUERY}>
+                  <QuestionIcon size={14} verticalAlign="middle" />
+                </ExternalLink>
+              }
+            />
+            {/* <Label htmlFor="repository">repository</Label> */}
+            <ControlledSelect
+              className={`search-section-field ${
+                isSearchSectionMinimized && 'is-technically-last'
+              }`}
+              name="repository"
+              placeholder="Repository"
+              control={control}
+              rules={{ required: true }}
+              options={repoOptions}
+              onChange={(option) => {
+                setSelectedOpenRepo(option.value);
+              }}
+            />
+            <HideContainer isHidden={isSearchSectionMinimized}>
+              {/* <Label htmlFor="language">language</Label> */}
+              <Suspense
+                fallback={
+                  <ControlledSelect
+                    className="search-section-field"
+                    name="language"
+                    placeholder="Language"
+                    control={control}
+                    options={{ value: '', label: 'Loading...' }}
+                  />
+                }
+              >
+                <LanguagesSelect
                   className="search-section-field"
                   name="language"
                   placeholder="Language"
                   control={control}
-                  options={{ value: '', label: 'Loading...' }}
+                  onChange={(option) => {
+                    setSelectedLanguage(option.value);
+                  }}
                 />
-              }
-            >
-              <LanguagesSelect
-                className="search-section-field"
-                name="language"
-                placeholder="Language"
-                control={control}
-                onChange={(option) => {
-                  console.log('set selected language', option);
-                  setSelectedLanguage(option.value);
-                }}
-              />
-            </Suspense>
-          </HideContainer>
-        </Form>
-      </FormContainer>
-      <FormResultsDescriptionContainer>
-        {isWellFormed &&
-          Array.isArray(results) && // so that 0 results doesn't show up while pending
-          (results.length
-            ? `${results.reduce(
-                (numResults, file) =>
-                  numResults +
-                  file.text_matches.reduce(
-                    (numTextMatches, textMatch) =>
-                      numTextMatches + textMatch.matches.length,
-                    0
-                  ),
-                0
-              )} results in ${results.length} files`
-            : '0 results')}
-      </FormResultsDescriptionContainer>
+              </Suspense>
+            </HideContainer>
+          </Form>
+        </FormContainer>
+        <FormResultsDescriptionContainer>
+          {isWellFormed &&
+            Array.isArray(results) && // so that 0 results doesn't show up while pending
+            (results.length
+              ? `${results.reduce(
+                  (numResults, file) =>
+                    numResults +
+                    file.text_matches.reduce(
+                      (numTextMatches, textMatch) =>
+                        numTextMatches + textMatch.matches.length,
+                      0
+                    ),
+                  0
+                )} results in ${results.length} files`
+              : '0 results')}
+        </FormResultsDescriptionContainer>
+      </HeaderContainer>
       <Scrollbars
         style={{
           width: '100%',
           height: '100%'
+        }}
+        onScrollFrame={({ top }) => {
+          if (top === 0) {
+            // At top of page
+            setAtScrollTop(true);
+          } else if (atScrollTop) {
+            setAtScrollTop(false);
+          }
         }}
         autoHideTimeout={500}
         autoHide

@@ -10,8 +10,11 @@ import OpenCloseChevron from '../OpenCloseChevron';
 import Spinner from '../Spinner';
 import { folderIconColor } from '../../constants/theme';
 import { useFileStore } from '../../hooks/store';
+import useTheme from '../../hooks/useTheme';
+import { ICON } from '../../constants/sizes';
 
 const Folder = ({ owner, repo, branch, data, level }) => {
+  const { spacing } = useTheme();
   const { openNode, closeNode, getNode } = useFileStore();
   const [open, setOpen] = useState(false);
   const nodes = getFolderFiles(
@@ -39,13 +42,16 @@ const Folder = ({ owner, repo, branch, data, level }) => {
         <StyledNode.LeftSpacer level={level} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon iconFill={folderIconColor}>
-          <FileDirectoryIcon size={14} verticalAlign="middle" />
+          <FileDirectoryIcon
+            size={ICON.SIZE({ theme: { spacing } })}
+            verticalAlign="middle"
+          />
         </StyledNode.Icon>
         <StyledNode.Name>{data.name}</StyledNode.Name>
       </StyledNode.Container>
       <>
         {open &&
-          (nodes.length ? (
+          (nodes && nodes.length ? (
             nodes.map((node) => (
               <Node
                 key={node.path}

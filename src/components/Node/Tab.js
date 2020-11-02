@@ -6,8 +6,11 @@ import { FileIcon } from '@primer/octicons-react';
 import StyledNode from './Base.style';
 import { changeActiveTab, processTabInformation } from './util';
 import { useUiStore } from '../../hooks/store';
+import useTheme from '../../hooks/useTheme';
+import { ICON } from '../../constants/sizes';
 
 const Tab = observer(({ tab, currentBranch }) => {
+  const { spacing } = useTheme();
   const { setPending } = useUiStore();
   const handleClick = async () => {
     // Redirect to file page
@@ -27,10 +30,13 @@ const Tab = observer(({ tab, currentBranch }) => {
     >
       <StyledNode.LeftSpacer level={1} />
       <StyledNode.Icon>
-        <FileIcon size={14} verticalAlign="middle" />
+        <FileIcon
+          size={ICON.SIZE({ theme: { spacing } })}
+          verticalAlign="middle"
+        />
       </StyledNode.Icon>
       <StyledNode.Name>{primaryText}</StyledNode.Name>
-      <StyledNode.SubName>
+      <StyledNode.SubName variant="smallFont">
         <span className="subpage">{subpageText}</span>/{secondaryText}
       </StyledNode.SubName>
     </StyledNode.Container>

@@ -54,8 +54,7 @@ const base = {
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: './src/manifest.json', to: './manifest.json' },
-        // {
+        { from: './src/manifest.json', to: './manifest.json' }, // {
         //   from: './src/content-scripts/index.css',
         //   to: './content-script.css'
         // },

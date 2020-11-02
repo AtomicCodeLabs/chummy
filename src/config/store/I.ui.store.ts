@@ -7,6 +7,12 @@ export enum Theme {
   Dark = 'dark'
 }
 
+export enum Spacing {
+  Compact = 'compact',
+  Cozy = 'cozy',
+  Comfortable = 'comfortable'
+}
+
 export enum SidebarView {
   Project,
   Branches,
@@ -32,8 +38,10 @@ export enum SectionName {
 class CUiStore {
   language: Language = Language.English;
   theme: Theme = Theme.Light;
+  spacing: Spacing = Spacing.Cozy;
   pendingRequestCount: number = 0;
   isPending: SectionName = SectionName.None;
+  isStickyWindow: boolean = false; 
 
   // Sidebar
   sidebarView: SidebarView = null;

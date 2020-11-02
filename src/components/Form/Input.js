@@ -7,9 +7,10 @@ import { INPUT } from '../../constants/sizes';
 import {
   fieldColor,
   nodeTextColor,
-  nodeLightestTextColor,
-  ACCENT_COLOR
+  nodeLightTextColor,
+  fontSize
 } from '../../constants/theme';
+import { ACCENT_COLOR } from '../../constants/colors';
 
 const InputContainer = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const InputContainer = styled.div`
   position: relative;
 
   background-color: ${fieldColor};
-  color: ${nodeTextColor};
+  color: ${nodeTextColor} !important;
   height: ${INPUT.HEIGHT}px;
   transition: box-shadow 100ms;
   box-shadow: 0 0 0 ${({ isFocused }) => (isFocused ? 1 : 0)}px ${ACCENT_COLOR};
@@ -27,7 +28,7 @@ const InputContainer = styled.div`
     transition: fill 100ms;
     padding-right: 0.3rem;
     width: 20px;
-    fill: ${nodeLightestTextColor};
+    fill: ${nodeLightTextColor};
     cursor: pointer;
 
     &:hover {
@@ -45,8 +46,9 @@ const StyledInput = styled.input`
   box-shadow: none;
   background-color: transparent;
 
+  color: ${nodeTextColor};
   flex: 1;
-  font-size: 0.75rem;
+  font-size: ${fontSize};
   padding: 0.2rem calc(0.3rem + 2px); // To be compatible with react-select
   height: 100%;
 `;

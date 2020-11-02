@@ -1,12 +1,14 @@
 import styled, { css } from 'styled-components';
-import { NODE } from '../../constants/sizes';
+import { ICON, NODE } from '../../constants/sizes';
 
 import {
   backgroundAlternatingDarkColor,
   backgroundAlternatingLightColor,
-  BORDER_GRAY,
+  fontSize,
+  indentPadding,
   shadowColor
 } from '../../constants/theme';
+import { BORDER_GRAY } from '../../constants/colors';
 
 export const SectionContainer = styled.div`
   display: flex;
@@ -23,7 +25,7 @@ export const SectionNameContainer = styled.div`
   display: flex;
   flex-direction: row;
   cursor: pointer;
-  padding-left: 0.2rem;
+  padding-left: calc(${indentPadding} - ${ICON.SIZE}px - ${ICON.SIDE_MARGIN}px);
   /* border-top: 1px solid ${BORDER_GRAY}; */
   box-shadow: 0px 2px 1px 0px ${shadowColor};
   z-index: ${({ zIndex }) => zIndex};
@@ -35,7 +37,7 @@ export const SectionName = styled.div`
   text-transform: uppercase;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: ${fontSize};
   line-height: ${NODE.HEIGHT}px;
   font-weight: bold;
   user-select: none;

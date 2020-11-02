@@ -22,3 +22,5 @@ export enum SUBPAGES {
   PULSE = 'pulse',
   SETTINGS = 'settings'
 }
+
+export const NO_WINDOW_EXTENSION_ID = -3; // -3 if it doesn't exist
