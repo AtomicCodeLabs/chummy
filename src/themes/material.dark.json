@@ -1,0 +1,31 @@
+{
+  "name": "Material Dark",
+  "type": "dark",
+  "author": "Alex Gyujin Kim",
+  "theme": {
+    "sidebarColor": "#212121",
+    "sidebarActiveIconColor": "#eeffff",
+    "sidebarInactiveIconColor": "#737a7a",
+    "backgroundColor": "#212121",
+    "backgroundAlternatingDarkColor": "#212121",
+    "backgroundAlternatingLightColor": "#212121",
+    "backgroundHighlightColor": "#80cbc4",
+    "backgroundHighlightTextColor": "#000000",
+    "backgroundHighlightDarkColor": "#80cbc4",
+    "backgroundHighlightDarkTextColor": "#000000",
+    "textColor": "#ffffff",
+    "lightTextColor": "#e3ded7",
+    "lighterTextColor": "#bab6b1",
+    "lightBackgroundTextColor": "#000000",
+    "darkBackgroundTextColor": "#e3ded7",
+    "highlightTextColor": "#000000",
+    "highlightBackgroundColor": "#ffcb6b",
+    "folderIconColor": "#ffcb6b",
+    "nodeIconColor": "#e3ded7",
+    "nodeIconDarkColor": "#f2eee9",
+    "shadowColor": "rgba(0, 0, 0, 0.5)",
+    "fieldBackgroundColor": "#37474f",
+    "fieldFocusOutlineColor": "#80cbc4",
+    "borderColor": "#34515e"
+  }
+}

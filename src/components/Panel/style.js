@@ -3,11 +3,11 @@ import theme from 'styled-theming';
 import {
   fontSize,
   indentPadding,
-  nodeTextColor,
+  lightTextColor,
   textColor,
   textSpacing,
   lineHeight,
-  fieldColor
+  fieldBackgroundColor
 } from '../../constants/theme';
 
 const innerPadding = theme('spacing', {
@@ -24,7 +24,7 @@ const Container = styled.div`
   padding: ${innerPadding};
 
   &:hover {
-    background-color: ${fieldColor};
+    background-color: ${fieldBackgroundColor};
   }
 `;
 
@@ -37,7 +37,7 @@ const Title = styled.div`
 
 const Description = styled.div`
   font-size: ${fontSize};
-  color: ${nodeTextColor};
+  color: ${lightTextColor};
   margin-bottom: ${textSpacing};
   line-height: ${lineHeight};
 `;

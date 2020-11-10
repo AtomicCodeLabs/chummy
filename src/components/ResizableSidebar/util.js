@@ -1,18 +1,7 @@
+import { sidebarRoutes } from '../../config/routes';
+
 export const getSidebarHeaderTitle = (pathname) => {
-  switch (pathname) {
-    case '/':
-      return 'Explorer';
-    case '/search':
-      return 'Search';
-    case '/vcs':
-      return 'Source Control';
-    case '/account':
-      return 'Account';
-    case '/settings':
-      return 'Settings';
-    default:
-      return '';
-  }
+  return sidebarRoutes.find((r) => r.pathname === pathname)?.title || '';
 };
 
 export const isPageWithHeader = (pathname) =>

@@ -9,19 +9,21 @@ import {
 
 // Rules set when extension is installed
 const onInstalledListener = async () => {
-  await browser.declarativeContent.onPageChanged
-    .removeRules(undefined)
-    .catch((error) => console.error('Error removing page rules', error));
-  browser.declarativeContent.onPageChanged.addRules([
-    {
-      conditions: [
-        new browser.declarativeContent.PageStateMatcher({
-          pageUrl: { hostEquals: 'github.com' }
-        })
-      ],
-      actions: [new browser.declarativeContent.ShowPageAction()]
-    }
-  ]);
+  try {
+    await browser.declarativeContent.onPageChanged.removeRules();
+    browser.declarativeContent.onPageChanged.addRules([
+      {
+        conditions: [
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: { hostEquals: 'github.com' }
+          })
+        ],
+        actions: [new browser.declarativeContent.ShowPageAction()]
+      }
+    ]);
+  } catch (error) {
+    console.error('Error removing and adding page rules', error);
+  }
 };
 browser.runtime.onInstalled.addListener(() => {
   onInstalledListener();
@@ -156,6 +158,7 @@ browser.windows.onBoundsChanged.addListener((window) => {
 });
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
+  console.log('sendcontentchanged', tabTitle);
   const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
   browser.runtime.sendMessage({
     action: 'active-tab-changed',
@@ -193,6 +196,7 @@ const onFocusChangedListener = async (windowId) => {
     }
     const tabs = await browser.tabs.query({ active: true, windowId });
     const { url, id: tabId, title: tabTitle } = tabs[0];
+    console.log(tabTitle);
 
     sendContentChangedMessage(windowId, tabId, tabTitle, url);
   } catch (error) {

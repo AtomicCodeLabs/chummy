@@ -1,5 +1,7 @@
 /* eslint-disable no-plusplus */
 import browser from 'webextension-polyfill';
+import urlUtil from 'url';
+import pathUtil from 'path';
 
 export const redirectTo = (
   base,
@@ -125,3 +127,18 @@ export const getMatchFragment = (fragment, matchStart, matchEnd) => {
     end: matchEnd - l + 1 + (truncatedLeft ? 3 : 0)
   };
 };
+
+export const getBookmarkUrl = (bookmark) => {
+  if (!bookmark?.repo || !bookmark?.branch || !bookmark?.path) {
+    return null;
+  }
+  const { repo, branch, path } = bookmark;
+  return urlUtil.resolve(
+    'https://github.com/',
+    pathUtil.join(`/${repo.owner}/${repo.name}`, `/blob/${branch.name}/${path}`)
+  );
+};
+
+export const clickedEl = (ref, event) =>
+  ref.current &&
+  (event.target === ref.current || ref.current.contains(event.target));

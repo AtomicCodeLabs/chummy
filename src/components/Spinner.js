@@ -1,6 +1,6 @@
 // https://gist.github.com/adrianmcli/9fac3ff3c144c2805be90381eaa8d3d4
 import styled, { keyframes } from 'styled-components';
-import { nodeIconColor, nodeIconDarkerColor } from '../constants/theme';
+import { nodeIconColor, nodeIconDarkColor } from '../constants/theme';
 
 const rotate360 = keyframes`
   from {
@@ -18,7 +18,7 @@ const Spinner = styled.div`
   border-top: 2px solid ${nodeIconColor};
   border-right: 2px solid ${nodeIconColor};
   border-bottom: 2px solid ${nodeIconColor};
-  border-left: 3px solid ${nodeIconDarkerColor};
+  border-left: 3px solid ${nodeIconDarkColor};
   background: transparent;
   width: ${({ size }) => size || 16}px;
   height: ${({ size }) => size || 16}px;

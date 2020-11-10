@@ -1,8 +1,11 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import browser from 'webextension-polyfill';
 
 import useOctoDAO from '../../hooks/octokit';
+import userUtils from '../../utils/user';
+import { transformBookmarks } from './util';
 
 let isInitialized = false;
 
@@ -15,10 +18,7 @@ class FirebaseDAO {
     // Add listener for auth changes and store
     browser.runtime.onMessage.addListener((response) => {
       if (response.action === 'auth-state-changed') {
-        // Set user
-        this.userStore.setUser({
-          user: response.payload.user
-        });
+        this.handleUserResponse(response);
       }
     });
   }
@@ -30,48 +30,146 @@ class FirebaseDAO {
   // *** Auth API ***
 
   signIn = async () => {
-    // console.log('sign-in message sent');
     this.userStore.setPending(true);
-    const response = await browser.runtime
-      .sendMessage({ action: 'sign-in' })
-      .catch((e) => console.error('Error signing in', e));
-    console.log('RESPONSE', response);
-    if (response) {
-      console.log('sign-in message received', response);
-      this.userStore.setUser({
-        user: response.payload.user
+
+    try {
+      // Sign in
+      const response = await browser.runtime.sendMessage({
+        action: 'sign-in'
       });
-      this.userStore.setPending(false);
-      this.octoDAO.authenticate(response.payload.user?.apiKey);
+      if (response) {
+        // Set user store
+        this.userStore.setUser({
+          user: response.payload.user
+        });
+        this.octoDAO.authenticate(response.payload.user?.apiKey);
+      }
+    } catch (error) {
+      console.error('Error signing in', error);
     }
+
     this.userStore.setPending(false);
   };
 
   signOut = () => {
     browser.runtime.sendMessage({ action: 'sign-out' });
-    this.userStore.setUser({});
+    this.userStore.clearUser();
     this.octoDAO.unauthenticate();
   };
 
   getCurrentUser = async () => {
-    // console.log('get-current-user message sent');
     this.userStore.setPending(true);
 
-    const response = await browser.runtime
-      .sendMessage({
+    try {
+      const response = await browser.runtime.sendMessage({
         action: 'get-current-user'
-      })
-      .catch((e) => console.error('Error getting current user', e));
-    if (response) {
-      this.userStore.setUser({
-        user: response.payload.user
       });
-      this.octoDAO.authenticate(response.payload.user?.apiKey);
-      this.userStore.setPending(false);
-    } else {
-      console.error('Error getting current user', response?.error);
+      this.handleUserResponse(response);
+    } catch (error) {
+      console.error('Error getting current user', error);
     }
 
+    this.userStore.setPending(false);
+  };
+
+  // Util method to handle user payload from bg script
+  handleUserResponse = (response) => {
+    if (response?.payload) {
+      if (response.payload.user) {
+        // If user is signed in
+        this.userStore.setUser({
+          user: response.payload.user
+        });
+        this.octoDAO.authenticate(response.payload.user?.apiKey);
+      } else {
+        // If user signs out, payload.user will be empty
+        this.userStore.clearUser();
+        this.octoDAO.unauthenticate();
+      }
+    }
+  };
+
+  // *** Firestore API ***
+
+  getAllBookmarks = async () => {
+    if (!this.userStore.isLoggedIn()) {
+      console.error('Firebase is not authenticated.');
+      return null;
+    }
+    // Check if cached bookmarks exist in store first
+    if (this.userStore.hasBookmarksCached()) {
+      return this.userStore.getUserBookmarks();
+    }
+
+    this.userStore.setPending(true);
+    try {
+      const response = await userUtils.getAllBookmarks();
+      if (response?.payload?.bookmarks) {
+        // Bookmarks will be array, so they'll need transforming
+        console.log(
+          'Transforming bookmarks',
+          transformBookmarks(response.payload.bookmarks)
+        );
+        this.userStore.setUserBookmarks(
+          transformBookmarks(response.payload.bookmarks)
+        );
+      }
+    } catch (error) {
+      console.error('Error getting all bookmarks', error);
+    }
+    this.userStore.setPending(false);
+  };
+
+  addBookmark = async (bookmark) => {
+    this.userStore.setPending(true);
+    try {
+      await userUtils.addBookmark(bookmark);
+
+      // Repo.bookmarks with default settings
+      const bookmarkRepo = {
+        owner: bookmark.repo.owner,
+        name: bookmark.repo.name,
+        bookmarks: {
+          [bookmark.bookmarkId]: bookmark
+        }
+      };
+      // Only after request resolves, update local cache
+      this.userStore.addBookmark(bookmarkRepo);
+    } catch (error) {
+      console.error('Error creating bookmark', error);
+    }
+    this.userStore.setPending(false);
+  };
+
+  updateBookmark = async (bookmark) => {
+    this.userStore.setPending(true);
+    try {
+      await userUtils.updateBookmark(bookmark);
+      // Only after request resolves, update local cache
+      this.userStore.updateBookmark(bookmark);
+    } catch (error) {
+      console.error('Error updating bookmark', error);
+    }
+    this.userStore.setPending(false);
+  };
+
+  removeBookmark = async (bookmark) => {
+    this.userStore.setPending(true);
+    try {
+      await userUtils.removeBookmark(bookmark);
+
+      // Repo.bookmarks with default settings
+      const bookmarkRepo = {
+        owner: bookmark.repo.owner,
+        name: bookmark.repo.name,
+        bookmarks: {
+          [bookmark.bookmarkId]: bookmark
+        }
+      };
+      this.userStore.removeBookmark(bookmarkRepo);
+    } catch (error) {
+      console.error('Error remove bookmark', error);
+    }
     this.userStore.setPending(false);
   };
 }

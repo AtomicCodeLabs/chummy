@@ -1,10 +1,7 @@
+import { THEME_NAMES } from '../../config/theme/selector';
+
 export enum Language {
   English = 'en_US'
-}
-
-export enum Theme {
-  Light = 'light',
-  Dark = 'dark'
 }
 
 export enum Spacing {
@@ -29,6 +26,7 @@ export enum SectionName {
   Tree = 'Explorer',
   Search = 'Search',
   VCS = 'Source Control',
+  Bookmarks = 'Bookmarks',
   Account = 'Account',
   Settings = 'Settings',
   None = 'None'
@@ -37,11 +35,11 @@ export enum SectionName {
 // UiStore
 class CUiStore {
   language: Language = Language.English;
-  theme: Theme = Theme.Light;
+  theme: string = THEME_NAMES[0];
   spacing: Spacing = Spacing.Cozy;
   pendingRequestCount: number = 0;
   isPending: SectionName = SectionName.None;
-  isStickyWindow: boolean = false; 
+  isStickyWindow: boolean = false;
 
   // Sidebar
   sidebarView: SidebarView = null;

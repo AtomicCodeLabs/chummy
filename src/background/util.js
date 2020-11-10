@@ -12,19 +12,6 @@ import {
   NO_WINDOW_EXTENSION_ID
 } from './constants.ts';
 
-// eslint-disable-next-line import/prefer-default-export
-export const inActiveTab = async (callback) => {
-  try {
-    const tabs = await browser.tabs.query({
-      active: true,
-      currentWindow: true
-    });
-    callback(tabs);
-  } catch (error) {
-    console.error('Error finding active tab', error);
-  }
-};
-
 export const isExtensionOpen = async () => {
   try {
     const { currentWindowId } = await browser.storage.sync.get([
@@ -117,8 +104,6 @@ export class UrlParser {
 
   parse() {
     if (!this.isGithubRepoUrl) return {};
-
-    console.log('PARSE', this.subpage, SUBPAGES.ISSUES);
 
     if (this.subpage === SUBPAGES.REPOSITORY) {
       return this.#handleRepositorySubpage();

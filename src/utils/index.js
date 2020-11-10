@@ -38,3 +38,6 @@ export const redirectToUrl = (url) => {
     payload: { url }
   });
 };
+
+// https://stackoverflow.com/questions/1983648/replace-spaces-with-dashes-and-make-all-letters-lower-case
+export const kebabify = (s) => s.replace(/\s+/g, '-').toLowerCase();

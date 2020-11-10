@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import {
   backgroundHighlightColor,
-  nodeLightTextColor,
+  lighterTextColor,
   fontSize,
   shadowColor,
   fieldMargin
@@ -27,7 +27,7 @@ export const FormContainer = styled.div`
 `;
 
 export const FormResultsDescriptionContainer = styled.div`
-  color: ${nodeLightTextColor};
+  color: ${lighterTextColor};
   font-size: ${fontSize};
   padding: 0 0.5rem 0.5rem calc(14px + 0.5rem + 0.15rem); // to line up with search inputs
 `;

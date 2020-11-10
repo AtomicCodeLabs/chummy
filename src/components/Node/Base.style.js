@@ -1,15 +1,18 @@
 import styled, { css } from 'styled-components';
 import theme from 'styled-theming';
-import { BLACK } from '../../constants/colors';
 import { ICON } from '../../constants/sizes';
 import {
   backgroundHighlightColor,
-  textHighlightColor,
-  nodeTextColor,
+  backgroundHighlightTextColor,
+  highlightBackgroundColor,
+  lightTextColor,
   nodeIconColor,
-  nodeLightTextColor,
+  lighterTextColor,
   fontSize,
-  indentPadding
+  indentPadding,
+  highlightTextColor,
+  backgroundHighlightDarkColor,
+  backgroundHighlightDarkTextColor
 } from '../../constants/theme';
 
 const nodePadding = theme('spacing', {
@@ -30,40 +33,63 @@ const nodePadding = theme('spacing', {
   `
 });
 
+const NodeRoot = styled.div`
+  position: absolute;
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: ${lightTextColor};
   ${nodePadding}
 
   cursor: pointer;
 
+  &:hover {
+    background-color: ${backgroundHighlightColor} !important;
+    color: ${backgroundHighlightTextColor} !important;
+    span {
+      color: ${backgroundHighlightTextColor} !important;
+    }
+    svg {
+      fill: ${backgroundHighlightTextColor};
+    }
+  }
+
   ${({ isActive }) =>
     isActive &&
     css`
-      background-color: ${backgroundHighlightColor} !important;
+      background-color: ${backgroundHighlightDarkColor} !important;
+      color: ${backgroundHighlightDarkTextColor} !important;
+      span {
+        color: ${backgroundHighlightDarkTextColor} !important;
+      }
+      svg {
+        fill: ${backgroundHighlightDarkTextColor} !important;
+      }
     `}
-
-  &:hover {
-    background-color: ${backgroundHighlightColor} !important;
-  }
 `;
 
 const LeftSpacer = styled.div`
   display: flex;
   width: calc(
     ${({ level, ...props }) =>
-      `(1.5 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
+      `(1.2 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
         props
       )}px`}
   );
   min-width: calc(
     ${({ level, ...props }) =>
-      `(1.5 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
+      `(1.2 * ${indentPadding(props)}) * ${level} - ${ICON.SIDE_MARGIN(
         props
       )}px`}
   );
-  margin-right: ${({ marginRight }) => marginRight || '0'};
+  margin-right: ${({ marginRight, extraIconFiller, ...props }) =>
+    (extraIconFiller &&
+      `calc(${ICON.SIZE(props)}px + ${ICON.SIDE_MARGIN(props)}px)`) ||
+    marginRight ||
+    '0'};
 `;
 
 const Icon = styled.div`
@@ -74,19 +100,38 @@ const Icon = styled.div`
     marginRight || `${ICON.SIDE_MARGIN(props)}px`};
 
   svg {
-    fill: ${({ iconFill }) => iconFill || nodeIconColor};
+    fill: ${({ iconFill, ...props }) =>
+      iconFill ? `${iconFill(props)} !important` : nodeIconColor(props)};
+  }
+`;
+
+const RightIconContainer = styled.div`
+  position: sticky;
+  right: -1px;
+  padding-right: calc(${ICON.SIDE_MARGIN}px + 1px);
+  padding-left: ${ICON.SIDE_MARGIN}px;
+  background-color: inherit;
+
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    fill: ${({ iconFill, ...props }) =>
+      iconFill ? `${iconFill(props)} !important` : nodeIconColor(props)};
   }
 `;
 
 const Name = styled.div`
   font-size: ${fontSize};
   user-select: none;
-  color: ${nodeTextColor};
+  /* color: ${lightTextColor}; */
   white-space: nowrap;
 
   span.highlight {
-    color: ${BLACK};
-    background-color: ${textHighlightColor};
+    color: ${highlightTextColor} !important;
+    background-color: ${highlightBackgroundColor};
+    padding: 0 0.2rem;
+    border-radius: 3px;
   }
 
   span.italic {
@@ -98,11 +143,11 @@ const SubName = styled.div`
   margin-left: 0.5rem;
   font-size: ${fontSize};
   user-select: none;
-  color: ${nodeLightTextColor};
+  color: ${lighterTextColor};
   white-space: nowrap;
 
   span.subpage {
-    color: ${nodeTextColor};
+    color: ${lightTextColor};
   }
 `;
 
@@ -116,9 +161,11 @@ const StickyRight = styled.div`
 `;
 
 export default {
+  NodeRoot,
   Container,
   LeftSpacer,
   Icon,
+  RightIconContainer,
   Name,
   SubName,
   MiddleSpacer,

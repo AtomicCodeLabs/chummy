@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { ChevronRightIcon } from '@primer/octicons-react';
-import { nodeIconColor, fieldColor } from '../constants/theme';
+import { nodeIconColor, fieldBackgroundColor } from '../constants/theme';
 import { ICON } from '../constants/sizes';
 import useTheme from '../hooks/useTheme';
 
@@ -23,7 +23,7 @@ const Container = styled.div`
     highlightOnHover &&
     css`
       &:hover {
-        background-color: ${fieldColor};
+        background-color: ${fieldBackgroundColor};
       }
     `}
 `;

@@ -128,10 +128,10 @@ export default class FileStore implements IFileStore {
     }
   };
 
-  @action.bound cleanupOpenRepos = (repos: Repo[]) => {
+  @action.bound cleanupOpenRepos = (reposToSet: Repo[]) => {
     // Loop through all the open repos and remove the tabs that aren't open
     let openTabIds = new Set();
-    repos.forEach((r: Repo) =>
+    reposToSet.forEach((r: Repo) =>
       Object.values(r.tabs).forEach((t: Branch) => openTabIds.add(t.tabId))
     );
 
@@ -167,18 +167,6 @@ export default class FileStore implements IFileStore {
     }
   };
 
-  // updateOpenRepo = (repo: Repo) => {
-  //   const key = `${repo.owner}:${repo.name}`;
-  //   const foundRepo = this.openRepos.get(key);
-  //   if (foundRepo) {
-  //     // Update branches from existing repo
-  //     Object.values(repo.branches).forEach((branch) => {
-  //       const branchKey = `${branch.name}#${branch.tabId}`;
-  //       foundRepo.branches[branchKey] = branch;
-  //     });
-  //   }
-  // };
-
   // Set open repo to open state (expanded)
   @action.bound openOpenRepo = (owner: string, name: string) => {
     const key = `${owner}:${name}`;
@@ -190,7 +178,6 @@ export default class FileStore implements IFileStore {
 
   // Set open repo to closed state (minimized)
   @action.bound closeOpenRepo = (owner: string, name: string) => {
-    console.log('close, openrepo', owner, name);
     const key = `${owner}:${name}`;
     const foundRepo = this.openRepos.get(key);
     if (foundRepo) {

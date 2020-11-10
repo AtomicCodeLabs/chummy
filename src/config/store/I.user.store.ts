@@ -1,11 +1,18 @@
 import IUiStore from './I.ui.store';
-import IFileStore from './I.file.store';
+import IFileStore, { Repo } from './I.file.store';
+
+export enum AccountType {
+  Basic = 'basic',
+  Pro = 'pro',
+  Enterprise = 'enterprise'
+}
 
 export interface User {
   uid: string;
   displayName: string;
   photoURL: string;
   apiKey: string;
+  accountType: AccountType;
 }
 
 export default interface IUserStore {
@@ -13,5 +20,6 @@ export default interface IUserStore {
   fileStore: IFileStore;
 
   user: User;
+  userBookmarks: Map<string, Repo>;
   isPending: boolean;
 }

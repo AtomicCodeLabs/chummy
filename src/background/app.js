@@ -208,7 +208,8 @@ const initializeTabListeners = () => {
     sendOpenRepositoryUpdatesMessage();
     // Also send active tab change event so that current branch & window/tab
     // can be updated on frontend
-    if (tab.active && changeInfo.url) {
+    const isTabTitleUrl = changeInfo.url === tab.title; // Tab changed event not ready to be sent
+    if (tab.active && changeInfo.url && !isTabTitleUrl) {
       const parsed = new UrlParser(tab.url, tab.title, tabId).parse();
       browser.runtime.sendMessage({
         action: 'active-tab-changed',

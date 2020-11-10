@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import { toJS } from 'mobx';
-import { LinkExternalIcon } from '@primer/octicons-react';
+import {
+  LinkExternalIcon,
+  BookmarkIcon
+  // BookmarkFillIcon
+} from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { useFileStore } from '../../hooks/store';
 import { redirectToUrl } from './util';
+import useTheme from '../../hooks/useTheme';
+import { ICON } from '../../constants/sizes';
 
 const SearchResultMatchNode = observer(
   ({ fragment, indices: { start, end }, url }) => {
+    const { spacing } = useTheme();
     const [showNewTab, setShowNewTab] = useState(false);
-    const { currentWindowTab } = useFileStore();
 
     const handleClick = (e) => {
       e.stopPropagation();
       e.preventDefault();
       // Always open search match file in new tab
-      console.log(toJS(currentWindowTab));
       redirectToUrl(url);
     };
 
@@ -36,13 +39,18 @@ const SearchResultMatchNode = observer(
             {fragment.slice(end)}
           </span>
         </StyledNode.Name>
+        <StyledNode.MiddleSpacer />
         {showNewTab && (
-          <>
-            <StyledNode.MiddleSpacer />
-            <StyledNode.Icon marginRight="1.5rem">
-              <LinkExternalIcon size={14} verticalAlign="middle" />
-            </StyledNode.Icon>
-          </>
+          <StyledNode.RightIconContainer>
+            <BookmarkIcon
+              size={ICON.SIZE({ theme: { spacing } })}
+              verticalAlign="middle"
+            />
+            <LinkExternalIcon
+              size={ICON.SIZE({ theme: { spacing } })}
+              verticalAlign="middle"
+            />
+          </StyledNode.RightIconContainer>
         )}
       </StyledNode.Container>
     );

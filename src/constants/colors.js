@@ -12,7 +12,9 @@ export const BLACK = '#000000';
 
 export const GRAY = '#888888';
 
-export const BORDER_GRAY = '#E1E4E8';
+export const BORDER_GRAY_LIGHT = '#E1E4E8';
+
+export const BORDER_GRAY_DARK = '#97999c';
 
 export const BACKGROUND_HIGHLIGHT_COLOR_LIGHT = '#d4e9ff';
 

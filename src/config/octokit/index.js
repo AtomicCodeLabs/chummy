@@ -28,7 +28,6 @@ class OctoDAO {
   // Auth API (Config with auth)
 
   authenticate = (apiKey) => {
-    console.log('auth', this.userStore.user?.apiKey, apiKey);
     if (!this.userStore.user?.apiKey && !apiKey) {
       console.error(
         'Cannot authenticate octokit because user is not signed in.'
@@ -36,9 +35,6 @@ class OctoDAO {
       return;
     }
     if (this.isAuthenticated()) {
-      console.warn(
-        'Cannot authenticate octokit because already authenticated.'
-      );
       return;
     }
     // console.log("authenticating github", this.userStore.user.apiKey)
@@ -79,7 +75,7 @@ class OctoDAO {
     this.restAuth = null;
   };
 
-  isAuthenticated = () => !!this.graphqlAuth;
+  isAuthenticated = () => !!this.graphqlAuth && !!this.restAuth;
 
   // Repo API
   getRepositoryNodes = async (owner, repo, branch, treePath = '') => {
@@ -95,13 +91,7 @@ class OctoDAO {
     }
 
     try {
-      console.log(
-        branch.name,
-        treePath,
-        owner,
-        repo,
-        formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath)
-      );
+      console.log(branch.name, treePath, owner, repo);
       const response = await this.graphqlAuth(
         formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath),
         {

@@ -1,22 +1,7 @@
 import theme from 'styled-theming';
+import selector from '../config/theme/selector';
 
-import {
-  PRIMARY_COLOR,
-  ACCENT_COLOR,
-  DARK,
-  LIGHT_DARK,
-  WHITE,
-  BLACK,
-  BACKGROUND_HIGHLIGHT_COLOR_DARK,
-  BACKGROUND_HIGHLIGHT_COLOR_LIGHT,
-  BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK,
-  NODE_LIGHTEST_TEXT_COLOR_DARK,
-  NODE_LIGHTEST_TEXT_COLOR_LIGHT,
-  NODE_TEXT_COLOR_DARK,
-  NODE_TEXT_COLOR_LIGHT,
-  FIELD_COLOR_DARK,
-  FIELD_COLOR_LIGHT
-} from './colors';
+// Sizing
 
 export const fieldMargin = theme('spacing', {
   compact: 3,
@@ -48,92 +33,49 @@ export const lineHeight = theme('spacing', {
   comfortable: '1.3rem'
 });
 
-export const sideBarColor = theme('theme', {
-  light: PRIMARY_COLOR,
-  dark: FIELD_COLOR_DARK
-});
+// Colors
 
-export const backgroundColor = theme('theme', {
-  light: WHITE,
-  dark: DARK
-});
+const themeCreator = (key) => theme('theme', selector(key));
 
-export const backgroundAlternatingDarkColor = theme('theme', {
-  light: '#F1F8FF',
-  dark: DARK
-});
-
-export const backgroundAlternatingLightColor = theme('theme', {
-  light: WHITE,
-  dark: LIGHT_DARK
-});
-
-export const backgroundHighlightColor = theme('theme', {
-  light: BACKGROUND_HIGHLIGHT_COLOR_LIGHT,
-  dark: BACKGROUND_HIGHLIGHT_DARK_COLOR_DARK
-});
-
-export const backgroundHighlightDarkColor = theme('theme', {
-  light: ACCENT_COLOR,
-  dark: BACKGROUND_HIGHLIGHT_COLOR_DARK
-});
-
-export const textColor = theme('theme', {
-  light: BLACK,
-  dark: '#fff'
-});
-
-export const nodeTextColor = theme('theme', {
-  light: NODE_TEXT_COLOR_LIGHT,
-  dark: NODE_TEXT_COLOR_DARK
-});
-
-export const nodeLightTextColor = theme('theme', {
-  light: NODE_LIGHTEST_TEXT_COLOR_LIGHT,
-  dark: NODE_LIGHTEST_TEXT_COLOR_DARK
-});
-
-export const invertedNodeTextColor = theme('theme', {
-  light: '#e3ded7',
-  dark: '#e3ded7'
-});
-
-export const textHighlightColor = theme('theme', {
-  light: '#fff200',
-  dark: '#fff200'
-});
-
-export const folderIconColor = theme('theme', {
-  light: '#79b8ff',
-  dark: '#79b8ff'
-});
-
-export const nodeIconColor = theme('theme', {
-  light: '#6a737d',
-  dark: '#e3ded7'
-});
-
-export const nodeIconDarkerColor = theme('theme', {
-  light: '#4b5259',
-  dark: '#f2eee9'
-});
-
-export const highlightColor = theme('theme', {
-  light: BLACK,
-  dark: WHITE
-});
-
-export const unHighlightColor = theme('theme', {
-  light: '#888888',
-  dark: '#222222'
-});
-
-export const shadowColor = theme('theme', {
-  light: 'rgba(0, 0, 0, 0.1)',
-  dark: 'rgba(0, 0, 0, 0.5)'
-});
-
-export const fieldColor = theme('theme', {
-  light: FIELD_COLOR_LIGHT,
-  dark: FIELD_COLOR_DARK
-});
+export const sidebarColor = themeCreator('sidebarColor');
+export const sidebarActiveIconColor = themeCreator('sidebarActiveIconColor');
+export const sidebarInactiveIconColor = themeCreator(
+  'sidebarInactiveIconColor'
+);
+export const backgroundColor = themeCreator('backgroundColor');
+export const backgroundAlternatingDarkColor = themeCreator(
+  'backgroundAlternatingDarkColor'
+);
+export const backgroundAlternatingLightColor = themeCreator(
+  'backgroundAlternatingLightColor'
+);
+export const backgroundHighlightColor = themeCreator(
+  'backgroundHighlightColor'
+);
+export const backgroundHighlightTextColor = themeCreator(
+  'backgroundHighlightTextColor'
+);
+export const backgroundHighlightDarkColor = themeCreator(
+  'backgroundHighlightDarkColor'
+);
+export const backgroundHighlightDarkTextColor = themeCreator(
+  'backgroundHighlightDarkTextColor'
+);
+export const textColor = themeCreator('textColor');
+export const lightTextColor = themeCreator('lightTextColor');
+export const lighterTextColor = themeCreator('lighterTextColor');
+export const lightBackgroundTextColor = themeCreator(
+  'lightBackgroundTextColor'
+);
+export const darkBackgroundTextColor = themeCreator('darkBackgroundTextColor');
+export const highlightTextColor = themeCreator('highlightTextColor');
+export const highlightBackgroundColor = themeCreator(
+  'highlightBackgroundColor'
+);
+export const folderIconColor = themeCreator('folderIconColor');
+export const nodeIconColor = themeCreator('nodeIconColor');
+export const nodeIconDarkColor = themeCreator('nodeIconDarkColor');
+export const shadowColor = themeCreator('shadowColor');
+export const fieldBackgroundColor = themeCreator('fieldBackgroundColor');
+export const fieldFocusOutlineColor = themeCreator('fieldFocusOutlineColor');
+export const borderColor = themeCreator('borderColor');

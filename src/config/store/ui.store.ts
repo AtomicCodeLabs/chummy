@@ -3,7 +3,6 @@ import { observable, computed } from 'mobx';
 
 import IUiStore, {
   Language,
-  Theme,
   SidebarView,
   TreeSection,
   UiStorePropsArray,
@@ -13,10 +12,11 @@ import IUiStore, {
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
+import { THEME_NAMES } from '../../config/theme/selector';
 
 export default class UiStore implements IUiStore {
   @observable language = Language.English;
-  @observable theme = Theme.Light;
+  @observable theme = THEME_NAMES[0];
   @observable spacing = Spacing.Comfortable;
   @observable pendingRequestCount = 0;
   @observable isPending = SectionName.None;
@@ -66,7 +66,7 @@ export default class UiStore implements IUiStore {
     this.isPending = pendingState;
   };
 
-  setTheme = (theme: Theme): void => {
+  setTheme = (theme: string): void => {
     setInChromeStorage({ theme });
     this.theme = theme;
   };
@@ -80,10 +80,6 @@ export default class UiStore implements IUiStore {
     console.log('sticky', isStickyWindow);
     setInChromeStorage({ isStickyWindow });
     this.isStickyWindow = isStickyWindow;
-  };
-
-  toggleTheme = (): void => {
-    this.setTheme(this.theme === Theme.Light ? Theme.Dark : Theme.Light);
   };
 
   setSidebarWidth = (width: number, setInChrome: boolean = false): void => {

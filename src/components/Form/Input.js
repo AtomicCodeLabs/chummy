@@ -5,34 +5,35 @@ import styled from 'styled-components';
 
 import { INPUT } from '../../constants/sizes';
 import {
-  fieldColor,
-  nodeTextColor,
-  nodeLightTextColor,
+  fieldBackgroundColor,
+  lightTextColor,
+  lighterTextColor,
+  fieldFocusOutlineColor,
   fontSize
 } from '../../constants/theme';
-import { ACCENT_COLOR } from '../../constants/colors';
 
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
 
-  background-color: ${fieldColor};
-  color: ${nodeTextColor} !important;
+  background-color: ${fieldBackgroundColor};
+  color: ${lightTextColor} !important;
   height: ${INPUT.HEIGHT}px;
   transition: box-shadow 100ms;
-  box-shadow: 0 0 0 ${({ isFocused }) => (isFocused ? 1 : 0)}px ${ACCENT_COLOR};
+  box-shadow: 0 0 0 ${({ isFocused }) => (isFocused ? 1 : 0)}px
+    ${fieldFocusOutlineColor};
 
   svg {
     // To keep consistent with RS's immutable styles
     transition: fill 100ms;
     padding-right: 0.3rem;
     width: 20px;
-    fill: ${nodeLightTextColor};
+    fill: ${lighterTextColor};
     cursor: pointer;
 
     &:hover {
-      fill: ${nodeTextColor};
+      fill: ${lightTextColor};
     }
   }
 `;
@@ -46,11 +47,19 @@ const StyledInput = styled.input`
   box-shadow: none;
   background-color: transparent;
 
-  color: ${nodeTextColor};
+  color: ${lightTextColor};
   flex: 1;
   font-size: ${fontSize};
   padding: 0.2rem calc(0.3rem + 2px); // To be compatible with react-select
   height: 100%;
+
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    color: ${lightTextColor};
+  }
+  :-ms-input-placeholder {
+    color: ${lightTextColor};
+  }
 `;
 
 const Input = forwardRef(({ className, icon: Icon, ...inputProps }, ref) => {

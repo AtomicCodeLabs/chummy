@@ -12,25 +12,19 @@ import {
   backgroundColor,
   backgroundHighlightColor,
   backgroundHighlightDarkColor,
-  nodeTextColor,
-  invertedNodeTextColor,
+  backgroundHighlightDarkTextColor,
+  lightTextColor,
+  backgroundHighlightTextColor,
   fontSize,
-  fieldColor,
-  nodeLightTextColor
+  fieldBackgroundColor,
+  lighterTextColor,
+  fieldFocusOutlineColor
 } from '../../constants/theme';
-import { ACCENT_COLOR } from '../../constants/colors';
 import useTheme from '../../hooks/useTheme';
 
 const StyledOptionContainer = styled.div`
   display: flex;
   align-items: center;
-
-  background-color: ${({ isSelected, ...props }) =>
-    isSelected
-      ? `${backgroundHighlightDarkColor(props)}`
-      : `${backgroundColor(props)}`};
-  color: ${({ isSelected, ...props }) =>
-    isSelected ? `${invertedNodeTextColor(props)}` : `${nodeTextColor(props)}`};
   height: ${INPUT.SELECT.OPTION.HEIGHT}px;
   padding: 0.2rem calc(0.6rem + 4px);
   font-size: ${fontSize};
@@ -39,11 +33,21 @@ const StyledOptionContainer = styled.div`
   overflow: hidden;
   white-space: nowrap;
 
+  background-color: ${({ isSelected, ...props }) =>
+    isSelected
+      ? `${backgroundHighlightDarkColor(props)}`
+      : `${backgroundColor(props)}`};
+  color: ${({ isSelected, ...props }) =>
+    isSelected
+      ? `${backgroundHighlightDarkTextColor(props)}`
+      : `${lightTextColor(props)}`};
+
   ${({ isSelected, ...props }) =>
     !isSelected &&
     css`
       &:hover {
         background-color: ${backgroundHighlightColor(props)} !important;
+        color: ${backgroundHighlightTextColor(props)} !important;
       }
     `}
 `;
@@ -91,7 +95,7 @@ export const Select = (props) => {
     () => ({
       control: (base) => ({
         ...base,
-        backgroundColor: fieldColor(STPayload),
+        backgroundColor: fieldBackgroundColor(STPayload),
         height: INPUT.SELECT.HEIGHT(STPayload),
         minHeight: 'auto',
         padding: '0.2rem 0.3rem',
@@ -107,14 +111,14 @@ export const Select = (props) => {
         ...base,
         padding: 0,
         cursor: 'pointer',
-        color: nodeLightTextColor(STPayload),
+        color: lighterTextColor(STPayload),
         '&:hover': {
-          color: nodeTextColor(STPayload)
+          color: lightTextColor(STPayload)
         }
       }),
       placeholder: (base) => ({
         ...base,
-        color: nodeTextColor(STPayload)
+        color: lightTextColor(STPayload)
       }),
       indicatorContainer: (base) => ({
         ...base,
@@ -131,7 +135,7 @@ export const Select = (props) => {
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
-        color: nodeTextColor(STPayload)
+        color: lightTextColor(STPayload)
       }),
       valueContainer: (base) => ({
         ...base,
@@ -145,7 +149,7 @@ export const Select = (props) => {
         marginTop: 0,
         textAlign: 'left',
         wordWrap: 'break-word',
-        backgroundColor: fieldColor(STPayload)
+        backgroundColor: fieldBackgroundColor(STPayload)
       }),
       menuList: (base) => ({
         ...base,
@@ -173,7 +177,7 @@ export const Select = (props) => {
         borderRadius: 0,
         colors: {
           ...theme.colors,
-          primary: ACCENT_COLOR
+          primary: fieldFocusOutlineColor(STPayload)
         }
       })}
       styles={customReactSelectStyles}

@@ -1,0 +1,31 @@
+{
+  "name": "Vanilla Light",
+  "type": "light",
+  "author": "Alex Gyujin Kim",
+  "theme": {
+    "sidebarColor": "#24292D",
+    "sidebarActiveIconColor": "#FFFFFF",
+    "sidebarInactiveIconColor": "#888888",
+    "backgroundColor": "#FFFFFF",
+    "backgroundAlternatingDarkColor": "#F1F8FF",
+    "backgroundAlternatingLightColor": "#FFFFFF",
+    "backgroundHighlightColor": "#d4e9ff",
+    "backgroundHighlightTextColor": "#000000",
+    "backgroundHighlightDarkColor": "#d4e9ff",
+    "backgroundHighlightDarkTextColor": "#000000",
+    "textColor": "#000000",
+    "lightTextColor": "#24292e",
+    "lighterTextColor": "#56626e",
+    "lightBackgroundTextColor": "#000000",
+    "darkBackgroundTextColor": "#e3ded7",
+    "highlightTextColor": "#000000",
+    "highlightBackgroundColor": "#fff200",
+    "folderIconColor": "#79b8ff",
+    "nodeIconColor": "#4b5259",
+    "nodeIconDarkColor": "#000000",
+    "shadowColor": "rgba(0, 0, 0, 0.1)",
+    "fieldBackgroundColor": "#DCDCDC",
+    "fieldFocusOutlineColor": "#4078c0",
+    "borderColor": "#E1E4E8"
+  }
+}

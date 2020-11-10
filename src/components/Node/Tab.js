@@ -28,7 +28,7 @@ const Tab = observer(({ tab, currentBranch }) => {
       onClick={handleClick}
       isActive={currentBranch && tab.tabId === currentBranch.tabId}
     >
-      <StyledNode.LeftSpacer level={1} />
+      <StyledNode.LeftSpacer level={1} extraIconFiller />
       <StyledNode.Icon>
         <FileIcon
           size={ICON.SIZE({ theme: { spacing } })}
@@ -37,23 +37,14 @@ const Tab = observer(({ tab, currentBranch }) => {
       </StyledNode.Icon>
       <StyledNode.Name>{primaryText}</StyledNode.Name>
       <StyledNode.SubName variant="smallFont">
-        <span className="subpage">{subpageText}</span>/{secondaryText}
+        <span className="subpage">{subpageText}</span>
+        <span>/{secondaryText}</span>
       </StyledNode.SubName>
     </StyledNode.Container>
   );
 });
 
 Tab.propTypes = {
-  repo: PropTypes.shape({
-    owner: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    tabs: PropTypes.objectOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired
-      })
-    ),
-    type: PropTypes.oneOf(['blob', 'tree']).isRequired
-  }).isRequired,
   tab: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,

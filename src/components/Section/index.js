@@ -8,7 +8,6 @@ import {
   indentPadding,
   shadowColor
 } from '../../constants/theme';
-import { BORDER_GRAY } from '../../constants/colors';
 
 export const SectionContainer = styled.div`
   display: flex;
@@ -26,7 +25,6 @@ export const SectionNameContainer = styled.div`
   flex-direction: row;
   cursor: pointer;
   padding-left: calc(${indentPadding} - ${ICON.SIZE}px - ${ICON.SIDE_MARGIN}px);
-  /* border-top: 1px solid ${BORDER_GRAY}; */
   box-shadow: 0px 2px 1px 0px ${shadowColor};
   z-index: ${({ zIndex }) => zIndex};
   height: ${NODE.HEIGHT}px;

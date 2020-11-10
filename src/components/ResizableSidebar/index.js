@@ -2,14 +2,8 @@ import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
-import {
-  CodeIcon,
-  SearchIcon,
-  GitBranchIcon,
-  GearIcon,
-  PersonIcon
-} from '@primer/octicons-react';
 
+import { sidebarRoutes } from '../../config/routes';
 import { useUiStore, useUserStore } from '../../hooks/store';
 import useWindowSize from '../../hooks/useWindowSize';
 import { getSidebarHeaderTitle, isPageWithHeader } from './util';
@@ -71,47 +65,24 @@ const ResizableSidebar = observer(({ children }) => {
   return (
     <Container>
       <SideTab isSidebarMinimized={isSidebarMinimized}>
-        <SideTabButton active={pathname === '/'}>
-          <IconButton
-            Icon={<CodeIcon />}
-            to="/"
-            onClick={openSidebarAndResetWidth}
-            disabled={!isLoggedIn}
-          />
-        </SideTabButton>
-        <SideTabButton active={pathname === '/search'}>
-          <IconButton
-            Icon={<SearchIcon />}
-            to="/search"
-            onClick={openSidebarAndResetWidth}
-            disabled={!isLoggedIn}
-          />
-        </SideTabButton>
-        <SideTabButton active={pathname === '/vcs'}>
-          <IconButton
-            Icon={<GitBranchIcon />}
-            to="/vcs"
-            onClick={openSidebarAndResetWidth}
-            disabled={!isLoggedIn}
-          />
-        </SideTabButton>
-        <FlexGrow />
-        <SideTabButton active={pathname === '/account'}>
-          <IconButton
-            Icon={<PersonIcon />}
-            to="/account"
-            onClick={openSidebarAndResetWidth}
-            disabled={!isLoggedIn}
-          />
-        </SideTabButton>
-        <SideTabButton active={pathname === '/settings'}>
-          <IconButton
-            Icon={<GearIcon />}
-            to="/settings"
-            onClick={openSidebarAndResetWidth}
-            disabled={!isLoggedIn}
-          />
-        </SideTabButton>
+        {sidebarRoutes &&
+          sidebarRoutes.map((route) =>
+            route.flex ? (
+              <FlexGrow key="flex-grow" />
+            ) : (
+              <SideTabButton
+                active={pathname === route.pathname}
+                key={route.pathname}
+              >
+                <IconButton
+                  Icon={route.icon}
+                  to={route.pathname}
+                  onClick={openSidebarAndResetWidth}
+                  disabled={!isLoggedIn}
+                />
+              </SideTabButton>
+            )
+          )}
       </SideTab>
       <ExpandingContainer isSidebarMinimized={isSidebarMinimized}>
         {isPageWithHeader(pathname) && (

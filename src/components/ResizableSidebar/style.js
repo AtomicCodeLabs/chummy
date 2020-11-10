@@ -4,11 +4,14 @@ import {
   backgroundColor,
   textColor,
   nodeIconColor,
-  sideBarColor,
+  sidebarColor,
+  borderColor,
+  backgroundHighlightColor,
+  sidebarActiveIconColor,
+  sidebarInactiveIconColor,
   fontSize,
   indentPadding
 } from '../../constants/theme';
-import { WHITE, GRAY, BORDER_GRAY, ACCENT_COLOR } from '../../constants/colors';
 import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
 
 export const Container = styled.div`
@@ -23,7 +26,7 @@ export const Container = styled.div`
 `;
 
 export const SideTab = styled.div`
-  background-color: ${sideBarColor};
+  background-color: ${sidebarColor};
   width: ${({ isSidebarMinimized }) =>
     isSidebarMinimized ? '100%' : `${SIDE_TAB.WIDTH}px`};
   z-index: 9999;
@@ -37,16 +40,18 @@ export const SideTabButton = styled.div`
   height: ${SIDE_TAB.BUTTON.HEIGHT}px;
 
   border-left: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px solid
-    ${({ active }) => (active ? WHITE : 'transparent')};
+    ${({ active, ...props }) =>
+      active ? sidebarActiveIconColor(props) : 'transparent'};
   padding-right: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px;
 
   svg {
-    fill: ${({ active }) => (active ? WHITE : GRAY)};
+    fill: ${({ active, ...props }) =>
+      active ? sidebarActiveIconColor(props) : sidebarInactiveIconColor(props)};
   }
 
   &:hover {
     svg {
-      fill: ${WHITE};
+      fill: ${sidebarActiveIconColor};
     }
   }
 `;
@@ -112,14 +117,14 @@ export const ExpandingContainerContent = styled.div`
     height: 0;
     /* left: 16px; Magic number that works */
     cursor: row-resize;
-    border-top: 1px ${BORDER_GRAY} solid;
+    border-top: 1px ${borderColor} solid;
 
     .custom-gutter {
       position: relative;
       height: inherit;
       top: -${RESIZE_GUTTER.HEIGHT}px;
       &:hover {
-        border-bottom: 1px ${ACCENT_COLOR} solid;
+        border-bottom: 1px ${backgroundHighlightColor} solid;
       }
     }
   }
@@ -128,5 +133,5 @@ export const ExpandingContainerContent = styled.div`
 export const ExpandingContainerDivider = styled.div`
   height: 1px;
   width: 100%;
-  background-color: ${BORDER_GRAY};
+  background-color: ${borderColor};
 `;
