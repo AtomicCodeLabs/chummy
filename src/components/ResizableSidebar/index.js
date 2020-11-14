@@ -106,7 +106,7 @@ const ResizableSidebar = observer(({ children }) => {
 });
 
 ResizableSidebar.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default ResizableSidebar;

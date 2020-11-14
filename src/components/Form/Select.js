@@ -66,7 +66,7 @@ const Option = (props) => {
   } = props;
   delete props.innerProps.onMouseMove;
   delete props.innerProps.onMouseOver;
-  
+
   return (
     <StyledOptionContainer
       ref={innerRef}
