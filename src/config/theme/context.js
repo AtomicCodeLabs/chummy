@@ -8,7 +8,6 @@ export const ThemeToggleContext = createContext();
 
 export const ThemeProvider = observer(({ children }) => {
   const { theme, spacing } = useUiStore();
-  console.log('THEME PROVIDER', theme, spacing);
 
   return (
     <ThemeToggleContext.Provider>
@@ -18,7 +17,7 @@ export const ThemeProvider = observer(({ children }) => {
 });
 
 ThemeProvider.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default ThemeProvider;

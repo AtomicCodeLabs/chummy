@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
-import { PanelsContainer } from '../../components/Panel/style';
+import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
 import { isStickyWindowOptions, spacingOptions, themeOptions } from './options';
 
@@ -35,6 +35,7 @@ export default observer(() => {
           }}
         />
       </Panel>
+      <PanelDivider />
       <Panel
         title="Density"
         description="Controls the spacing and sizes of elements."
@@ -49,6 +50,7 @@ export default observer(() => {
           }}
         />
       </Panel>
+      <PanelDivider />
       <Panel
         title="Sticky Window"
         description="Controls whether extension popup window will stick to the currently active window when focus is changed or window is dragged around."

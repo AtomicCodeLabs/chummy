@@ -13,6 +13,7 @@ export interface User {
   photoURL: string;
   apiKey: string;
   accountType: AccountType;
+  email: string;
 }
 
 export default interface IUserStore {

@@ -86,7 +86,6 @@ export default observer(() => {
     onSearch();
   }, [debouncedQuery, repository, numOfBookmarks]);
 
-  console.log('bookmarkRepoResults', bookmarkRepoResults);
   return (
     <>
       <HeaderContainer hasShadow={!atScrollTop}>

@@ -75,7 +75,7 @@ const Tab = observer(({ tab, currentBranch }) => {
 
 Tab.propTypes = {
   tab: PropTypes.shape({
-    tabId: PropTypes.string,
+    tabId: PropTypes.number,
     name: PropTypes.string
   }).isRequired,
   currentBranch: PropTypes.shape({

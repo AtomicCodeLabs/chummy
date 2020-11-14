@@ -20,7 +20,6 @@ export const checkCurrentUser = () => {
   // Check if user is signed in or not
   useEffect(() => {
     if (firebase && !isLoggedIn) {
-      console.log('getting current user');
       firebase.getCurrentUser();
     }
   }, [firebase]);
@@ -28,22 +27,22 @@ export const checkCurrentUser = () => {
   // Redirect on userStore.user update
   // TODO: use chrome storage to persist user across different sessions
   useEffect(() => {
-    console.log('user changed in checkCurrentUser', user, location.pathname);
-    console.log('firebase user is authenticated', isLoggedIn);
-    console.log('octokit is authenticated', octoDAO?.isAuthenticated());
+    // console.log('user changed in checkCurrentUser', user, location.pathname);
+    // console.log('firebase user is authenticated', isLoggedIn);
+    // console.log('octokit is authenticated', octoDAO?.isAuthenticated());
     // If either firebase or octokit isn't authenticated, ask user to sign
     // in again.
     if (!isLoggedIn || !octoDAO || !octoDAO.isAuthenticated()) {
       // If not on sign in page but not logged in.
       if (location.pathname !== '/account-sign-in') {
-        console.log('navigating to account-signin');
+        // console.log('navigating to account-signin');
         history.push('/account-sign-in');
       }
     } else {
       // If coming from sign in page, go to tree
       // eslint-disable-next-line no-lonely-if
       if (location.pathname === '/account-sign-in') {
-        console.log('navigating to /');
+        // console.log('navigating to /');
         history.push('/');
       }
     }

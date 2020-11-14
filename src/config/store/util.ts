@@ -14,7 +14,6 @@ export const getFromChromeStorage = async (
       payload: keys
     });
     if (response?.payload) {
-      console.log('get-store message received', response);
       callback(response.payload);
     }
   } catch (error) {

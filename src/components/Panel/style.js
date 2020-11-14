@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import theme from 'styled-theming';
 import {
   fontSize,
@@ -7,7 +7,8 @@ import {
   textColor,
   textSpacing,
   lineHeight,
-  fieldBackgroundColor
+  fieldBackgroundColor,
+  h3FontSize
 } from '../../constants/theme';
 
 const innerPadding = theme('spacing', {
@@ -20,16 +21,32 @@ export const PanelsContainer = styled.div`
   padding: ${indentPadding} calc(${indentPadding} - ${innerPadding});
 `;
 
-const Container = styled.div`
-  padding: ${innerPadding};
+export const PanelDivider = styled.div`
+  margin: -1px calc(${indentPadding} - ${innerPadding});
+  height: 1px;
+  background-color: ${fieldBackgroundColor};
+`;
 
-  &:hover {
-    background-color: ${fieldBackgroundColor};
-  }
+const Container = styled.div`
+  display: flex;
+  align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
+  flex-direction: column;
+  padding: ${({ evenPadding, ...props }) =>
+    evenPadding
+      ? innerPadding(props)
+      : `calc(${innerPadding(props)} * 1.5) ${innerPadding(props)}}`};
+
+  ${({ highlightOnHover, ...props }) =>
+    highlightOnHover &&
+    css`
+      &:hover {
+        background-color: ${fieldBackgroundColor(props)};
+      }
+    `};
 `;
 
 const Title = styled.div`
-  font-size: ${fontSize};
+  font-size: ${h3FontSize};
   font-weight: 600;
   color: ${textColor};
   margin-bottom: ${textSpacing};
@@ -38,7 +55,8 @@ const Title = styled.div`
 const Description = styled.div`
   font-size: ${fontSize};
   color: ${lightTextColor};
-  margin-bottom: ${textSpacing};
+  margin-bottom: ${({ isLast, ...props }) =>
+    isLast ? '0' : `${textSpacing(props)}`};
   line-height: ${lineHeight};
 `;
 

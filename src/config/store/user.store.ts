@@ -1,4 +1,4 @@
-import { observable, computed, action, toJS } from 'mobx';
+import { observable, computed, action } from 'mobx';
 
 import IRootStore from './I.root.store';
 import IUserStore, { AccountType, User } from './I.user.store';
@@ -23,13 +23,7 @@ export default class UserStore implements IUserStore {
 
   /** Firebase Auth - sync firebase with user in store **/
 
-  @action.bound setUser({
-    user,
-    credential
-  }: {
-    user: User;
-    credential?: string;
-  }): void {
+  @action.bound setUser({ user }: { user: User }): void {
     if (!user) {
       this.user = null;
       return;
@@ -38,13 +32,16 @@ export default class UserStore implements IUserStore {
       uid = null,
       displayName = null,
       photoURL = null,
-      accountType = null
+      accountType = null,
+      apiKey = null,
+      email = null
     } = user;
     this.user = {
       uid,
       displayName,
       photoURL,
-      apiKey: credential || this.user?.apiKey,
+      email,
+      apiKey: apiKey || this.user?.apiKey,
       accountType: accountType || this.user?.accountType || AccountType.Basic
     };
   }
@@ -111,7 +108,6 @@ export default class UserStore implements IUserStore {
   @action.bound removeBookmark(repo: Repo) {
     const key = `${repo.owner}:${repo.name}`;
     const foundRepo = this.userBookmarks.get(key);
-    console.log('removing bookmark from store', repo, toJS(this.userBookmarks));
 
     if (foundRepo) {
       // Remove branches from existing repo
@@ -124,7 +120,6 @@ export default class UserStore implements IUserStore {
         this.userBookmarks.delete(key);
       }
     }
-    console.log('removed bookmark from store', toJS(this.userBookmarks));
 
     this.numOfBookmarks = Math.min(0, this.numOfBookmarks - 1);
   }

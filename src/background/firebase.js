@@ -192,8 +192,13 @@ class Firebase {
 
   // *** Class Methods ***
 
-  setGithubApiKey = (apiKey) => {
+  setGithubApiKey = async (apiKey) => {
     this.githubApiKey = apiKey;
+    // Set chrome storage with apiKey and loggedin state
+    await browser.storage.sync.set({
+      apiKey: this.githubApiKey,
+      isLoggedIn: true
+    });
   };
 
   setAccountType = (accountType) => {
@@ -222,17 +227,13 @@ class Firebase {
         // Create new firestore collection if user is new
         this.createNewUserCollection(response.user.uid);
       } else {
-        // Get bookmarks
+        // Get user data
+        this.getUserCollection(response.user.uid);
       }
 
       // Set api key property
       this.setGithubApiKey(response.credential?.accessToken);
-
-      // Set chrome storage with apiKey and loggedin state
-      await browser.storage.sync.set({
-        apiKey: response.credential?.accessToken,
-        isLoggedIn: true
-      });
+      console.log('API KEY', this.githubApiKey);
     } catch (error) {
       console.error('Error signing in with Github', error);
     }
@@ -244,6 +245,7 @@ class Firebase {
       this.auth.signOut();
       this.setGithubApiKey(null);
       this.setAccountType(null);
+      this.setBookmarks([]);
       // eslint-disable-next-line object-shorthand
       await browser.storage.sync.set({ apiKey: null, isLoggedIn: false });
       console.log('Api key removed from chrome storage');
@@ -257,10 +259,11 @@ class Firebase {
       console.error('User is not authenticated.');
       return null;
     }
-    const { uid, displayName, photoURL } = this.auth.currentUser;
+    const { uid, displayName, email, photoURL } = this.auth.currentUser;
     return {
       user: {
         uid,
+        email,
         displayName,
         photoURL,
         apiKey: this.githubApiKey,
@@ -288,8 +291,25 @@ class Firebase {
     }
   };
 
+  getUserCollection = async (userUuid) => {
+    try {
+      console.log(
+        '%c[READ] User collection read',
+        'background-color: blue; color: white;'
+      );
+      const userDoc = await this.dbUsers.doc(userUuid).get();
+      if (userDoc.exists) {
+        const user = userDoc.data();
+        console.log(user);
+        this.setAccountType(user.accountType);
+        this.setBookmarks(user.bookmarks);
+      }
+    } catch (error) {
+      console.error('Error creating new user collection', error);
+    }
+  };
+
   createBookmark = async (bookmark) => {
-    console.log('create bookmark', this.getCurrentUser(), bookmark);
     const currentUserUuid = this.getCurrentUser()?.user.uid;
     if (!currentUserUuid) {
       console.log('Cannot add bookmark because user is not logged in.');
@@ -413,10 +433,10 @@ const firebaseStore = new Firebase();
 const onBrowserActionClickedListener = async () => {
   try {
     if (await isExtensionOpen()) {
-      console.log('extension is open');
       return;
     }
     console.log('initialize firebase listeners');
+    firebaseStore.subscribeListeners();
   } catch (error) {
     console.error('Error initializing extension listeners', error);
   }

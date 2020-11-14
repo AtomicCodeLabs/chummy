@@ -19,6 +19,7 @@ const InputContainer = styled.div`
 
   background-color: ${fieldBackgroundColor};
   color: ${lightTextColor} !important;
+  width: 100%;
   height: ${INPUT.HEIGHT}px;
   transition: box-shadow 100ms;
   box-shadow: 0 0 0 ${({ isFocused }) => (isFocused ? 1 : 0)}px

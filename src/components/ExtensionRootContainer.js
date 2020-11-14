@@ -53,7 +53,6 @@ const ExtensionRootContainer = observer(({ children }) => {
   // Get all bookmarks on startup
   useEffect(() => {
     if (firebase && isLoggedIn) {
-      console.log('Getting all bookmarks at startup');
       firebase.getAllBookmarks();
     }
   }, [firebase, isLoggedIn]);

@@ -40,7 +40,14 @@ export const ICON = {
     compact: 3,
     cozy: 4,
     comfortable: 5
-  })
+  }),
+  PROFILE_IMAGE: {
+    SIZE: theme('spacing', {
+      compact: 150,
+      cozy: 160,
+      comfortable: 170
+    })
+  }
 };
 
 export const INPUT = {
@@ -63,6 +70,14 @@ export const INPUT = {
       })
     }
   }
+};
+
+export const BUTTON = {
+  HEIGHT: theme('spacing', {
+    compact: 30,
+    cozy: 35,
+    comfortable: 40
+  })
 };
 
 export const RESIZE_GUTTER = {

@@ -21,14 +21,32 @@ export const fontSize = theme('spacing', {
   comfortable: '0.83rem'
 });
 
+export const h3FontSize = theme('spacing', {
+  compact: '0.8rem',
+  cozy: '0.83rem',
+  comfortable: '0.86rem'
+});
+
+export const h2FontSize = theme('spacing', {
+  compact: '1rem',
+  cozy: '1.2rem',
+  comfortable: '1.3rem'
+});
+
+export const h1FontSize = theme('spacing', {
+  compact: '1.3rem',
+  cozy: '1.5rem',
+  comfortable: '1.7rem'
+});
+
 export const textSpacing = theme('spacing', {
-  compact: '0.35rem',
+  compact: '0.47rem',
   cozy: '0.5rem',
   comfortable: '0.55rem'
 });
 
 export const lineHeight = theme('spacing', {
-  compact: '0.9rem',
+  compact: '1.1rem',
   cozy: '1.2rem',
   comfortable: '1.3rem'
 });
@@ -78,5 +96,8 @@ export const nodeIconColor = themeCreator('nodeIconColor');
 export const nodeIconDarkColor = themeCreator('nodeIconDarkColor');
 export const shadowColor = themeCreator('shadowColor');
 export const fieldBackgroundColor = themeCreator('fieldBackgroundColor');
+export const fieldBackgroundLightColor = themeCreator(
+  'fieldBackgroundLightColor'
+);
 export const fieldFocusOutlineColor = themeCreator('fieldFocusOutlineColor');
 export const borderColor = themeCreator('borderColor');

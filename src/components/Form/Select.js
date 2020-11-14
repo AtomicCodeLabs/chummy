@@ -66,7 +66,7 @@ const Option = (props) => {
   } = props;
   delete props.innerProps.onMouseMove;
   delete props.innerProps.onMouseOver;
-  if (isSelected) console.log('OPTION', children, isSelected);
+  
   return (
     <StyledOptionContainer
       ref={innerRef}
@@ -93,19 +93,27 @@ export const Select = (props) => {
   const STPayload = { theme: { theme: mode, spacing } };
   const customReactSelectStyles = useMemo(
     () => ({
+      container: (base) => ({
+        ...base,
+        width: '100%'
+      }),
       control: (base) => ({
         ...base,
         backgroundColor: fieldBackgroundColor(STPayload),
         height: INPUT.SELECT.HEIGHT(STPayload),
         minHeight: 'auto',
+        width: '100%',
         padding: '0.2rem 0.3rem',
         border: 0,
         outline: 'none',
-        cursor: 'text'
+        cursor: 'text',
+        fontSize: fontSize(STPayload)
       }),
       input: (base) => ({
         ...base,
-        minHeight: 'auto'
+        minHeight: 'auto',
+        color: lightTextColor(STPayload),
+        fontSize: fontSize(STPayload)
       }),
       dropdownIndicator: (base) => ({
         ...base,
@@ -118,7 +126,8 @@ export const Select = (props) => {
       }),
       placeholder: (base) => ({
         ...base,
-        color: lightTextColor(STPayload)
+        color: lightTextColor(STPayload),
+        fontSize: fontSize(STPayload)
       }),
       indicatorContainer: (base) => ({
         ...base,
@@ -135,7 +144,8 @@ export const Select = (props) => {
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
-        color: lightTextColor(STPayload)
+        color: lightTextColor(STPayload),
+        fontSize: fontSize(STPayload)
       }),
       valueContainer: (base) => ({
         ...base,

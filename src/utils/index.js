@@ -41,3 +41,6 @@ export const redirectToUrl = (url) => {
 
 // https://stackoverflow.com/questions/1983648/replace-spaces-with-dashes-and-make-all-letters-lower-case
 export const kebabify = (s) => s.replace(/\s+/g, '-').toLowerCase();
+
+// https://flaviocopes.com/how-to-uppercase-first-letter-javascript/
+export const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);

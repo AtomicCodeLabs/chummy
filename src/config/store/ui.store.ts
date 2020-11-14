@@ -99,7 +99,6 @@ export default class UiStore implements IUiStore {
   };
 
   @action.bound setIsStickyWindow = (isStickyWindow: boolean): void => {
-    console.log('sticky', isStickyWindow);
     setInChromeStorage({ isStickyWindow });
     this.isStickyWindow = isStickyWindow;
   };

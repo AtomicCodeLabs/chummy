@@ -18,7 +18,7 @@ import {
   ExpandingContainerHeaderSpacer,
   ExpandingContainerHeaderIcon
 } from './style';
-import IconButton from '../IconButton';
+import IconButton from '../Buttons/IconButton';
 import Spinner from '../Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
 
@@ -106,7 +106,7 @@ const ResizableSidebar = observer(({ children }) => {
 });
 
 ResizableSidebar.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default ResizableSidebar;

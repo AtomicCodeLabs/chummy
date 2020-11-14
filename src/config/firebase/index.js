@@ -102,7 +102,6 @@ class FirebaseDAO {
       return null;
     }
     // Check if cached bookmarks exist in store first
-    console.log('Are bookmarks cached', this.userStore.hasBookmarksCached);
     if (this.userStore.hasBookmarksCached) {
       return this.userStore.getUserBookmarks();
     }
@@ -201,7 +200,7 @@ const FirebaseProvider = ({ children, store }) => {
   );
 };
 FirebaseProvider.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   store: PropTypes.object.isRequired
 };

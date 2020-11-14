@@ -91,7 +91,6 @@ class OctoDAO {
     }
 
     try {
-      console.log(branch.name, treePath, owner, repo);
       const response = await this.graphqlAuth(
         formQueryGetRepositorySpecificBranchRootNodes(branch.name, treePath),
         {
@@ -181,7 +180,7 @@ const OctoProvider = ({ children, store }) => {
   );
 };
 OctoProvider.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   store: PropTypes.object.isRequired
 };

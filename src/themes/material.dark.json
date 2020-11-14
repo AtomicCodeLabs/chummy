@@ -26,6 +26,7 @@
     "nodeIconDarkColor": "#f2eee9",
     "shadowColor": "rgba(0, 0, 0, 0.5)",
     "fieldBackgroundColor": "#37474f",
+    "fieldBackgroundLightColor": "#465a63",
     "fieldFocusOutlineColor": "#80cbc4",
     "borderColor": "#34515e"
   }
