@@ -1,39 +1,61 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import { FileIcon, BookmarkSlashIcon } from '@primer/octicons-react';
+import {
+  FileIcon,
+  BookmarkIcon,
+  BookmarkFillIcon
+} from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { redirectToUrl, processTabInformation, getBookmarkUrl } from './util';
-import useFirebaseDAO from '../../hooks/firebase';
+import {
+  redirectToUrl,
+  processBookmarkInformation,
+  getBookmarkUrl,
+  clickedEl,
+  highlightTextPart
+} from './util';
 import useTheme from '../../hooks/useTheme';
+import useBookmarkState from '../../hooks/useBookmarkState';
 import { ICON } from '../../constants/sizes';
+import { bookmarkIconColor } from '../../constants/theme';
 
-const Bookmark = observer(({ bookmark }) => {
+const Bookmark = observer(({ bookmark: { matches, ...bookmark } }) => {
   const { spacing } = useTheme();
-  const { removeBookmark } = useFirebaseDAO();
-  const [showNewTab, setShowNewTab] = useState(false);
-  console.log('BOOKMARK', bookmark);
+  const bookmarkEl = useRef(null);
+  const [localBookmarked, setLocalBookmarked] = useBookmarkState(
+    bookmark,
+    'Bookmarks'
+  );
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Unbookmark file
+    if (clickedEl(bookmarkEl, e)) {
+      setLocalBookmarked(!localBookmarked);
+      return;
+    }
+
+    // Or redirect to new tab
     // Always open search match file in new tab
     const toUrl = getBookmarkUrl(bookmark);
     redirectToUrl(toUrl);
   };
-  const handleBookmarkClick = () => {
-    // Remove bookmark
-    removeBookmark();
-  };
-  const { primaryText, secondaryText, subpageText } = processTabInformation(
-    bookmark.branch
-  );
+
+  const {
+    primaryText: name, // name
+    secondaryText: path, // path excluding file
+    subpageText: branchName // branch
+  } = processBookmarkInformation(bookmark);
 
   return (
     <StyledNode.Container
       className="node"
-      onClick={handleClick}
-      onMouseEnter={() => setShowNewTab(true)}
-      onMouseLeave={() => setShowNewTab(false)}
+      onClickCapture={handleClick}
+      // onMouseEnter={() => setShowNewTab(true)}
+      // onMouseLeave={() => setShowNewTab(false)}
     >
       <StyledNode.LeftSpacer level={1} extraIconFiller />
       <StyledNode.Icon>
@@ -42,21 +64,33 @@ const Bookmark = observer(({ bookmark }) => {
           verticalAlign="middle"
         />
       </StyledNode.Icon>
-      <StyledNode.Name>{primaryText}</StyledNode.Name>
+      <StyledNode.Name>{highlightTextPart(name, matches.name)}</StyledNode.Name>
       <StyledNode.SubName variant="smallFont">
-        <span className="subpage">{subpageText}</span>
-        <span>/{secondaryText}</span>
+        <span className="subpage">
+          {highlightTextPart(branchName, matches.branchName)}
+        </span>
+        <span>/{highlightTextPart(path, matches.path)}</span>
       </StyledNode.SubName>
       <StyledNode.MiddleSpacer />
-      {showNewTab && (
-        <StyledNode.RightIconContainer>
-          <BookmarkSlashIcon
-            size={ICON.SIZE({ theme: { spacing } })}
-            verticalAlign="middle"
-            onClick={handleBookmarkClick}
-          />
-        </StyledNode.RightIconContainer>
-      )}
+      {/* {showNewTab && ( */}
+      <StyledNode.RightIconContainer>
+        {localBookmarked ? (
+          <StyledNode.Icon ref={bookmarkEl} iconFill={bookmarkIconColor}>
+            <BookmarkFillIcon
+              size={ICON.SIZE({ theme: { spacing } })}
+              verticalAlign="middle"
+            />
+          </StyledNode.Icon>
+        ) : (
+          <StyledNode.Icon ref={bookmarkEl}>
+            <BookmarkIcon
+              size={ICON.SIZE({ theme: { spacing } })}
+              verticalAlign="middle"
+            />
+          </StyledNode.Icon>
+        )}
+      </StyledNode.RightIconContainer>
+      {/* )} */}
     </StyledNode.Container>
   );
 });
@@ -71,9 +105,12 @@ Bookmark.propTypes = {
     }).isRequired,
     branch: PropTypes.shape({
       name: PropTypes.string.isRequired
-    }).isRequired,
+    }),
     name: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired
+    path: PropTypes.string.isRequired,
+    matches: PropTypes.objectOf(
+      PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+    )
   }).isRequired
 };
 

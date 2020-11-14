@@ -57,6 +57,7 @@
     "mobx": "^5.15.6",
     "mobx-react-lite": "^2.2.1",
     "prop-types": "^15.7.2",
+    "quick-score": "^0.0.9",
     "react": "^16.13.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",

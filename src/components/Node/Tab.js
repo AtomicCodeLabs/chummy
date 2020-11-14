@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import { FileIcon } from '@primer/octicons-react';
+import { FileIcon, XIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { changeActiveTab, processTabInformation } from './util';
+import {
+  changeActiveTab,
+  clickedEl,
+  closeTab,
+  processTabInformation
+} from './util';
 import { useUiStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
 
 const Tab = observer(({ tab, currentBranch }) => {
   const { spacing } = useTheme();
-  const { setPending } = useUiStore();
-  const handleClick = async () => {
-    // Redirect to file page
-    setPending('Explorer');
+  const [showX, setShowX] = useState(false);
+  const xEl = useRef(null);
+  const { addPendingRequest, removePendingRequest } = useUiStore();
+  const handleClick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // X Icon
+    if (clickedEl(xEl, e)) {
+      closeTab(tab.tabId);
+      return;
+    }
+
+    // Change active tab
+    addPendingRequest('Explorer');
     await changeActiveTab(tab.tabId);
-    setPending('None');
+    removePendingRequest('Explorer');
   };
   const { primaryText, secondaryText, subpageText } = processTabInformation(
     tab
@@ -25,8 +41,10 @@ const Tab = observer(({ tab, currentBranch }) => {
   return (
     <StyledNode.Container
       className="node"
-      onClick={handleClick}
+      onClickCapture={handleClick}
       isActive={currentBranch && tab.tabId === currentBranch.tabId}
+      onMouseEnter={() => setShowX(true)}
+      onMouseLeave={() => setShowX(false)}
     >
       <StyledNode.LeftSpacer level={1} extraIconFiller />
       <StyledNode.Icon>
@@ -40,13 +58,25 @@ const Tab = observer(({ tab, currentBranch }) => {
         <span className="subpage">{subpageText}</span>
         <span>/{secondaryText}</span>
       </StyledNode.SubName>
+      <StyledNode.MiddleSpacer />
+      <StyledNode.RightIconContainer>
+        {showX && (
+          <StyledNode.Icon ref={xEl}>
+            <XIcon
+              size={ICON.SIZE({ theme: { spacing } })}
+              verticalAlign="middle"
+            />
+          </StyledNode.Icon>
+        )}
+      </StyledNode.RightIconContainer>
     </StyledNode.Container>
   );
 });
 
 Tab.propTypes = {
   tab: PropTypes.shape({
-    name: PropTypes.string.isRequired
+    tabId: PropTypes.string,
+    name: PropTypes.string
   }).isRequired,
   currentBranch: PropTypes.shape({
     name: PropTypes.string,

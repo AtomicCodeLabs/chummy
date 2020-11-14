@@ -43,7 +43,7 @@ export const Form = styled.form`
     }
   }
 
-  .search-section-field {
+  .input-field {
     &:not(:last-child) {
       margin-bottom: ${fieldMargin}px;
     }

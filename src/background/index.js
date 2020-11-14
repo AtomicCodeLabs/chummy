@@ -40,7 +40,7 @@ const onBrowserActionClickedListener = async () => {
       sidebarWidth
     } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
     if (await isExtensionOpen()) {
-      console.log('extensioon isopne');
+      console.log('extensioon is open');
       return;
     }
     const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
@@ -158,7 +158,6 @@ browser.windows.onBoundsChanged.addListener((window) => {
 });
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
-  console.log('sendcontentchanged', tabTitle);
   const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
   browser.runtime.sendMessage({
     action: 'active-tab-changed',
@@ -196,7 +195,6 @@ const onFocusChangedListener = async (windowId) => {
     }
     const tabs = await browser.tabs.query({ active: true, windowId });
     const { url, id: tabId, title: tabTitle } = tabs[0];
-    console.log(tabTitle);
 
     sendContentChangedMessage(windowId, tabId, tabTitle, url);
   } catch (error) {

@@ -39,7 +39,6 @@ export const isExtensionOpen = async () => {
 };
 
 export const isCurrentWindow = (windowId, currentWindowId) => {
-  console.log(windowId, currentWindowId);
   return (
     currentWindowId !== NO_WINDOW_EXTENSION_ID &&
     (windowId === currentWindowId ||

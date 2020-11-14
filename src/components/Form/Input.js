@@ -69,6 +69,7 @@ const Input = forwardRef(({ className, icon: Icon, ...inputProps }, ref) => {
       <StyledInput
         {...inputProps}
         ref={ref}
+        autoFocus
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />

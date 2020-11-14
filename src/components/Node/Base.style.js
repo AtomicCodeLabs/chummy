@@ -15,20 +15,26 @@ import {
   backgroundHighlightDarkTextColor
 } from '../../constants/theme';
 
+// fontsize + nodeTopPadding + nodeBottomPadding
+const nodeHeight = theme('spacing', {
+  compact: `calc(0.75rem + (2 * 0.5rem))`,
+  cozy: `calc(0.8rem + (2 * 0.7rem))`,
+  comfortable: `calc(0.83rem + (2 * 0.9rem))`
+});
 const nodePadding = theme('spacing', {
   compact: css`
-    padding-top: 0.15rem;
-    padding-bottom: 0.15rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     padding-left: 0.8rem;
   `,
   cozy: css`
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
     padding-left: 0.8rem;
   `,
   comfortable: css`
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
     padding-left: 0.8rem;
   `
 });
@@ -42,6 +48,8 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   color: ${lightTextColor};
+  max-height: ${nodeHeight};
+  box-sizing: border-box;
   ${nodePadding}
 
   cursor: pointer;
@@ -130,8 +138,9 @@ const Name = styled.div`
   span.highlight {
     color: ${highlightTextColor} !important;
     background-color: ${highlightBackgroundColor};
-    padding: 0 0.2rem;
-    border-radius: 3px;
+    padding: 0 0.1rem;
+    margin: 0 0.05rem;
+    border-radius: 2px;
   }
 
   span.italic {
@@ -145,6 +154,14 @@ const SubName = styled.div`
   user-select: none;
   color: ${lighterTextColor};
   white-space: nowrap;
+
+  span.highlight {
+    color: ${highlightTextColor} !important;
+    background-color: ${highlightBackgroundColor};
+    padding: 0 0.1rem;
+    margin: 0 0.05rem;
+    border-radius: 2px;
+  }
 
   span.subpage {
     color: ${lightTextColor};

@@ -35,9 +35,10 @@ const LanguagesSelect = React.lazy(() => import('./LanguagesSelect'));
 export default observer(() => {
   checkCurrentUser();
   const octoDAO = useOctoDAO();
-  const { openRepos, clearOpenSearchResultFiles } = useFileStore();
+  const { openRepos } = useFileStore();
   const {
-    setPending,
+    addPendingRequest,
+    removePendingRequest,
     isSearchSectionMinimized,
     toggleSearchSection,
     selectedQuery,
@@ -53,7 +54,7 @@ export default observer(() => {
   const repoOptions = useMemo(
     () =>
       Array.from(openRepos).map(([repoId, repo]) => ({
-        value: repoId,
+        value: repoId, // Separated with :
         label: `${repo.owner}/${repo.name}`
       })),
     [openRepos.size]
@@ -82,12 +83,15 @@ export default observer(() => {
   const isWellFormed = useMemo(
     () =>
       !isBlank(debouncedQuery) && !isBlank(repository) && !isBlank(language),
+    // (debouncedQuery !== selectedQuery ||
+    //   repository.value !== selectedOpenRepo ||
+    //   language.value !== selectedLanguage),
     [debouncedQuery, repository, language]
   );
 
   // Search API call
   const onSearch = useCallback(async () => {
-    setPending('Search');
+    addPendingRequest('Search');
     const parsedRepo = repository.value.split(':'); // alexkim205:master
     const responseNodes = await octoDAO.searchCode(
       parsedRepo[0],
@@ -96,14 +100,16 @@ export default observer(() => {
       language.value.toLowerCase()
     );
     setResults(responseNodes);
-    setPending('None');
+    removePendingRequest('Search');
   }, [debouncedQuery, repository, language]);
 
   // Call api when user stops typing
   useEffect(() => {
+    setSelectedQuery(debouncedQuery);
+    setSelectedOpenRepo(repository.value);
+    setSelectedLanguage(language.value);
+
     if (isWellFormed) {
-      clearOpenSearchResultFiles(); // clear open states of search results
-      setSelectedQuery(debouncedQuery);
       // TODO make api call
       onSearch();
     } else {
@@ -122,7 +128,7 @@ export default observer(() => {
           />
           <Form onSubmit={handleSubmit(onSearch)}>
             <Input
-              className="search-section-field"
+              className="input-field"
               type="text"
               placeholder="Search"
               id="query"
@@ -136,7 +142,7 @@ export default observer(() => {
             />
             {/* <Label htmlFor="repository">repository</Label> */}
             <ControlledSelect
-              className={`search-section-field ${
+              className={`input-field ${
                 isSearchSectionMinimized && 'is-technically-last'
               }`}
               name="repository"
@@ -144,16 +150,13 @@ export default observer(() => {
               control={control}
               rules={{ required: true }}
               options={repoOptions}
-              onChange={(option) => {
-                setSelectedOpenRepo(option.value);
-              }}
             />
             <HideContainer isHidden={isSearchSectionMinimized}>
               {/* <Label htmlFor="language">language</Label> */}
               <Suspense
                 fallback={
                   <ControlledSelect
-                    className="search-section-field"
+                    className="input-field"
                     name="language"
                     placeholder="Language"
                     control={control}
@@ -162,13 +165,10 @@ export default observer(() => {
                 }
               >
                 <LanguagesSelect
-                  className="search-section-field"
+                  className="input-field"
                   name="language"
                   placeholder="Language"
                   control={control}
-                  onChange={(option) => {
-                    setSelectedLanguage(option.value);
-                  }}
                 />
               </Suspense>
             </HideContainer>
@@ -209,9 +209,18 @@ export default observer(() => {
       >
         <SectionContent>
           {results &&
-            results.map((file) => (
-              <SearchResultFileNode file={file} key={file.path} />
-            ))}
+            results.map((file) => {
+              const parsedRepo = repository.value.split(':');
+              return (
+                <SearchResultFileNode
+                  file={{
+                    ...file,
+                    repo: { owner: parsedRepo[0], name: parsedRepo[1] }
+                  }}
+                  key={file.path}
+                />
+              );
+            })}
         </SectionContent>
       </Scrollbars>
     </>

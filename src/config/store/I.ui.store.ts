@@ -1,4 +1,5 @@
 import { THEME_NAMES } from '../../config/theme/selector';
+import IUserStore from './I.user.store';
 
 export enum Language {
   English = 'en_US'
@@ -34,11 +35,14 @@ export enum SectionName {
 
 // UiStore
 class CUiStore {
+  userStore: IUserStore = null;
+
   language: Language = Language.English;
   theme: string = THEME_NAMES[0];
   spacing: Spacing = Spacing.Cozy;
-  pendingRequestCount: number = 0;
-  isPending: SectionName = SectionName.None;
+  pendingRequestCount: Map<SectionName, number> = new Map(
+    Object.values(SectionName).map((sectionName) => [sectionName, 0])
+  );
   isStickyWindow: boolean = false;
 
   // Sidebar
@@ -56,13 +60,23 @@ class CUiStore {
   };
 
   // Search Page
-  isSearchSectionMinimized: boolean = false;
+  isSearchSectionMinimized: boolean = true;
   selectedQuery: string = null;
   selectedOpenRepo: string = null;
   selectedLanguage: string = null;
+  // openSearchResultFiles: Set<string>;
+
+  // Bookmarks Page
+  isBookmarksSectionMinimized: boolean = true;
+  selectedBookmarkQuery: string = null;
+  selectedBookmarkRepo: string = null;
+  openBookmarkRepos: Set<string>;
 }
 
-export default interface IUiStore extends CUiStore {}
+export default interface IUiStore extends CUiStore {
+  removePendingRequest(pendingState: SectionName): void;
+  addPendingRequest(pendingState: SectionName): void;
+}
 
 export type UiStorePropsArray = Array<keyof IUiStore>;
 

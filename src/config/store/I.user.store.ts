@@ -21,5 +21,6 @@ export default interface IUserStore {
 
   user: User;
   userBookmarks: Map<string, Repo>;
+  numOfBookmarks: number; // Used for triggering ui changes
   isPending: boolean;
 }

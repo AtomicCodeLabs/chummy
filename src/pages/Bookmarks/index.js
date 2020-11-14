@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
@@ -9,82 +9,98 @@ import {
   HeaderContainer,
   FormContainer,
   FormResultsDescriptionContainer,
-  Form
+  Form,
+  HideContainer
 } from '../../components/Form';
 import Input from '../../components/Form/Input';
+import { ControlledSelect } from '../../components/Form/Select';
+import BookmarkRepoNode from '../../components/Node/BookmarkRepoNode';
 import { checkCurrentUser } from '../../hooks/firebase';
-import { useUiStore, useFileStore } from '../../hooks/store';
+import { useUiStore, useUserStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
-import { isBlank } from '../../utils';
-import SearchResultFileNode from '../../components/Node/SearchResultFileNode';
+import { getBookmarkResultsDescription, useSearchableBookmarks } from './util';
 
 export default observer(() => {
   checkCurrentUser();
-  // const firebase = useFirebaseDAO();
-  const { clearOpenSearchResultFiles } = useFileStore();
+  const { userBookmarks, numOfBookmarks } = useUserStore();
   const {
-    setPending,
-    isSearchSectionMinimized,
-    toggleSearchSection,
-    selectedQuery,
-    setSelectedQuery
+    addPendingRequest,
+    removePendingRequest,
+    isBookmarksSectionMinimized,
+    toggleBookmarksSection,
+    selectedBookmarkQuery,
+    setSelectedBookmarkQuery,
+    selectedBookmarkRepo,
+    setSelectedBookmarkRepo
   } = useUiStore();
   const [atScrollTop, setAtScrollTop] = useState(true); // to render shadow under search box
 
-  const { register, watch, handleSubmit } = useForm({
+  // @computed repo options
+  const repoOptions = useMemo(
+    () => [
+      { value: '', label: 'All repositories' },
+      ...Array.from(userBookmarks).map(([repoId, repo]) => ({
+        value: repoId,
+        label: `${repo.owner}/${repo.name}`
+      }))
+    ],
+    [userBookmarks.size]
+  );
+
+  // Form stuff
+  const { control, register, watch } = useForm({
     defaultValues: {
-      query: selectedQuery || ''
+      query: selectedBookmarkQuery || '',
+      repository: selectedBookmarkRepo
+        ? repoOptions.filter((o) => o.value === selectedBookmarkRepo)[0]
+        : repoOptions.length && repoOptions[0]
     }
   });
+  const repository = watch('repository');
 
-  const [results, setResults] = useState(false);
+  // Update fused bookmarks array only when bookmarks
+  // are added or removed
+  const { bookmarkRepoResults, searchBookmarks } = useSearchableBookmarks(
+    userBookmarks,
+    numOfBookmarks,
+    repository.value
+  );
+
   // Local state query will persist after being debounced
-  // const [localQuery, setLocalQuery] = useState(selectedQuery || '');
   const localQuery = watch('query');
   const debouncedQuery = useDebounce(localQuery, 700);
 
-  const isWellFormed = useMemo(() => !isBlank(debouncedQuery), [
-    debouncedQuery
-  ]);
-
-  // Search API call
-  const onSearch = useCallback(async () => {
-    setPending('Bookmarks');
-    // const parsedRepo = repository.value.split(':'); // alexkim205:master
-    // const responseNodes = await octoDAO.searchCode(
-    //   parsedRepo[0],
-    //   parsedRepo[1],
-    //   debouncedQuery,
-    //   language.value.toLowerCase()
-    // );
-    // setResults(responseNodes);
-    setPending('None');
-  }, [debouncedQuery]);
-
   // Call api when user stops typing
   useEffect(() => {
-    if (isWellFormed) {
-      clearOpenSearchResultFiles(); // clear open states of search results
-      setSelectedQuery(debouncedQuery);
-      // TODO make api call
-      onSearch();
-    } else {
-      setResults(false);
-    }
-  }, [debouncedQuery]);
+    const onSearch = async () => {
+      addPendingRequest('Bookmarks');
+      await searchBookmarks(debouncedQuery);
+      // setResults(responseNodes);
+      removePendingRequest('Bookmarks');
+    };
+    setSelectedBookmarkQuery(debouncedQuery);
+    setSelectedBookmarkRepo(repository.value);
 
+    // closeAllUserBookmarksRepos(); // clear open states of bookmarks
+    // TODO make api call
+    onSearch();
+  }, [debouncedQuery, repository, numOfBookmarks]);
+
+  console.log('bookmarkRepoResults', bookmarkRepoResults);
   return (
     <>
       <HeaderContainer hasShadow={!atScrollTop}>
         <FormContainer>
           <OpenCloseChevron
-            open={!isSearchSectionMinimized}
-            onClick={toggleSearchSection}
+            open={!isBookmarksSectionMinimized}
+            onClick={toggleBookmarksSection}
             highlightOnHover
           />
-          <Form onSubmit={handleSubmit(onSearch)}>
+          <Form>
             <Input
-              className="search-section-field"
+              className={`input-field ${
+                isBookmarksSectionMinimized && 'is-technically-last'
+              }`}
               type="text"
               placeholder="Search"
               id="query"
@@ -96,24 +112,23 @@ export default observer(() => {
               //   </ExternalLink>
               // }
             />
-            {/* <Label htmlFor="repository">repository</Label> */}
+            <HideContainer isHidden={isBookmarksSectionMinimized}>
+              <ControlledSelect
+                className="input-field"
+                name="repository"
+                placeholder="Repository"
+                control={control}
+                rules={{ required: true }}
+                options={repoOptions}
+                onChange={(option) => {
+                  setSelectedBookmarkRepo(option.value);
+                }}
+              />
+            </HideContainer>
           </Form>
         </FormContainer>
         <FormResultsDescriptionContainer>
-          {isWellFormed &&
-            Array.isArray(results) && // so that 0 results doesn't show up while pending
-            (results.length
-              ? `${results.reduce(
-                  (numResults, file) =>
-                    numResults +
-                    file.text_matches.reduce(
-                      (numTextMatches, textMatch) =>
-                        numTextMatches + textMatch.matches.length,
-                      0
-                    ),
-                  0
-                )} results in ${results.length} files`
-              : '0 results')}
+          {getBookmarkResultsDescription(bookmarkRepoResults)}
         </FormResultsDescriptionContainer>
       </HeaderContainer>
       <Scrollbars
@@ -133,10 +148,17 @@ export default observer(() => {
         autoHide
       >
         <SectionContent>
-          {results &&
-            results.map((file) => (
-              <SearchResultFileNode file={file} key={file.path} />
-            ))}
+          {bookmarkRepoResults &&
+            Object.entries(bookmarkRepoResults).map(
+              ([repoKey]) =>
+                userBookmarks.has(repoKey) && (
+                  <BookmarkRepoNode
+                    key={repoKey}
+                    repo={userBookmarks.get(repoKey)}
+                    repoMatches={bookmarkRepoResults[repoKey]}
+                  />
+                )
+            )}
         </SectionContent>
       </Scrollbars>
     </>

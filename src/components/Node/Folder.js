@@ -43,7 +43,7 @@ const Folder = ({ owner, repo, branch, data, level }) => {
         <OpenCloseChevron open={open} />
         <StyledNode.Icon iconFill={folderIconColor}>
           <FileDirectoryIcon
-            size={ICON.SIZE({ theme: { spacing } })}
+            size={ICON.SIZE({ theme: { spacing } }) - 1}
             verticalAlign="middle"
           />
         </StyledNode.Icon>

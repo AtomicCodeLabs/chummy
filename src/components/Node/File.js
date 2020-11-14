@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import {
@@ -9,39 +9,24 @@ import {
 } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import useFirebaseDAO from '../../hooks/firebase';
-import { useFileStore, useUserStore } from '../../hooks/store';
+import { useFileStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
-import { redirectTo, clickedEl } from './util';
+import { redirectTo, clickedEl, createBookmark } from './util';
 import { ICON } from '../../constants/sizes';
+import useBookmarkState from '../../hooks/useBookmarkState';
+import { bookmarkIconColor } from '../../constants/theme';
 
 const File = observer(({ owner, repo, branch, data, level }) => {
-  const bookmark = {
-    bookmarkId: `bookmark-${data.oid}`,
-    pinned: false,
-    ...data, // rest of Node
-    repo: {
-      owner,
-      name: repo
-    }
-  };
+  const bookmark = createBookmark(owner, repo, branch.name, data);
   const [showNewTab, setShowNewTab] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
   const bookmarkEl = useRef(null);
   const newTabEl = useRef(null);
   const { spacing } = useTheme();
-
-  const firebase = useFirebaseDAO();
-  const { getUserBookmark } = useUserStore();
   const { currentWindowTab } = useFileStore();
-
-  useEffect(() => {
-    console.log(
-      'bookmark updated',
-      getUserBookmark(owner, repo, bookmark.bookmarkId)
-    );
-    setBookmarked(!!getUserBookmark(owner, repo, bookmark.bookmarkId) || false);
-  }, [getUserBookmark(owner, repo, bookmark.bookmarkId)]);
+  const [localBookmarked, setLocalBookmarked] = useBookmarkState(
+    bookmark,
+    'Explorer'
+  );
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -49,14 +34,7 @@ const File = observer(({ owner, repo, branch, data, level }) => {
 
     // Bookmark file
     if (clickedEl(bookmarkEl, e)) {
-      // Check if bookmark already exists
-      if (bookmarked) {
-        console.log('removing bookmark', bookmark);
-        firebase.removeBookmark(bookmark);
-      } else {
-        console.log('adding bookmark', bookmark);
-        firebase.addBookmark(bookmark);
-      }
+      setLocalBookmarked(!localBookmarked); // toggle local bookmarked
       return;
     }
 
@@ -86,13 +64,12 @@ const File = observer(({ owner, repo, branch, data, level }) => {
       <StyledNode.LeftSpacer level={level} extraIconFiller />
       <StyledNode.Icon>
         <FileIcon
-          size={ICON.SIZE({ theme: { spacing } })}
+          size={ICON.SIZE({ theme: { spacing } }) - 1}
           verticalAlign="middle"
         />
       </StyledNode.Icon>
       <StyledNode.Name>{data.name}</StyledNode.Name>
       <StyledNode.MiddleSpacer />
-
       <StyledNode.RightIconContainer>
         {showNewTab && (
           <StyledNode.Icon ref={newTabEl}>
@@ -102,8 +79,8 @@ const File = observer(({ owner, repo, branch, data, level }) => {
             />
           </StyledNode.Icon>
         )}
-        {bookmarked ? (
-          <StyledNode.Icon ref={bookmarkEl}>
+        {localBookmarked ? (
+          <StyledNode.Icon ref={bookmarkEl} iconFill={bookmarkIconColor}>
             <BookmarkFillIcon
               size={ICON.SIZE({ theme: { spacing } })}
               verticalAlign="middle"

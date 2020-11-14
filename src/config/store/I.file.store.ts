@@ -92,9 +92,6 @@ export default interface IFileStore {
   openRepos: Map<string, Repo>;
   currentBranch: Branch; // Branch to show in files section (active tab)
 
-  /* Search Section */
-  openSearchResultFiles: Set<string>;
-
   /* VCS Section */
   currentRepo: Repo;
 }

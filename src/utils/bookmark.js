@@ -1,3 +1,6 @@
+export const bookmarkRepoMapToArray = (repoMap) =>
+  Object.values(repoMap).flat();
+
 export const transformBookmarks = (bookmarks) => {
   // <key: {owner:repo}, value: Repo>
   // eslint-disable-next-line prefer-const

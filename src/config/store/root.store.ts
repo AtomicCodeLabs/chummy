@@ -12,7 +12,7 @@ export class RootStore implements IRootStore {
   userStore: IUserStore;
 
   constructor() {
-    this.uiStore = new UiStore();
+    this.uiStore = new UiStore(this);
     this.userStore = new UserStore(this);
     this.fileStore = new FileStore(this);
   }

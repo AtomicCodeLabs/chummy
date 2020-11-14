@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 
-import { useFileStore } from '../hooks/store';
+import { useFileStore, useUserStore } from '../hooks/store';
 
 // eslint-disable-next-line import/no-named-as-default
 import { backgroundColor, textColor } from '../constants/theme';
@@ -11,6 +11,7 @@ import {
   onUpdateOpenRepositories,
   repoMapToArray
 } from '../utils/repository';
+import useFirebaseDAO from '../hooks/firebase';
 
 const Container = styled.div`
   position: fixed;
@@ -28,6 +29,8 @@ const Container = styled.div`
 
 const ExtensionRootContainer = observer(({ children }) => {
   const { openRepos, setOpenRepos } = useFileStore();
+  const { isLoggedIn } = useUserStore();
+  const firebase = useFirebaseDAO();
 
   // App wide listeners are initialized here.
   // On Open repositories update setOpenRepos
@@ -46,6 +49,14 @@ const ExtensionRootContainer = observer(({ children }) => {
       });
     }
   }, [openRepos]);
+
+  // Get all bookmarks on startup
+  useEffect(() => {
+    if (firebase && isLoggedIn) {
+      console.log('Getting all bookmarks at startup');
+      firebase.getAllBookmarks();
+    }
+  }, [firebase, isLoggedIn]);
 
   return <Container>{children}</Container>;
 });

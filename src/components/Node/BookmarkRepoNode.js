@@ -9,15 +9,15 @@ import { useUserStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
 
-const BookmarkRepoNode = ({ repo }) => {
+const BookmarkRepoNode = ({ repo, repoMatches }) => {
   const { spacing } = useTheme();
   const {
     openUserBookmarksRepo,
     closeUserBookmarksRepo,
     getUserBookmarkRepo
   } = useUserStore();
-  const [open, setOpen] = useState(false);
-  const hasBookmarks = !!Object.keys(repo.bookmarks).length;
+  const [open, setOpen] = useState(true);
+  const hasBookmarks = !!Object.keys(repoMatches).length;
 
   useEffect(() => {
     setOpen(getUserBookmarkRepo(repo.owner, repo.name)?.isOpen || false);
@@ -51,12 +51,15 @@ const BookmarkRepoNode = ({ repo }) => {
       <>
         {open &&
           hasBookmarks &&
-          Object.values(repo.bookmarks).map((bookmark) => (
-            <Bookmark
-              key={`${bookmark.name}#${bookmark.bookmarkId}`}
-              bookmark={bookmark}
-            />
-          ))}
+          Object.entries(repoMatches).map(
+            ([bookmarkId, { matches }]) =>
+              repo.bookmarks[bookmarkId] && (
+                <Bookmark
+                  key={bookmarkId}
+                  bookmark={{ ...repo.bookmarks[bookmarkId], matches }}
+                />
+              )
+          )}
       </>
     </>
   );
@@ -64,24 +67,31 @@ const BookmarkRepoNode = ({ repo }) => {
 
 BookmarkRepoNode.propTypes = {
   repo: PropTypes.shape({
-    owner: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    owner: PropTypes.string,
+    name: PropTypes.string,
     bookmarks: PropTypes.objectOf(
       PropTypes.shape({
-        bookmarkId: PropTypes.string.isRequired,
+        bookmarkId: PropTypes.string,
         pinned: PropTypes.boolean,
         repo: PropTypes.shape({
-          owner: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired
-        }).isRequired,
+          owner: PropTypes.string,
+          name: PropTypes.string
+        }),
         branch: PropTypes.shape({
-          name: PropTypes.string.isRequired
-        }).isRequired,
-        name: PropTypes.string.isRequired,
-        path: PropTypes.string.isRequired
+          name: PropTypes.string
+        }),
+        name: PropTypes.string,
+        path: PropTypes.string
       })
     )
-  }).isRequired
+  }).isRequired,
+  repoMatches: PropTypes.objectOf(
+    PropTypes.shape({
+      matches: PropTypes.objectOf(
+        PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+      )
+    })
+  ).isRequired
 };
 
 export default BookmarkRepoNode;

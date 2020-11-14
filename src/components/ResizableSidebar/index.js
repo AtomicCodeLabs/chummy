@@ -24,7 +24,7 @@ import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
 
 const ResizableSidebar = observer(({ children }) => {
   const {
-    isPending,
+    pendingRequestCount,
     isSidebarMinimized,
     openSidebar,
     closeSidebar
@@ -62,6 +62,8 @@ const ResizableSidebar = observer(({ children }) => {
     pathname
   ]);
 
+  // console.log(toJS(pendingRequestCount));
+
   return (
     <Container>
       <SideTab isSidebarMinimized={isSidebarMinimized}>
@@ -89,7 +91,7 @@ const ResizableSidebar = observer(({ children }) => {
           <ExpandingContainerHeaderContainer>
             {sidebarHeaderTitle}
             <ExpandingContainerHeaderSpacer />
-            {isPending === sidebarHeaderTitle && isPending !== 'None' && (
+            {!!pendingRequestCount.get(sidebarHeaderTitle) && (
               <ExpandingContainerHeaderIcon>
                 <Spinner />
               </ExpandingContainerHeaderIcon>

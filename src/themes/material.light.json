@@ -21,6 +21,7 @@
     "highlightTextColor": "#4d5a61",
     "highlightBackgroundColor": "#ffcb6b",
     "folderIconColor": "#ffcb6b",
+    "bookmarkIconColor": "#1769aa",
     "nodeIconColor": "#687982",
     "nodeIconDarkColor": "#4d5a61",
     "shadowColor": "rgba(0, 0, 0, 0.1)",

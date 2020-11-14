@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import {
-  LinkExternalIcon,
-  BookmarkIcon
-  // BookmarkFillIcon
-} from '@primer/octicons-react';
+import { LinkExternalIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
 import { redirectToUrl } from './util';
@@ -20,6 +16,7 @@ const SearchResultMatchNode = observer(
     const handleClick = (e) => {
       e.stopPropagation();
       e.preventDefault();
+
       // Always open search match file in new tab
       redirectToUrl(url);
     };
@@ -40,30 +37,28 @@ const SearchResultMatchNode = observer(
           </span>
         </StyledNode.Name>
         <StyledNode.MiddleSpacer />
-        {showNewTab && (
-          <StyledNode.RightIconContainer>
-            <BookmarkIcon
-              size={ICON.SIZE({ theme: { spacing } })}
-              verticalAlign="middle"
-            />
-            <LinkExternalIcon
-              size={ICON.SIZE({ theme: { spacing } })}
-              verticalAlign="middle"
-            />
-          </StyledNode.RightIconContainer>
-        )}
+        <StyledNode.RightIconContainer>
+          {showNewTab && (
+            <StyledNode.Icon>
+              <LinkExternalIcon
+                size={ICON.SIZE({ theme: { spacing } })}
+                verticalAlign="middle"
+              />
+            </StyledNode.Icon>
+          )}
+        </StyledNode.RightIconContainer>
       </StyledNode.Container>
     );
   }
 );
 
 SearchResultMatchNode.propTypes = {
-  fragment: PropTypes.string.isRequired,
+  fragment: PropTypes.string,
   indices: PropTypes.shape({
-    start: PropTypes.number.isRequired,
-    end: PropTypes.number.isRequired
+    start: PropTypes.number,
+    end: PropTypes.number
   }),
-  url: PropTypes.string.isRequired
+  url: PropTypes.string
 };
 
 export default SearchResultMatchNode;

@@ -1,34 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { FileIcon } from '@primer/octicons-react';
+import {
+  FileIcon,
+  BookmarkIcon,
+  BookmarkFillIcon
+} from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
-import { useFileStore } from '../../hooks/store';
-import { getMatchFragment } from './util';
+import { getMatchFragment, createBookmark, clickedEl } from './util';
 import SearchResultMatchNode from './SearchResultMatchNode';
+import useBookmarkState from '../../hooks/useBookmarkState';
+import useTheme from '../../hooks/useTheme';
+import { ICON } from '../../constants/sizes';
+import { bookmarkIconColor } from '../../constants/theme';
 
-const SearchResultFileNode = ({
-  file: { text_matches: textMatches, name, path, html_url: htmlUrl }
-}) => {
+const SearchResultFileNode = ({ file }) => {
   const {
-    openOpenSearchResultFile,
-    closeOpenSearchResultFile,
-    isOpenSearchResultFileOpen
-  } = useFileStore();
+    text_matches: textMatches,
+    name,
+    path,
+    html_url: htmlUrl,
+    repo
+  } = file;
+  const bookmark = createBookmark(repo.owner, repo.name, 'master', file);
+  const bookmarkEl = useRef(null);
   const [open, setOpen] = useState(false);
   const parentPath = path.replace(name, '');
+  const [localBookmarked, setLocalBookmarked] = useBookmarkState(
+    bookmark,
+    'Search'
+  );
+  const { spacing } = useTheme();
 
-  useEffect(() => {
-    setOpen(isOpenSearchResultFileOpen(path));
-  }, [isOpenSearchResultFileOpen(path)]);
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-  const handleClick = () => {
+    // Bookmark file
+    if (clickedEl(bookmarkEl, e)) {
+      setLocalBookmarked(!localBookmarked);
+      return;
+    }
+
+    // Or toggle open state
     if (open) {
-      closeOpenSearchResultFile(path);
       setOpen(false);
     } else {
-      openOpenSearchResultFile(path);
       setOpen(true);
     }
   };
@@ -63,7 +81,7 @@ const SearchResultFileNode = ({
 
   return (
     <>
-      <StyledNode.Container className="node" onClick={handleClick}>
+      <StyledNode.Container className="node" onClickCapture={handleClick}>
         <StyledNode.LeftSpacer level={0} />
         <OpenCloseChevron open={open} />
         <StyledNode.Icon>
@@ -73,6 +91,24 @@ const SearchResultFileNode = ({
         <StyledNode.SubName variant="smallFont">
           {parentPath}
         </StyledNode.SubName>
+        <StyledNode.MiddleSpacer />
+        <StyledNode.RightIconContainer>
+          {localBookmarked ? (
+            <StyledNode.Icon ref={bookmarkEl} iconFill={bookmarkIconColor}>
+              <BookmarkFillIcon
+                size={ICON.SIZE({ theme: { spacing } })}
+                verticalAlign="middle"
+              />
+            </StyledNode.Icon>
+          ) : (
+            <StyledNode.Icon ref={bookmarkEl}>
+              <BookmarkIcon
+                size={ICON.SIZE({ theme: { spacing } })}
+                verticalAlign="middle"
+              />
+            </StyledNode.Icon>
+          )}
+        </StyledNode.RightIconContainer>
       </StyledNode.Container>
       {renderMatches()}
     </>
@@ -82,9 +118,10 @@ const SearchResultFileNode = ({
 // Shaped after data format given by rest api
 SearchResultFileNode.propTypes = {
   file: PropTypes.shape({
+    oid: PropTypes.string,
     text_matches: PropTypes.arrayOf(
       PropTypes.shape({
-        fragment: PropTypes.string.isRequired,
+        fragment: PropTypes.string,
         matches: PropTypes.arrayOf(
           PropTypes.shape({
             indices: PropTypes.arrayOf(PropTypes.number),
@@ -93,9 +130,13 @@ SearchResultFileNode.propTypes = {
         )
       })
     ),
-    name: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    html_url: PropTypes.string.isRequired
+    name: PropTypes.string,
+    path: PropTypes.string,
+    html_url: PropTypes.string,
+    repo: PropTypes.shape({
+      owner: PropTypes.string,
+      name: PropTypes.string
+    })
   }).isRequired
 };
 

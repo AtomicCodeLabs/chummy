@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import React from 'react';
 import browser from 'webextension-polyfill';
 import urlUtil from 'url';
 import pathUtil from 'path';
@@ -33,6 +34,21 @@ export const changeActiveTab = async (destinationTabId) => {
     }
   } catch (error) {
     console.error('Error changing active tab', error);
+    return false;
+  }
+};
+
+export const closeTab = async (tabId) => {
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'close-tab',
+      payload: { tabId }
+    });
+    if (response?.complete) {
+      return true;
+    }
+  } catch (error) {
+    console.error('Error closing tab', error);
     return false;
   }
 };
@@ -76,6 +92,15 @@ export const processTabInformation = (tab) => {
     primaryText: '/',
     secondaryText: '',
     subpageText: subpage
+  };
+};
+
+export const processBookmarkInformation = (bookmark) => {
+  const { parentPath, fileName } = parseFilePath(bookmark.path);
+  return {
+    primaryText: decodeURI(fileName),
+    secondaryText: parentPath,
+    subpageText: bookmark?.branch?.name || 'master' // repo branch name
   };
 };
 
@@ -129,16 +154,60 @@ export const getMatchFragment = (fragment, matchStart, matchEnd) => {
 };
 
 export const getBookmarkUrl = (bookmark) => {
-  if (!bookmark?.repo || !bookmark?.branch || !bookmark?.path) {
+  if (!bookmark?.repo || !bookmark?.path) {
     return null;
   }
   const { repo, branch, path } = bookmark;
   return urlUtil.resolve(
     'https://github.com/',
-    pathUtil.join(`/${repo.owner}/${repo.name}`, `/blob/${branch.name}/${path}`)
+    pathUtil.join(
+      `/${repo.owner}/${repo.name}`,
+      `/blob/${branch?.name || 'master'}/${path}`
+    )
   );
 };
 
 export const clickedEl = (ref, event) =>
   ref.current &&
   (event.target === ref.current || ref.current.contains(event.target));
+
+export const createBookmark = (owner, repo, branch, node) => ({
+  bookmarkId: `bookmark-${owner}:${repo}:${node.path}`,
+  pinned: false,
+  name: node.name,
+  path: node.path,
+  repo: {
+    owner,
+    name: repo
+  },
+  branch: {
+    name: branch
+  }
+});
+
+// Return React text nodes with sections highlighted per the matches passed in
+export const highlightTextPart = (fragment, matches) => {
+  if (matches.length === 0) return [fragment];
+  // eslint-disable-next-line prefer-const
+  let textNodes = [];
+  let lastL = 0;
+  const maxR = fragment.length;
+  matches.forEach(([l, r], i) => {
+    if (l >= maxR) {
+      return;
+    }
+    // If first match, push start of string
+    textNodes.push(fragment.slice(lastL, l));
+    textNodes.push(
+      <span key={`${l}-${r}`} className="highlight">
+        {fragment.slice(l, Math.min(r, maxR))}
+      </span>
+    );
+    // If last match, push end of string
+    if (i === matches.length - 1 && r !== maxR) {
+      textNodes.push(fragment.slice(r));
+    }
+    lastL = r;
+  });
+  return textNodes;
+};

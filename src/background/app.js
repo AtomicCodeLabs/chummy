@@ -128,6 +128,18 @@ const redirectTab = async (request) => {
     }
     return null;
   }
+
+  // Change active tab (when branch node is clicked)
+  if (request.action === 'close-tab') {
+    try {
+      await browser.tabs.remove(request.payload.tabId);
+      return { action: 'close-tab', complete: true };
+    } catch (error) {
+      console.error('Error changing active tab', error);
+    }
+    return null;
+  }
+
   return null;
 };
 browser.runtime.onMessage.addListener((request) => {
@@ -136,7 +148,8 @@ browser.runtime.onMessage.addListener((request) => {
       'redirect',
       'redirect-to-url',
       'change-active-tab',
-      'get-open-repositories'
+      'get-open-repositories',
+      'close-tab'
     ].includes(request.action)
   ) {
     return redirectTab(request);

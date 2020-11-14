@@ -193,7 +193,7 @@ export const ControlledSelect = (props) => {
     control,
     rules,
     onFocus,
-    onChange: rsOnChange,
+    onChange: rsOnChange = () => {},
     defaultValue,
     ...reactSelectProps
   } = props;

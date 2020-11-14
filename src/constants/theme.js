@@ -73,6 +73,7 @@ export const highlightBackgroundColor = themeCreator(
   'highlightBackgroundColor'
 );
 export const folderIconColor = themeCreator('folderIconColor');
+export const bookmarkIconColor = themeCreator('bookmarkIconColor');
 export const nodeIconColor = themeCreator('nodeIconColor');
 export const nodeIconDarkColor = themeCreator('nodeIconDarkColor');
 export const shadowColor = themeCreator('shadowColor');

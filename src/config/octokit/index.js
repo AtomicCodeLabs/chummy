@@ -99,7 +99,6 @@ class OctoDAO {
           repo
         }
       );
-      console.log('OCTOKIT RESPONSE', response);
       // Sort files before storing
       const entries = response?.repository?.object?.entries;
       if (!entries) {

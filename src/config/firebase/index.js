@@ -5,7 +5,10 @@ import browser from 'webextension-polyfill';
 
 import useOctoDAO from '../../hooks/octokit';
 import userUtils from '../../utils/user';
-import { transformBookmarks } from './util';
+import {
+  transformBookmarks,
+  bookmarkRepoMapToArray
+} from '../../utils/bookmark';
 
 let isInitialized = false;
 
@@ -44,6 +47,8 @@ class FirebaseDAO {
         });
         this.octoDAO.authenticate(response.payload.user?.apiKey);
       }
+      // Fetch user's bookmarks
+      this.getAllBookmarks();
     } catch (error) {
       console.error('Error signing in', error);
     }
@@ -53,7 +58,7 @@ class FirebaseDAO {
 
   signOut = () => {
     browser.runtime.sendMessage({ action: 'sign-out' });
-    this.userStore.clearUser();
+    this.userStore.clearUser(); // cleans up user and user's bookmarks
     this.octoDAO.unauthenticate();
   };
 
@@ -92,12 +97,13 @@ class FirebaseDAO {
   // *** Firestore API ***
 
   getAllBookmarks = async () => {
-    if (!this.userStore.isLoggedIn()) {
+    if (!this.userStore.isLoggedIn) {
       console.error('Firebase is not authenticated.');
       return null;
     }
     // Check if cached bookmarks exist in store first
-    if (this.userStore.hasBookmarksCached()) {
+    console.log('Are bookmarks cached', this.userStore.hasBookmarksCached);
+    if (this.userStore.hasBookmarksCached) {
       return this.userStore.getUserBookmarks();
     }
 
@@ -106,12 +112,8 @@ class FirebaseDAO {
       const response = await userUtils.getAllBookmarks();
       if (response?.payload?.bookmarks) {
         // Bookmarks will be array, so they'll need transforming
-        console.log(
-          'Transforming bookmarks',
-          transformBookmarks(response.payload.bookmarks)
-        );
         this.userStore.setUserBookmarks(
-          transformBookmarks(response.payload.bookmarks)
+          bookmarkRepoMapToArray(transformBookmarks(response.payload.bookmarks))
         );
       }
     } catch (error) {

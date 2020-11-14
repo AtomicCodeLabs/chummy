@@ -1,8 +1,8 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, toJS } from 'mobx';
 
 import IRootStore from './I.root.store';
 import IUserStore, { AccountType, User } from './I.user.store';
-import IUiStore from './I.ui.store';
+import IUiStore, { SectionName } from './I.ui.store';
 import IFileStore, { Bookmark, Repo } from './I.file.store';
 import { objectMap } from '../../utils';
 
@@ -12,8 +12,9 @@ export default class UserStore implements IUserStore {
 
   @observable user: User = null;
   @observable userBookmarks: Map<string, Repo> = new Map(); // key is owner:branchName
+  @observable numOfBookmarks: number = 0;
 
-  @observable isPending: boolean;
+  @observable isPending: boolean; // keep boolean bc user pending requests are binary
 
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
@@ -58,7 +59,7 @@ export default class UserStore implements IUserStore {
 
   @action.bound getUserBookmarkRepo = (owner: string, repoName: string) => {
     const key = `${owner}:${repoName}`;
-    return this.userBookmarks.get(key)?.bookmarks;
+    return this.userBookmarks.get(key);
   };
 
   @action.bound getUserBookmark = (
@@ -68,7 +69,7 @@ export default class UserStore implements IUserStore {
   ) => {
     const key = `${owner}:${repoName}`;
     const repoBookmarks = this.userBookmarks.get(key)?.bookmarks;
-    if (!repoBookmarks) return;
+    if (!repoBookmarks) return null;
     return repoBookmarks[bookmarkId];
   };
 
@@ -93,7 +94,7 @@ export default class UserStore implements IUserStore {
           repo.bookmarks,
           (k: string, v: Bookmark) => v.bookmarkId
         ),
-        isOpen: false
+        isOpen: true
       });
     } else {
       // Add branches to existing repo
@@ -102,11 +103,15 @@ export default class UserStore implements IUserStore {
         foundRepo.bookmarks[bookmarkKey] = bookmark;
       });
     }
+
+    // Increment
+    this.numOfBookmarks += 1;
   }
 
   @action.bound removeBookmark(repo: Repo) {
     const key = `${repo.owner}:${repo.name}`;
     const foundRepo = this.userBookmarks.get(key);
+    console.log('removing bookmark from store', repo, toJS(this.userBookmarks));
 
     if (foundRepo) {
       // Remove branches from existing repo
@@ -119,6 +124,9 @@ export default class UserStore implements IUserStore {
         this.userBookmarks.delete(key);
       }
     }
+    console.log('removed bookmark from store', toJS(this.userBookmarks));
+
+    this.numOfBookmarks = Math.min(0, this.numOfBookmarks - 1);
   }
 
   @action.bound cleanupUserBookmarks(repoBookmarksToSet: Repo[]) {
@@ -136,6 +144,8 @@ export default class UserStore implements IUserStore {
           const repoKey = `${r.owner}:${r.name}`;
           // If not an active bookmark, remove it.
           delete this.userBookmarks.get(repoKey).bookmarks[b.bookmarkId];
+          // Decrement
+          this.numOfBookmarks = Math.min(0, this.numOfBookmarks - 1);
           // If no bookmarks left, remove open repo entry.
           if (
             Object.keys(this.userBookmarks.get(repoKey).bookmarks).length === 0
@@ -165,10 +175,36 @@ export default class UserStore implements IUserStore {
     }
   };
 
+  // Set all bookmarks repos to open state
+  @action.bound openAllUserBookmarksRepos = () => {
+    this.userBookmarks.forEach((r: Repo) => {
+      const key = `${r.owner}:${r.name}`;
+      const foundRepo = this.userBookmarks.get(key);
+      if (foundRepo) {
+        this.userBookmarks.set(key, { ...foundRepo, isOpen: true });
+      }
+    });
+  };
+
+  // Set all bookmarks repos to closed state
+  @action.bound closeAllUserBookmarksRepos = () => {
+    this.userBookmarks.forEach((r: Repo) => {
+      const key = `${r.owner}:${r.name}`;
+      const foundRepo = this.userBookmarks.get(key);
+      if (foundRepo) {
+        this.userBookmarks.set(key, { ...foundRepo, isOpen: false });
+      }
+    });
+  };
+
   /** Util **/
   @action.bound setPending(isPending: boolean): void {
     this.isPending = isPending;
-    this.uiStore.pendingRequestCount += isPending ? 1 : -1;
+    if (isPending) {
+      this.uiStore.addPendingRequest(SectionName.Account);
+    } else {
+      this.uiStore.removePendingRequest(SectionName.Account);
+    }
   }
 
   @computed get isLoggedIn() {
@@ -176,6 +212,10 @@ export default class UserStore implements IUserStore {
   }
 
   @computed get hasBookmarksCached() {
-    return !!this.userBookmarks;
+    return this.userBookmarks.size !== 0;
+  }
+
+  @computed get hasBookmarks() {
+    return this.numOfBookmarks !== 0;
   }
 }

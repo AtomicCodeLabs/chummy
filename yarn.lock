@@ -5850,6 +5850,11 @@ querystring@0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
+quick-score@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/quick-score/-/quick-score-0.0.9.tgz#d6b5bfe9ac4e09df95e36f7ae1e210fc7ad71f8e"
+  integrity sha512-8v9bWIY53ietW8tkv1RfKvJlWY3Eza39vWQpo8V5IfDCyJtvPAE0szycNmQg2Ko+iZ8WLonMJIsP7Ih9Ang5AA==
+
 raf@^3.1.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.1.tgz#0742e99a4a6552f445d73e3ee0328af0ff1ede39"
