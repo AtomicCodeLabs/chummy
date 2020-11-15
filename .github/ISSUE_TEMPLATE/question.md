@@ -1,0 +1,28 @@
+---
+name: Question
+about: Help me with something ❓
+title: "[Q] "
+labels: question
+assignees: ''
+
+---
+
+Before submitting this issue, make sure you've read over the [I Have a Question](https://github.com/alexkim205/chummy/blob/master/docs/CONTRIBUTING.md#i-have-a-question) section of the Contributing guidelines.
+
+### Version Information
+| ------------------------| ---------- |
+| Browser             |        (e.g. Chrome, Safari)         |
+| Browser Version                    |      (e.g. 22)           |
+| Extension Version    |        (e.g. 0.1.0)         |
+
+### Alternatives
+
+Can you achieve the same result doing it in an alternative way? Is the alternative considerable?
+
+### Has this question been asked before?
+
+Please provide a link to the issue.
+
+### If the feature request is approved, would you be willing to submit a PR?
+
+Yes / No _(Help can be provided if you need assistance submitting a PR)_
