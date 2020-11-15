@@ -2,7 +2,7 @@
 name: Feature Request
 about: "I have an idea \U0001F4A1"
 title: "[FEAT] "
-labels: enhancement
+labels: feature-request
 assignees: ''
 
 ---
