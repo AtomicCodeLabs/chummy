@@ -2,7 +2,7 @@
 name: Bug
 about: "I spy a bug \U0001F41E"
 title: "[BUG] "
-labels: bug
+labels: bug-report
 assignees: ''
 
 ---
