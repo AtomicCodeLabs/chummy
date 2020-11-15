@@ -139,9 +139,27 @@ Updating, improving and correcting the documentation
 
 ### Commit Messages
 
-<!-- TODO
+This project uses Conventional Changelog's [commitlint](https://github.com/conventional-changelog/commitlint) package to standardize commit messages. Make sure to prefix all commits with one of the common types below:
 
--->
+- build
+- ci
+- chore
+- docs
+- feat
+- fix
+- perf
+- refactor
+- revert
+- style
+- test
+
+```txt
+// Example Commit Message
+feat: added bookmarking page and corresponding store values
+fix: fixed random unauth bug
+```
+
+Check out the [`.commitlintrc.js`](../.commitlintrc.js) file for the full rules configuration.
 
 <!-- omit in toc -->
 

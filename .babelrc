@@ -5,7 +5,7 @@
       {
         "useBuiltIns": "usage", // alternative mode: "entry"
         "corejs": 3, // default would be 2
-        "targets": "> 0.25%, not dead"
+        "targets": [">0.25%", "not dead", "not ie <= 11", "not op_mini all"]
         // set your own target environment here (see Browserslist)
       }
     ],
