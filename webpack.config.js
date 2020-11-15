@@ -1,9 +1,11 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtensionReloaderPlugin = require('webpack-extension-reloader');
+// const ExtensionReloaderPlugin = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+// const TerserPlugin = require("terser-webpack-plugin");
 const path = require('path');
 
 const { NODE_ENV = 'development' } = process.env;
@@ -20,8 +22,17 @@ const base = {
     popup: './src/popup/index.js',
     options: './src/options/index.js'
   },
+  output: {
+    filename: '[name].js',
+    chunkFilename: '[id].js',
+    path: path.resolve(process.cwd(), 'dist')
+  },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
+    fallback: {
+      path: require.resolve('path-browserify'),
+      url: require.resolve('url/')
+    }
   },
   module: {
     rules: [
@@ -55,13 +66,6 @@ const base = {
     new CopyPlugin({
       patterns: [
         { from: './src/manifest.json', to: './manifest.json' }, // {
-        //   from: './src/content-scripts/index.css',
-        //   to: './content-script.css'
-        // },
-        // {
-        //   from: './src/popup/index.html',
-        //   to: './popup.html'
-        // },
         { from: './public/icon', to: './icon' }
       ]
     }),
@@ -86,7 +90,7 @@ const base = {
     //   chunks: ['window'],
     //   filename: 'window.html'
     // }),
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new webpack.EnvironmentPlugin({ NODE_ENV: 'development' }),
     new webpack.DefinePlugin({
       'process.env': {
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
@@ -108,33 +112,27 @@ const development = {
   plugins: [
     ...base.plugins,
     new webpack.HotModuleReplacementPlugin(),
-    new ExtensionReloaderPlugin({
-      manifest: path.resolve(__dirname, 'src/manifest.json')
-    }),
-    new DotenvPlugin({ path: path.resolve(__dirname, '.env.development') })
+    // new ExtensionReloaderPlugin({
+    //   manifest: path.resolve(__dirname, 'src/manifest.json')
+    // }),
+    new DotenvPlugin({ path: path.resolve(__dirname, '.env.development') }),
+    new BundleAnalyzerPlugin()
   ]
 };
 
 const production = {
   ...base,
   mode: 'production',
-  devtool: '#source-map',
-  output: {
-    filename: '[name].bundle.js',
-    chunkFilename: '[id].chunk.js',
-    path: path.resolve(__dirname, 'dist')
-  },
   optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
+    runtimeChunk: false
   },
   plugins: [
     ...base.plugins,
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
-    })
+    }),
+    new DotenvPlugin({ path: path.resolve(__dirname, '.env.production') })
   ]
 };
 

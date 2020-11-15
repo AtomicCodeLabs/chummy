@@ -1,6 +1,4 @@
-# Themes
-
-## Adding a new theme
+# Adding a new theme
 
 Copy any file in `src/themes` and replace the colors with your own.
 

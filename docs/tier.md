@@ -16,5 +16,5 @@
 - Unlimited bookmarks
 - Bookmarks search
 - Dark mode + customizable themes
-- Priority support
+- Priority email support
 - (In development) - Custom cache TTL's

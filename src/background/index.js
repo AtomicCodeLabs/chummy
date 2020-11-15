@@ -7,28 +7,6 @@ import {
   isExtensionOpen
 } from './util';
 
-// Rules set when extension is installed
-const onInstalledListener = async () => {
-  try {
-    await browser.declarativeContent.onPageChanged.removeRules();
-    browser.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: { hostEquals: 'github.com' }
-          })
-        ],
-        actions: [new browser.declarativeContent.ShowPageAction()]
-      }
-    ]);
-  } catch (error) {
-    console.error('Error removing and adding page rules', error);
-  }
-};
-browser.runtime.onInstalled.addListener(() => {
-  onInstalledListener();
-});
-
 // Called when the user clicks on the extension icon
 const onBrowserActionClickedListener = async () => {
   try {
@@ -40,11 +18,10 @@ const onBrowserActionClickedListener = async () => {
       sidebarWidth
     } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
     if (await isExtensionOpen()) {
-      console.log('extensioon is open');
+      console.log('extension is open');
       return;
     }
     const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
-
     // Create new window
     const win = await browser.windows.create({
       url: browser.runtime.getURL('popup.html'),
