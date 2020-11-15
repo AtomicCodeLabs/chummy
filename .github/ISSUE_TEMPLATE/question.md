@@ -1,19 +1,20 @@
 ---
 name: Question
-about: Help me with something ❓
+about: I need some clarification ❓
 title: "[Q] "
 labels: question
 assignees: ''
 
 ---
 
-Before submitting this issue, make sure you've read over the [I Have a Question](https://github.com/alexkim205/chummy/blob/master/docs/CONTRIBUTING.md#i-have-a-question) section of the Contributing guidelines.
+**Before submitting this issue, make sure you've read over the [I Have a Question](https://github.com/alexkim205/chummy/blob/master/docs/CONTRIBUTING.md#i-have-a-question) section of the Contributing guidelines.**
 
 ### Version Information
-| ------------------------| ---------- |
-| Browser             |        (e.g. Chrome, Safari)         |
-| Browser Version                    |      (e.g. 22)           |
-| Extension Version    |        (e.g. 0.1.0)         |
+| Software            |    Information              |
+| --------------------| --------------------------- |
+| Browser             |    (e.g. Chrome, Safari)    |
+| Browser Version     |    (e.g. 22)                |
+| Extension Version   |    (e.g. 0.1.0)             |
 
 ### Alternatives
 
