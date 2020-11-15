@@ -5,12 +5,6 @@
   "main": "index.js",
   "author": "Alex Kim",
   "license": "MIT",
-  "browserslist": [
-    ">0.25%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "scripts": {
     "dev": "NODE_ENV=development webpack --mode=development --watch",
     "build": "NODE_ENV=production webpack --mode=production",
