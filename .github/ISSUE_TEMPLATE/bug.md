@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 ### Version Information
+| Software            |    Information              |
 | --------------------| --------------------------- |
 | Browser             |    (e.g. Chrome, Safari)    |
 | Browser Version     |    (e.g. 22)                |
