@@ -1,6 +1,4 @@
-# You
-
-## User Feedback
+# User Feedback
 
 You, the user, drives what new features we will work on next, and that makes your feedback invaluable. The most straightforward way to file a feature/bug ticket is by clicking the Accounts Icon on the left sidebar and clicking the Feedback button.
 
