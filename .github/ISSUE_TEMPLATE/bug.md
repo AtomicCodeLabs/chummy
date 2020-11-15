@@ -8,10 +8,10 @@ assignees: ''
 ---
 
 ### Version Information
-| ------------------------| ---------- |
-| Browser             |        (e.g. Chrome, Safari)         |
-| Browser Version                    |      (e.g. 22)           |
-| Extension Version    |        (e.g. 0.1.0)         |
+| --------------------| --------------------------- |
+| Browser             |    (e.g. Chrome, Safari)    |
+| Browser Version     |    (e.g. 22)                |
+| Extension Version   |    (e.g. 0.1.0)             |
 
 ### What is the expected behavior?
 
