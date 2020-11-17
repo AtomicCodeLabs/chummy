@@ -90,7 +90,7 @@ const base = {
     //   chunks: ['window'],
     //   filename: 'window.html'
     // }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: 'development' }),
+    // new webpack.EnvironmentPlugin({ NODE_ENV: 'development' }),
     new webpack.DefinePlugin({
       'process.env': {
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
