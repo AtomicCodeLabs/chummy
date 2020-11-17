@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Decrypt env secret
-        run: ./scripts/decrypt_env.sh
+        run: ../scripts/decrypt_env.sh
         env:
           ENV_PRODUCTION_SECRET_KEY: ${{ secrets.ENV_PRODUCTION_SECRET_KEY }}
       - run: npm install -g yarn
