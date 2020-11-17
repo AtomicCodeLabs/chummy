@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const ExtensionReloaderPlugin = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
@@ -80,16 +79,6 @@ const base = {
       chunks: ['options'],
       filename: 'options.html'
     }),
-    // new HtmlWebpackPlugin({
-    //   template: './src/devtools/devpanel/index.html',
-    //   chunks: ['devpanel'],
-    //   filename: 'devpanel.html'
-    // }),
-    // new HtmlWebpackPlugin({
-    //   template: './src/devtools/window/index.html',
-    //   chunks: ['window'],
-    //   filename: 'window.html'
-    // }),
     new webpack.EnvironmentPlugin({ NODE_ENV }),
     new webpack.DefinePlugin({
       'process.env': {
@@ -112,10 +101,9 @@ const development = {
   plugins: [
     ...base.plugins,
     new webpack.HotModuleReplacementPlugin(),
-    // new ExtensionReloaderPlugin({
-    //   manifest: path.resolve(__dirname, 'src/manifest.json')
-    // }),
-    new DotenvPlugin({ path: path.resolve(__dirname, '.env.development') }),
+    new DotenvPlugin({
+      path: path.join(__dirname, '../envs/.env.development')
+    }),
     new BundleAnalyzerPlugin()
   ]
 };
@@ -132,7 +120,7 @@ const production = {
       minimize: true,
       debug: false
     }),
-    new DotenvPlugin({ path: path.resolve(__dirname, '.env.production') })
+    new DotenvPlugin({ path: path.join(__dirname, '../envs/.env.production') })
   ]
 };
 
