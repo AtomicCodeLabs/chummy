@@ -1,14 +1,3 @@
-*node_modules*
-.vscode/
-*.env*
-
-# Extension
-extension/dist
-
-# Website
-website/public
-website/.cache
-
 # Mac
 .DS_Store
 .AppleDouble
