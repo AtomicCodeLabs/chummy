@@ -1,5 +1,8 @@
-require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV}`
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config({
+  path: path.join(__dirname, `../envs/.env.${process.env.NODE_ENV}`)
 });
 
 module.exports = {
@@ -26,13 +29,14 @@ module.exports = {
           performance: false
         },
         credentials: {
-          apiKey: '<YOUR_FIREBASE_API_KEY>',
-          authDomain: '<YOUR_FIREBASE_AUTH_DOMAIN>',
-          databaseURL: '<YOUR_FIREBASE_DATABASE_URL>',
-          projectId: '<YOUR_FIREBASE_PROJECT_ID>',
-          storageBucket: '<YOUR_FIREBASE_STORAGE_BUCKET>',
-          messagingSenderId: '<YOUR_FIREBASE_MESSAGING_SENDER_ID>',
-          appId: '<YOUR_FIREBASE_APP_ID>'
+          apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+          authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+          databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+          projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+          storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.REACT_APP_FIREBASE_APP_ID,
+          measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
         }
       }
     }
