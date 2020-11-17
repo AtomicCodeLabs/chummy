@@ -1,1 +1,1 @@
-$ gpg --symmetric --cipher-algo AES256 ../extension/.env.production --output ../env.production.gpg
+$ gpg --symmetric --cipher-algo AES256 ../website/.env.production --output ../env.production.gpg
