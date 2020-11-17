@@ -8,3 +8,8 @@ extension/dist
 # Website
 website/public
 website/.cache
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
