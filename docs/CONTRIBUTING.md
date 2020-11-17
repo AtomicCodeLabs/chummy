@@ -8,8 +8,6 @@ First off, welcome! We are happy that you've found yourself here and for taking 
 
 As a user of a Github productivity browser extension, you may already be familiar with how contributing to an open source project works. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved.
 
-Our small team is doing its best to prioritize tickets that will impact the most amount of users in the best possible way. Given our growing userbase, we still need your help. The free community version of the extension is completely open-sourced, and provides all sorts of opportunities where you can get involved.
-
 All types of contributions are encouraged and valued. We hope to see you around!
 
 > And if you like the project, but just don't have time to contribute, that's fine. There are other easy ways to support the project and show your appreciation, which we would also be very happy about:
