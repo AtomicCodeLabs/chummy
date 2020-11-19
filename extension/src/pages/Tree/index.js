@@ -64,8 +64,6 @@ export default observer(() => {
     return removeListener;
   }, []);
 
-  console.log('HEIGHTS', heights);
-
   return (
     <SplitSections.Container
       heights={heights}

@@ -49,7 +49,6 @@ const Container = ({ children, heights, setHeights, isMinimizedArray }) => {
         // section remains open
         return Math.round((h * remainingTotalSize) / MAX_HEIGHT);
       });
-      console.log('add section', heights, newHeights);
       setHeights(newHeights);
     }
     // Remove section
@@ -69,7 +68,6 @@ const Container = ({ children, heights, setHeights, isMinimizedArray }) => {
         // section remains open
         return Math.round((h * MAX_HEIGHT) / (MAX_HEIGHT - totalSizeToRemove));
       });
-      console.log('remove section', heights, newHeights);
       setHeights(newHeights);
     }
   }, [defaultIsMinimizedArray]);
