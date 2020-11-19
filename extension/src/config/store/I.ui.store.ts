@@ -23,6 +23,11 @@ export enum TreeSection {
   Files = 'files'
 }
 
+export interface TreeState {
+  isMinimized: boolean;
+  lastHeight: number;
+}
+
 export enum SectionName {
   Tree = 'Explorer',
   Search = 'Search',
@@ -38,7 +43,7 @@ class CUiStore {
   userStore: IUserStore = null;
 
   language: Language = Language.English;
-  theme: string = THEME_NAMES[0];
+  theme: string = 'vanillaLight';
   spacing: Spacing = Spacing.Cozy;
   pendingRequestCount: Map<SectionName, number> = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
@@ -52,11 +57,11 @@ class CUiStore {
 
   // Tree Page
   isTreeSectionMinimized: {
-    [TreeSection.OpenTabs]: boolean;
-    [TreeSection.Files]: boolean;
+    [TreeSection.OpenTabs]: TreeState;
+    [TreeSection.Files]: TreeState;
   } = {
-    [TreeSection.OpenTabs]: false,
-    [TreeSection.Files]: false
+    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
+    [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };
 
   // Search Page

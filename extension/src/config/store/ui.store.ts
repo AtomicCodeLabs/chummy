@@ -12,7 +12,6 @@ import IUiStore, {
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
-import { THEME_NAMES } from '../../config/theme/selector';
 import IUserStore from './I.user.store';
 import IRootStore from './I.root.store';
 
@@ -20,7 +19,7 @@ export default class UiStore implements IUiStore {
   userStore: IUserStore;
 
   @observable language = Language.English;
-  @observable theme = THEME_NAMES[0];
+  @observable theme = 'vanillaLight';
   @observable spacing = Spacing.Comfortable;
   @observable pendingRequestCount = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
@@ -30,8 +29,8 @@ export default class UiStore implements IUiStore {
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
   @observable isSidebarMinimized = false;
   @observable isTreeSectionMinimized = {
-    [TreeSection.OpenTabs]: false,
-    [TreeSection.Files]: false
+    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
+    [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };
   @observable isSearchSectionMinimized = true;
   @observable selectedQuery: string = null;
@@ -59,6 +58,7 @@ export default class UiStore implements IUiStore {
       const filteredKeys = keys.filter(
         (k) => !['pendingRequestCount'].includes(k)
       );
+      console.log('GOT UI ITEMS FROM STORAGE', items);
 
       // Set each key
       filteredKeys.forEach((key) => {
@@ -126,8 +126,30 @@ export default class UiStore implements IUiStore {
   @action.bound toggleTreeSection = (sectionName: TreeSection) => {
     this.isTreeSectionMinimized = {
       ...this.isTreeSectionMinimized,
-      [sectionName]: !this.isTreeSectionMinimized[sectionName]
+      [sectionName]: {
+        ...this.isTreeSectionMinimized[sectionName],
+        isMinimized: !this.isTreeSectionMinimized[sectionName].isMinimized
+      }
     };
+    setInChromeStorage({
+      isTreeSectionMinimized: this.isTreeSectionMinimized
+    });
+  };
+
+  @action.bound setTreeSectionHeight = (
+    sectionName: TreeSection,
+    height: number
+  ) => {
+    this.isTreeSectionMinimized = {
+      ...this.isTreeSectionMinimized,
+      [sectionName]: {
+        ...this.isTreeSectionMinimized[sectionName],
+        lastHeight: height
+      }
+    };
+    setInChromeStorage({
+      isTreeSectionMinimized: this.isTreeSectionMinimized
+    });
   };
 
   @action.bound toggleSearchSection = () => {
