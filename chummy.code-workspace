@@ -1,0 +1,49 @@
+{
+  "folders": [
+    {
+      "name": "Extension",
+      "path": "."
+    },
+    {
+      "name": "Website",
+      "path": "../chummy-web"
+    },
+    {
+      "name": "Docs",
+      "path": "../chummy-docs"
+    }
+  ],
+  "settings": {},
+  "launch": {
+    "configurations": [],
+    "compounds": [
+      {
+        "name": "Extension Development",
+        "configurations": [
+          {
+            "folder": "Extension",
+            "name": "Launch Dev Server"
+          },
+          {
+            "folder": "Extension",
+            "name": "Launch Chrome"
+          },
+          "Attach Chrome"
+        ]
+      },
+      {
+        "name": "Website Development",
+        "configurations": [
+          {
+            "folder": "Website",
+            "name": "Launch Dev Server"
+          },
+          {
+            "folder": "Website",
+            "name": "Launch Chrome"
+          }
+        ]
+      }
+    ]
+  }
+}
