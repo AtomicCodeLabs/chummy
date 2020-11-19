@@ -1,5 +1,5 @@
 import IUiStore from './I.ui.store';
-import IFileStore, { Repo } from './I.file.store';
+import IFileStore, { Repo, Session } from './I.file.store';
 
 export enum AccountType {
   Basic = 'basic',
@@ -23,5 +23,7 @@ export default interface IUserStore {
   user: User;
   userBookmarks: Map<string, Repo>;
   numOfBookmarks: number; // Used for triggering ui changes
+  userSessions: Map<string, Session>;
+  numOfSessions: number; // Used for triggering ui changes
   isPending: boolean;
 }

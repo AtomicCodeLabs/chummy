@@ -38,6 +38,7 @@ export interface Tab {
   name: string;
   tabId: number;
   tabTitle?: string;
+  repo?: Repo;
 }
 
 export interface Repo {
@@ -47,6 +48,12 @@ export interface Repo {
   bookmarks?: { [key: string]: Bookmark };
   type: NodeType;
   isOpen?: boolean;
+}
+
+
+export interface Session {
+  id: string;
+  tabs?: { [key: string]: Tab };
 }
 
 export interface Branch extends Tab {

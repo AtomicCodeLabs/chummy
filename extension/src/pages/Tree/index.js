@@ -18,23 +18,28 @@ import { onActiveTabChange } from '../../utils/tabs';
 export default observer(() => {
   checkCurrentUser();
   const {
-    isTreeSectionMinimized: { openTabs, files },
+    isTreeSectionMinimized: { sessions, openTabs, files },
     toggleTreeSection,
     setTreeSectionHeight
   } = useUiStore();
   const { setCurrentBranch, setCurrentWindowTab } = useFileStore();
-  const [heights, setHeights] = useState([
-    openTabs.lastHeight,
-    files.lastHeight
-  ]);
+  const sections = [sessions, openTabs, files];
+  const [heights, setHeights] = useState(sections.map((s) => s.lastHeight));
 
   // Change heights when heights are updated from storage sync
-  useEffect(() => {
-    if (heights[0] === openTabs.lastHeight && heights[1] === files.lastHeight) {
-      return;
-    }
-    setHeights([openTabs.lastHeight, files.lastHeight]);
-  }, [openTabs.lastHeight, files.lastHeight]);
+  useEffect(
+    () => {
+      const nextHeights = sections.map((s) => s.lastHeight);
+      if (
+        heights.length === nextHeights.length &&
+        heights.every((h, i) => h === nextHeights[i])
+      ) {
+        return;
+      }
+      setHeights(nextHeights);
+    },
+    sections.map((s) => s.lastHeight)
+  );
 
   // On Tab Change listener set currentBranch
   useEffect(() => {
@@ -59,16 +64,37 @@ export default observer(() => {
     return removeListener;
   }, []);
 
+  console.log('HEIGHTS', heights);
+
   return (
     <SplitSections.Container
       heights={heights}
       setHeights={(sizes) => {
         setHeights(sizes);
-        setTreeSectionHeight('openTabs', sizes[0]);
-        setTreeSectionHeight('files', sizes[1]);
+        setTreeSectionHeight('sessions', sizes[0]);
+        setTreeSectionHeight('openTabs', sizes[1]);
+        setTreeSectionHeight('files', sizes[2]);
       }}
-      isMinimizedArray={[openTabs.isMinimized, files.isMinimized]}
+      isMinimizedArray={sections.map((s) => s.isMinimized)}
     >
+      <>
+        <SectionNameContainer
+          onClick={() => toggleTreeSection('sessions')}
+          zIndex={2}
+        >
+          <OpenCloseChevron open={!sessions.isMinimized} />
+          <SectionName>Sessions</SectionName>
+        </SectionNameContainer>
+        <Scrollbars
+          style={{
+            width: '100%'
+          }}
+          autoHideTimeout={500}
+          autoHide
+        >
+          <SectionContent>{/* <OpenTabsSection /> */}</SectionContent>
+        </Scrollbars>
+      </>
       <>
         <SectionNameContainer
           onClick={() => toggleTreeSection('openTabs')}

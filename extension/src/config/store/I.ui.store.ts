@@ -19,6 +19,7 @@ export enum SidebarView {
 }
 
 export enum TreeSection {
+  Sessions = 'sessions',
   OpenTabs = 'openTabs',
   Files = 'files'
 }
@@ -57,9 +58,11 @@ class CUiStore {
 
   // Tree Page
   isTreeSectionMinimized: {
+    [TreeSection.Sessions]: TreeState;
     [TreeSection.OpenTabs]: TreeState;
     [TreeSection.Files]: TreeState;
   } = {
+    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 0 },
     [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
     [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };

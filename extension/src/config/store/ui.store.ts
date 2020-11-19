@@ -29,6 +29,7 @@ export default class UiStore implements IUiStore {
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
   @observable isSidebarMinimized = false;
   @observable isTreeSectionMinimized = {
+    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 0 },
     [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
     [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };
@@ -58,6 +59,7 @@ export default class UiStore implements IUiStore {
       const filteredKeys = keys.filter(
         (k) => !['pendingRequestCount'].includes(k)
       );
+      console.log('GOT ITEMS', items);
 
       // Set each key
       filteredKeys.forEach((key) => {

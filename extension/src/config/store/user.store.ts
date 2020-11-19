@@ -3,7 +3,7 @@ import { observable, computed, action } from 'mobx';
 import IRootStore from './I.root.store';
 import IUserStore, { AccountType, User } from './I.user.store';
 import IUiStore, { SectionName } from './I.ui.store';
-import IFileStore, { Bookmark, Repo } from './I.file.store';
+import IFileStore, { Bookmark, Repo, Session } from './I.file.store';
 import { objectMap } from '../../utils';
 
 export default class UserStore implements IUserStore {
@@ -13,6 +13,8 @@ export default class UserStore implements IUserStore {
   @observable user: User = null;
   @observable userBookmarks: Map<string, Repo> = new Map(); // key is owner:branchName
   @observable numOfBookmarks: number = 0;
+  @observable userSessions: Map<string, Session> = new Map(); // key is session id
+  @observable numOfSessions: number = 0;
 
   @observable isPending: boolean; // keep boolean bc user pending requests are binary
 
@@ -54,6 +56,7 @@ export default class UserStore implements IUserStore {
 
   /** Firebase Firestore - sync user properties in firestore with user store **/
 
+  // userBookmarks
   @action.bound getUserBookmarkRepo = (owner: string, repoName: string) => {
     const key = `${owner}:${repoName}`;
     return this.userBookmarks.get(key);
@@ -190,6 +193,41 @@ export default class UserStore implements IUserStore {
         this.userBookmarks.set(key, { ...foundRepo, isOpen: false });
       }
     });
+  };
+
+  // userSessions
+
+  @action.bound getUserSession = (sessionId: string) => {
+    const foundUserSession = this.userSessions.get(sessionId);
+    if (!foundUserSession) return null;
+    return foundUserSession;
+  };
+
+  @action.bound getUserSessions = (sessionId: string) => {
+    return this.userSessions;
+  };
+
+  @action.bound setUserSessions = (sessions: Session[]) => {
+    this.userSessions.clear();
+    sessions.forEach((session) => this.addUserSession(session));
+  };
+
+  @action.bound addUserSession = (session: Session) => {
+    this.userSessions.set(session.id, session);
+    this.numOfSessions = this.numOfBookmarks + 1;
+  };
+
+  @action.bound updateUserSession = (session: Session) => {
+    const foundSession = this.userSessions.get(session.id);
+
+    if (foundSession) {
+      this.userSessions.set(session.id, { ...foundSession, ...session });
+    }
+  };
+
+  @action.bound removeUserSession = (sessionId: string) => {
+    this.userSessions.delete(sessionId);
+    this.numOfSessions = Math.min(0, this.numOfBookmarks - 1);
   };
 
   /** Util **/
