@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
+import { toJS } from 'mobx';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
 import { isStickyWindowOptions, spacingOptions, themeOptions } from './options';
-import { toJS } from 'mobx';
 
 export default observer(() => {
   checkCurrentUser();
