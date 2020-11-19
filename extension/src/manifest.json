@@ -1,4 +1,5 @@
 {
+  "manifest_version": 2,
   "name": "Tomas",
   "version": "1.0.0",
   "description": "An improvement on Github",
@@ -17,8 +18,8 @@
     ],
     "persistent": false
   },
-  "manifest_version": 2,
-  "permissions": ["tabs", "storage"],
+  "web_accessible_resources": ["background.redirect.inject.js"],
+  "permissions": ["tabs", "storage", "*://github.com/*"],
   "icons": {
     "16": "icon/default16.png",
     "32": "icon/default32.png"
