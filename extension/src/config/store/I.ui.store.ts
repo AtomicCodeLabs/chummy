@@ -43,7 +43,7 @@ class CUiStore {
   userStore: IUserStore = null;
 
   language: Language = Language.English;
-  theme: string = 'vanillaLight';
+  theme: string = 'vanilla-light';
   spacing: Spacing = Spacing.Cozy;
   pendingRequestCount: Map<SectionName, number> = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])

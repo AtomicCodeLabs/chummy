@@ -7,6 +7,7 @@ import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
 import { isStickyWindowOptions, spacingOptions, themeOptions } from './options';
+import { toJS } from 'mobx';
 
 export default observer(() => {
   checkCurrentUser();
@@ -18,6 +19,8 @@ export default observer(() => {
     isStickyWindow,
     setIsStickyWindow
   } = useUiStore();
+
+  console.log('THEME', toJS(theme));
 
   return (
     <PanelsContainer>

@@ -19,7 +19,7 @@ export default class UiStore implements IUiStore {
   userStore: IUserStore;
 
   @observable language = Language.English;
-  @observable theme = 'vanillaLight';
+  @observable theme = 'vanilla-light'; // hardcode in so it doesn't have to wait for themes to load
   @observable spacing = Spacing.Comfortable;
   @observable pendingRequestCount = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
@@ -58,7 +58,6 @@ export default class UiStore implements IUiStore {
       const filteredKeys = keys.filter(
         (k) => !['pendingRequestCount'].includes(k)
       );
-      console.log('GOT UI ITEMS FROM STORAGE', items);
 
       // Set each key
       filteredKeys.forEach((key) => {
