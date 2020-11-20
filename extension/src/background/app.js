@@ -28,12 +28,10 @@ const redirectTab = async (request) => {
       try {
         // Instead of triggering a content script which is unreliable when it doesn't load
         // on the page correctly all the time. Inject listener and then send message
-        console.log("tabid1", window.tabId)
         await browser.tabs.executeScript(window.tabId, {
           file: 'background.redirect.inject.js'
         });
 
-        console.log("tabid2", window.tabId)
         await browser.tabs.sendMessage(window.tabId, {
           action: 'redirect-content-script',
           payload: request.payload
