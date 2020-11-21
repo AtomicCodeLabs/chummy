@@ -1,5 +1,9 @@
+import React from 'react';
 import styled, { css } from 'styled-components';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 import { ICON, NODE } from '../../constants/sizes';
+import useTheme from '../../hooks/useTheme';
 
 import {
   backgroundAlternatingDarkColor,
@@ -12,12 +16,9 @@ import {
 export const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  ${({ isDragging }) =>
-    isDragging
-      ? null
-      : css`
-          transition: 0.2s height;
-        `}
+  height: 100%;
+  width: 100%;
+  transition: 0.2s height;
 `;
 
 export const SectionNameContainer = styled.div`
@@ -25,10 +26,14 @@ export const SectionNameContainer = styled.div`
   flex-direction: row;
   cursor: pointer;
   padding-left: calc(${indentPadding} - ${ICON.SIZE}px - ${ICON.SIDE_MARGIN}px);
-  box-shadow: 0px 2px 1px 0px ${shadowColor};
   z-index: ${({ zIndex }) => zIndex};
   height: ${NODE.HEIGHT}px;
   max-height: ${NODE.HEIGHT}px;
+  ${({ hasShadow }) =>
+    hasShadow &&
+    css`
+      box-shadow: 0px 2px 1px 0px ${shadowColor};
+    `}
 `;
 
 export const SectionName = styled.div`
@@ -58,3 +63,24 @@ export const SectionContent = styled.div`
     background-color: ${backgroundAlternatingDarkColor};
   }
 `;
+
+// Wrapper for Scrollbars
+// eslint-disable-next-line react/prop-types
+export const ScrollContainer = ({ children, ...props }) => {
+  const { spacing } = useTheme();
+
+  return (
+    <Scrollbars
+      style={{
+        width: '100%',
+        height: `calc(100% - ${NODE.HEIGHT({ theme: { spacing } })}px)`
+      }}
+      autoHideTimeout={500}
+      autoHide
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+    >
+      {children}
+    </Scrollbars>
+  );
+};

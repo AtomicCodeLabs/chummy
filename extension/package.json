@@ -1,5 +1,5 @@
 {
-  "name": "tomas",
+  "name": "chummy",
   "version": "1.0.0",
   "description": "An improvement on Github",
   "main": "index.js",
@@ -68,9 +68,9 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.9.5",
+    "react-resizable": "^1.11.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
-    "react-split": "^2.0.9",
     "regenerator-runtime": "^0.13.7",
     "styled-components": "^5.2.0",
     "styled-theming": "^2.2.0",

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import {
   SectionNameContainer,
   SectionName,
-  SectionContent
+  SectionContent,
+  ScrollContainer
 } from '../../components/Section';
 import SplitSections from '../../components/Section/SplitSections';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
@@ -67,73 +67,52 @@ export default observer(() => {
   return (
     <SplitSections.Container
       heights={heights}
-      setHeights={(sizes) => {
-        setHeights(sizes);
-        setTreeSectionHeight('sessions', sizes[0]);
-        setTreeSectionHeight('openTabs', sizes[1]);
-        setTreeSectionHeight('files', sizes[2]);
-      }}
+      setHeights={setHeights}
       isMinimizedArray={sections.map((s) => s.isMinimized)}
     >
-      <>
+      <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
         <SectionNameContainer
           onClick={() => toggleTreeSection('sessions')}
           zIndex={2}
+          hasShadow={!sessions.isMinimized}
         >
           <OpenCloseChevron open={!sessions.isMinimized} />
           <SectionName>Sessions</SectionName>
         </SectionNameContainer>
-        <Scrollbars
-          style={{
-            width: '100%'
-          }}
-          autoHideTimeout={500}
-          autoHide
-        >
+        <ScrollContainer>
           <SectionContent>{/* <OpenTabsSection /> */}</SectionContent>
-        </Scrollbars>
-      </>
-      <>
+        </ScrollContainer>
+      </div>
+      <div onResizeStop={(height) => setTreeSectionHeight('openTabs', height)}>
         <SectionNameContainer
           onClick={() => toggleTreeSection('openTabs')}
           zIndex={2}
+          hasShadow={!openTabs.isMinimized}
         >
           <OpenCloseChevron open={!openTabs.isMinimized} />
           <SectionName>Open Tabs</SectionName>
         </SectionNameContainer>
-        <Scrollbars
-          style={{
-            width: '100%'
-          }}
-          autoHideTimeout={500}
-          autoHide
-        >
+        <ScrollContainer>
           <SectionContent>
             <OpenTabsSection />
           </SectionContent>
-        </Scrollbars>
-      </>
-      <>
+        </ScrollContainer>
+      </div>
+      <div onResizeStop={(height) => setTreeSectionHeight('files', height)}>
         <SectionNameContainer
           onClick={() => toggleTreeSection('files')}
           zIndex={1}
+          hasShadow={!files.isMinimized}
         >
           <OpenCloseChevron open={!files.isMinimized} />
           <SectionName>Files</SectionName>
         </SectionNameContainer>
-        <Scrollbars
-          style={{
-            width: '100%'
-            // height: filesIsMinimized ? 0 : '100%'
-          }}
-          autoHideTimeout={500}
-          autoHide
-        >
+        <ScrollContainer>
           <SectionContent>
             <FilesSection />
           </SectionContent>
-        </Scrollbars>
-      </>
+        </ScrollContainer>
+      </div>
     </SplitSections.Container>
   );
 });

@@ -125,13 +125,16 @@ export default class UiStore implements IUiStore {
   };
 
   @action.bound toggleTreeSection = (sectionName: TreeSection) => {
+    const foundTreeState = this.isTreeSectionMinimized[sectionName];
+    // console.log('before toggle', toJS(foundTreeState));
     this.isTreeSectionMinimized = {
       ...this.isTreeSectionMinimized,
       [sectionName]: {
-        ...this.isTreeSectionMinimized[sectionName],
-        isMinimized: !this.isTreeSectionMinimized[sectionName].isMinimized
+        ...foundTreeState,
+        isMinimized: !foundTreeState.isMinimized
       }
     };
+    // console.log('after toggle', toJS(this.isTreeSectionMinimized[sectionName]));
     setInChromeStorage({
       isTreeSectionMinimized: this.isTreeSectionMinimized
     });
