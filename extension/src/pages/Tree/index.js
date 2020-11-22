@@ -100,7 +100,10 @@ export default observer(() => {
       </div>
       <div onResizeStop={(height) => setTreeSectionHeight('files', height)}>
         <SectionNameContainer
-          onClick={() => toggleTreeSection('files')}
+          onClick={() => {
+            toggleTreeSection('files');
+            // when last section is closed, set second to last to fill up remaining height
+          }}
           zIndex={1}
           hasShadow={!files.isMinimized}
         >

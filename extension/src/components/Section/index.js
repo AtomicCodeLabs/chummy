@@ -17,6 +17,7 @@ export const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: calc(3 * ${NODE.HEIGHT}px);
   width: 100%;
   transition: 0.2s height;
 `;
@@ -29,6 +30,8 @@ export const SectionNameContainer = styled.div`
   z-index: ${({ zIndex }) => zIndex};
   height: ${NODE.HEIGHT}px;
   max-height: ${NODE.HEIGHT}px;
+
+  border-top: 1px solid ${shadowColor};
   ${({ hasShadow }) =>
     hasShadow &&
     css`

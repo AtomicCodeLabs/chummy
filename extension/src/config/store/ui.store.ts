@@ -29,9 +29,9 @@ export default class UiStore implements IUiStore {
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
   @observable isSidebarMinimized = false;
   @observable isTreeSectionMinimized = {
-    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 0 },
-    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
-    [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
+    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 200 },
+    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 200 },
+    [TreeSection.Files]: { isMinimized: false, lastHeight: 200 }
   };
   @observable isSearchSectionMinimized = true;
   @observable selectedQuery: string = null;
@@ -62,11 +62,11 @@ export default class UiStore implements IUiStore {
       console.log('GOT ITEMS', items);
 
       // Set each key
-      filteredKeys.forEach((key) => {
-        if (items[key]) {
-          (this[key] as any) = items[key];
-        }
-      });
+      // filteredKeys.forEach((key) => {
+      //   if (items[key]) {
+      //     (this[key] as any) = items[key];
+      //   }
+      // });
 
       // Set defaults but don't overwrite previous
       setInChromeStorage(
