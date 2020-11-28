@@ -72,10 +72,7 @@ export default observer(() => {
   }, []);
 
   return (
-    <SplitSections
-      heights={heights}
-      minimized={minimized}
-    >
+    <SplitSections heights={heights} minimized={minimized}>
       <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
         <SectionContainer>
           <SectionNameContainer
