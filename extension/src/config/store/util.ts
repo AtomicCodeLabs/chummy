@@ -17,6 +17,6 @@ export const getFromChromeStorage = async (
       callback(response.payload);
     }
   } catch (error) {
-    console.error('Error getting store', keys, error);
+    console.warn('Error getting store', keys, error);
   }
 };

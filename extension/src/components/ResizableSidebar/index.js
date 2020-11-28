@@ -62,8 +62,6 @@ const ResizableSidebar = observer(({ children }) => {
     pathname
   ]);
 
-  // console.log(toJS(pendingRequestCount));
-
   return (
     <Container>
       <SideTab isSidebarMinimized={isSidebarMinimized}>

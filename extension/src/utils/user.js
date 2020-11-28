@@ -9,7 +9,7 @@ export const getAllBookmarks = async () => {
       return response;
     }
   } catch (error) {
-    console.error('Error getting all bookmarks', error);
+    console.warn('Error getting all bookmarks', error);
   }
   return null;
 };

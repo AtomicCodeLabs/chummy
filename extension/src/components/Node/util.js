@@ -33,7 +33,7 @@ export const changeActiveTab = async (destinationTabId) => {
       return true;
     }
   } catch (error) {
-    console.error('Error changing active tab', error);
+    console.warn('Error changing active tab', error);
     return false;
   }
 };
@@ -48,7 +48,7 @@ export const closeTab = async (tabId) => {
       return true;
     }
   } catch (error) {
-    console.error('Error closing tab', error);
+    console.warn('Error closing tab', error);
     return false;
   }
 };

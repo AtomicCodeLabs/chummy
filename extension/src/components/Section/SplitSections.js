@@ -80,24 +80,7 @@ const SplitSections = ({
   // When setting heights, call both local and parent's callback
   const setHeights = (_heightsToSet) => {
     _setHeights(_heightsToSet);
-    // Reconstruct heights to include heights of all sections, open and closed
-    // let _i_r = 0; // relative to _heights
-    // let heightsToSetInParent = [];
-
-    // // add to array from _heights if not minimized. else, add to
-    // // array from heights
-    // heights.forEach((h, _i) => {
-    //   if (minimized[_i]) {
-    //     heightsToSetInParent.push(h);
-    //   } else {
-    //     heightsToSetInParent.push(_heightsToSet[_i_r]);
-    //     _i_r += 1;
-    //   }
-    // });
-
-    // console.log("setting parent heights", heightsToSetInParent);
-
-    // setHeightsCallback(heightsToSetInParent);
+    // setHeights(_heightsToSet)
   };
 
   /* Lifecycle */

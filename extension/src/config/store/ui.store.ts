@@ -62,11 +62,11 @@ export default class UiStore implements IUiStore {
       console.log('GOT ITEMS', items);
 
       // Set each key
-      // filteredKeys.forEach((key) => {
-      //   if (items[key]) {
-      //     (this[key] as any) = items[key];
-      //   }
-      // });
+      filteredKeys.forEach((key) => {
+        if (items[key]) {
+          (this[key] as any) = items[key];
+        }
+      });
 
       // Set defaults but don't overwrite previous
       setInChromeStorage(

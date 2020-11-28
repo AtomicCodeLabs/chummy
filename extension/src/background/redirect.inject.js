@@ -1,7 +1,5 @@
 const browser = require('webextension-polyfill');
 
-console.log('LOADED');
-
 // eslint-disable-next-line import/prefer-default-export
 const redirectPageListeners = () => {
   browser.runtime.onMessage.addListener(function redirectListener(request) {

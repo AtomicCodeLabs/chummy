@@ -7,7 +7,7 @@ const storeAccessListener = async (request) => {
     try {
       await browser.storage.sync.set(request.payload);
     } catch (error) {
-      console.error('Error setting store', error);
+      console.warn('Error setting store', error);
     }
     return null;
   }
@@ -18,7 +18,7 @@ const storeAccessListener = async (request) => {
       const items = await browser.storage.sync.get(request.payload);
       return { action: 'get-store', payload: items };
     } catch (error) {
-      console.error('Error getting store', error);
+      console.warn('Error getting store', error);
       return null;
     }
   }
@@ -37,6 +37,6 @@ browser.storage.onChanged.addListener(async () => {
     const items = await browser.storage.sync.get(null);
     console.log('DEBUG', items);
   } catch (error) {
-    console.error('Error getting store changes for debugging', error);
+    console.warn('Error getting store changes for debugging', error);
   }
 });

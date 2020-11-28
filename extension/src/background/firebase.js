@@ -57,7 +57,6 @@ class Firebase {
       return (async () => {
         // Sign In
         if (request.action === 'sign-in') {
-          console.log('RECEIVING SINGING');
           let success = false;
           let payload;
           let error;
@@ -101,7 +100,6 @@ class Firebase {
       ].includes(request.action)
     ) {
       return (async () => {
-        console.log(request.action, 'action triggered');
         // Get current user's bookmarks
         if (request.action === 'get-bookmarks') {
           let success = false;
@@ -112,7 +110,7 @@ class Firebase {
             success = true;
           } catch (e) {
             error = e;
-            console.error(`Error handling ${request.action} action`, e);
+            console.warn(`Error handling ${request.action} action`, e);
           }
           return {
             action: request.action,
@@ -124,7 +122,7 @@ class Firebase {
           try {
             await this.updateBookmark(request.payload);
           } catch (e) {
-            console.error(`Error handling ${request.action} action`, e);
+            console.warn(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -133,7 +131,7 @@ class Firebase {
           try {
             await this.createBookmark(request.payload);
           } catch (e) {
-            console.error(`Error handling ${request.action} action`, e);
+            console.warn(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -142,7 +140,7 @@ class Firebase {
           try {
             await this.removeBookmark(request.payload);
           } catch (e) {
-            console.error(`Error handling ${request.action} action`, e);
+            console.warn(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -233,9 +231,8 @@ class Firebase {
 
       // Set api key property
       this.setGithubApiKey(response.credential?.accessToken);
-      console.log('API KEY', this.githubApiKey);
     } catch (error) {
-      console.error('Error signing in with Github', error);
+      console.warn('Error signing in with Github', error);
     }
     return response;
   };
@@ -250,13 +247,13 @@ class Firebase {
       await browser.storage.sync.set({ apiKey: null, isLoggedIn: false });
       console.log('Api key removed from chrome storage');
     } catch (error) {
-      console.error('Error signing out', error);
+      console.warn('Error signing out', error);
     }
   };
 
   getCurrentUser = () => {
     if (!this.auth.currentUser) {
-      console.error('User is not authenticated.');
+      console.warn('User is not authenticated.');
       return null;
     }
     const { uid, displayName, email, photoURL } = this.auth.currentUser;
@@ -287,7 +284,7 @@ class Firebase {
       this.setAccountType(newCollection.accountType);
       this.setBookmarks(newCollection.bookmarks);
     } catch (error) {
-      console.error('Error creating new user collection', error);
+      console.warn('Error creating new user collection', error);
     }
   };
 
@@ -300,19 +297,18 @@ class Firebase {
       const userDoc = await this.dbUsers.doc(userUuid).get();
       if (userDoc.exists) {
         const user = userDoc.data();
-        console.log(user);
         this.setAccountType(user.accountType);
         this.setBookmarks(user.bookmarks);
       }
     } catch (error) {
-      console.error('Error creating new user collection', error);
+      console.warn('Error creating new user collection', error);
     }
   };
 
   createBookmark = async (bookmark) => {
     const currentUserUuid = this.getCurrentUser()?.user.uid;
     if (!currentUserUuid) {
-      console.log('Cannot add bookmark because user is not logged in.');
+      console.warn('Error adding bookmark because user is not logged in.');
       return;
     }
     /* From I.user.store.ts
@@ -337,10 +333,9 @@ class Firebase {
   removeBookmark = async (bookmark) => {
     const currentUserUuid = this.getCurrentUser()?.user.uid;
     if (!currentUserUuid) {
-      console.log('Cannot remove bookmark because user is not logged in.');
+      console.warn('Error removing bookmark because user is not logged in.');
       return;
     }
-    console.log('try to remove bookmark', bookmark);
     // Remove from cloud db
     await this.dbUsers.doc(currentUserUuid).update({
       bookmarks: firebase.firestore.FieldValue.arrayRemove(bookmark)
@@ -359,7 +354,7 @@ class Firebase {
   updateBookmark = async (bookmark) => {
     const currentUserUuid = this.getCurrentUser()?.user.uid;
     if (!currentUserUuid) {
-      console.log('Cannot remove bookmark because user is not logged in.');
+      console.warn('Error removing bookmark because user is not logged in.');
       return;
     }
 
@@ -395,13 +390,15 @@ class Firebase {
   getAllBookmarks = async () => {
     const currentUserUuid = this.getCurrentUser()?.user.uid;
     if (!currentUserUuid) {
-      console.log('Cannot get bookmarks because user is not logged in.');
+      console.warn('Cannot get bookmarks because user is not logged in.');
       return [];
     }
 
     // If locally cached in background
     if (this.bookmarks.length !== 0) {
-      console.log('USING CACHED BOOKMARKS', this.bookmarks);
+      console.log(
+        `Using cached bookmarks, retrieved ${this.bookmarks.length} bookmarks`
+      );
       return { bookmarks: this.bookmarks };
     }
 
@@ -435,10 +432,10 @@ const onBrowserActionClickedListener = async () => {
     if (await isExtensionOpen()) {
       return;
     }
-    console.log('initialize firebase listeners');
+    console.log('Initialize firebase listeners');
     firebaseStore.subscribeListeners();
   } catch (error) {
-    console.error('Error initializing extension listeners', error);
+    console.warn('Error initializing extension listeners', error);
   }
 };
 browser.browserAction.onClicked.addListener(() => {
@@ -455,7 +452,7 @@ const onWindowRemoveListener = async (windowId) => {
       firebaseStore.unsubscribeListeners();
     }
   } catch (error) {
-    console.error('Error cleaning up listeners', error);
+    console.warn('Error cleaning up listeners', error);
   }
 };
 browser.windows.onRemoved.addListener((windowId) => {

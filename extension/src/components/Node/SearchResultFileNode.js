@@ -77,8 +77,6 @@ const SearchResultFileNode = ({ file }) => {
       )
       .flat();
 
-  // console.log(renderMatches());
-
   return (
     <>
       <StyledNode.Container className="node" onClickCapture={handleClick}>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { toJS } from 'mobx';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
@@ -19,8 +18,6 @@ export default observer(() => {
     isStickyWindow,
     setIsStickyWindow
   } = useUiStore();
-
-  console.log('THEME', toJS(theme));
 
   return (
     <PanelsContainer>

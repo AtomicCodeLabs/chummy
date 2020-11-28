@@ -50,7 +50,7 @@ class FirebaseDAO {
       // Fetch user's bookmarks
       this.getAllBookmarks();
     } catch (error) {
-      console.error('Error signing in', error);
+      console.warn('Error signing in', error);
     }
 
     this.userStore.setPending(false);
@@ -71,7 +71,7 @@ class FirebaseDAO {
       });
       this.handleUserResponse(response);
     } catch (error) {
-      console.error('Error getting current user', error);
+      console.warn('Error getting current user', error);
     }
 
     this.userStore.setPending(false);
@@ -98,7 +98,7 @@ class FirebaseDAO {
 
   getAllBookmarks = async () => {
     if (!this.userStore.isLoggedIn) {
-      console.error('Firebase is not authenticated.');
+      console.warn('Firebase is not authenticated.');
       return null;
     }
     // Check if cached bookmarks exist in store first
@@ -116,7 +116,7 @@ class FirebaseDAO {
         );
       }
     } catch (error) {
-      console.error('Error getting all bookmarks', error);
+      console.warn('Error getting all bookmarks', error);
     }
     this.userStore.setPending(false);
   };
@@ -137,7 +137,7 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.addBookmark(bookmarkRepo);
     } catch (error) {
-      console.error('Error creating bookmark', error);
+      console.warn('Error creating bookmark', error);
     }
     this.userStore.setPending(false);
   };
@@ -149,7 +149,7 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.updateBookmark(bookmark);
     } catch (error) {
-      console.error('Error updating bookmark', error);
+      console.warn('Error updating bookmark', error);
     }
     this.userStore.setPending(false);
   };
@@ -169,7 +169,7 @@ class FirebaseDAO {
       };
       this.userStore.removeBookmark(bookmarkRepo);
     } catch (error) {
-      console.error('Error remove bookmark', error);
+      console.warn('Error remove bookmark', error);
     }
     this.userStore.setPending(false);
   };

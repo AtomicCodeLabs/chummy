@@ -29,7 +29,7 @@ class OctoDAO {
 
   authenticate = (apiKey) => {
     if (!this.userStore.user?.apiKey && !apiKey) {
-      console.error(
+      console.warn(
         'Cannot authenticate octokit because user is not signed in.'
       );
       return;
@@ -37,7 +37,6 @@ class OctoDAO {
     if (this.isAuthenticated()) {
       return;
     }
-    // console.log("authenticating github", this.userStore.user.apiKey)
 
     this.graphqlAuth = this.graphql.defaults({
       headers: {
@@ -80,7 +79,7 @@ class OctoDAO {
   // Repo API
   getRepositoryNodes = async (owner, repo, branch, treePath = '') => {
     if (!this.isAuthenticated()) {
-      console.error('Octokit is not authenticated.');
+      console.warn('Octokit is not authenticated.');
       return null;
     }
 
@@ -122,7 +121,7 @@ class OctoDAO {
       this.fileStore.setNode(node);
       return files;
     } catch (error) {
-      console.error(
+      console.warn(
         'Error getting specific branch repository root nodes.',
         owner,
         repo,
@@ -136,7 +135,7 @@ class OctoDAO {
   // Search API
   searchCode = async (owner, repo, query, language = null) => {
     if (!this.isAuthenticated()) {
-      console.error('Octokit is not authenticated.');
+      console.warn('Octokit is not authenticated.');
       return null;
     }
 
@@ -152,7 +151,7 @@ class OctoDAO {
       });
       return response?.data?.items;
     } catch (error) {
-      console.error(
+      console.warn(
         'Error searching code.',
         owner,
         repo,

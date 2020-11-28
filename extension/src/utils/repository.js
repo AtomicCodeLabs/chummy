@@ -10,7 +10,7 @@ export const getOpenRepositories = async (callback = () => {}) => {
       callback(response.payload);
     }
   } catch (error) {
-    console.error('Error getting open repositories', error);
+    console.warn('Error getting open repositories', error);
   }
 };
 

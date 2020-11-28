@@ -18,7 +18,7 @@ const onBrowserActionClickedListener = async () => {
       sidebarWidth
     } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
     if (await isExtensionOpen()) {
-      console.log('extension is open');
+      console.warn("Error opening extension because it's already open");
       return;
     }
     const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
@@ -38,7 +38,7 @@ const onBrowserActionClickedListener = async () => {
     // Store extension window id in storage
     await browser.storage.sync.set({ currentWindowId: win.id });
   } catch (error) {
-    console.error('Error opening extension popup', error);
+    console.warn('Error opening extension popup', error);
   }
 };
 browser.browserAction.onClicked.addListener(() => {
@@ -61,7 +61,7 @@ const onWindowRemoveListener = async (windowId) => {
       );
     }
   } catch (error) {
-    console.error('Error resetting currentWindowId', error);
+    console.warn('Error resetting currentWindowId', error);
   }
 };
 browser.windows.onRemoved.addListener((windowId) => {
@@ -105,7 +105,7 @@ const updatePopupBounds = async (mainWindow) => {
       // alwaysOnTop: true
     });
   } catch (error) {
-    console.error('Error updating popup bounds', error);
+    console.warn('Error updating popup bounds', error);
   }
 };
 
@@ -122,7 +122,7 @@ const onFocusChangeListener = async (windowId) => {
     const window = await browser.windows.get(windowId);
     updatePopupBounds(window);
   } catch (error) {
-    console.error('Error on retrieving currentWindowId', error);
+    console.warn('Error on retrieving currentWindowId', error);
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {
@@ -153,7 +153,7 @@ const onTabActivatedListener = async ({ windowId, tabId }) => {
     const { url, title } = await browser.tabs.get(tabId);
     sendContentChangedMessage(windowId, tabId, title, url);
   } catch (error) {
-    console.error('Error on tab activate', error);
+    console.warn('Error on tab activate', error);
   }
 };
 browser.tabs.onActivated.addListener((tabInfo) => {
@@ -166,7 +166,6 @@ const onFocusChangedListener = async (windowId) => {
       'currentWindowId'
     ]);
 
-    // console.log('Current window id retrieved from storage', windowId, currentWindowId);
     if (isCurrentWindow(windowId, currentWindowId)) {
       return;
     }
@@ -175,7 +174,7 @@ const onFocusChangedListener = async (windowId) => {
 
     sendContentChangedMessage(windowId, tabId, tabTitle, url);
   } catch (error) {
-    console.error('Error on tab focus change', error);
+    console.warn('Error on tab focus change', error);
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {

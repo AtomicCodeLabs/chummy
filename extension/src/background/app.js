@@ -20,7 +20,7 @@ const redirectTab = async (request) => {
           active: false
         });
       } catch (error) {
-        console.error('Error creating tab', error);
+        console.warn('Error creating tab', error);
       }
     }
     // Send redirect event to active tab
@@ -37,7 +37,7 @@ const redirectTab = async (request) => {
           payload: request.payload
         });
       } catch (error) {
-        console.error('Error redirecting active tab', error);
+        console.warn('Error redirecting active tab', error);
       }
     }
     return null;
@@ -56,7 +56,7 @@ const redirectTab = async (request) => {
         active: false
       });
     } catch (error) {
-      console.error('Error redirecting to url', error);
+      console.warn('Error redirecting to url', error);
     }
     return null;
   }
@@ -89,7 +89,7 @@ const redirectTab = async (request) => {
       // To let frontend know when tab updates have been made.
       return { action: 'change-active-tab', complete: true };
     } catch (error) {
-      console.error('Error changing active tab', error);
+      console.warn('Error changing active tab', error);
     }
     return null;
   }
@@ -124,7 +124,7 @@ const redirectTab = async (request) => {
         payload: openRepositories
       };
     } catch (error) {
-      console.error('Error getting all windows', error);
+      console.warn('Error getting all windows', error);
     }
     return null;
   }
@@ -135,7 +135,7 @@ const redirectTab = async (request) => {
       await browser.tabs.remove(request.payload.tabId);
       return { action: 'close-tab', complete: true };
     } catch (error) {
-      console.error('Error changing active tab', error);
+      console.warn('Error changing active tab', error);
     }
     return null;
   }
@@ -174,7 +174,7 @@ const initializeOpenTabs = async () => {
       });
     });
   } catch (error) {
-    console.error('Error initializing open tabs', error);
+    console.warn('Error initializing open tabs', error);
   }
 };
 initializeOpenTabs();
@@ -206,7 +206,7 @@ const sendOpenRepositoryUpdatesMessage = async () => {
       payload: openRepositories
     });
   } catch (error) {
-    console.error('Error updating open repositories', error);
+    console.warn('Error updating open repositories', error);
   }
 };
 

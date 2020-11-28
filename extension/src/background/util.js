@@ -33,7 +33,7 @@ export const isExtensionOpen = async () => {
     }
     return true;
   } catch (error) {
-    console.error('Error checking if extension is open', error);
+    console.warn('Error checking if extension is open', error);
     return false;
   }
 };
