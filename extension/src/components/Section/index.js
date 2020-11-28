@@ -15,11 +15,13 @@ import {
 
 export const SectionContainer = styled.div`
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   height: 100%;
-  min-height: calc(3 * ${NODE.HEIGHT}px);
-  width: 100%;
+  user-select: none;
   transition: 0.2s height;
+  box-sizing: border-box;
+  z-index: 1;
 `;
 
 export const SectionNameContainer = styled.div`
@@ -53,7 +55,6 @@ export const SectionName = styled.div`
 export const SectionContent = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute;
   left: 0;
   right: 0;
   min-width: fit-content;

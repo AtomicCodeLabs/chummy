@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import {
+  SectionContainer,
   SectionNameContainer,
   SectionName,
   SectionContent,
@@ -14,6 +15,7 @@ import FilesSection from '../../components/TreeSections/Files';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import { onActiveTabChange } from '../../utils/tabs';
+import { areArraysEqual } from '../../utils';
 
 export default observer(() => {
   checkCurrentUser();
@@ -25,21 +27,26 @@ export default observer(() => {
   const { setCurrentBranch, setCurrentWindowTab } = useFileStore();
   const sections = [sessions, openTabs, files];
   const [heights, setHeights] = useState(sections.map((s) => s.lastHeight));
-
-  // Change heights when heights are updated from storage sync
-  useEffect(
-    () => {
-      const nextHeights = sections.map((s) => s.lastHeight);
-      if (
-        heights.length === nextHeights.length &&
-        heights.every((h, i) => h === nextHeights[i])
-      ) {
-        return;
-      }
-      setHeights(nextHeights);
-    },
-    sections.map((s) => s.lastHeight)
+  const [minimized, setMinimized] = useState(
+    sections.map((s) => s.isMinimized)
   );
+
+  // Change heights and minimized when either is updated from
+  // storage sync
+  useEffect(() => {
+    const nextHeights = sections.map((s) => s.lastHeight);
+    if (!areArraysEqual(heights, nextHeights)) {
+      setHeights(nextHeights);
+    }
+
+    const nextMinimized = sections.map((s) => s.isMinimized);
+    if (!areArraysEqual(minimized, nextMinimized)) {
+      setMinimized(nextMinimized);
+    }
+  }, [
+    ...sections.map((s) => s.lastHeight),
+    ...sections.map((s) => s.isMinimized)
+  ]);
 
   // On Tab Change listener set currentBranch
   useEffect(() => {
@@ -65,57 +72,62 @@ export default observer(() => {
   }, []);
 
   return (
-    <SplitSections.Container
+    <SplitSections
       heights={heights}
-      setHeights={setHeights}
-      isMinimizedArray={sections.map((s) => s.isMinimized)}
+      minimized={minimized}
     >
       <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
-        <SectionNameContainer
-          onClick={() => toggleTreeSection('sessions')}
-          zIndex={2}
-          hasShadow={!sessions.isMinimized}
-        >
-          <OpenCloseChevron open={!sessions.isMinimized} />
-          <SectionName>Sessions</SectionName>
-        </SectionNameContainer>
-        <ScrollContainer>
-          <SectionContent>{/* <OpenTabsSection /> */}</SectionContent>
-        </ScrollContainer>
+        <SectionContainer>
+          <SectionNameContainer
+            onClick={() => toggleTreeSection('sessions')}
+            zIndex={2}
+            hasShadow={!sessions.isMinimized}
+          >
+            <OpenCloseChevron open={!sessions.isMinimized} />
+            <SectionName>Sessions</SectionName>
+          </SectionNameContainer>
+          <ScrollContainer>
+            <SectionContent>{/* <OpenTabsSection /> */}</SectionContent>
+          </ScrollContainer>
+        </SectionContainer>
       </div>
       <div onResizeStop={(height) => setTreeSectionHeight('openTabs', height)}>
-        <SectionNameContainer
-          onClick={() => toggleTreeSection('openTabs')}
-          zIndex={2}
-          hasShadow={!openTabs.isMinimized}
-        >
-          <OpenCloseChevron open={!openTabs.isMinimized} />
-          <SectionName>Open Tabs</SectionName>
-        </SectionNameContainer>
-        <ScrollContainer>
-          <SectionContent>
-            <OpenTabsSection />
-          </SectionContent>
-        </ScrollContainer>
+        <SectionContainer>
+          <SectionNameContainer
+            onClick={() => toggleTreeSection('openTabs')}
+            zIndex={2}
+            hasShadow={!openTabs.isMinimized}
+          >
+            <OpenCloseChevron open={!openTabs.isMinimized} />
+            <SectionName>Open Tabs</SectionName>
+          </SectionNameContainer>
+          <ScrollContainer>
+            <SectionContent>
+              <OpenTabsSection />
+            </SectionContent>
+          </ScrollContainer>
+        </SectionContainer>
       </div>
       <div onResizeStop={(height) => setTreeSectionHeight('files', height)}>
-        <SectionNameContainer
-          onClick={() => {
-            toggleTreeSection('files');
-            // when last section is closed, set second to last to fill up remaining height
-          }}
-          zIndex={1}
-          hasShadow={!files.isMinimized}
-        >
-          <OpenCloseChevron open={!files.isMinimized} />
-          <SectionName>Files</SectionName>
-        </SectionNameContainer>
-        <ScrollContainer>
-          <SectionContent>
-            <FilesSection />
-          </SectionContent>
-        </ScrollContainer>
+        <SectionContainer>
+          <SectionNameContainer
+            onClick={() => {
+              toggleTreeSection('files');
+              // when last section is closed, set second to last to fill up remaining height
+            }}
+            zIndex={2}
+            hasShadow={!files.isMinimized}
+          >
+            <OpenCloseChevron open={!files.isMinimized} />
+            <SectionName>Files</SectionName>
+          </SectionNameContainer>
+          <ScrollContainer>
+            <SectionContent>
+              <FilesSection />
+            </SectionContent>
+          </ScrollContainer>
+        </SectionContainer>
       </div>
-    </SplitSections.Container>
+    </SplitSections>
   );
 });

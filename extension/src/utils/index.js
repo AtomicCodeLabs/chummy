@@ -44,3 +44,6 @@ export const kebabify = (s) => s.replace(/\s+/g, '-').toLowerCase();
 
 // https://flaviocopes.com/how-to-uppercase-first-letter-javascript/
 export const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+export const areArraysEqual = (a, b) =>
+  a.length === b.length && a.every((ai, i) => ai === b[i]);
