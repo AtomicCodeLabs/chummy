@@ -47,6 +47,13 @@ export const ICON = {
       cozy: 160,
       comfortable: 170
     })
+  },
+  SPLASH: {
+    SIZE: theme('spacing', {
+      compact: 90,
+      cozy: 100,
+      comfortable: 110
+    })
   }
 };
 
@@ -77,6 +84,16 @@ export const BUTTON = {
     compact: 30,
     cozy: 35,
     comfortable: 40
+  }),
+  BIG_HEIGHT: theme('spacing', {
+    compact: 40,
+    cozy: 45,
+    comfortable: 50
+  }),
+  SIDE_PADDING: theme('spacing', {
+    compact: 10,
+    cozy: 15,
+    comfortable: 20
   })
 };
 

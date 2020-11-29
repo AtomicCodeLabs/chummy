@@ -79,6 +79,7 @@ const ResizableSidebar = observer(({ children }) => {
                   to={route.pathname}
                   onClick={openSidebarAndResetWidth}
                   disabled={!isLoggedIn}
+                  active={pathname === route.pathname}
                 />
               </SideTabButton>
             )

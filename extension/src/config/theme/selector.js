@@ -4,7 +4,7 @@ import * as themes from './themes';
 const THEMES = objectMap(
   themes,
   (k, v) => v.name,
-  (v) => v.theme
+  (v) => ({ ...v.theme, type: v.type })
 );
 
 export const THEME_NAMES = Object.keys(THEMES);

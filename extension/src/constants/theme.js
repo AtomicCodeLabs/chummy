@@ -2,7 +2,6 @@ import theme from 'styled-theming';
 import selector from '../config/theme/selector';
 
 // Sizing
-
 export const fieldMargin = theme('spacing', {
   compact: 3,
   cozy: 5,
@@ -26,6 +25,11 @@ export const h3FontSize = theme('spacing', {
   cozy: '0.83rem',
   comfortable: '0.86rem'
 });
+export const h3MarginSize = theme('spacing', {
+  compact: '0.4rem',
+  cozy: '0.415rem',
+  comfortable: '0.43rem'
+});
 
 export const h2FontSize = theme('spacing', {
   compact: '1rem',
@@ -33,10 +37,28 @@ export const h2FontSize = theme('spacing', {
   comfortable: '1.3rem'
 });
 
+export const h2MarginSize = theme('spacing', {
+  compact: '0.5rem',
+  cozy: '0.6rem',
+  comfortable: '0.65rem'
+});
+
 export const h1FontSize = theme('spacing', {
   compact: '1.3rem',
   cozy: '1.5rem',
   comfortable: '1.7rem'
+});
+
+export const h1MarginSize = theme('spacing', {
+  compact: '0.6rem',
+  cozy: '0.75rem',
+  comfortable: '0.85rem'
+});
+
+export const monoFontSize = theme('spacing', {
+  compact: '0.72rem',
+  cozy: '0.75rem',
+  comfortable: '0.80rem'
 });
 
 export const textSpacing = theme('spacing', {
@@ -55,6 +77,7 @@ export const lineHeight = theme('spacing', {
 
 const themeCreator = (key) => theme('theme', selector(key));
 
+export const themeType = themeCreator('type');
 export const sidebarColor = themeCreator('sidebarColor');
 export const sidebarActiveIconColor = themeCreator('sidebarActiveIconColor');
 export const sidebarInactiveIconColor = themeCreator(
@@ -91,6 +114,7 @@ export const highlightBackgroundColor = themeCreator(
   'highlightBackgroundColor'
 );
 export const folderIconColor = themeCreator('folderIconColor');
+export const flagIconColor = themeCreator('flagIconColor');
 export const bookmarkIconColor = themeCreator('bookmarkIconColor');
 export const nodeIconColor = themeCreator('nodeIconColor');
 export const nodeIconDarkColor = themeCreator('nodeIconDarkColor');

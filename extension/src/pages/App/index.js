@@ -1,9 +1,11 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import ExtensionRootContainer from '../components/ExtensionRootContainer';
-import ResizableSidebar from '../components/ResizableSidebar';
-import { routes } from '../config/routes';
+import ExtensionRootContainer from '../../components/ExtensionRootContainer';
+import ResizableSidebar from '../../components/ResizableSidebar';
+import { routes } from '../../config/routes';
+
+import './style.css';
 
 // Split into left sidebar and right sidebar.
 // Both are horizontal resizable containers -

@@ -20,12 +20,13 @@ import { areArraysEqual } from '../../utils';
 export default observer(() => {
   checkCurrentUser();
   const {
+    // eslint-disable-next-line no-unused-vars
     isTreeSectionMinimized: { sessions, openTabs, files },
     toggleTreeSection,
     setTreeSectionHeight
   } = useUiStore();
   const { setCurrentBranch, setCurrentWindowTab } = useFileStore();
-  const sections = [sessions, openTabs, files];
+  const sections = [openTabs, files]; // const sections = [sessions, openTabs, files];
   const [heights, setHeights] = useState(sections.map((s) => s.lastHeight));
   const [minimized, setMinimized] = useState(
     sections.map((s) => s.isMinimized)
@@ -73,7 +74,7 @@ export default observer(() => {
 
   return (
     <SplitSections heights={heights} minimized={minimized}>
-      <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
+      {/* <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
         <SectionContainer>
           <SectionNameContainer
             onClick={() => toggleTreeSection('sessions')}
@@ -84,10 +85,10 @@ export default observer(() => {
             <SectionName>Sessions</SectionName>
           </SectionNameContainer>
           <ScrollContainer>
-            <SectionContent>{/* <OpenTabsSection /> */}</SectionContent>
+            <SectionContent></SectionContent>
           </ScrollContainer>
         </SectionContainer>
-      </div>
+      </div> */}
       <div onResizeStop={(height) => setTreeSectionHeight('openTabs', height)}>
         <SectionContainer>
           <SectionNameContainer

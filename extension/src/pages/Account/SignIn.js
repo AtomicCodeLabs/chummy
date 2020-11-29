@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
+import { OctofaceIcon } from '@primer/octicons-react';
 
 import SplashSpinner from '../../components/Loading/SplashSpinner';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import { useUserStore } from '../../hooks/store';
+import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
+import { H3 } from '../../components/Text';
+import { ICON } from '../../constants/sizes';
+import useTheme from '../../hooks/useTheme';
 
 const Container = styled.div`
   display: flex;
@@ -14,8 +19,14 @@ const Container = styled.div`
   align-items: center;
 `;
 
+const SignInContainer = styled.div`
+  padding: 1rem;
+`;
+
 export default observer(() => {
   const firebase = useFirebaseDAO();
+  const { theme: mode, spacing } = useTheme();
+  const STPayload = { theme: { mode, spacing } };
   const [isSplashScreen, setSplashScreen] = useState(true);
   const { error, isPending } = useUserStore();
   checkCurrentUser();
@@ -42,14 +53,19 @@ export default observer(() => {
     }
 
     return (
-      <button
-        onClick={() => {
-          firebase.signIn();
-        }}
-        type="button"
-      >
-        Sign into Github
-      </button>
+      <>
+        <SignInContainer>
+          <IconAndTextButton
+            Icon={<OctofaceIcon />}
+            iconSize={ICON.SIZE(STPayload) + 4}
+            onClick={() => {
+              firebase.signIn();
+            }}
+          >
+            <H3>Sign in with Github</H3>
+          </IconAndTextButton>
+        </SignInContainer>
+      </>
     );
   };
 

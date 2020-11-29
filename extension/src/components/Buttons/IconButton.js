@@ -21,7 +21,6 @@ const ContainerButton = styled.div`
 
 const LinkButton = ({
   style = {},
-  size = 22,
   Icon,
   disabled,
   to,
@@ -40,14 +39,15 @@ const LinkButton = ({
   };
 
   return (
-    <ContainerButton style={style} onClick={navigateToPage} {...buttonProps}>
-      <Suspense fallback={<XIcon />}>{cloneElement(Icon, { size })}</Suspense>
+    <ContainerButton style={style} onClick={navigateToPage}>
+      <Suspense fallback={<XIcon {...buttonProps} />}>
+        {cloneElement(Icon, buttonProps)}
+      </Suspense>
     </ContainerButton>
   );
 };
 LinkButton.propTypes = {
   style: PropTypes.object,
-  size: PropTypes.number,
   Icon: PropTypes.element.isRequired,
   // eslint-disable-next-line react/no-typos
   disabled: PropTypes.bool,

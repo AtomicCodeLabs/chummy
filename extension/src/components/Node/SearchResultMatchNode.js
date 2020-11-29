@@ -30,7 +30,7 @@ const SearchResultMatchNode = observer(
       >
         <StyledNode.LeftSpacer level={1} />
         <StyledNode.Name>
-          <span className="italic">
+          <span className="mono">
             {fragment.slice(0, start)}
             <span className="highlight">{fragment.slice(start, end)}</span>
             {fragment.slice(end)}

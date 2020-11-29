@@ -9,6 +9,7 @@ import {
   nodeIconColor,
   lighterTextColor,
   fontSize,
+  monoFontSize,
   indentPadding,
   highlightTextColor,
   backgroundHighlightDarkColor,
@@ -143,8 +144,11 @@ const Name = styled.div`
     border-radius: 2px;
   }
 
-  span.italic {
-    font-style: italic;
+  span.mono {
+    /* Github's monospace stack */
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+      monospace;
+    font-size: ${monoFontSize};
   }
 `;
 

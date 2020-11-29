@@ -8,6 +8,8 @@ import {
   PersonIcon
 } from '@primer/octicons-react';
 
+import { IconWithFeatureFlag } from '../components/Icon';
+
 import Tree from '../pages/Tree';
 import Search from '../pages/Search';
 import Vcs from '../pages/Vcs';
@@ -19,35 +21,35 @@ import Settings from '../pages/Settings';
 export const sidebarRoutes = [
   {
     pathname: '/',
-    icon: <CodeIcon />,
+    icon: <CodeIcon size={22} />,
     title: 'Explorer'
   },
   {
     pathname: '/search',
-    icon: <SearchIcon />,
+    icon: <SearchIcon size={22} />,
     title: 'Search'
   },
   {
-    pathname: '/vcs',
-    icon: <GitBranchIcon />,
-    title: 'Source Control'
+    pathname: '/bookmarks',
+    icon: <BookmarkIcon size={22} />,
+    title: 'Bookmarks'
   },
   {
-    pathname: '/bookmarks',
-    icon: <BookmarkIcon />,
-    title: 'Bookmarks'
+    pathname: '/vcs',
+    icon: <IconWithFeatureFlag Icon={<GitBranchIcon size={22} />} />,
+    title: 'Source Control'
   },
   {
     flex: true
   },
   {
     pathname: '/account',
-    icon: <PersonIcon />,
+    icon: <PersonIcon size={22} />,
     title: 'Account'
   },
   {
     pathname: '/settings',
-    icon: <GearIcon />,
+    icon: <GearIcon size={22} />,
     title: 'Settings'
   }
 ];
