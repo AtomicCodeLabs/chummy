@@ -120,7 +120,8 @@ const production = {
       minimize: true,
       debug: false
     }),
-    new DotenvPlugin({ path: path.join(__dirname, '../envs/.env.production') })
+    new DotenvPlugin({ path: path.join(__dirname, '../envs/.env.production') }),
+    new BundleAnalyzerPlugin()
   ]
 };
 
