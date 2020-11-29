@@ -29,8 +29,8 @@ export const PanelDivider = styled.div`
 
 const Container = styled.div`
   display: flex;
-  align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
-  flex-direction: column;
+  flex-direction: row;
+
   padding: ${({ evenPadding, ...props }) =>
     evenPadding
       ? innerPadding(props)
@@ -43,6 +43,26 @@ const Container = styled.div`
         background-color: ${fieldBackgroundColor(props)};
       }
     `};
+
+  ${({ onClick }) =>
+    onClick &&
+    css`
+      cursor: pointer;
+    `}
+`;
+
+const LeftPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+`;
+
+const RightPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
 `;
 
 const Title = styled.div`
@@ -60,8 +80,18 @@ const Description = styled.div`
   line-height: ${lineHeight};
 `;
 
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
+  width: 100%;
+`;
+
 export default {
   Container,
+  LeftPanel,
+  RightPanel,
   Title,
-  Description
+  Description,
+  Content
 };

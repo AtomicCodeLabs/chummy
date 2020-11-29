@@ -17,6 +17,7 @@ export default class UserStore implements IUserStore {
   @observable numOfSessions: number = 0;
 
   @observable isPending: boolean; // keep boolean bc user pending requests are binary
+  @observable error: Error = null; // sign in error, null if none
 
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
@@ -238,6 +239,10 @@ export default class UserStore implements IUserStore {
     } else {
       this.uiStore.removePendingRequest(SectionName.Account);
     }
+  }
+
+  @action.bound setError(error: Error): void {
+    this.error = error;
   }
 
   @computed get isLoggedIn() {

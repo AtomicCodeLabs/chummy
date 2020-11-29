@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import {
   backgroundColor,
@@ -6,13 +6,14 @@ import {
   nodeIconColor,
   sidebarColor,
   borderColor,
-  backgroundHighlightColor,
   sidebarActiveIconColor,
   sidebarInactiveIconColor,
   fontSize,
-  indentPadding
+  indentPadding,
+  backgroundAlternatingLightColor,
+  backgroundAlternatingDarkColor
 } from '../../constants/theme';
-import { SIDE_TAB, HEADER, RESIZE_GUTTER } from '../../constants/sizes';
+import { SIDE_TAB, HEADER } from '../../constants/sizes';
 
 export const Container = styled.div`
   background-color: ${backgroundColor};
@@ -34,6 +35,16 @@ export const SideTab = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  /* If sidebar color is the same as either alternating node colors
+   * draw a right border for contrast
+   */
+  ${(props) =>
+    (sidebarColor(props) === backgroundAlternatingDarkColor(props) ||
+      sidebarColor(props) === backgroundAlternatingLightColor(props)) &&
+    css`
+      border-right: 1px solid ${borderColor};
+    `}
 `;
 
 export const SideTabButton = styled.div`
@@ -107,27 +118,6 @@ export const ExpandingContainerContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-
-  /* // For some reason, drag cursor disappears after first drag */
-  /* // https://github.com/nathancahill/split/issues/99 */
-  .gutter-container {
-    background-color: transparent;
-    width: 100%;
-    position: absolute;
-    height: 0;
-    /* left: 16px; Magic number that works */
-    cursor: row-resize;
-    border-top: 1px ${borderColor} solid;
-
-    .custom-gutter {
-      position: relative;
-      height: inherit;
-      top: -${RESIZE_GUTTER.HEIGHT}px;
-      &:hover {
-        border-bottom: 1px ${backgroundHighlightColor} solid;
-      }
-    }
-  }
 `;
 
 export const ExpandingContainerDivider = styled.div`

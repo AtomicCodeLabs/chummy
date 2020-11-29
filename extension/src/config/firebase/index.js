@@ -51,6 +51,7 @@ class FirebaseDAO {
       this.getAllBookmarks();
     } catch (error) {
       console.warn('Error signing in', error);
+      this.userStore.setError(error);
     }
 
     this.userStore.setPending(false);

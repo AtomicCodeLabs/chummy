@@ -7,7 +7,7 @@ import getFolderFiles from '../../hooks/getFolderFiles';
 import Node from './TreeOrBlobNode';
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
-import Spinner from '../Spinner';
+import Spinner from '../Loading/Spinner';
 import { folderIconColor } from '../../constants/theme';
 import { useFileStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';

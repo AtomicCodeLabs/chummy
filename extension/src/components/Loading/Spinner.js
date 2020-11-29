@@ -1,6 +1,6 @@
 // https://gist.github.com/adrianmcli/9fac3ff3c144c2805be90381eaa8d3d4
 import styled, { keyframes } from 'styled-components';
-import { nodeIconColor, nodeIconDarkColor } from '../constants/theme';
+import { nodeIconColor, nodeIconDarkColor } from '../../constants/theme';
 
 const rotate360 = keyframes`
   from {

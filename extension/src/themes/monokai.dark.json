@@ -9,9 +9,9 @@
     "backgroundColor": "#2f2f2f",
     "backgroundAlternatingDarkColor": "#2f2f2f",
     "backgroundAlternatingLightColor": "#363636",
-    "backgroundHighlightColor": "#cb2d62",
+    "backgroundHighlightColor": "#424242",
     "backgroundHighlightTextColor": "#e3ded7",
-    "backgroundHighlightDarkColor": "#cb2d62",
+    "backgroundHighlightDarkColor": "#424242",
     "backgroundHighlightDarkTextColor": "#e3ded7",
     "textColor": "#ffffff",
     "lightTextColor": "#e3ded7",
@@ -21,13 +21,13 @@
     "highlightTextColor": "#000000",
     "highlightBackgroundColor": "#66D9EF",
     "folderIconColor": "#e3ded7",
-    "bookmarkIconColor": "#2196f3",
+    "bookmarkIconColor": "#cb2d62",
     "nodeIconColor": "#e3ded7",
     "nodeIconDarkColor": "#f2eee9",
-    "shadowColor": "rgba(0, 0, 0, 0.5)",
+    "shadowColor": "rgba(0, 0, 0, 0.3)",
     "fieldBackgroundColor": "#222222",
     "fieldBackgroundLightColor": "#363636",
     "fieldFocusOutlineColor": "#cb2d62",
-    "borderColor": "#97999c"
+    "borderColor": "#404040"
   }
 }

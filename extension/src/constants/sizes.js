@@ -64,9 +64,9 @@ export const INPUT = {
     }),
     OPTION: {
       HEIGHT: theme('spacing', {
-        compact: 15,
-        cozy: 18,
-        comfortable: 20
+        compact: 20,
+        cozy: 23,
+        comfortable: 27
       })
     }
   }

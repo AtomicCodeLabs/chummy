@@ -53,7 +53,7 @@ const redirectTab = async (request) => {
       await browser.tabs.create({
         // windowId: window.windowId, // defaults to the last current window
         url: redirectUrl,
-        active: false
+        active: true
       });
     } catch (error) {
       console.warn('Error redirecting to url', error);

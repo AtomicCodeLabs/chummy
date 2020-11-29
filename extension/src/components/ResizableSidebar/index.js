@@ -19,7 +19,7 @@ import {
   ExpandingContainerHeaderIcon
 } from './style';
 import IconButton from '../Buttons/IconButton';
-import Spinner from '../Spinner';
+import Spinner from '../Loading/Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
 
 const ResizableSidebar = observer(({ children }) => {

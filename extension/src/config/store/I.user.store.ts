@@ -26,4 +26,5 @@ export default interface IUserStore {
   userSessions: Map<string, Session>;
   numOfSessions: number; // Used for triggering ui changes
   isPending: boolean;
+  error: Error;
 }

@@ -8,6 +8,7 @@ import useTheme from '../../hooks/useTheme';
 import {
   backgroundAlternatingDarkColor,
   backgroundAlternatingLightColor,
+  borderColor,
   fontSize,
   indentPadding,
   shadowColor
@@ -33,7 +34,7 @@ export const SectionNameContainer = styled.div`
   height: ${NODE.HEIGHT}px;
   max-height: ${NODE.HEIGHT}px;
 
-  border-top: 1px solid ${shadowColor};
+  border-top: 1px solid ${borderColor};
   ${({ hasShadow }) =>
     hasShadow &&
     css`
