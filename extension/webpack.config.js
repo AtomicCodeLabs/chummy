@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CompressionPlugin = require('compression-webpack-plugin');
 // const TerserPlugin = require("terser-webpack-plugin");
 const path = require('path');
 
@@ -121,6 +122,11 @@ const production = {
       debug: false
     }),
     new DotenvPlugin({ path: path.join(__dirname, '../envs/.env.production') }),
+    new CompressionPlugin({
+      test: /\.js?$/,
+      algorithm: 'gzip',
+      threshold: 244000
+    }),
     new BundleAnalyzerPlugin()
   ]
 };
