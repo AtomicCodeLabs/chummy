@@ -40,7 +40,7 @@ const InputContainer = styled.div`
 `;
 
 const StyledInput = styled.input`
-  /* // Reset styles */
+  // Reset styles
   border: none;
   background-image: none;
   box-sizing: border-box;
@@ -51,7 +51,7 @@ const StyledInput = styled.input`
   color: ${lightTextColor};
   flex: 1;
   font-size: ${fontSize};
-  /* // To be compatible with react-select */
+  // To be compatible with react-select
   padding: 0.2rem calc(0.3rem + 2px);
   height: 100%;
 
