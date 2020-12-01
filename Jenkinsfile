@@ -8,6 +8,7 @@ pipeline {
             steps {
                 sh 'echo $ENV_PRODUCTION_SECRET_KEY'
                 dir('envs') {
+                    sh 'chmod +x decrypt_env.sh'
                     sh './decrypt_env.sh'
                     sh 'ls'
                 }
