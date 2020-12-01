@@ -1,4 +1,4 @@
 #!/bin/sh
 
-gpg --symmetric --cipher-algo AES256 \
-  ../envs/.env.production --output ../envs/env.production.gpg
+gpg --output env.production.gpg \
+  --symmetric --cipher-algo AES256 .env.production
