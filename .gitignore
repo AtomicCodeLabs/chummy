@@ -3,6 +3,7 @@
 
 # Extension
 extension/dist
+extension/reports
 
 # Website
 website/public
