@@ -6,6 +6,7 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
+                sh 'echo $ENV_PRODUCTION_SECRET_KEY'
                 dir('envs') {
                     sh './decrypt_env.sh'
                     sh 'ls'
