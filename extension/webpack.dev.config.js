@@ -82,7 +82,7 @@ module.exports = {
       template: './src/popup/index.html',
       chunks: ['popup'],
       filename: 'popup.html',
-      cache: false,
+      cache: false
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: env }),
     new webpack.DefinePlugin({
