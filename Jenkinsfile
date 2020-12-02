@@ -6,14 +6,10 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'echo $ENV_PRODUCTION_SECRET_KEY'
                 dir('envs') {
-                    sh 'chmod +x decrypt_env.sh'
                     sh './decrypt_env.sh'
                     sh 'ls'
                 }
-                sh 'cd extension'
-                sh 'npm install -g yarn'
                 sh 'yarn --version'
             }
         }
