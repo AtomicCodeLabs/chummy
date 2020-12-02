@@ -15,11 +15,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'cd extension'
-                sh 'yarn'
-                sh 'yarn lint:check'
-                sh 'yarn format:check'
-                sh 'yarn build'
+                dir('extension') {
+                    sh 'yarn'
+                    sh 'yarn lint:check'
+                    sh 'yarn format:check'
+                    sh 'yarn build'
+                }
             }
         }
     }
