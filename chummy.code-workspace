@@ -11,6 +11,10 @@
     {
       "name": "Docs",
       "path": "../chummy-docs"
+    },
+    {
+      "name": "CI",
+      "path": "../ci"
     }
   ],
   "settings": {},
