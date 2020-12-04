@@ -11,7 +11,6 @@ pipeline {
                         ]) {
                         sh 'cp $ENV_DEVELOPMENT_FILE ./.env.development'
                         sh 'cp $ENV_PRODUCTION_FILE ./.env.production'
-                        sh 'ls -alF'
                         }
                 }
                 sh 'yarn --version'
