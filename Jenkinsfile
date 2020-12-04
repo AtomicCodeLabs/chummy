@@ -1,12 +1,18 @@
+/* groovylint-disable NestedBlockDepth */
 pipeline {
     agent { dockerfile true }
     stages {
         stage('Setup') {
             steps {
                 dir('envs') {
-                    sh 'cp /data/.env.development ./.env.development'
-                    sh 'cp /data/.env.production ./.env.production'
-                    sh 'ls -alF'
+                    withCredentials([
+                        file(credentialsId: 'ENV_PRODUCTION_FILE', variable: 'ENV_PRODUCTION_FILE'),
+                        file(credentialsId: 'ENV_DEVELOPMENT_FILE', variable: 'ENV_DEVELOPMENT_FILE')
+                        ]) {
+                        sh 'cp $ENV_DEVELOPMENT_FILE ./.env.development'
+                        sh 'cp $ENV_PRODUCTION_FILE ./.env.production'
+                        sh 'ls -alF'
+                        }
                 }
                 sh 'yarn --version'
             }
