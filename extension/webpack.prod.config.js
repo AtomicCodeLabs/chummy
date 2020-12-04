@@ -96,7 +96,7 @@ module.exports = {
       minimize: true,
       debug: false
     }),
-    new DotenvPlugin({ path: path.join(__dirname, '../envs/.env.production') }),
+    new DotenvPlugin({ path: path.join(__dirname, '.env.production') }),
     new CompressionPlugin({
       test: /\.js?$/,
       algorithm: 'gzip',

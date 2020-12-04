@@ -95,7 +95,7 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new DotenvPlugin({
-      path: path.join(__dirname, '../envs/.env.development')
+      path: path.join(__dirname, '.env.development')
     }),
     new MiniCssExtractPlugin(),
     new BundleAnalyzerPlugin({

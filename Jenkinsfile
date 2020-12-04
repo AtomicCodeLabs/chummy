@@ -1,10 +1,10 @@
-/* groovylint-disable NestedBlockDepth */
+/* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 pipeline {
-    agent { dockerfile true }
+    agent { docker { image 'node:12.19.0' } }
     stages {
         stage('Setup') {
             steps {
-                dir('envs') {
+                dir('extension') {
                     withCredentials([
                         file(credentialsId: 'ENV_PRODUCTION_FILE', variable: 'ENV_PRODUCTION_FILE'),
                         file(credentialsId: 'ENV_DEVELOPMENT_FILE', variable: 'ENV_DEVELOPMENT_FILE')
