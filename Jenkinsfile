@@ -1,8 +1,5 @@
 pipeline {
     agent { dockerfile true }
-    environment {
-        ENV_PRODUCTION_SECRET_KEY = credentials('env-production-secret-key')
-    }
     stages {
         stage('Setup') {
             steps {
