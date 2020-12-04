@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { image 'node:12.19.0' } }
+    agent { dockerfile true }
     environment {
         ENV_PRODUCTION_SECRET_KEY = credentials('env-production-secret-key')
     }
@@ -7,8 +7,9 @@ pipeline {
         stage('Setup') {
             steps {
                 dir('envs') {
-                    sh './decrypt_env.sh'
-                    sh 'ls'
+                    sh 'cp /data/.env.development ./.env.development'
+                    sh 'cp /data/.env.production ./.env.production'
+                    sh 'ls -alF'
                 }
                 sh 'yarn --version'
             }
