@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
 import { QuestionIcon } from '@primer/octicons-react';
+import loadable from '@loadable/component';
 
 import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
@@ -30,7 +31,7 @@ import SearchResultFileNode from '../../components/Node/SearchResultFileNode';
 import ExternalLink from '../../components/ExternalLink';
 import { GITHUB_URLS } from '../../constants/urls';
 
-const LanguagesSelect = React.lazy(() => import('./LanguagesSelect'));
+const LanguagesSelect = loadable(() => import('./LanguagesSelect'));
 
 export default observer(() => {
   checkCurrentUser();

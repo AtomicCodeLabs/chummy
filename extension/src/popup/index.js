@@ -10,11 +10,9 @@ import RootStoreContext from '../config/store/context.ts';
 import rootStore from '../config/store/root.store.ts';
 import FirebaseProvider from '../config/firebase';
 import OctoProvider from '../config/octokit';
-import getScrollBarWidth from '../hooks/getScrollBarWidth';
 import './index.css';
 
 let app;
-const scrollbarWidth = getScrollBarWidth();
 
 function renderDevPanel() {
   app = document.getElementById('my-extension-root');

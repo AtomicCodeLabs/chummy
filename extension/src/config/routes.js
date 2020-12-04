@@ -1,4 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
+import loadable from '@loadable/component';
 import {
   CodeIcon,
   SearchIcon,
@@ -9,14 +11,40 @@ import {
 } from '@primer/octicons-react';
 
 import { IconWithFeatureFlag } from '../components/Icon';
+import SplashSpinner from '../components/Loading/SplashSpinner';
+import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
+import CenterContainer from '../components/Containers/Center';
 
-import Tree from '../pages/Tree';
-import Search from '../pages/Search';
-import Vcs from '../pages/Vcs';
-import Bookmarks from '../pages/Bookmarks';
-import Account from '../pages/Account';
-import AccountSignIn from '../pages/Account/SignIn';
-import Settings from '../pages/Settings';
+const LoadingPage = ({ error }) => {
+  if (error) {
+    return <AccountSignIn />;
+  }
+  return (
+    <CenterContainer>
+      <SplashSpinner />
+    </CenterContainer>
+  );
+};
+
+// Lazy load route pages
+const Tree = loadable(() => import('../pages/Tree'), {
+  fallback: <LoadingPage />
+});
+const Search = loadable(() => import('../pages/Search'), {
+  fallback: <LoadingPage />
+});
+const Vcs = loadable(() => import('../pages/Vcs'), {
+  fallback: <LoadingPage />
+});
+const Bookmarks = loadable(() => import('../pages/Bookmarks'), {
+  fallback: <LoadingPage />
+});
+const Account = loadable(() => import('../pages/Account'), {
+  fallback: <LoadingPage />
+});
+const Settings = loadable(() => import('../pages/Settings'), {
+  fallback: <LoadingPage />
+});
 
 export const sidebarRoutes = [
   {

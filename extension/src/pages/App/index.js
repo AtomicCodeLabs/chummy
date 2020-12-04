@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import ExtensionRootContainer from '../../components/ExtensionRootContainer';
+import ExtensionRootContainer from '../../components/Containers/ExtensionRootContainer';
 import ResizableSidebar from '../../components/ResizableSidebar';
 import { routes } from '../../config/routes';
 

@@ -23,6 +23,23 @@
       {
         "loose": true
       }
-    ]
-  ]
+    ],
+    "@babel/plugin-syntax-dynamic-import",
+    "@loadable/babel-plugin"
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        [
+          "transform-react-remove-prop-types",
+          {
+            "mode": "wrap",
+            "ignoreFilenames": ["node_modules"]
+          }
+        ],
+        "minify-constant-folding",
+        "tailcall-optimization"
+      ]
+    }
+  }
 }
