@@ -32,7 +32,7 @@ pipeline {
             steps {
                 dir('extension/dist') {
                     script {
-                        withAWS(credentials: 'AWS_CREDENTIALS') {
+                        withAWSCli(credentialsId: 'AWS_CREDENTIALS') {
                             for (f in findFiles(glob: '*.gz')) {
                                 sh "aws s3api put - object - bucket chummy - assets - key ${f} - body ${f}"
                             }
