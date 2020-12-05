@@ -1,6 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 pipeline {
-    agent { docker { image 'node:12.19.0' } }
+    agent { dockerfile true }
     stages {
         stage('Setup') {
             steps {
@@ -32,14 +32,20 @@ pipeline {
             steps {
                 dir('extension/dist') {
                     script {
-                        withAWSCli(credentialsId: 'AWS_CREDENTIALS') {
+                        withAWS(credentials: 'AWS_CREDENTIALS') {
                             for (f in findFiles(glob: '*.gz')) {
-                                sh "aws s3api put - object - bucket chummy - assets - key ${f} - body ${f}"
+                                s3Upload(file:"$f", bucket:'chummy-assets', path:"$f")
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+post {
+    always {
+        cleanWs()
     }
 }
