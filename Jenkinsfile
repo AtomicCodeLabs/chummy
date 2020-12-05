@@ -19,10 +19,25 @@ pipeline {
         stage('Build') {
             steps {
                 dir('extension') {
-                    sh 'yarn'
-                    sh 'yarn lint:check'
-                    sh 'yarn format:check'
-                    sh 'yarn build'
+                    sh '''
+                        yarn
+                        yarn lint:check
+                        yarn format:check
+                        yarn build
+                    '''
+                }
+            }
+        }
+        stage('Publish Assets') {
+            steps {
+                dir('extension/dist') {
+                    script {
+                        withAWS(credentials: 'AWS_CREDENTIALS') {
+                            for (f in findFiles(glob: '*.gz')) {
+                                aws s3api put - object - bucket chummy - assets - key "${f}" - body "${f}"
+                            }
+                        }
+                    }
                 }
             }
         }
