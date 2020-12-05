@@ -34,7 +34,7 @@ pipeline {
                     script {
                         withAWS(credentials: 'AWS_CREDENTIALS') {
                             for (f in findFiles(glob: '*.gz')) {
-                                aws s3api put - object - bucket chummy - assets - key "${f}" - body "${f}"
+                                sh "aws s3api put - object - bucket chummy - assets - key ${f} - body ${f}"
                             }
                         }
                     }
