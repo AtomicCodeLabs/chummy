@@ -1,6 +1,11 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 pipeline {
-    agent { docker { image 'alexkim205/ci:jenkins-node' } }
+    agent {
+        docker {
+            image 'alexkim205/ci:jenkins-node'
+            args '-u root:root'
+        }
+    }
     stages {
         stage('Setup') {
             steps {
@@ -32,6 +37,7 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
+                        whoami
                         yarn cy:run
                     '''
                 }
