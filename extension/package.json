@@ -15,7 +15,8 @@
     "lint": "eslint . --fix",
     "serve": "serve dist",
     "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cypress open\"",
-    "cy:run": "yarn build && yarn concurrently --kill-others --success first \"cypress run\" \"yarn serve\""
+    "cy:run": "yarn concurrently --kill-others --success first \"cypress run\" \"yarn serve\"",
+    "cy:brun": "yarn build && yarn run cy:run"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

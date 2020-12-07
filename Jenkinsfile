@@ -49,7 +49,7 @@ pipeline {
             steps {
                 dir('extension/dist') {
                     script {
-                        withAWS(credentials: 'AWS_CREDENTIALS') {
+                        withAWS(credentials: 'AWS_CREDENTIALS', region: 'us-west-2') {
                             for (f in findFiles(glob: '*.gz')) {
                                 s3Upload(file:"$f", bucket:'chummy-assets', path:"$f")
                             }
