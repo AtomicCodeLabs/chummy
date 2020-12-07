@@ -37,7 +37,6 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
-                        whoami
                         yarn cy:run
                     '''
                 }
