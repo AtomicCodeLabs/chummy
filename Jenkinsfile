@@ -14,8 +14,11 @@ pipeline {
                         file(credentialsId: 'ENV_PRODUCTION_FILE', variable: 'ENV_PRODUCTION_FILE'),
                         file(credentialsId: 'ENV_DEVELOPMENT_FILE', variable: 'ENV_DEVELOPMENT_FILE')
                         ]) {
-                        sh 'ln -s $ENV_DEVELOPMENT_FILE ./.env.development'
-                        sh 'ln -s $ENV_PRODUCTION_FILE ./.env.production'
+                            sh '''
+                                rm -rf ./.env*
+                                cp $ENV_DEVELOPMENT_FILE ./.env.development
+                                cp $ENV_PRODUCTION_FILE ./.env.production
+                            '''
                         }
                 }
                 sh 'yarn --version'
