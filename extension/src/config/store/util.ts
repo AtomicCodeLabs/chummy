@@ -9,10 +9,17 @@ export const getFromChromeStorage = async (
   callback: Function
 ) => {
   try {
-    const response = await browser.runtime.sendMessage({
+    const request = {
       action: 'get-store',
       payload: keys
-    });
+    };
+    console.log(
+      '%cGet store request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    const response = await browser.runtime.sendMessage(request);
+    console.log('Response', response);
     if (response?.payload) {
       callback(response.payload);
     }

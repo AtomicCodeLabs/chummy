@@ -1,6 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 pipeline {
-    agent { dockerfile true }
+    agent { docker { image 'alexkim205/ci:jenkins-build' } }
     stages {
         stage('Setup') {
             steps {
@@ -24,6 +24,15 @@ pipeline {
                         yarn lint:check
                         yarn format:check
                         yarn build
+                    '''
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('extension') {
+                    sh '''
+                        yarn cy:run
                     '''
                 }
             }

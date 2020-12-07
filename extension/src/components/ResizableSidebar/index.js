@@ -80,6 +80,7 @@ const ResizableSidebar = observer(({ children }) => {
                   onClick={openSidebarAndResetWidth}
                   disabled={!isLoggedIn}
                   active={pathname === route.pathname}
+                  dataTestId={`route-button-${route.pathname.slice(1)}`}
                 />
               </SideTabButton>
             )
@@ -87,7 +88,7 @@ const ResizableSidebar = observer(({ children }) => {
       </SideTab>
       <ExpandingContainer isSidebarMinimized={isSidebarMinimized}>
         {isPageWithHeader(pathname) && (
-          <ExpandingContainerHeaderContainer>
+          <ExpandingContainerHeaderContainer data-testid="page-title">
             {sidebarHeaderTitle}
             <ExpandingContainerHeaderSpacer />
             {!!pendingRequestCount.get(sidebarHeaderTitle) && (

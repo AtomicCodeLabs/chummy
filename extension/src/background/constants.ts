@@ -23,4 +23,4 @@ export enum SUBPAGES {
   SETTINGS = 'settings'
 }
 
-export const NO_WINDOW_EXTENSION_ID = -3; // -3 if it doesn't exist
+export const NO_WINDOW_EXTENSION_ID = -1; // -3 if it doesn't exist

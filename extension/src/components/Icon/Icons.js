@@ -17,6 +17,5 @@ const RotatedBookmark = styled(BookmarkFillIcon)`
 `;
 
 export const FlagIcon = forwardRef(({ color, ...props }, ref) => {
-  console.log('color', color);
   return <RotatedBookmark ref={ref} color={color} {...props} />;
 });

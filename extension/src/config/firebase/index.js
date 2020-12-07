@@ -37,9 +37,17 @@ class FirebaseDAO {
 
     try {
       // Sign in
-      const response = await browser.runtime.sendMessage({
+      const request = {
         action: 'sign-in'
-      });
+      };
+      console.log(
+        '%cSign in request -> bg',
+        'background-color: #00c853; color: white;',
+        request
+      );
+      const response = await browser.runtime.sendMessage(request);
+      console.log('Response', response);
+
       if (response) {
         // Set user store
         this.userStore.setUser({
@@ -58,7 +66,13 @@ class FirebaseDAO {
   };
 
   signOut = () => {
-    browser.runtime.sendMessage({ action: 'sign-out' });
+    const request = { action: 'sign-out' };
+    console.log(
+      '%cSign out request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    browser.runtime.sendMessage(request);
     this.userStore.clearUser(); // cleans up user and user's bookmarks
     this.octoDAO.unauthenticate();
   };
@@ -67,9 +81,16 @@ class FirebaseDAO {
     this.userStore.setPending(true);
 
     try {
-      const response = await browser.runtime.sendMessage({
+      const request = {
         action: 'get-current-user'
-      });
+      };
+      console.log(
+        '%cGet current user -> bg',
+        'background-color: #00c853; color: white;',
+        request
+      );
+      const response = await browser.runtime.sendMessage(request);
+      console.log('Response', response);
       this.handleUserResponse(response);
     } catch (error) {
       console.warn('Error getting current user', error);

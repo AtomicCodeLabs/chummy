@@ -19,12 +19,13 @@ const ContainerButton = styled.div`
   height: 100%;
 `;
 
-const LinkButton = ({
+const IconButton = ({
   style = {},
   Icon,
   disabled,
   to,
   onClick = () => {},
+  dataTestId,
   ...buttonProps
 }) => {
   const history = useHistory();
@@ -39,21 +40,26 @@ const LinkButton = ({
   };
 
   return (
-    <ContainerButton style={style} onClick={navigateToPage}>
+    <ContainerButton
+      style={style}
+      onClick={navigateToPage}
+      data-testid={dataTestId}
+    >
       <Suspense fallback={<XIcon {...buttonProps} />}>
         {cloneElement(Icon, buttonProps)}
       </Suspense>
     </ContainerButton>
   );
 };
-LinkButton.propTypes = {
+IconButton.propTypes = {
   style: PropTypes.object,
   Icon: PropTypes.element.isRequired,
   // eslint-disable-next-line react/no-typos
   disabled: PropTypes.bool,
   to: PropTypes.string,
   // eslint-disable-next-line react/no-typos
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  dataTestId: PropTypes.string
 };
 
-export default LinkButton;
+export default IconButton;

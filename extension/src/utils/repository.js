@@ -3,9 +3,17 @@ import browser from 'webextension-polyfill';
 // eslint-disable-next-line import/prefer-default-export
 export const getOpenRepositories = async (callback = () => {}) => {
   try {
-    const response = await browser.runtime.sendMessage({
+    const request = {
       action: 'get-open-repositories'
-    });
+    };
+    console.log(
+      '%cGet open repositories request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    const response = await browser.runtime.sendMessage(request);
+    console.log('Response', response);
+
     if (response) {
       callback(response.payload);
     }

@@ -5,6 +5,8 @@ ci/
 
 # Extension
 extension/dist
+extension/cypress/screenshots
+extension/cypress/videos
 
 # Website
 website/public

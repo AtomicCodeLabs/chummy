@@ -136,7 +136,7 @@ browser.windows.onBoundsChanged.addListener((window) => {
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
   const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-  browser.runtime.sendMessage({
+  const response = {
     action: 'active-tab-changed',
     payload: {
       ...parsed,
@@ -144,7 +144,9 @@ const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
       windowId,
       tabId
     }
-  });
+  };
+  console.log('app.js', response);
+  browser.runtime.sendMessage(response);
 };
 
 // Emit change tab/window/focus event to change content

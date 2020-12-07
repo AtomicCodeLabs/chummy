@@ -1,0 +1,24 @@
+{
+  "action": "get-store",
+  "payload": {
+    "isBookmarksSectionMinimized": true,
+    "isSearchSectionMinimized": true,
+    "isSidebarMinimized": false,
+    "isStickyWindow": false,
+    "isTreeSectionMinimized": {
+      "files": { "isMinimized": false, "lastHeight": 722 },
+      "openTabs": { "isMinimized": false, "lastHeight": 257 },
+      "sessions": { "isMinimized": true, "lastHeight": 87 }
+    },
+    "language": "en_US",
+    "selectedBookmarkQuery": null,
+    "selectedBookmarkRepo": null,
+    "selectedLanguage": null,
+    "selectedOpenRepo": null,
+    "selectedQuery": null,
+    "sidebarView": 0,
+    "sidebarWidth": 533,
+    "spacing": "cozy",
+    "theme": "vanilla-dark"
+  }
+}

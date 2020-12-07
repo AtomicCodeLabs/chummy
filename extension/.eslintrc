@@ -2,9 +2,10 @@
   "env": {
     "browser": true,
     "jest": true,
-    "es6": true
+    "es6": true,
+    "cypress/globals": true
   },
-  "plugins": ["import"],
+  "plugins": ["import", "cypress"],
   "extends": ["airbnb", "prettier", "prettier/react"],
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -17,6 +18,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-console": "off",
     "no-eval": "error",
-    "import/first": "error"
+    "import/first": "error",
+    "no-param-reassign": "off"
   }
 }

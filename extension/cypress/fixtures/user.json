@@ -1,0 +1,13 @@
+{
+  "action": "get-current-user",
+  "payload": {
+    "user": {
+      "uid": "LR3KUY0FumTy4u79tRJEK88YoTj2",
+      "email": "agk2144@columbia.edu",
+      "displayName": "Alex Gyujin Kim",
+      "photoURL": "https://avatars1.githubusercontent.com/u/13460330?v=4",
+      "apiKey": "292836e915bf829c4f04307e01f91357a701cfd5",
+      "accountType": null
+    }
+  }
+}

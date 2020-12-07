@@ -2,9 +2,17 @@ import browser from 'webextension-polyfill';
 
 export const getAllBookmarks = async () => {
   try {
-    const response = await browser.runtime.sendMessage({
+    const request = {
       action: 'get-bookmarks'
-    });
+    };
+    console.log(
+      '%cGet bookmarks request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    const response = await browser.runtime.sendMessage(request);
+    console.log('Response', response);
+
     if (response) {
       return response;
     }
@@ -15,24 +23,42 @@ export const getAllBookmarks = async () => {
 };
 
 export const addBookmark = async (bookmark) => {
-  await browser.runtime.sendMessage({
+  const request = {
     action: 'create-bookmark',
     payload: bookmark
-  });
+  };
+  console.log(
+    '%cCreate bookmark request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  await browser.runtime.sendMessage(request);
 };
 
 export const updateBookmark = async (bookmark) => {
-  await browser.runtime.sendMessage({
+  const request = {
     action: 'update-bookmark',
     payload: bookmark
-  });
+  };
+  console.log(
+    '%cUpdate bookmark request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  await browser.runtime.sendMessage(request);
 };
 
 export const removeBookmark = async (bookmark) => {
-  await browser.runtime.sendMessage({
+  const request = {
     action: 'remove-bookmark',
     payload: bookmark
-  });
+  };
+  console.log(
+    '%cRemove bookmark request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  await browser.runtime.sendMessage(request);
 };
 
 export default {

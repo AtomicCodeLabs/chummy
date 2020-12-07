@@ -10,25 +10,44 @@ export const redirectTo = (
   currentWindowTab,
   openInNewTab = false
 ) => {
-  browser.runtime.sendMessage({
+  const request = {
     action: 'redirect',
     payload: { window: currentWindowTab, base, filepath, openInNewTab }
-  });
+  };
+  console.log(
+    '%cRedirect request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  browser.runtime.sendMessage(request);
 };
 
 export const redirectToUrl = (url) => {
-  browser.runtime.sendMessage({
+  const request = {
     action: 'redirect-to-url',
     payload: { url }
-  });
+  };
+  console.log(
+    '%cRedirect to url request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  browser.runtime.sendMessage(request);
 };
 
 export const changeActiveTab = async (destinationTabId) => {
   try {
-    const response = await browser.runtime.sendMessage({
+    const request = {
       action: 'change-active-tab',
       payload: { destinationTabId }
-    });
+    };
+    console.log(
+      '%cChange active tab request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    const response = await browser.runtime.sendMessage(request);
+    console.log('Response', response);
     if (response?.complete) {
       return true;
     }
@@ -40,10 +59,18 @@ export const changeActiveTab = async (destinationTabId) => {
 
 export const closeTab = async (tabId) => {
   try {
-    const response = await browser.runtime.sendMessage({
+    const request = {
       action: 'close-tab',
       payload: { tabId }
-    });
+    };
+    console.log(
+      '%cClose tab request -> bg',
+      'background-color: #00c853; color: white;',
+      request
+    );
+    const response = await browser.runtime.sendMessage(request);
+    console.log('Response', response);
+
     if (response?.complete) {
       return true;
     }

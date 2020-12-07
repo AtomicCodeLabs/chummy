@@ -53,12 +53,13 @@ export default class UiStore implements IUiStore {
     // Get keys of IUiStore
     const keys: UiStorePropsArray = UiStoreKeys;
 
+    // Keep some keys out of chrome storage
+    const filteredKeys = keys.filter(
+      (k) => !['pendingRequestCount', 'userStore'].includes(k)
+    ).sort();
+
     // Get and set previous sessions' settings
-    getFromChromeStorage(keys, (items: { [key: string]: any }) => {
-      // Keep some keys out of chrome storage
-      const filteredKeys = keys.filter(
-        (k) => !['pendingRequestCount'].includes(k)
-      );
+    getFromChromeStorage(filteredKeys, (items: { [key: string]: any }) => {
       console.log('GOT ITEMS', items);
 
       // Set each key

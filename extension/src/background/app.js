@@ -14,11 +14,12 @@ const redirectTab = async (request) => {
     // Open a new tab
     if (openInNewTab) {
       try {
-        await browser.tabs.create({
+        const newTab = {
           windowId: window.windowId,
           url: url.resolve('https://github.com/', path.join(base, filepath)),
           active: false
-        });
+        };
+        await browser.tabs.create(newTab);
       } catch (error) {
         console.warn('Error creating tab', error);
       }
@@ -32,10 +33,12 @@ const redirectTab = async (request) => {
           file: 'background.redirect.inject.js'
         });
 
-        await browser.tabs.sendMessage(window.tabId, {
+        const response = {
           action: 'redirect-content-script',
           payload: request.payload
-        });
+        };
+        console.log('app.js', response);
+        await browser.tabs.sendMessage(window.tabId, response);
       } catch (error) {
         console.warn('Error redirecting active tab', error);
       }
@@ -50,11 +53,12 @@ const redirectTab = async (request) => {
     } = request;
     try {
       // Open a new tab
-      await browser.tabs.create({
+      const newTab = {
         // windowId: window.windowId, // defaults to the last current window
         url: redirectUrl,
         active: true
-      });
+      };
+      await browser.tabs.create(newTab);
     } catch (error) {
       console.warn('Error redirecting to url', error);
     }
@@ -77,7 +81,7 @@ const redirectTab = async (request) => {
 
       // Send active-tab-changed action to set current branch
       const parsed = new UrlParser(tab.url, tab.title, tab.id).parse();
-      await browser.runtime.sendMessage({
+      const response = {
         action: 'active-tab-changed',
         payload: {
           ...parsed,
@@ -85,7 +89,9 @@ const redirectTab = async (request) => {
           windowId: tab.windowId,
           tabId: tab.id
         }
-      });
+      };
+      console.log('app.js', response);
+      await browser.runtime.sendMessage(response);
       // To let frontend know when tab updates have been made.
       return { action: 'change-active-tab', complete: true };
     } catch (error) {
@@ -201,10 +207,12 @@ const sendOpenRepositoryUpdatesMessage = async () => {
         }
       });
     });
-    browser.runtime.sendMessage({
+    const response = {
       action: 'tab-updated',
       payload: openRepositories
-    });
+    };
+    console.log('app.js', response);
+    browser.runtime.sendMessage(response);
   } catch (error) {
     console.warn('Error updating open repositories', error);
   }
@@ -224,7 +232,7 @@ const initializeTabListeners = () => {
     const isTabTitleUrl = changeInfo.url === tab.title; // Tab changed event not ready to be sent
     if (tab.active && changeInfo.url && !isTabTitleUrl) {
       const parsed = new UrlParser(tab.url, tab.title, tabId).parse();
-      browser.runtime.sendMessage({
+      const response = {
         action: 'active-tab-changed',
         payload: {
           ...parsed,
@@ -232,7 +240,9 @@ const initializeTabListeners = () => {
           windowId: tab.windowId,
           tabId
         }
-      });
+      };
+      console.log('app.js', response);
+      browser.runtime.sendMessage(response);
     }
   });
 };

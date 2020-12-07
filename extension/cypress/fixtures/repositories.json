@@ -1,0 +1,31 @@
+{
+  "action": "get-open-repositories",
+  "payload": {
+    "alexkim205/chummy": [
+      {
+        "url": "https://github.com/alexkim205/chummy",
+        "owner": "alexkim205",
+        "repo": "chummy",
+        "tab": {
+          "name": "master",
+          "tabId": 2,
+          "subpage": "repository",
+          "nodeName": null
+        },
+        "type": "tree"
+      },
+      {
+        "url": "https://github.com/alexkim205/chummy",
+        "owner": "alexkim205",
+        "repo": "chummy",
+        "tab": {
+          "name": "master",
+          "tabId": 11,
+          "subpage": "repository",
+          "nodeName": null
+        },
+        "type": "tree"
+      }
+    ]
+  }
+}

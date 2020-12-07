@@ -33,10 +33,16 @@ export const isBlank = (o) => {
 };
 
 export const redirectToUrl = (url) => {
-  browser.runtime.sendMessage({
+  const request = {
     action: 'redirect-to-url',
     payload: { url }
-  });
+  };
+  console.log(
+    '%Redirect to url request -> bg',
+    'background-color: #00c853; color: white;',
+    request
+  );
+  browser.runtime.sendMessage(request);
 };
 
 // https://stackoverflow.com/questions/1983648/replace-spaces-with-dashes-and-make-all-letters-lower-case
