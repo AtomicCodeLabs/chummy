@@ -34,10 +34,6 @@ pipeline {
                             printf "%s\n" "[default]" "region = us-west-2" >~/.aws/config
                         '''
                     }
-                sh '''
-                    mkdir -p /home/jenkins/.cache/
-                    mv /root/.cache/Cypress/ /home/jenkins/.cache/
-                '''
                 sh 'yarn --version'
             }
         }
@@ -57,6 +53,7 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
+                        yarn cypress install
                         yarn cy:run
                     '''
                 }
