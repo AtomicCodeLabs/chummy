@@ -21,6 +21,18 @@ pipeline {
                             '''
                         }
                 }
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'AWS_CREDENTIALS',
+                        usernameVariable: 'KEY',
+                        passwordVariable: 'SECRET_KEY'
+                        )
+                    ]) {
+                        sh '''
+                            printf "%s\n" "[default]" "aws_access_key_id=$KEY" "aws_secret_access_key=$SECRET_KEY" >~/.aws/credentials
+                            printf "%s\n" "[default]" "region = us-west-2" >~/.aws/config
+                        '''
+                    }
                 sh 'yarn --version'
             }
         }
@@ -49,10 +61,8 @@ pipeline {
             steps {
                 dir('extension/dist') {
                     script {
-                        withAWS(credentials: 'AWS_CREDENTIALS', region: 'us-west-2') {
-                            for (f in findFiles(glob: '*.gz')) {
-                                s3Upload(file:"$f", bucket:'chummy-assets', path:"$f")
-                            }
+                        for (f in findFiles(glob: '*.gz')) {
+                            sh 'aws s3 cp $f s3://chummy-assets'
                         }
                     }
                 }
