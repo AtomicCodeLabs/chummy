@@ -61,7 +61,7 @@ pipeline {
         stage('Publish Assets') {
             steps {
                 dir('extension/dist') {
-                    node {
+                    script {
                         for (f in findFiles(glob: '*.gz')) {
                             sh "aws s3 cp ${f} s3://chummy-assets"
                         }
