@@ -41,7 +41,7 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
-                        yarn
+                        yarn install --frozen-lockfile
                         yarn lint:check
                         yarn format:check
                         yarn build
