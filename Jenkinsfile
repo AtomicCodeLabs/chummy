@@ -53,6 +53,7 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
+                        cypress install
                         yarn cy:run
                     '''
                 }
