@@ -1,6 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 pipeline {
-    agent { docker { image 'alexkim205/ci:jenkins-build' } }
+    agent { docker { image 'alexkim205/ci:jenkins-node' } }
     stages {
         stage('Setup') {
             steps {
