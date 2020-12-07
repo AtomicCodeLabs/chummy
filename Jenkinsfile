@@ -35,7 +35,7 @@ pipeline {
                         '''
                     }
                 sh '''
-                    mkdir /home/jenkins/.cache/
+                    mkdir -p /home/jenkins/.cache/
                     mv /root/.cache/Cypress/ /home/jenkins/.cache/
                 '''
                 sh 'yarn --version'
