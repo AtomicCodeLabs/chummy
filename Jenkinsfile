@@ -62,6 +62,8 @@ pipeline {
             steps {
                 dir('extension/dist') {
                     script {
+                        sh 'cat ~/.aws/credentials'
+                        sh 'cat ~/.aws/config'
                         for (f in findFiles(glob: '*.gz')) {
                             sh "aws s3 cp ${f} s3://chummy-assets"
                         }
@@ -75,6 +77,12 @@ pipeline {
             node('master') {
                 cleanWs()
             }
+        }
+        success {
+            setBuildStatus('Build succeeded', 'SUCCESS')
+            }
+        failure {
+            setBuildStatus('Build failed', 'FAILURE')
         }
     }
 }
