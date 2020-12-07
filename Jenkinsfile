@@ -29,6 +29,7 @@ pipeline {
                         )
                     ]) {
                         sh '''
+                            mkdir ~/.aws
                             printf "%s\n" "[default]" "aws_access_key_id=$KEY" "aws_secret_access_key=$SECRET_KEY" >~/.aws/credentials
                             printf "%s\n" "[default]" "region = us-west-2" >~/.aws/config
                         '''
