@@ -21,18 +21,23 @@ module.exports = {
   mode: env,
   context: __dirname,
   entry: {
-    background: './src/background/index.js',
+    background: {
+      import: './src/background/index.js',
+      publicPath: process.env.ASSETS_PUBLIC_PATH
+    },
     'background.app': './src/background/app.js',
     'background.firebase': './src/background/firebase.js',
     'background.storage': './src/background/storage.js',
     'background.redirect.inject': './src/background/redirect.inject.js',
     'content-script': './src/content-scripts/index.js',
-    popup: './src/popup/index.js'
+    popup: {
+      import: './src/popup/index.js',
+      publicPath: process.env.ASSETS_PUBLIC_PATH
+    }
   },
   output: {
     path: path.resolve(process.cwd(), 'dist'),
     filename: '[name].js',
-    publicPath: process.env.ASSETS_PUBLIC_PATH,
     chunkFilename: '[name][id].js'
   },
   resolve: {
