@@ -21,12 +21,12 @@ module.exports = {
   mode: env,
   context: __dirname,
   entry: {
-    background: {
-      import: './src/background/index.js',
+    background: './src/background/index.js',
+    'background.app': './src/background/app.js',
+    'background.firebase': {
+      import: './src/background/firebase.js',
       filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js`
     },
-    'background.app': './src/background/app.js',
-    'background.firebase': './src/background/firebase.js',
     'background.storage': './src/background/storage.js',
     'background.redirect.inject': './src/background/redirect.inject.js',
     'content-script': './src/content-scripts/index.js',
