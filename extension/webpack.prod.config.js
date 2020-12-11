@@ -28,6 +28,7 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), 'dist'),
     filename: '[name].js',
+    publicPath: process.env.ASSETS_PUBLIC_PATH,
     chunkFilename: '[name][id].js'
   },
   resolve: {
