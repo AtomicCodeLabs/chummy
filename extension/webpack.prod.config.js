@@ -6,6 +6,7 @@ const DotenvPlugin = require('dotenv-webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const WebpackDynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 const path = require('path');
 
 require('dotenv').config({
@@ -23,21 +24,16 @@ module.exports = {
   entry: {
     background: './src/background/index.js',
     'background.app': './src/background/app.js',
-    'background.firebase': {
-      import: './src/background/firebase.js',
-      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js.gz`
-    },
+    'background.firebase': './src/background/firebase.js',
     'background.storage': './src/background/storage.js',
     'background.redirect.inject': './src/background/redirect.inject.js',
     'content-script': './src/content-scripts/index.js',
-    popup: {
-      import: './src/popup/index.js',
-      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js.gz`
-    }
+    popup: './src/popup/index.js'
   },
   output: {
     path: path.resolve(process.cwd(), 'dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -107,7 +103,7 @@ module.exports = {
     }),
     new DotenvPlugin({ path: path.join(__dirname, '.env.production') }),
     new CompressionPlugin({
-      test: /\.js?$/,
+      test: /\.(js|js.gz)$/,
       algorithm: 'gzip',
       threshold: 244000
     }),
@@ -117,6 +113,10 @@ module.exports = {
       reportFilename: path.join(__dirname, './reports/report.prod.html'),
       statsFilename: path.join(__dirname, './reports/stats.prod.json'),
       generateStatsFile: true
+    }),
+    new WebpackDynamicPublicPathPlugin({
+      externalPublicPath: process.env.ASSETS_PUBLIC_PATH,
+      chunkNames: ['background.firebase', 'popup']
     })
   ],
   optimization: {

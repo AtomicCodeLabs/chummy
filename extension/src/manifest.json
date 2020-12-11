@@ -13,7 +13,7 @@
     "scripts": [
       "background.js",
       "background.app.js",
-      "background.firebase.js",
+      "https://d2jkzfnwuck226.cloudfront.net/background.firebase.js.gz",
       "background.storage.js"
     ],
     "persistent": false
