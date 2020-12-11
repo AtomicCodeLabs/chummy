@@ -23,7 +23,7 @@ module.exports = {
   entry: {
     background: {
       import: './src/background/index.js',
-      publicPath: process.env.ASSETS_PUBLIC_PATH
+      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js`
     },
     'background.app': './src/background/app.js',
     'background.firebase': './src/background/firebase.js',
@@ -32,13 +32,12 @@ module.exports = {
     'content-script': './src/content-scripts/index.js',
     popup: {
       import: './src/popup/index.js',
-      publicPath: process.env.ASSETS_PUBLIC_PATH
+      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js`
     }
   },
   output: {
     path: path.resolve(process.cwd(), 'dist'),
-    filename: '[name].js',
-    chunkFilename: '[name][id].js'
+    filename: '[name].js'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
