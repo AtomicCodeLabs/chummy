@@ -64,10 +64,7 @@ pipeline {
                 dir('extension/dist') {
                     script {
                         for (f in findFiles(glob: '*.gz')) {
-                            sh '''
-                                FILE="${${f}%.gz}"
-                                aws s3 cp ${f} s3://chummy-assets/$FILE
-                            '''
+                            sh "aws s3 cp ${f} s3://chummy-assets"
                         }
                     }
                 }

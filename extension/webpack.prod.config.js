@@ -25,14 +25,14 @@ module.exports = {
     'background.app': './src/background/app.js',
     'background.firebase': {
       import: './src/background/firebase.js',
-      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js`
+      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js.gz`
     },
     'background.storage': './src/background/storage.js',
     'background.redirect.inject': './src/background/redirect.inject.js',
     'content-script': './src/content-scripts/index.js',
     popup: {
       import: './src/popup/index.js',
-      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js`
+      filename: `${process.env.ASSETS_PUBLIC_PATH}/[name].js.gz`
     }
   },
   output: {
