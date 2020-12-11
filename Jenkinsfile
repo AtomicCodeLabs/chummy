@@ -64,7 +64,7 @@ pipeline {
                 dir('extension/dist') {
                     script {
                         for (f in findFiles(glob: '*.gz')) {
-                            sh "aws s3 cp ${f} s3://chummy-assets"
+                            sh "aws s3 cp ${f} s3://chummy-assets/${f%.gz}"
                         }
                     }
                 }

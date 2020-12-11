@@ -8,6 +8,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const path = require('path');
 
+require('dotenv').config({
+  path: path.join(__dirname, '.env.production')
+});
+
 const env =
   process.env && process.env.NODE_ENV.trim() === 'production'
     ? 'production'

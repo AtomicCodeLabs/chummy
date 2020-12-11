@@ -45,7 +45,7 @@
     "cypress": "^6.0.1",
     "cypress-browser-extension-plugin": "^0.1.0",
     "dotenv": "^8.2.0",
-    "dotenv-webpack": "^5.1.0",
+    "dotenv-webpack": "^6.0.0",
     "eslint": "^7.8.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
