@@ -23,10 +23,6 @@ pipeline {
                                 cp $ENV_DEVELOPMENT_FILE ./.env.development
                                 cp $ENV_PRODUCTION_FILE ./.env.production
                                 cp $KEY_PEM_FILE ./key.pem
-                                ls -alF
-                                echo $KEY_PEM_FILE
-                                cat $KEY_PEM_FILE
-                                cat ./key.pem
                             '''
                         }
                 }
