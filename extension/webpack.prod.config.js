@@ -11,7 +11,7 @@ require('dotenv').config({
   path: path.join(__dirname, '.env.production')
 });
 
-console.log('ENV', process.env.ASSETS_PUBLIC_PATH);
+console.log('ENV', process.env);
 
 const env =
   process.env && process.env.NODE_ENV.trim() === 'production'
