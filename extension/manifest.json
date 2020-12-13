@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Tomas",
+  "version": "1.0.0",
+  "description": "An improvement on Github",
+  "browser_action": {
+    "default_icon": {
+      "16": "icon/default16.png",
+      "32": "icon/default32.png"
+    }
+  },
+  "background": {
+    "page": "background.html",
+    "persistent": false
+  },
+  "web_accessible_resources": ["background.redirect.inject.js"],
+  "permissions": ["tabs", "storage", "*://github.com/*"],
+  "icons": {
+    "16": "icon/default16.png",
+    "32": "icon/default32.png"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://apis.google.com https://unpkg.com https://d2jkzfnwuck226.cloudfront.net; object-src 'self'"
+}

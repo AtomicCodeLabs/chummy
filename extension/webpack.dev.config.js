@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const path = require('path');
 
@@ -27,8 +26,7 @@ module.exports = {
     'background.storage': './src/background/storage.js',
     'background.redirect.inject': './src/background/redirect.inject.js',
     'content-script': './src/content-scripts/index.js',
-    popup: './src/popup/index.js',
-    options: './src/options/index.js'
+    popup: './src/popup/index.js'
   },
   output: {
     path: path.resolve(process.cwd(), 'dist'),
@@ -60,7 +58,7 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/
       },
-      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
+      { test: /\.css$/, use: 'css-loader' },
       {
         test: /\.html$/,
         loader: 'html-loader'
@@ -78,11 +76,13 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: './src/manifest.json', to: './manifest.json' }, // {
-        { from: './public/icon', to: './icon' }
+        { from: './manifest.json', to: './manifest.json' },
+        { from: './public/icon', to: './icon' },
+        { from: './src/background/index.dev.html', to: './background.html' }
       ]
     }),
     new HtmlWebpackPlugin({
+      title: 'Chummy',
       template: './src/popup/index.html',
       chunks: ['popup'],
       filename: 'popup.html',
@@ -101,7 +101,6 @@ module.exports = {
     new DotenvPlugin({
       path: path.join(__dirname, '.env.development')
     }),
-    new MiniCssExtractPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: path.join(__dirname, './reports/report.dev.html'),

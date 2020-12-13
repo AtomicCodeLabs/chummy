@@ -1,13 +1,11 @@
 const webpack = require('webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
-const CompressionPlugin = require('compression-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const WebpackDynamicPublicPathPlugin = require('webpack-dynamic-public-path');
-const path = require('path');
 
 require('dotenv').config({
   path: path.join(__dirname, '.env.production')
@@ -60,7 +58,7 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/
       },
-      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
+      { test: /\.css$/, use: 'css-loader' },
       {
         test: /\.html$/,
         loader: 'html-loader'
@@ -78,13 +76,16 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: './src/manifest.json', to: './manifest.json' }, // {
-        { from: './public/icon', to: './icon' }
+        { from: './manifest.json', to: './manifest.json' },
+        { from: './public/icon', to: './icon' },
+        { from: './src/background/index.prod.html', to: './background.html' }
       ]
     }),
     new HtmlWebpackPlugin({
+      title: 'Chummy',
       template: './src/popup/index.html',
       chunks: ['popup'],
+      publicPath: process.env.ASSETS_PUBLIC_PATH,
       filename: 'popup.html',
       cache: false
     }),
@@ -102,12 +103,6 @@ module.exports = {
       debug: false
     }),
     new DotenvPlugin({ path: path.join(__dirname, '.env.production') }),
-    new CompressionPlugin({
-      test: /\.(js|js.gz)$/,
-      algorithm: 'gzip',
-      threshold: 244000
-    }),
-    new MiniCssExtractPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: path.join(__dirname, './reports/report.prod.html'),
@@ -115,7 +110,7 @@ module.exports = {
       generateStatsFile: true
     }),
     new WebpackDynamicPublicPathPlugin({
-      externalPublicPath: process.env.ASSETS_PUBLIC_PATH,
+      externalPublicPath: `"${process.env.ASSETS_PUBLIC_PATH}"`,
       chunkNames: ['background.firebase', 'popup']
     })
   ],

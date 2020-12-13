@@ -1,4 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
+largeFiles = ['popup', 'background.firebase']
+
 pipeline {
     agent {
         docker {
@@ -59,14 +61,17 @@ pipeline {
                 }
             }
         }
-        stage('Publish Assets') {
+        stage('Publish Assets to S3') {
             steps {
                 dir('extension/dist') {
-                    script {
-                        for (f in findFiles(glob: '*.gz')) {
-                            sh "aws s3 cp ${f} s3://chummy-assets"
-                        }
+                    largeFiles.each { f ->
+                        sh "aws s3 cp ${f}.js s3://chummy-assets"
+                        sh "rm -f ${f}.js"
                     }
+                }
+                dir('extension') {
+                    sh 'zip -r dist.zip dist'
+                    sh 'aws s3 cp dist.zip s3://chummy-assets'
                 }
             }
         }
