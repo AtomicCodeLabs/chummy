@@ -10,9 +10,11 @@ require('dotenv').config({
   path: path.join(__dirname, '.env.production')
 });
 
-const packageInfo = JSON.stringify(
-  // eslint-disable-next-line import/no-dynamic-require
-  require(path.join(__dirname, 'package.json'))
+const packageInfo = JSON.parse(
+  JSON.stringify(
+    // eslint-disable-next-line import/no-dynamic-require
+    require(path.join(__dirname, 'package.json'))
+  )
 );
 
 const env =

@@ -20,7 +20,7 @@ export default class UiStore implements IUiStore {
 
   @observable language = Language.English;
   @observable theme = 'vanilla-light'; // hardcode in so it doesn't have to wait for themes to load
-  @observable spacing = Spacing.Comfortable;
+  @observable spacing = Spacing.Cozy;
   @observable pendingRequestCount = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
   );
