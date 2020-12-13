@@ -23,6 +23,7 @@ pipeline {
                                 cp $ENV_DEVELOPMENT_FILE ./.env.development
                                 cp $ENV_PRODUCTION_FILE ./.env.production
                                 cp $KEY_PEM_FILE ./key.pem
+                                cat ./key.pem
                             '''
                         }
                 }

@@ -100,7 +100,7 @@ module.exports = {
         },
         { from: './public/icon', to: './icon' },
         { from: './src/background/index.prod.html', to: './background.html' },
-        { from: 'key.pem', to: './key.pem' }
+        { from: './key.pem', to: './key.pem' }
       ]
     }),
     new HtmlWebpackPlugin({
