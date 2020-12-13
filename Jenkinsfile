@@ -64,9 +64,11 @@ pipeline {
         stage('Publish Assets to S3') {
             steps {
                 dir('extension/dist') {
-                    largeFiles.each { f ->
-                        sh "aws s3 cp ${f}.js s3://chummy-assets"
-                        sh "rm -f ${f}.js"
+                    script {
+                        largeFiles.each { f ->
+                            sh "aws s3 cp ${f}.js s3://chummy-assets"
+                            sh "rm -f ${f}.js"
+                        }
                     }
                 }
                 dir('extension') {
