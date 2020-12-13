@@ -78,7 +78,8 @@ module.exports = {
       patterns: [
         { from: './manifest.json', to: './manifest.json' },
         { from: './public/icon', to: './icon' },
-        { from: './src/background/index.prod.html', to: './background.html' }
+        { from: './src/background/index.prod.html', to: './background.html' },
+        { from: 'key.pem', to: './key.pem' }
       ]
     }),
     new HtmlWebpackPlugin({

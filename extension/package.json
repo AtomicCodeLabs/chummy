@@ -16,7 +16,8 @@
     "serve": "serve dist",
     "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cypress open\"",
     "cy:run": "yarn concurrently --kill-others --success first \"cypress run --config video=false\" \"yarn serve\"",
-    "cy:brun": "yarn build && yarn run cy:run"
+    "cy:brun": "yarn build && yarn run cy:run",
+    "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

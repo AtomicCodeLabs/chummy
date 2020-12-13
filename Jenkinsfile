@@ -14,12 +14,15 @@ pipeline {
                 dir('extension') {
                     withCredentials([
                         file(credentialsId: 'ENV_PRODUCTION_FILE', variable: 'ENV_PRODUCTION_FILE'),
-                        file(credentialsId: 'ENV_DEVELOPMENT_FILE', variable: 'ENV_DEVELOPMENT_FILE')
+                        file(credentialsId: 'ENV_DEVELOPMENT_FILE', variable: 'ENV_DEVELOPMENT_FILE'),
+                        file(credentialsId: 'KEY_PEM_FILE', variable: 'KEY_PEM_FILE')
                         ]) {
                             sh '''
                                 rm -rf ./.env*
+                                rm -rf ./key.pem
                                 cp $ENV_DEVELOPMENT_FILE ./.env.development
                                 cp $ENV_PRODUCTION_FILE ./.env.production
+                                cp $KEY_PEM_FILE ./key.pem
                             '''
                         }
                 }

@@ -49,6 +49,7 @@ export default observer(() => {
     // }
     // If there was an error signing in
     if (error) {
+      console.log('ERROR', error);
       return 'Error';
     }
 
