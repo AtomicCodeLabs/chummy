@@ -10,6 +10,11 @@ require('dotenv').config({
   path: path.join(__dirname, '.env.production')
 });
 
+const packageInfo = JSON.stringify(
+  // eslint-disable-next-line import/no-dynamic-require
+  require(path.join(__dirname, 'package.json'))
+);
+
 const env =
   process.env && process.env.NODE_ENV.trim() === 'production'
     ? 'production'
@@ -76,7 +81,23 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: './manifest.json', to: './manifest.json' },
+        {
+          from: './manifest-base.json',
+          to: './manifest.json',
+          transform(content) {
+            return JSON.stringify(
+              {
+                ...JSON.parse(content),
+                description: packageInfo.description,
+                version: packageInfo.version,
+                key:
+                  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkZ7eURkxU+9PPkvVaVDUK88dZX39ZXKS9zRtpkAY6so1omoDZ6L3AWjy4e3ds8vz6OxeFcPzgycgTDVaPa2LAgvk2i+/eSbmFO8wvbp8Ce0/iPf2Vp0IqR1MQ+aRT+qD+6swNXvIJuAwFcuPP0LnDMe4veGVHyvI4uoelEVJ7P7RrnrskU4vscUAKHi5FygZLnfXzifrY2Vy6GA2wNipmd2I4+gW4ZnvSTzMs1u6s/k3LSg96cFxOl62AanEnuOcahUrCPl2/aTlU8OrOdgyiGvWKw4DxXsLC7XNZ589QvVP9uRdSsj7sAie/bGkTWRM3/NqYts8YhsMypWCCCxnQQIDAQAB'
+              },
+              null,
+              2
+            );
+          }
+        },
         { from: './public/icon', to: './icon' },
         { from: './src/background/index.dev.html', to: './background.html' }
       ]

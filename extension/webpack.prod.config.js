@@ -11,6 +11,11 @@ require('dotenv').config({
   path: path.join(__dirname, '.env.production')
 });
 
+const packageInfo = JSON.stringify(
+  // eslint-disable-next-line import/no-dynamic-require
+  require(path.join(__dirname, 'package.json'))
+);
+
 const env =
   process.env && process.env.NODE_ENV.trim() === 'production'
     ? 'production'
@@ -76,7 +81,21 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: './manifest.json', to: './manifest.json' },
+        {
+          from: './manifest-base.json',
+          to: './manifest.json',
+          transform(content) {
+            return JSON.stringify(
+              {
+                ...JSON.parse(content),
+                description: packageInfo.description,
+                version: packageInfo.version
+              },
+              null,
+              2
+            );
+          }
+        },
         { from: './public/icon', to: './icon' },
         { from: './src/background/index.prod.html', to: './background.html' },
         { from: 'key.pem', to: './key.pem' }
