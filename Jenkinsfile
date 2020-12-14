@@ -76,10 +76,10 @@ pipeline {
                         }
                     }
                 }
-                dir('extension') {
+                dir('extension/dist') {
                     sh '''
-                        zip -r dist.web.zip web/dist
-                        zip -r dist.moz.zip moz/dist
+                        zip -r dist.web.zip web
+                        zip -r dist.moz.zip moz
                         aws s3 cp dist.web.zip s3://chummy-assets
                         aws s3 cp dist.moz.zip s3://chummy-assets
                     '''

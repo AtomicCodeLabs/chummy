@@ -2370,6 +2370,15 @@ assert@^1.4.0:
     object-assign "^4.1.1"
     util "0.10.3"
 
+assets-webpack-plugin@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/assets-webpack-plugin/-/assets-webpack-plugin-7.0.0.tgz#c61ed7466f35ff7a4d90d7070948736f471b8804"
+  integrity sha512-DMZ9r6HFxynWeONRMhSOFTvTrmit5dovdoUKdJgCG03M6CC7XiwNImPH+Ad1jaVrQ2n59e05lBhte52xPt4MSA==
+  dependencies:
+    camelcase "^6.0.0"
+    escape-string-regexp "^4.0.0"
+    lodash "^4.17.20"
+
 assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -4243,6 +4252,11 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
+
+escape-string-regexp@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
+  integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
 eslint-config-airbnb-base@^14.2.1:
   version "14.2.1"
