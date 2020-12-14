@@ -23,4 +23,10 @@ export enum SUBPAGES {
   SETTINGS = 'settings'
 }
 
+export enum AccountType {
+  Community = 'community',
+  Professional = 'professional',
+  Enterprise = 'enterprise'
+}
+
 export const NO_WINDOW_EXTENSION_ID = -1; // -3 if it doesn't exist

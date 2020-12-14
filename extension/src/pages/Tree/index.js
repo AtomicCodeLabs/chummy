@@ -10,8 +10,8 @@ import {
 } from '../../components/Section';
 import SplitSections from '../../components/Section/SplitSections';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
-import OpenTabsSection from '../../components/TreeSections/OpenTabs';
-import FilesSection from '../../components/TreeSections/Files';
+import OpenTabsSection from './OpenTabs';
+import FilesSection from './Files';
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import { onActiveTabChange } from '../../utils/tabs';
@@ -74,21 +74,6 @@ export default observer(() => {
 
   return (
     <SplitSections heights={heights} minimized={minimized}>
-      {/* <div onResizeStop={(height) => setTreeSectionHeight('sessions', height)}>
-        <SectionContainer>
-          <SectionNameContainer
-            onClick={() => toggleTreeSection('sessions')}
-            zIndex={2}
-            hasShadow={!sessions.isMinimized}
-          >
-            <OpenCloseChevron open={!sessions.isMinimized} />
-            <SectionName>Sessions</SectionName>
-          </SectionNameContainer>
-          <ScrollContainer>
-            <SectionContent></SectionContent>
-          </ScrollContainer>
-        </SectionContainer>
-      </div> */}
       <div onResizeStop={(height) => setTreeSectionHeight('openTabs', height)}>
         <SectionContainer>
           <SectionNameContainer

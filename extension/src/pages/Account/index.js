@@ -1,7 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { PersonIcon, LinkExternalIcon } from '@primer/octicons-react';
+import {
+  PersonIcon,
+  LinkExternalIcon,
+  ShareIcon
+} from '@primer/octicons-react';
 
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
@@ -49,6 +53,16 @@ export default observer(() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);
           }}
           rightPanel={<LinkExternalIcon size={ICON.SIZE(STPayload)} />}
+        />
+        <PanelDivider />
+        <Panel
+          title="Enjoying the app?"
+          description="Spread the word to the other Github enthusiasts in your life!"
+          center
+          onClick={() => {
+            redirectToUrl(GITHUB_URLS.FEEDBACK);
+          }}
+          rightPanel={<ShareIcon size={ICON.SIZE(STPayload)} />}
         />
         <Panel highlightOnHover={false} center>
           <TextButton

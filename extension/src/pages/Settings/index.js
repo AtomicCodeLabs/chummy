@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { checkCurrentUser } from '../../hooks/firebase';
-import { useUiStore } from '../../hooks/store';
+import { useUiStore, useUserStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
@@ -18,6 +18,7 @@ export default observer(() => {
     isStickyWindow,
     setIsStickyWindow
   } = useUiStore();
+  const { user } = useUserStore();
 
   return (
     <PanelsContainer>
@@ -33,6 +34,7 @@ export default observer(() => {
           onChange={(option) => {
             setTheme(option.value);
           }}
+          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
         />
       </Panel>
       <PanelDivider />
@@ -48,6 +50,7 @@ export default observer(() => {
           onChange={(option) => {
             setSpacing(option.value);
           }}
+          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
         />
       </Panel>
       <PanelDivider />
@@ -63,6 +66,7 @@ export default observer(() => {
           onChange={(option) => {
             setIsStickyWindow(option.value);
           }}
+          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
         />
       </Panel>
     </PanelsContainer>

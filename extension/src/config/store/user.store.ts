@@ -45,7 +45,8 @@ export default class UserStore implements IUserStore {
       photoURL,
       email,
       apiKey: apiKey || this.user?.apiKey,
-      accountType: accountType || this.user?.accountType || AccountType.Basic
+      accountType:
+        accountType || this.user?.accountType || AccountType.Community
     };
   }
 
@@ -215,7 +216,7 @@ export default class UserStore implements IUserStore {
 
   @action.bound addUserSession = (session: Session) => {
     this.userSessions.set(session.id, session);
-    this.numOfSessions = this.numOfBookmarks + 1;
+    this.numOfSessions = this.numOfSessions + 1;
   };
 
   @action.bound updateUserSession = (session: Session) => {

@@ -5,6 +5,7 @@ import 'firebase/firestore';
 import 'regenerator-runtime/runtime'; // for async/await to work
 import 'core-js/stable'; // or a more selective import such as "core-js/es/array"
 import { isCurrentWindow, isExtensionOpen } from './util';
+import { AccountType } from './constants.ts';
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -273,7 +274,7 @@ class Firebase {
   createNewUserCollection = (userUuid) => {
     try {
       const newCollection = {
-        accountType: 'basic',
+        accountType: AccountType.Community,
         bookmarks: []
       };
       console.log(

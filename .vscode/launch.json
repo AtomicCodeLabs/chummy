@@ -34,7 +34,7 @@
       "request": "launch",
       "port": 9222,
       "url": "https://github.com/alexkim205/chummy",
-      "webRoot": "${workspaceFolder}/extension/dist"
+      "webRoot": "${workspaceFolder}/extension/dist/dev"
     },
     {
       "name": "Attach Chrome",

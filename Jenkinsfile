@@ -49,7 +49,8 @@ pipeline {
                         yarn install --frozen-lockfile
                         yarn lint:check
                         yarn format:check
-                        yarn build
+                        yarn build:web
+                        yarn build:moz
                     '''
                 }
             }
@@ -66,7 +67,8 @@ pipeline {
         }
         stage('Publish Assets to S3') {
             steps {
-                dir('extension/dist') {
+                dir('extension/dist/web') {
+                    // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
                             sh "aws s3 cp ${f}.js s3://chummy-assets"
@@ -75,8 +77,12 @@ pipeline {
                     }
                 }
                 dir('extension') {
-                    sh 'zip -r dist.zip dist'
-                    sh 'aws s3 cp dist.zip s3://chummy-assets'
+                    sh '''
+                        zip -r dist.web.zip web/dist
+                        zip -r dist.moz.zip moz/dist
+                        aws s3 cp dist.web.zip s3://chummy-assets
+                        aws s3 cp dist.moz.zip s3://chummy-assets
+                    '''
                 }
             }
         }

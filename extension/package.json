@@ -6,9 +6,9 @@
   "author": "Alex Kim",
   "license": "AGPL-3.0-only",
   "scripts": {
-    "dev": "NODE_ENV=development webpack --mode=development --watch --config webpack.dev.config.js",
-    "build": "NODE_ENV=production webpack --mode=production --config webpack.prod.config.js",
-    "build:server": "NODE_ENV=production webpack --mode=production --config webpack.server.config.js",
+    "dev": "NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.config.js",
+    "build:web": "NODE_ENV=production webpack --mode=production --config ./webpack/prod.config.js",
+    "build:moz": "NODE_ENV=production webpack --mode=production --config ./webpack/prod.moz.config.js",
     "format:check": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "lint:check": "eslint .",

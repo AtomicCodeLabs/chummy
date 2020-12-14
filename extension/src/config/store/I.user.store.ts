@@ -2,8 +2,8 @@ import IUiStore from './I.ui.store';
 import IFileStore, { Repo, Session } from './I.file.store';
 
 export enum AccountType {
-  Basic = 'basic',
-  Pro = 'pro',
+  Community = 'community',
+  Professional = 'professional',
   Enterprise = 'enterprise'
 }
 
