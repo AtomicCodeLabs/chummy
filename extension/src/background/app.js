@@ -37,8 +37,13 @@ const redirectTab = async (request) => {
           action: 'redirect-content-script',
           payload: request.payload
         };
-        console.log('app.js', response);
-        await browser.tabs.sendMessage(window.tabId, response);
+        browser.tabs.sendMessage(window.tabId, response).catch((e) => {
+          console.log(
+            'Error sending message because extension is not open',
+            e?.message,
+            response
+          );
+        });
       } catch (error) {
         console.warn('Error redirecting active tab', error);
       }
@@ -90,8 +95,13 @@ const redirectTab = async (request) => {
           tabId: tab.id
         }
       };
-      console.log('app.js', response);
-      await browser.runtime.sendMessage(response);
+      await browser.runtime.sendMessage(response).catch((e) => {
+        console.log(
+          'Error sending message because extension is not open',
+          e?.message,
+          response
+        );
+      });
       // To let frontend know when tab updates have been made.
       return { action: 'change-active-tab', complete: true };
     } catch (error) {
@@ -211,8 +221,13 @@ const sendOpenRepositoryUpdatesMessage = async () => {
       action: 'tab-updated',
       payload: openRepositories
     };
-    console.log('app.js', response);
-    browser.runtime.sendMessage(response);
+    browser.runtime.sendMessage(response).catch((e) => {
+      console.log(
+        'Error sending message because extension is not open',
+        e?.message,
+        response
+      );
+    });
   } catch (error) {
     console.warn('Error updating open repositories', error);
   }
@@ -241,8 +256,13 @@ const initializeTabListeners = () => {
           tabId
         }
       };
-      console.log('app.js', response);
-      browser.runtime.sendMessage(response);
+      browser.runtime.sendMessage(response).catch((e) => {
+        console.log(
+          'Error sending message because extension is not open',
+          e?.message,
+          response
+        );
+      });
     }
   });
 };

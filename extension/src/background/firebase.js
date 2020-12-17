@@ -21,14 +21,18 @@ const config = {
 class Firebase {
   constructor() {
     // Initialize firebase in background script
-    firebase.initializeApp(config);
-
-    this.auth = firebase.auth();
-    this.db = firebase.firestore();
-    this.dbUsers = this.db.collection('users');
-    this.githubProvider = new firebase.auth.GithubAuthProvider();
-    this.githubProvider.addScope('repo'); // add for private repo access
-    this.githubProvider.addScope('user'); // add for user information
+    try {
+      firebase.initializeApp(config);
+      this.auth = firebase.auth();
+      this.db = firebase.firestore();
+      this.dbUsers = this.db.collection('users');
+      this.githubProvider = new firebase.auth.GithubAuthProvider();
+      this.githubProvider.addScope('repo'); // add for private repo access
+      this.githubProvider.addScope('user'); // add for user information
+    } catch (error) {
+      console.warn('No internet connection!', error);
+      return;
+    }
 
     // Additional properties on this.auth.currentUser
     this.githubApiKey = null; // Keep API key to make requests with on hand

@@ -145,8 +145,13 @@ const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
       tabId
     }
   };
-  console.log('app.js', response);
-  browser.runtime.sendMessage(response);
+  browser.runtime.sendMessage(response).catch((e) => {
+    console.log(
+      'Error sending message because extension is not open',
+      e?.message,
+      response
+    );
+  });
 };
 
 // Emit change tab/window/focus event to change content

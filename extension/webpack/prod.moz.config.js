@@ -27,7 +27,12 @@ module.exports = {
               {
                 ...JSON.parse(content),
                 description: packageInfo.description,
-                version: packageInfo.version
+                version: packageInfo.version,
+                browser_specific_settings: {
+                  gecko: {
+                    id: 'chummy@alexkim.dev'
+                  }
+                }
               },
               null,
               2

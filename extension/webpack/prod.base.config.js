@@ -90,7 +90,7 @@ module.exports = {
       minimize: true,
       debug: false
     }),
-    new DotenvPlugin({ path: path.join(__dirname, '../.env.production') }),
+    new DotenvPlugin({ path: path.join(__dirname, '../.env.production') })
   ],
   optimization: {
     runtimeChunk: false
