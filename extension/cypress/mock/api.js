@@ -1,7 +1,10 @@
 import browser from 'sinon-chrome';
+import { interceptJS } from '../utils/http';
 
 export default () => {
   browser.runtime.id = 'testid'; // workaround https://github.com/mozilla/webextension-polyfill/issues/218
+
+  interceptJS();
 
   // Retrieve test data
   cy.fixture('user').then((user) => {

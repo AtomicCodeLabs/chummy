@@ -1,4 +1,5 @@
 const addExtensionCommands = require('cypress-browser-extension-plugin/commands');
+const { interceptJS } = require('../utils/http');
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -35,6 +36,7 @@ Cypress.Commands.add('findById', (id) => {
 
 // Navigate to sidebar page
 Cypress.Commands.add('goTo', (pageName) => {
+  interceptJS();
   let buttonTestId = 'route-button-';
   switch (pageName) {
     case 'Account':
