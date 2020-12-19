@@ -98,7 +98,6 @@ pipeline {
                             script {
                                 largeFiles.each { f ->
                                     sh "aws s3 cp web/${f}_${version}.js s3://chummy-assets"
-                                    sh "rm -f web/${f}_${version}.js"
                                 }
                             }
                         }
