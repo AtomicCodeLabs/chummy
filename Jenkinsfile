@@ -86,7 +86,7 @@ pipeline {
                         }
                         dir('extension/dist') {
                             sh "zip -r dist_${version}.moz.zip web"
-                            sh "aws s3 cp dist_${version}.moz.zip s3://chummy-assets"
+                            sh "aws s3 cp dist_${version}.moz.zip s3://chummy-assets/${version}"
                         }
                     }
                 }
@@ -97,7 +97,8 @@ pipeline {
                         dir('extension/dist') {
                             script {
                                 largeFiles.each { f ->
-                                    sh "aws s3 cp web/${f}_${version}.js s3://chummy-assets"
+                                    sh "aws s3 cp web/${f}_${version}.js s3://chummy-assets/${version}"
+                                    sh "rm -f web/${f}_${version}.js/${version}"
                                 }
                             }
                         }
@@ -106,7 +107,7 @@ pipeline {
                         }
                         dir('extension/dist') {
                             sh "zip -r dist_${version}.web.zip web"
-                            sh "aws s3 cp dist_${version}.web.zip s3://chummy-assets"
+                            sh "aws s3 cp dist_${version}.web.zip s3://chummy-assets/${version}"
                         }
                     }
                 }

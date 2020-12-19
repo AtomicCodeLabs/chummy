@@ -18,7 +18,8 @@ module.exports = {
   ...base,
   output: {
     ...base.output,
-    path: path.join(__dirname, '../dist/web')
+    path: path.join(__dirname, '../dist/web'),
+    publicPath: '/'
   },
   plugins: [
     ...base.plugins,
@@ -48,12 +49,12 @@ module.exports = {
       title: 'Chummy',
       template: '../src/popup/index.html',
       chunks: ['popup'],
-      publicPath: process.env.ASSETS_PUBLIC_PATH,
+      publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
       filename: 'popup.html',
       cache: false
     }),
     new WebpackDynamicPublicPathPlugin({
-      externalPublicPath: `"${process.env.ASSETS_PUBLIC_PATH}"`,
+      externalPublicPath: `"${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}"`,
       chunkNames: ['background.firebase', 'popup']
     }),
     new BundleAnalyzerPlugin({
