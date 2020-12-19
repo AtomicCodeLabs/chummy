@@ -40,67 +40,72 @@ pipeline {
                             printf "%s\n" "[default]" "region = us-west-2" >~/.aws/config
                         '''
                     }
-                sh 'yarn --version'
-            }
-        }
-        stage('Build') {
-            steps {
                 dir('extension') {
                     sh '''
                         yarn install --frozen-lockfile
-                        yarn lint:check
-                        yarn format:check
-                        yarn build:moz
-                        yarn build:web
-                    '''
-                }
-            }
-        }
-        stage('Test Moz Build') {
-            steps {
-                dir('extension') {
-                    sh '''
                         yarn cypress install
-                        yarn cy:run:moz
+                        yarn --version
                     '''
                 }
             }
         }
-        stage('Publish Moz `dist/`') {
-            steps {
-                dir('extension/dist') {
-                    sh "zip -r dist_${version}.moz.zip web"
-                    sh "aws s3 cp dist_${version}.moz.zip s3://chummy-assets"
-                }
-            }
+        stage('Pre-Build Checks') {
+            sh '''
+                yarn lint:check
+                yarn format:check
+            '''
         }
-        stage('Publish Web Assets') {
-            steps {
-                dir('extension/dist/web') {
-                    // Only publish chrome assets, bc Mozilla doesn't allow remote files
-                    script {
-                        largeFiles.each { f ->
-                            sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
-                            sh "rm -f ${f}_${version}.js"
+        stage('Build') {
+            parallel {
+                stage ('Moz') {
+                    steps {
+                        dir('extension') {
+                            sh 'yarn build:moz'
+                        }
+                    }
+                }
+                stage ('Web') {
+                    steps {
+                        dir('extension') {
+                            sh 'yarn build:web'
                         }
                     }
                 }
             }
         }
-        stage('Test Web Build') {
-            steps {
-                dir('extension') {
-                    sh '''
-                        yarn cy:run:web
-                    '''
+        stage('Test & Publish') {
+            parallel {
+                stage ('Moz') {
+                    steps {
+                        dir('extension') {
+                            sh 'yarn cy:run:moz'
+                        }
+                        dir('extension/dist') {
+                            sh "zip -r dist_${version}.moz.zip web"
+                            sh "aws s3 cp dist_${version}.moz.zip s3://chummy-assets"
+                        }
+                    }
                 }
-            }
-        }
-        stage('Publish Web `dist/`') {
-            steps {
-                dir('extension/dist') {
-                    sh "zip -r dist_${version}.web.zip web"
-                    sh "aws s3 cp dist_${version}.web.zip s3://chummy-assets"
+                stage ('Web') {
+                    steps {
+                        // Only publish chrome assets, bc Mozilla doesn't allow remote files
+                        // Prepublish assets so that tests will pass
+                        dir('extension/dist/web') {
+                            script {
+                                largeFiles.each { f ->
+                                    sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
+                                    sh "rm -f ${f}_${version}.js"
+                                }
+                            }
+                        }
+                        dir('extension') {
+                            sh 'yarn cy:run:web'
+                        }
+                        dir('extension/dist') {
+                            sh "zip -r dist_${version}.web.zip web"
+                            sh "aws s3 cp dist_${version}.web.zip s3://chummy-assets"
+                        }
+                    }
                 }
             }
         }
