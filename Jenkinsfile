@@ -51,6 +51,7 @@ pipeline {
                         yarn format:check
                         yarn build:web
                         yarn build:moz
+                        ls
                     '''
                 }
             }
