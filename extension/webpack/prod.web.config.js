@@ -47,7 +47,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Chummy',
       template: '../src/popup/index.html',
-      chunks: [`popup_${packageInfo.version}`],
+      chunks: ['popup'],
       publicPath: process.env.ASSETS_PUBLIC_PATH,
       filename: 'popup.html',
       cache: false

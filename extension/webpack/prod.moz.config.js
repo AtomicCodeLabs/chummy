@@ -54,7 +54,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Chummy',
       template: '../src/popup/index.html',
-      chunks: [`popup_${packageInfo.version}`],
+      chunks: ['popup'],
       filename: 'popup.html',
       cache: false
     }),
