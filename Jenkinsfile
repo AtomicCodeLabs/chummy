@@ -60,8 +60,8 @@ pipeline {
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
+                        packageJson = readJSON file: '../../package.json'
                         largeFiles.each { f ->
-                            packageJson = readJSON file: '../../package.json'
                             sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
                             sh "rm -f ${f}_${packageJson.version}.js"
                         }
@@ -85,8 +85,8 @@ pipeline {
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
+                        packageJson = readJSON file: '../../package.json'
                         largeFiles.each { f ->
-                            packageJson = readJSON file: '../../package.json'
                             sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
                             sh "rm -f ${f}_${packageJson.version}.js"
                         }
