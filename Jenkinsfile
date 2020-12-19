@@ -51,10 +51,12 @@ pipeline {
         }
         stage('Pre-Build Checks') {
             steps {
-                sh '''
-                    yarn lint:check
-                    yarn format:check
-                '''
+                dir('extension') {
+                    sh '''
+                        yarn lint:check
+                        yarn format:check
+                    '''
+                }
             }
         }
         stage('Build') {
