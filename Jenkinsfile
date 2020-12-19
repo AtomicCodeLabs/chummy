@@ -55,6 +55,19 @@ pipeline {
                 }
             }
         }
+        stage('Pre-publish Assets to S3') {
+            steps {
+                dir('extension/dist/web') {
+                    // Only publish chrome assets, bc Mozilla doesn't allow remote files
+                    script {
+                        largeFiles.each { f ->
+                            sh "aws s3 cp ${f}.js s3://chummy-assets"
+                            sh "rm -f ${f}.js"
+                        }
+                    }
+                }
+            }
+        }
         stage('Test') {
             steps {
                 dir('extension') {
