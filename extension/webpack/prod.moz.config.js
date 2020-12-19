@@ -15,6 +15,10 @@ const packageInfo = JSON.parse(
 
 module.exports = {
   ...base,
+  output: {
+    ...base.output,
+    path: path.join(__dirname, '../dist/moz')
+  },
   plugins: [
     ...base.plugins,
     new CopyPlugin({

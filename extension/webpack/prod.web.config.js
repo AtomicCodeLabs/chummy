@@ -16,6 +16,10 @@ const packageInfo = JSON.parse(
 
 module.exports = {
   ...base,
+  output: {
+    ...base.output,
+    path: path.join(__dirname, '../dist/web')
+  },
   plugins: [
     ...base.plugins,
     new CopyPlugin({

@@ -32,7 +32,6 @@ module.exports = {
     popup: '../src/popup/index.js'
   },
   output: {
-    path: path.join(__dirname, '../dist/moz'),
     filename: `[name]_${packageInfo.version}.js`,
     publicPath: '/'
   },
