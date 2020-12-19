@@ -94,11 +94,11 @@ pipeline {
                     steps {
                         // Only publish chrome assets, bc Mozilla doesn't allow remote files
                         // Prepublish assets so that tests will pass
-                        dir('extension/dist/web') {
+                        dir('extension/dist') {
                             script {
                                 largeFiles.each { f ->
-                                    sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
-                                    sh "rm -f ${f}_${version}.js"
+                                    sh "aws s3 cp web/${f}_${version}.js s3://chummy-assets"
+                                    sh "rm -f web/${f}_${version}.js"
                                 }
                             }
                         }
