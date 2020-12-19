@@ -74,15 +74,6 @@ pipeline {
                 }
             }
         }
-        stage('Test Web Build') {
-            steps {
-                dir('extension') {
-                    sh '''
-                        yarn cy:run:web
-                    '''
-                }
-            }
-        }
         stage('Publish Web Assets') {
             steps {
                 dir('extension/dist/web') {
