@@ -62,10 +62,8 @@ pipeline {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
-                            sh '''
-                                aws s3 cp ${f}_${version}.js s3://chummy-assets
-                                rm -f ${f}_${version}.js
-                            '''
+                            sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${version}.js"
                         }
                     }
                 }
@@ -87,10 +85,8 @@ pipeline {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
-                            sh '''
-                                aws s3 cp ${f}_${version}.js s3://chummy-assets
-                                rm -f ${f}_${version}.js
-                            '''
+                            sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${version}.js"
                         }
                     }
                 }
