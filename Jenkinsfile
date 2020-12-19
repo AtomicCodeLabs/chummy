@@ -50,10 +50,12 @@ pipeline {
             }
         }
         stage('Pre-Build Checks') {
-            sh '''
-                yarn lint:check
-                yarn format:check
-            '''
+            steps {
+                sh '''
+                    yarn lint:check
+                    yarn format:check
+                '''
+            }
         }
         stage('Build') {
             parallel {
