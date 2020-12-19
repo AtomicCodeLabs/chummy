@@ -18,10 +18,13 @@ const extensionLoader = require('cypress-browser-extension-plugin/loader');
 /**
  * @type {Cypress.PluginConfig}
  */
+
+const sourceDir = path.join(__dirname, '../../dist/', Cypress.env('TARGET'));
+
 module.exports = (on) => {
   on('before:browser:launch', async (browser = {}, launchOptions) => {
     const loader = extensionLoader.load({
-      source: path.join(__dirname, '../../dist/moz'),
+      source: sourceDir,
       alias: 'chummy'
     });
 

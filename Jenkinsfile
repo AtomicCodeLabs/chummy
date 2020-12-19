@@ -50,18 +50,18 @@ pipeline {
                         yarn install --frozen-lockfile
                         yarn lint:check
                         yarn format:check
-                        yarn build:web
                         yarn build:moz
+                        yarn build:web
                     '''
                 }
             }
         }
-        stage('Test') {
+        stage('Test Moz Build') {
             steps {
                 dir('extension') {
                     sh '''
                         yarn cypress install
-                        yarn cy:run
+                        yarn cy:run:moz
                     '''
                 }
             }
@@ -83,6 +83,15 @@ pipeline {
                         zip -r dist_${version}.moz.zip moz
                         aws s3 cp dist_${version}.web.zip s3://chummy-assets
                         aws s3 cp dist_${version}.moz.zip s3://chummy-assets
+                    '''
+                }
+            }
+        }
+        stage('Test Web Build') {
+            steps {
+                dir('extension') {
+                    sh '''
+                        yarn cy:run:web
                     '''
                 }
             }
