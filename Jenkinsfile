@@ -1,5 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 largeFiles = ['popup', 'background.firebase']
+packageJson = readJSON file: '../../package.json'
 
 pipeline {
     agent {
@@ -61,8 +62,8 @@ pipeline {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
-                            sh "aws s3 cp ${f}_*.js s3://chummy-assets"
-                            sh "rm -f ${f}_*.js"
+                            sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${packageJson.version}.js"
                         }
                     }
                 }
@@ -85,8 +86,8 @@ pipeline {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
-                            sh "aws s3 cp ${f}_*.js s3://chummy-assets"
-                            sh "rm -f ${f}_*.js"
+                            sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${packageJson.version}.js"
                         }
                     }
                 }
