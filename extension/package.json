@@ -18,6 +18,7 @@
     "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cypress open\"",
     "cy:run": "yarn concurrently --kill-others --success first \"cypress run --config video=false\" \"yarn serve\"",
     "cy:brun": "yarn build && yarn run cy:run",
+    "commit": "cz",
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
   },
   "devDependencies": {
@@ -41,11 +42,13 @@
     "babel-plugin-tailcall-optimization": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "clean-webpack-plugin": "^3.0.0",
+    "commitizen": "^4.2.2",
     "concurrently": "^5.3.0",
     "copy-webpack-plugin": "^6.1.0",
     "css-loader": "^4.3.0",
     "cypress": "^6.0.1",
     "cypress-browser-extension-plugin": "^0.1.0",
+    "cz-conventional-changelog": "3.3.0",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^6.0.0",
     "eslint": "^7.8.1",
@@ -102,7 +105,13 @@
   "husky": {
     "hooks": {
       "pre-commit": "yarn format && yarn lint",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
     }
   }
 }

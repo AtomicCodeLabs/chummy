@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/alexkim/.nvm/versions/node/v12.19.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js publish
+  /Users/alexkim/.nvm/versions/node/v12.19.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js add -D commitizen
 
 PATH: 
   /Users/alexkim/.nvm/versions/node/v12.19.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin:/Users/alexkim/.nvm/versions/node/v12.19.0/bin
@@ -14,17 +14,12 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: canceled
-      at Interface.<anonymous> (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:137008:13)
-      at Interface.emit (events.js:314:20)
-      at Interface._ttyWrite (readline.js:868:16)
-      at ReadStream.onkeypress (readline.js:205:10)
-      at ReadStream.emit (events.js:314:20)
-      at emitKeys (internal/readline/utils.js:335:14)
-      at emitKeys.next (<anonymous>)
-      at ReadStream.onData (readline.js:1137:36)
-      at ReadStream.emit (events.js:314:20)
-      at addChunk (_stream_readable.js:298:12)
+  SyntaxError: /Users/alexkim/Documents/Development/chummy-ext/extension/package.json: Unexpected token : in JSON at position 1046
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:321:13
 
 npm manifest: 
   {
@@ -35,17 +30,19 @@ npm manifest:
     "author": "Alex Kim",
     "license": "AGPL-3.0-only",
     "scripts": {
-      "dev": "NODE_ENV=development webpack --mode=development --watch --config webpack.dev.config.js",
-      "build": "NODE_ENV=production webpack --mode=production --config webpack.prod.config.js",
-      "build:server": "NODE_ENV=production webpack --mode=production --config webpack.server.config.js",
+      "dev": "NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.config.js",
+      "build:web": "NODE_ENV=production webpack --mode=production --config ./webpack/prod.web.config.js",
+      "build:moz": "NODE_ENV=production webpack --mode=production --config ./webpack/prod.moz.config.js",
+      "clean": "rm -rf dist",
       "format:check": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
       "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
-      "lint:check": "eslint .",
-      "lint": "eslint . --fix",
+      "lint:check": "eslint --ext .js,.jsx .",
+      "lint": "eslint --fix --ext .js,.jsx .",
       "serve": "serve dist",
       "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cypress open\"",
       "cy:run": "yarn concurrently --kill-others --success first \"cypress run --config video=false\" \"yarn serve\"",
       "cy:brun": "yarn build && yarn run cy:run",
+      "commit": 
       "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
     },
     "devDependencies": {
@@ -61,6 +58,7 @@ npm manifest:
       "@loadable/webpack-plugin": "^5.14.0",
       "@types/chrome": "^0.0.123",
       "@types/react": "^16.9.49",
+      "assets-webpack-plugin": "^7.0.0",
       "babel-eslint": "^10.1.0",
       "babel-loader": "^8.1.0",
       "babel-plugin-minify-constant-folding": "^0.5.0",
@@ -2510,6 +2508,15 @@ Lockfile:
       object-assign "^4.1.1"
       util "0.10.3"
   
+  assets-webpack-plugin@^7.0.0:
+    version "7.0.0"
+    resolved "https://registry.yarnpkg.com/assets-webpack-plugin/-/assets-webpack-plugin-7.0.0.tgz#c61ed7466f35ff7a4d90d7070948736f471b8804"
+    integrity sha512-DMZ9r6HFxynWeONRMhSOFTvTrmit5dovdoUKdJgCG03M6CC7XiwNImPH+Ad1jaVrQ2n59e05lBhte52xPt4MSA==
+    dependencies:
+      camelcase "^6.0.0"
+      escape-string-regexp "^4.0.0"
+      lodash "^4.17.20"
+  
   assign-symbols@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -4383,6 +4390,11 @@ Lockfile:
     version "1.0.5"
     resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
     integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
+  
+  escape-string-regexp@^4.0.0:
+    version "4.0.0"
+    resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
+    integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
   
   eslint-config-airbnb-base@^14.2.1:
     version "14.2.1"
