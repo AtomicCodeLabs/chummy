@@ -21,7 +21,7 @@ const extensionLoader = require('cypress-browser-extension-plugin/loader');
 module.exports = (on) => {
   on('before:browser:launch', async (browser = {}, launchOptions) => {
     const loader = extensionLoader.load({
-      source: path.join(__dirname, '../../dist/web'),
+      source: path.join(__dirname, '../../dist/moz'),
       alias: 'chummy'
     });
 
