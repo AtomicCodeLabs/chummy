@@ -57,7 +57,7 @@ pipeline {
         }
         stage('Pre-publish Assets to S3') {
             steps {
-                def packageJson = readJSON file: 'package.json'
+                packageJson = readJSON file: 'package.json'
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
@@ -83,7 +83,7 @@ pipeline {
         }
         stage('Publish Assets to S3') {
             steps {
-                def packageJson = readJSON file: 'package.json'
+                packageJson = readJSON file: 'package.json'
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
