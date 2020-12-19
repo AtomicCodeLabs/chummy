@@ -1,4 +1,5 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
+version = '1.0.0'
 largeFiles = ['popup', 'background.firebase']
 
 pipeline {
@@ -60,11 +61,10 @@ pipeline {
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
-                        packageJson = readJSON file: 'package.json'
                         largeFiles.each { f ->
                             sh 'ls'
-                            sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
-                            sh "rm -f ${f}_${packageJson.version}.js"
+                            sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${version}.js"
                         }
                     }
                 }
@@ -86,19 +86,18 @@ pipeline {
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
-                        packageJson = readJSON file: 'package.json'
                         largeFiles.each { f ->
-                            sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
-                            sh "rm -f ${f}_${packageJson.version}.js"
+                            sh "aws s3 cp ${f}_${version}.js s3://chummy-assets"
+                            sh "rm -f ${f}_${version}.js"
                         }
                     }
                 }
                 dir('extension/dist') {
                     sh '''
-                        zip -r dist.web.zip web
-                        zip -r dist.moz.zip moz
-                        aws s3 cp dist.web.zip s3://chummy-assets
-                        aws s3 cp dist.moz.zip s3://chummy-assets
+                        zip -r dist_${version}.web.zip web
+                        zip -r dist_${version}.moz.zip moz
+                        aws s3 cp dist_${version}.web.zip s3://chummy-assets
+                        aws s3 cp dist_${version}.moz.zip s3://chummy-assets
                     '''
                 }
             }
