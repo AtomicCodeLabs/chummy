@@ -62,6 +62,7 @@ pipeline {
                     script {
                         packageJson = readJSON file: '../../package.json'
                         largeFiles.each { f ->
+                            sh 'ls'
                             sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
                             sh "rm -f ${f}_${packageJson.version}.js"
                         }
