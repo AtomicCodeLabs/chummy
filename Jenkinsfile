@@ -51,7 +51,6 @@ pipeline {
                         yarn format:check
                         yarn build:web
                         yarn build:moz
-                        ls
                     '''
                 }
             }
@@ -60,6 +59,7 @@ pipeline {
             steps {
                 dir('extension') {
                     sh '''
+                        ls dist/
                         yarn cypress install
                         yarn cy:run
                     '''
