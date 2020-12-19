@@ -18,9 +18,9 @@
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
     "serve": "serve dist",
-    "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cypress open\"",
-    "cy:run:moz": "yarn concurrently --kill-others --success first \"cross-env TARGET=moz cypress run --config video=false\" \"yarn serve\"",
-    "cy:run:web": "yarn concurrently --kill-others --success first \"cross-env TARGET=web cypress run --config video=false\" \"yarn serve\"",
+    "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cross-env TARGET=dev cypress open --env TARGET=dev --config baseUrl=http://localhost:5000/dev\"",
+    "cy:run:moz": "yarn concurrently --kill-others --success first \"cross-env TARGET=moz cypress run --env TARGET=moz --config baseUrl=http://localhost:5000/moz,video=false --browser firefox\" \"yarn serve\"",
+    "cy:run:web": "yarn concurrently --kill-others --success first \"cross-env TARGET=web cypress run --env TARGET=web --config baseUrl=http://localhost:5000/web,video=false\" \"yarn serve\"",
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
   },
   "devDependencies": {

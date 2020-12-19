@@ -19,7 +19,7 @@ const extensionLoader = require('cypress-browser-extension-plugin/loader');
  * @type {Cypress.PluginConfig}
  */
 
-const sourceDir = path.join(__dirname, '../../dist/', Cypress.env('TARGET'));
+const sourceDir = path.join(__dirname, '../../dist/', process.env.TARGET);
 
 module.exports = (on) => {
   on('before:browser:launch', async (browser = {}, launchOptions) => {

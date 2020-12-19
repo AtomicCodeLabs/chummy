@@ -66,7 +66,24 @@ pipeline {
                 }
             }
         }
-        stage('Publish Assets to S3') {
+        stage('Publish Moz `dist/`') {
+            steps {
+                dir('extension/dist') {
+                    sh "zip -r dist_${version}.moz.zip web"
+                    sh "aws s3 cp dist_${version}.moz.zip s3://chummy-assets"
+                }
+            }
+        }
+        stage('Test Web Build') {
+            steps {
+                dir('extension') {
+                    sh '''
+                        yarn cy:run:web
+                    '''
+                }
+            }
+        }
+        stage('Publish Web Assets') {
             steps {
                 dir('extension/dist/web') {
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
@@ -77,14 +94,6 @@ pipeline {
                         }
                     }
                 }
-                dir('extension/dist') {
-                    sh '''
-                        zip -r dist_${version}.web.zip web
-                        zip -r dist_${version}.moz.zip moz
-                        aws s3 cp dist_${version}.web.zip s3://chummy-assets
-                        aws s3 cp dist_${version}.moz.zip s3://chummy-assets
-                    '''
-                }
             }
         }
         stage('Test Web Build') {
@@ -93,6 +102,14 @@ pipeline {
                     sh '''
                         yarn cy:run:web
                     '''
+                }
+            }
+        }
+        stage('Publish Web `dist/`') {
+            steps {
+                dir('extension/dist') {
+                    sh "zip -r dist_${version}.web.zip web"
+                    sh "aws s3 cp dist_${version}.web.zip s3://chummy-assets"
                 }
             }
         }

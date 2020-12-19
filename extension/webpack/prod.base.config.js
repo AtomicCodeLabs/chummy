@@ -32,8 +32,7 @@ module.exports = {
     popup: '../src/popup/index.js'
   },
   output: {
-    filename: `[name]_${packageInfo.version}.js`,
-    publicPath: '/'
+    filename: `[name]_${packageInfo.version}.js`
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],

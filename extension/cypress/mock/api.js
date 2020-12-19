@@ -26,7 +26,7 @@ export default () => {
             .yields(bookmarks);
 
           // Load your popup
-          cy.visit('/popup.html', {
+          cy.visit(`popup.html`, {
             // If you need to stub `chrome*` API, you should do it there:
             onBeforeLoad(win) {
               global.chrome = browser;
