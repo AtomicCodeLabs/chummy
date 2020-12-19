@@ -58,10 +58,10 @@ pipeline {
         stage('Pre-publish Assets to S3') {
             steps {
                 dir('extension/dist/web') {
-                    def packageJson = readJSON file: '../../package.json'
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
+                            packageJson = readJSON file: '../../package.json'
                             sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
                             sh "rm -f ${f}_${packageJson.version}.js"
                         }
@@ -83,10 +83,10 @@ pipeline {
         stage('Publish Assets to S3') {
             steps {
                 dir('extension/dist/web') {
-                    def packageJson = readJSON file: '../../package.json'
                     // Only publish chrome assets, bc Mozilla doesn't allow remote files
                     script {
                         largeFiles.each { f ->
+                            packageJson = readJSON file: '../../package.json'
                             sh "aws s3 cp ${f}_${packageJson.version}.js s3://chummy-assets"
                             sh "rm -f ${f}_${packageJson.version}.js"
                         }
