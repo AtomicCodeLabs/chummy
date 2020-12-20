@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const WebpackDynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const AssetsPlugin = require('assets-webpack-plugin');
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');

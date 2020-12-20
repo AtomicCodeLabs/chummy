@@ -10474,11 +10474,6 @@ webpack-cli@^4.2.0:
     v8-compile-cache "^2.2.0"
     webpack-merge "^4.2.2"
 
-webpack-dynamic-public-path@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/webpack-dynamic-public-path/-/webpack-dynamic-public-path-1.0.6.tgz#d8c72b54f4e15d39ad6191f41bd20796796338db"
-  integrity sha512-EnJThkswMeq450dCrLNoDn3ZxToDIxagVME6JPrEGQ980X/JBTMuHS36RexqRH4v6tz0Ee5w5OjkGY3z/o6UfQ==
-
 webpack-merge@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.2.2.tgz#a27c52ea783d1398afd2087f547d7b9d2f43634d"

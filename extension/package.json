@@ -81,8 +81,7 @@
     "webextension-polyfill-ts": "^0.21.0",
     "webpack": "^5.0.0-rc.6",
     "webpack-bundle-analyzer": "^4.2.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dynamic-public-path": "^1.0.6"
+    "webpack-cli": "^4.2.0"
   },
   "dependencies": {
     "@loadable/component": "^5.14.1",
@@ -114,7 +113,7 @@
       "prettier --write",
       "git add"
     ],
-    "src/**/*.js": [
+    "**/*.js": [
       "eslint --fix",
       "git add"
     ]
