@@ -9,6 +9,10 @@ describe('Render each page', () => {
     cy.viewport(400, 1000);
   });
 
+  afterEach(() => {
+    cy.clearCookies();
+  });
+
   describe('Account', () => {
     it('page title is `Account`', () => {
       cy.goTo('Account');
