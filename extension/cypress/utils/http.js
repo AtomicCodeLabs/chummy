@@ -9,7 +9,6 @@ export const interceptJS = () => {
     },
     (req) => {
       const filename = req.url.split('/').pop();
-      console.log('INTERCEPTED', req, Cypress.config().baseUrl, filename);
       req.url = `${Cypress.config().baseUrl}/${filename}`;
     }
   );

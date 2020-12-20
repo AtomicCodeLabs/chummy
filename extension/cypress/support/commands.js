@@ -61,4 +61,5 @@ Cypress.Commands.add('goTo', (pageName) => {
   }
   interceptJS();
   cy.findById(buttonTestId).click();
+  interceptJS();
 });
