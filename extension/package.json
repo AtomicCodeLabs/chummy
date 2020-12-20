@@ -111,12 +111,10 @@
   },
   "lint-staged": {
     "**/*.+(js|jsx|json|css|md)": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "**/*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "husky": {
