@@ -100,8 +100,7 @@ module.exports = {
             );
           }
         },
-        { from: '../public/icon', to: './icon' },
-        { from: '../src/background/index.dev.html', to: './background.html' }
+        { from: '../public/icon', to: './icon' }
       ]
     }),
     new HtmlWebpackPlugin({
@@ -109,6 +108,18 @@ module.exports = {
       template: '../src/popup/index.html',
       chunks: ['popup'],
       filename: 'popup.html',
+      cache: false
+    }),
+    new HtmlWebpackPlugin({
+      title: 'Chummy Background',
+      template: '../src/background/index.html',
+      chunks: [
+        'background',
+        'background.app',
+        'background.firebase',
+        'background.storage'
+      ],
+      filename: 'background.html',
       cache: false
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: env }),

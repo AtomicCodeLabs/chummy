@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WebpackDynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const AssetsPlugin = require('assets-webpack-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const base = require('./prod.base.config');
 
@@ -33,7 +34,9 @@ module.exports = {
               {
                 ...JSON.parse(content),
                 description: packageInfo.description,
-                version: packageInfo.version
+                version: packageInfo.version,
+                key:
+                  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkZ7eURkxU+9PPkvVaVDUK88dZX39ZXKS9zRtpkAY6so1omoDZ6L3AWjy4e3ds8vz6OxeFcPzgycgTDVaPa2LAgvk2i+/eSbmFO8wvbp8Ce0/iPf2Vp0IqR1MQ+aRT+qD+6swNXvIJuAwFcuPP0LnDMe4veGVHyvI4uoelEVJ7P7RrnrskU4vscUAKHi5FygZLnfXzifrY2Vy6GA2wNipmd2I4+gW4ZnvSTzMs1u6s/k3LSg96cFxOl62AanEnuOcahUrCPl2/aTlU8OrOdgyiGvWKw4DxXsLC7XNZ589QvVP9uRdSsj7sAie/bGkTWRM3/NqYts8YhsMypWCCCxnQQIDAQAB'
               },
               null,
               2
@@ -41,7 +44,6 @@ module.exports = {
           }
         },
         { from: '../public/icon', to: './icon' },
-        { from: '../src/background/index.prod.html', to: './background.html' },
         { from: '../key.pem', to: './key.pem' }
       ]
     }),
@@ -53,9 +55,17 @@ module.exports = {
       filename: 'popup.html',
       cache: false
     }),
-    new WebpackDynamicPublicPathPlugin({
-      externalPublicPath: `"${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}"`,
-      chunkNames: ['background.firebase', 'popup']
+    new HtmlWebpackPlugin({
+      title: 'Chummy Background',
+      template: '../src/background/index.html',
+      chunks: ['background', 'background.app', 'background.storage'],
+      filename: 'background.html',
+      cache: false
+    }),
+    new HtmlWebpackTagsPlugin({
+      scripts: [`background.firebase_${packageInfo.version}.js`],
+      publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
+      append: true
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
