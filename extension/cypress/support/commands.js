@@ -36,7 +36,6 @@ Cypress.Commands.add('findById', (id) => {
 
 // Navigate to sidebar page
 Cypress.Commands.add('goTo', (pageName) => {
-  interceptJS();
   let buttonTestId = 'route-button-';
   switch (pageName) {
     case 'Account':
@@ -60,5 +59,6 @@ Cypress.Commands.add('goTo', (pageName) => {
       cy.log('Could not navigate to unknown page', pageName);
       return;
   }
+  interceptJS();
   cy.findById(buttonTestId).click();
 });
