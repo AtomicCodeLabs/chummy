@@ -1,8 +1,22 @@
 {
   "name": "chummy-website",
-  "description": "Website for Chummy",
   "version": "1.0.0",
-  "author": "Alex Kim <alexgkim205@gmail.com>",
+  "description": "Website for Chummy Extension",
+  "author": "Alex Kim",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "dev": "gatsby develop",
+    "serve": "gatsby serve",
+    "build": "gatsby build",
+    "build:pp": "gatsby build --prefix-paths",
+    "build:gh": "npm run clean && npm run build:pp && gh-pages -d public",
+    "clean": "rm -rf public && rm -rf .cache",
+    "format:check": "prettier '**/*.{js,jsx}' --check",
+    "format": "prettier '**/*.{js,jsx}' --write",
+    "lint:check": "eslint --ext .js,.jsx .",
+    "lint": "eslint --fix --ext .js,.jsx .",
+    "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
+  },
   "dependencies": {
     "@reach/router": "^1.3.4",
     "firebase": "^8.0.2",
@@ -27,6 +41,8 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "babel-eslint": "^10.1.0",
+    "commitizen": "^4.2.2",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.13.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -36,27 +52,35 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "gh-pages": "^3.1.0",
-    "husky": "^4.3.0"
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
+    "standard-version": "^9.0.0",
+    "weallcontribute": "^1.0.9"
   },
   "keywords": [
-    "gatsby"
+    "chummy",
+    "github"
   ],
-  "license": "MIT",
-  "scripts": {
-    "develop": "gatsby develop",
-    "dev": "npm run develop",
-    "serve": "gatsby serve",
-    "build": "gatsby build",
-    "build:pp": "gatsby build --prefix-paths",
-    "build:gh": "npm run clean && npm run build:pp && gh-pages -d public",
-    "clean": "rm -rf public && rm -rf .cache",
-    "lint": "eslint --ext .js,.jsx .",
-    "format": "prettier '**/*.{js,jsx}' --write"
+  "lint-staged": {
+    "**/*.+(js|jsx|json|css|md)": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format && yarn lint",
+      "pre-commit": "lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
     }
   }
 }
