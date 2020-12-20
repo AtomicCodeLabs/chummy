@@ -1,5 +1,7 @@
 # Chummy
 
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 Welcome to Chummy's open source!
 
 - [FAQ](https://github.com/alexkim205/chummy/blob/docs/docs/FAQ.md)
