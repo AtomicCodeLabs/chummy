@@ -1,16 +1,23 @@
 {
   "name": "chummy-website",
-  "version": "1.0.0",
   "description": "Website for Chummy Extension",
+  "version": "1.0.0",
   "author": "Alex Kim",
   "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexkim205/chummy-website"
+  },
+  "bugs": {
+    "url": "https://github.com/alexkim205/chummy-website/issues"
+  },
   "scripts": {
-    "dev": "gatsby develop",
-    "serve": "gatsby serve",
     "build": "gatsby build",
-    "build:pp": "gatsby build --prefix-paths",
-    "build:gh": "npm run clean && npm run build:pp && gh-pages -d public",
-    "clean": "rm -rf public && rm -rf .cache",
+    "dev": "gatsby develop",
+    "start": "yarn develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "format:check": "prettier '**/*.{js,jsx}' --check",
     "format": "prettier '**/*.{js,jsx}' --write",
     "lint:check": "eslint --ext .js,.jsx .",
@@ -18,48 +25,36 @@
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
   },
   "dependencies": {
-    "@reach/router": "^1.3.4",
-    "firebase": "^8.0.2",
     "gatsby": "^2.26.1",
-    "gatsby-plugin-create-client-paths": "^2.1.17",
-    "gatsby-plugin-favicon": "^3.1.6",
-    "gatsby-plugin-firebase": "^0.1.5",
-    "gatsby-plugin-postcss": "^2.1.1",
-    "gatsby-plugin-react-helmet": "^3.1.10",
-    "mobx": "^6.0.4",
-    "mobx-react-lite": "^3.1.6",
-    "prop-types": "^15.6.1",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-firebaseui": "^4.0.0",
-    "react-helmet": "^5.2.0",
+    "gatsby-image": "^2.5.0",
+    "gatsby-plugin-manifest": "^2.6.1",
+    "gatsby-plugin-offline": "^3.4.0",
+    "gatsby-plugin-react-helmet": "^3.4.0",
+    "gatsby-plugin-sharp": "^2.8.0",
+    "gatsby-source-filesystem": "^2.5.0",
+    "gatsby-transformer-sharp": "^2.6.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-helmet": "^6.1.0",
     "styled-components": "^5.2.1",
-    "styled-theming": "^2.2.0",
-    "tailwindcss": "^1.0.5"
+    "styled-theming": "^2.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.2",
-    "cz-conventional-changelog": "^3.3.0",
-    "dotenv": "^8.2.0",
-    "eslint": "^7.13.0",
+    "commitlint": "^11.0.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
-    "gh-pages": "^3.1.0",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
-    "standard-version": "^9.0.0",
-    "weallcontribute": "^1.0.9"
+    "prettier": "2.2.1",
+    "standard-version": "^9.0.0"
   },
   "keywords": [
-    "chummy",
-    "github"
+    "gatsby"
   ],
   "lint-staged": {
     "**/*.+(js|jsx|json|css|md)": [
