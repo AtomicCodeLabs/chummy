@@ -13,9 +13,9 @@
   },
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
-    "build": "gatsby build",
+    "mock:backend": "amplify mock",
     "dev": "gatsby develop",
-    "start": "yarn develop",
+    "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
@@ -23,12 +23,13 @@
     "format": "prettier '**/*.{js,jsx}' --write",
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
-    "checkout:dev": "git checkout dev && amplify env checkout dev",
-    "checkout:gamma": "git checkout gamma && amplify env checkout gamma",
-    "checkout:prod": "git checkout master && amplify env checkout prod"
+    "checkout:dev": "git checkout dev && amplify env checkout dev && amplify pull",
+    "checkout:gamma": "git checkout gamma && amplify env checkout gamma && amplify pull",
+    "checkout:prod": "git checkout main && amplify env checkout prod && amplify pull"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
+    "@loadable/component": "^5.14.1",
     "aws-amplify": "^3.3.13",
     "gatsby": "^2.26.1",
     "gatsby-image": "^2.5.0",
