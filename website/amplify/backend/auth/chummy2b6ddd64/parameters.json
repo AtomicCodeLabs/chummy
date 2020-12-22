@@ -34,9 +34,9 @@
   "hostedUIDomainName": "chummy",
   "authProvidersUserPool": [],
   "hostedUIProviderMeta": "[]",
-  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://atomiccode.io/chummy/signin/redirect/\"],\"LogoutURLs\":[\"https://atomiccode.io/chummy/signout/redirect/\"]}",
   "userPoolGroupList": [],
   "serviceName": "Cognito",
   "usernameCaseSensitive": false,
-  "dependsOn": []
+  "dependsOn": [],
+  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8000/account/\"],\"LogoutURLs\":[\"http://localhost:8000/\"]}"
 }

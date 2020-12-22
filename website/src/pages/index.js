@@ -1,13 +1,13 @@
 import React from 'react';
-import Amplify from 'aws-amplify';
 import { Link } from 'gatsby';
 
-import awsExports from '../aws-exports';
+import initializeApp from '../config/amplify';
+
 import Layout from '../components/layout';
 import Image from '../components/image';
 import SEO from '../components/seo';
 
-Amplify.configure(awsExports);
+initializeApp();
 
 const IndexPage = () => (
   <Layout>
