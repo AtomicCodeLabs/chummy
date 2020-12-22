@@ -1,6 +1,0 @@
-node_modules/*
-public/*
-.cache/*
-.vscode/*
-gatsby-*.js
-postcss.config.js
