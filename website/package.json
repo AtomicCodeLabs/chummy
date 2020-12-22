@@ -12,6 +12,7 @@
     "url": "https://github.com/alexkim205/chummy-website/issues"
   },
   "scripts": {
+    "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
     "build": "gatsby build",
     "dev": "gatsby develop",
     "start": "yarn develop",
@@ -22,9 +23,13 @@
     "format": "prettier '**/*.{js,jsx}' --write",
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
-    "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem"
+    "checkout:dev": "git checkout dev && amplify env checkout dev",
+    "checkout:gamma": "git checkout gamma && amplify env checkout gamma",
+    "checkout:prod": "git checkout master && amplify env checkout prod"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^0.2.33",
+    "aws-amplify": "^3.3.13",
     "gatsby": "^2.26.1",
     "gatsby-image": "^2.5.0",
     "gatsby-plugin-manifest": "^2.6.1",
@@ -38,7 +43,8 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
     "styled-components": "^5.2.1",
-    "styled-theming": "^2.2.0"
+    "styled-theming": "^2.2.0",
+    "webextension-polyfill": "^0.7.0"
   },
   "devDependencies": {
     "commitizen": "^4.2.2",

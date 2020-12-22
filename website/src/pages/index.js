@@ -1,9 +1,13 @@
 import React from 'react';
+import Amplify from 'aws-amplify';
 import { Link } from 'gatsby';
 
+import awsExports from '../aws-exports';
 import Layout from '../components/layout';
 import Image from '../components/image';
 import SEO from '../components/seo';
+
+Amplify.configure(awsExports);
 
 const IndexPage = () => (
   <Layout>
@@ -14,7 +18,8 @@ const IndexPage = () => (
     <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
       <Image />
     </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
+    <Link to="/signin/">Go to signin</Link> <br />
+    <Link to="/signout/">Go to signout</Link> <br />
     <Link to="/using-typescript/">Go to Using TypeScript</Link>
   </Layout>
 );
