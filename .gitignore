@@ -10,22 +10,20 @@ extension/cypress/screenshots
 extension/cypress/videos
 extension/github-cognito-openid-wrapper
 ## Amplify
-extension/**/amplify/\#current-cloud-backend
-extension/**/amplify/.config/local-*
-extension/**/amplify/logs
-extension/**/amplify/mock-data
-extension/**/amplify/backend/amplify-meta.json
-extension/**/amplify/backend/awscloudformation
-extension/**/amplify/backend/.temp
-extension/**/build/
-extension/**/dist/
-extension/**/aws-exports.js
-extension/**/awsconfiguration.json
-extension/**/amplifyconfiguration.json
-extension/**/amplify-build-config.json
-extension/**/amplify-gradle-config.json
-extension/**/amplifytools.xcconfig
-extension/**/.secret-*
+extension/amplify/\#current-cloud-backend
+extension/amplify/.config/local-*
+extension/amplify/logs
+extension/amplify/mock-data
+extension/amplify/backend/amplify-meta.json
+extension/amplify/backend/awscloudformation
+extension/amplify/backend/.temp
+extension/src/aws-exports.js
+**/awsconfiguration.json
+**/amplifyconfiguration.json
+**/amplify-build-config.json
+**/amplify-gradle-config.json
+**/amplifytools.xcconfig
+**/.secret-*
 
 # Website
 website/public
