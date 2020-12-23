@@ -29,8 +29,8 @@
     "checkout:dev": "git checkout extension/dev && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout extension/gamma && amplify env checkout gamma && amplify pull --yes",
     "checkout:prod": "git checkout extension/prod && amplify env checkout prod && amplify pull --yes",
-    "promote:to-gamma": "yarn checkout:gamma && git merge extension/dev && amplify push && git push -u origin extension/gamma",
-    "promote:to-prod": "yarn checkout:prod && git merge extension/gamma && amplify push && git push -u origin extension/prod"
+    "promote:to-gamma": "./scripts/promote.gamma.sh",
+    "promote:to-prod": "./scripts/promote.gamma.sh"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
