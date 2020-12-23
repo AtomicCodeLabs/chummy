@@ -9,6 +9,7 @@
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
     "dev": "cross-env NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.config.js",
+    "free:commit": "HUSKY_SKIP_HOOKS=1 git commit -m",
     "mock:backend": "amplify mock",
     "format:check": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
