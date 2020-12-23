@@ -26,11 +26,11 @@
     "cy:open:web": "yarn concurrently \"cross-env TARGET=web cypress open --env TARGET=web --config baseUrl=http://localhost:5000/web\" \"yarn serve\"",
     "cy:run:moz": "yarn concurrently --kill-others --success first \"cross-env TARGET=moz cypress run --env TARGET=moz --config baseUrl=http://localhost:5000/moz,video=false --browser firefox --headless\" \"yarn serve\"",
     "cy:run:web": "yarn concurrently --kill-others --success first \"cross-env TARGET=web cypress run --env TARGET=web --config baseUrl=http://localhost:5000/web,video=false --headless\" \"yarn serve\"",
-    "checkout:dev": "git checkout dev && amplify env checkout dev && amplify pull",
-    "checkout:gamma": "git checkout gamma && amplify env checkout gamma && amplify pull",
-    "checkout:prod": "git checkout master && amplify env checkout prod && amplify pull",
-    "promote:dev-gamma": "yarn checkout:gamma && git merge dev && amplify push && git push -u origin gamma",
-    "promote:gamma-prod": "yarn checkout:prod && git merge gamma && amplify push && git push -u origin prod"
+    "checkout:dev": "git checkout extension/dev && amplify env checkout dev && amplify pull --yes",
+    "checkout:gamma": "git checkout extension/gamma && amplify env checkout gamma && amplify pull --yes",
+    "checkout:prod": "git checkout extension/prod && amplify env checkout prod && amplify pull --yes",
+    "promote:to-gamma": "yarn checkout:gamma && git merge extension/dev && amplify push && git push -u origin extension/gamma",
+    "promote:to-prod": "yarn checkout:prod && git merge extension/gamma && amplify push && git push -u origin extension/prod"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
