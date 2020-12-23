@@ -1,6 +1,3 @@
 node_modules/*
 dist/*
 .vscode/*
-github-cognito-openid-wrapper/*
-amplify/*
-src/aws-exports.js

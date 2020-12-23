@@ -1,6 +1,6 @@
 # Checkout source branch first
 yarn checkout:dev
-git push -u extension/dev
+git push -u origin extension/dev
 
 # Checkout target branch
 yarn checkout:gamma
