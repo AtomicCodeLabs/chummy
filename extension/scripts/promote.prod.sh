@@ -11,7 +11,7 @@ HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push prod"
 git push -u origin extension/prod
 
 # Merge
-git merge --squash -s recursive -X ours extension/gamma
+HUSKY_SKIP_HOOKS=1 git merge -s recursive -X ours extension/gamma
 
 # Push target branch
 amplify push
