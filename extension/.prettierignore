@@ -2,3 +2,4 @@ node_modules/*
 dist/*
 webpack/reports/*
 .vscode/*
+github-cognito-openid-wrapper/*
