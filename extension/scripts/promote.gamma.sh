@@ -1,5 +1,7 @@
 # Checkout source branch first
 yarn checkout:dev
+git add -A
+
 git push -u origin extension/dev
 
 # Checkout target branch
