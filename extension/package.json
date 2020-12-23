@@ -29,7 +29,7 @@
     "cy:run:web": "yarn concurrently --kill-others --success first \"cross-env TARGET=web cypress run --env TARGET=web --config baseUrl=http://localhost:5000/web,video=false --headless\" \"yarn serve\"",
     "checkout:dev": "git checkout extension/dev && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout extension/gamma && amplify env checkout gamma && amplify pull --yes",
-    "checkout:prod": "git checkout extension/prod && amplify env checkout prod && amplify pull --yes",
+    "checkout:prod": "git checkout extensin/prod && amplify env checkout prod && amplify pull --yes",
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh"
   },
