@@ -3,6 +3,6 @@
     "AppSyncApiName": "chummy",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": false,
-    "S3DeploymentBucket": "amplify-chummy-dev-191547-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/2b73da0a2265aab79a547a1275c6ff5e6654466e"
+    "S3DeploymentBucket": "amplify-chummy-prod-13953-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/bc1b1902dbd8c2bd7e69fb3511b97e7723946323"
 }
