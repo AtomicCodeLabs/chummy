@@ -6,7 +6,7 @@ git push -u origin extension/dev
 yarn checkout:gamma
 
 # Merge
-git merge extension/dev
+git merge --squash extension/dev
 
 # Push target branch
 amplify push
