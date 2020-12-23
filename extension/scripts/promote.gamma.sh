@@ -8,7 +8,7 @@ git push -u origin extension/dev
 yarn checkout:gamma
 git add -A
 HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push gamma"
-git push -u origin extension/dev
+git push -u origin extension/gamma
 
 # Merge
 git merge --squash extension/dev
