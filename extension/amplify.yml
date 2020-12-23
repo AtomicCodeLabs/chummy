@@ -1,0 +1,46 @@
+version: 1
+applications:
+  - backend:
+      phases:
+        build:
+          commands:
+            - '# Deploy backend infra'
+            - amplifyPush --simple
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo $KEY_PEM > ./key.pem
+            - yarn install --frozen-lockfile
+            - yarn lint:check
+            - yarn format:check
+        build:
+          commands:
+            - yarn build:moz
+            - yarn build:web
+      artifacts:
+        baseDirectory: /
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+    test:
+      artifacts:
+        baseDirectory: cypress
+        configFilePath: '**/mochawesome.json'
+        files:
+          - '**/*.png'
+          - '**/*.mp4'
+      phases:
+        preTest:
+          commands:
+            - echo "copy web assets to s3"
+        test:
+          commands:
+            - yarn cy:run:moz
+            - yarn cy:run:web
+        postTest:
+          commands:
+-           - echo "copy all assets to s3"
+    appRoot: extension
