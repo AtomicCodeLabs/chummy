@@ -121,11 +121,7 @@
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-<<<<<<< HEAD
                         1609311833
-=======
-                        1609311473
->>>>>>> extension/gamma
                     ]
                 }
             },
