@@ -6,3 +6,5 @@ dist/*
 public/*
 .cache/*
 .vscode/*
+amplify/*
+src/aws-exports.js
