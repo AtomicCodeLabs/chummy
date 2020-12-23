@@ -1,7 +1,7 @@
 # Checkout source branch first
 yarn checkout:dev
 git add -A
-git commit -m "chore(promote): pre-promote dev to gamma"
+HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): dev -> gamma"
 git push -u origin extension/dev
 
 # Checkout target branch
