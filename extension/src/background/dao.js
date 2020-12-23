@@ -1,36 +1,27 @@
-import firebase from 'firebase/app';
+import Amplify, { API, Auth } from 'aws-amplify';
 import browser from 'webextension-polyfill';
-import 'firebase/auth';
-import 'firebase/firestore';
+
 import 'regenerator-runtime/runtime'; // for async/await to work
 import 'core-js/stable'; // or a more selective import such as "core-js/es/array"
+
+import awsExports from '../aws-exports';
+// import * as queries from '../graphql/queries';
+// import * as mutations from '../graphql/mutations';
+// import * as subscriptions from '../graphql/subscriptions';
+
 import { isCurrentWindow, isExtensionOpen } from './util';
 import { AccountType } from './constants.ts';
+import { APP_URLS } from '../constants/urls';
 
-const config = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
-};
-
-class Firebase {
+class DAO {
   constructor() {
     // Initialize firebase in background script
     try {
-      firebase.initializeApp(config);
-      this.auth = firebase.auth();
-      this.db = firebase.firestore();
-      this.dbUsers = this.db.collection('users');
-      this.githubProvider = new firebase.auth.GithubAuthProvider();
-      this.githubProvider.addScope('repo'); // add for private repo access
-      this.githubProvider.addScope('user'); // add for user information
+      Amplify.configure(awsExports);
+      this.graphql = API.graphql;
+      this.auth = Auth;
     } catch (error) {
-      console.warn('No internet connection!', error);
+      console.warn('Error configuring DAO', error);
       return;
     }
 
@@ -38,7 +29,7 @@ class Firebase {
     this.githubApiKey = null; // Keep API key to make requests with on hand
     this.accountType = null; // Keep accountType to know which request user is allowed to make
     this.bookmarks = [];
-    this.firebaseListeners = null;
+    this.listeners = null;
 
     // If user hasn't signed out yet, apiKey will still be in
     // chrome storage. Use that for future requests.
@@ -49,7 +40,7 @@ class Firebase {
     });
 
     // Subscribe only once
-    if (!this.firebaseListeners) {
+    if (!this.listeners) {
       this.subscribeListeners(); // Will get initialized on extension open
     }
   }
@@ -57,7 +48,7 @@ class Firebase {
   // *** Listeners ***
   // Expose firebase Auth API that content script can query
 
-  cleanupFirebaseAccessListener = (request) => {
+  cleanupAuthListener = (request) => {
     if (['sign-in', 'sign-out', 'get-current-user'].includes(request.action)) {
       return (async () => {
         // Sign In
@@ -95,7 +86,7 @@ class Firebase {
   };
 
   // Expose firestore API that content script can query
-  cleanupFirebaseDataListener = (request) => {
+  cleanupDataListener = (request) => {
     if (
       [
         'get-bookmarks',
@@ -155,42 +146,13 @@ class Firebase {
   };
 
   subscribeListeners = () => {
-    // On auth change, send message to popup extension
-    // Triggered on sign in, sign out, and token refresh events
-    // To keep user store in sync with auth events
-    // const onUserChangeListener = async () => {
-    //   try {
-    //     const currentUser = this.getCurrentUser();
-    //     const payload = { user: currentUser };
-    //     console.log(
-    //       '%c[READ] Auth token changed listener',
-    //       'background-color: blue; color: white;'
-    //     );
-    //     // Send message to extension window
-    //     await browser.runtime.sendMessage({
-    //       action: 'auth-state-changed',
-    //       payload
-    //     });
-    //   } catch (error) {
-    //     console.error('Error sending auth state change message', error);
-    //   }
-    // };
-    // this.authStateListener = this.auth.onIdTokenChanged((user) => {
-    //   return onUserChangeListener(user);
-    // });
-    browser.runtime.onMessage.addListener(this.cleanupFirebaseAccessListener);
-    browser.runtime.onMessage.addListener(this.cleanupFirebaseDataListener);
+    browser.runtime.onMessage.addListener(this.cleanupAuthListener);
+    browser.runtime.onMessage.addListener(this.cleanupDataListener);
   };
 
   unsubscribeListeners = () => {
-    // if (this.authStateListener) {
-    //   console.log("unsubscribe from auth state")
-    //   this.authStateListener();
-    // }
-    browser.runtime.onMessage.removeListener(
-      this.cleanupFirebaseAccessListener
-    );
-    browser.runtime.onMessage.removeListener(this.cleanupFirebaseDataListener);
+    browser.runtime.onMessage.removeListener(this.cleanupAuthListener);
+    browser.runtime.onMessage.removeListener(this.cleanupDataListener);
   };
 
   // *** Class Methods ***
@@ -214,32 +176,63 @@ class Firebase {
 
   // *** Auth API ***
 
+  /*
+   * Create new tab that redirects to https://<website>/signin
+   * Extenion will start listening for "sign-in-complete" message
+   * This page will
+   *  1. auto click the "Sign in With Github" button
+   *  2. login with github
+   *  3. redirect to https://<website>/account
+   * This callback page will
+   *  1. Find the id of the Chummy chrome extension
+   *  2. sendMessage to chrome extension
+   * Extension receives message and removes listener
+   * Continue with sign in.
+   */
   signInWithGithub = async () => {
-    let response = null;
     try {
-      // Sign in
-      response = await this.auth.signInWithRedirect(this.githubProvider);
+      // Create new tab
+      const newTab = {
+        url: new URL(APP_URLS.WEBSITE.SIGNIN, APP_URLS.WEBSITE.BASE).toString(),
+        active: true
+      };
+      console.log('Creating new tab', newTab);
+      await browser.tabs.create(newTab);
 
-      // Query firestore for user's account type, it will create one
-      // if it doesn't exist
-      if (!response || !response.user) {
-        throw new Error('Sign in response is empty');
-      }
-      const { isNewUser } = response.additionalUserInfo;
-      if (isNewUser) {
-        // Create new firestore collection if user is new
-        this.createNewUserCollection(response.user.uid);
-      } else {
-        // Get user data
-        this.getUserCollection(response.user.uid);
-      }
+      // Call this method once browser receives sign-in-message
+      const continueSignIn = async (request) => {
+        const response = request?.payload;
 
-      // Set api key property
-      this.setGithubApiKey(response.credential?.accessToken);
+        // Query store for user's account type, it will create one
+        // if it doesn't exist
+        if (!response || !response.user) {
+          throw new Error('Sign in response is empty');
+        }
+        const { isNewUser } = response.additionalUserInfo;
+        if (isNewUser) {
+          // Create new firestore collection if user is new
+          this.createNewUserCollection(response.user.uid);
+        } else {
+          // Get user data
+          this.getUserCollection(response.user.uid);
+        }
+
+        // Set api key property
+        this.setGithubApiKey(response.credential?.accessToken);
+
+        return response;
+      };
+
+      // Listen for sign-in-complete message
+      browser.runtime.onMessage.addListener((request) => {
+        if (request.action === 'sign-in-complete') {
+          console.log('Received sign-in-complete request', request);
+          return continueSignIn(request);
+        }
+      });
     } catch (error) {
       console.warn('Error signing in with Github', error);
     }
-    return response;
   };
 
   signOut = async () => {
@@ -327,9 +320,9 @@ class Firebase {
       '%c[WRITE] New bookmark created',
       'background-color: green; color: white;'
     );
-    await this.dbUsers.doc(currentUserUuid).update({
-      bookmarks: firebase.firestore.FieldValue.arrayUnion(bookmark)
-    });
+    // await this.dbUsers.doc(currentUserUuid).update({
+    //   bookmarks: firebase.firestore.FieldValue.arrayUnion(bookmark)
+    // });
 
     // Add to local cache of bookmarks
     this.setBookmarks([...this.bookmarks, bookmark]);
@@ -342,9 +335,9 @@ class Firebase {
       return;
     }
     // Remove from cloud db
-    await this.dbUsers.doc(currentUserUuid).update({
-      bookmarks: firebase.firestore.FieldValue.arrayRemove(bookmark)
-    });
+    // await this.dbUsers.doc(currentUserUuid).update({
+    //   bookmarks: firebase.firestore.FieldValue.arrayRemove(bookmark)
+    // });
     console.log(
       '%c[WRITE] Bookmark deleted',
       'background-color: green; color: white;'
@@ -426,8 +419,8 @@ class Firebase {
   };
 }
 
-// Initialize firebase store
-const firebaseStore = new Firebase();
+// Initialize DAO store
+const daoStore = new DAO();
 
 // *** Window events ***
 
@@ -437,8 +430,8 @@ const onBrowserActionClickedListener = async () => {
     if (await isExtensionOpen()) {
       return;
     }
-    console.log('Initialize firebase listeners');
-    firebaseStore.subscribeListeners();
+    console.log('Initialize dao listeners');
+    daoStore.subscribeListeners();
   } catch (error) {
     console.warn('Error initializing extension listeners', error);
   }
@@ -454,7 +447,7 @@ const onWindowRemoveListener = async (windowId) => {
       'currentWindowId'
     ]);
     if (isCurrentWindow(windowId, currentWindowId)) {
-      firebaseStore.unsubscribeListeners();
+      daoStore.unsubscribeListeners();
     }
   } catch (error) {
     console.warn('Error cleaning up listeners', error);

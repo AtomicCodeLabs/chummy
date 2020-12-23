@@ -5,5 +5,21 @@ export const GITHUB_URLS = {
 };
 
 export const APP_URLS = {
-  HOMEPAGE: 'https://octometry.com'
+  WEBSITE: {
+    BASE: {
+      DEV: 'http://localhost:8000/',
+      GAMMA: 'http://localhost:8000/',
+      PROD: 'https://atomiccode.io/chummy/'
+    },
+    SIGNIN: {
+      DEV: 'signin/',
+      GAMMA: 'signin/',
+      PROD: 'signin/'
+    },
+    SIGNIN_REDIRECT: {
+      DEV: 'account/',
+      GAMMA: 'account/',
+      PROD: 'account/'
+    }
+  }
 };

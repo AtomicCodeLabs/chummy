@@ -62,7 +62,7 @@ module.exports = {
       cache: false
     }),
     new HtmlWebpackTagsPlugin({
-      scripts: [`background.firebase_${packageInfo.version}.js`],
+      scripts: [`background.dao_${packageInfo.version}.js`],
       publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
       append: true
     }),

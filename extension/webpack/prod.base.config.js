@@ -25,7 +25,7 @@ module.exports = {
   entry: {
     background: '../src/background/index.js',
     'background.app': '../src/background/app.js',
-    'background.firebase': '../src/background/firebase.js',
+    'background.dao': '../src/background/dao.js',
     'background.storage': '../src/background/storage.js',
     'background.redirect.inject': '../src/background/redirect.inject.js',
     'content-script': '../src/content-scripts/index.js',
@@ -35,7 +35,7 @@ module.exports = {
     filename: `[name]_${packageInfo.version}.js`
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.mjs', '.ts', '.tsx', '.js'],
     fallback: {
       path: require.resolve('path-browserify'),
       url: require.resolve('url/')

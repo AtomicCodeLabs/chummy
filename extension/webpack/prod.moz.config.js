@@ -34,7 +34,7 @@ module.exports = {
                 version: packageInfo.version,
                 browser_specific_settings: {
                   gecko: {
-                    id: 'chummy@atomiccode.io'
+                    id: packageInfo.extensionId
                   }
                 }
               },
@@ -60,7 +60,7 @@ module.exports = {
       chunks: [
         'background',
         'background.app',
-        'background.firebase',
+        'background.dao',
         'background.storage'
       ],
       filename: 'background.html',

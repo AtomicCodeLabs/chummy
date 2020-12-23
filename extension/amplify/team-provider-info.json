@@ -1,0 +1,56 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chummy-dev-191547-authRole",
+      "UnauthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-dev-191547-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-dev-191547-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-chummy-dev-191547-deployment",
+      "UnauthRoleName": "amplify-chummy-dev-191547-unauthRole",
+      "StackName": "amplify-chummy-dev-191547",
+      "StackId": "arn:aws:cloudformation:us-west-2:202575095365:stack/amplify-chummy-dev-191547/bf9ef6e0-4321-11eb-b5aa-02cc60371653",
+      "AmplifyAppId": "d32qeprsvk89q0"
+    },
+    "categories": {
+      "auth": {
+        "chummy2b6ddd64": {}
+      }
+    }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chummy-prod-13953-authRole",
+      "UnauthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-prod-13953-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-prod-13953-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-chummy-prod-13953-deployment",
+      "UnauthRoleName": "amplify-chummy-prod-13953-unauthRole",
+      "StackName": "amplify-chummy-prod-13953",
+      "StackId": "arn:aws:cloudformation:us-west-2:202575095365:stack/amplify-chummy-prod-13953/8081e210-4420-11eb-adb2-0a5dfebd7057",
+      "AmplifyAppId": "d32qeprsvk89q0"
+    },
+    "categories": {
+      "auth": {
+        "chummy2b6ddd64": {}
+      }
+    }
+  },
+  "gamma": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chummy-gamma-20435-authRole",
+      "UnauthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-gamma-20435-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-gamma-20435-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-chummy-gamma-20435-deployment",
+      "UnauthRoleName": "amplify-chummy-gamma-20435-unauthRole",
+      "StackName": "amplify-chummy-gamma-20435",
+      "StackId": "arn:aws:cloudformation:us-west-2:202575095365:stack/amplify-chummy-gamma-20435/f3df3d90-4423-11eb-9ba7-0a5a0f356ccf",
+      "AmplifyAppId": "d32qeprsvk89q0"
+    },
+    "categories": {
+      "auth": {
+        "chummy2b6ddd64": {}
+      }
+    }
+  }
+}

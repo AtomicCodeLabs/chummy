@@ -14,7 +14,7 @@
     },
     {
       "name": "CI",
-      "path": "../ci"
+      "path": "../chummy-ci"
     }
   ],
   "settings": {},

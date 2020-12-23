@@ -1,6 +1,6 @@
 /* groovylint-disable CompileStatic, DuplicateStringLiteral, NestedBlockDepth */
 version = '1.0.0'
-largeFiles = ['popup', 'background.firebase']
+largeFiles = ['popup', 'background.dao']
 
 pipeline {
     agent {
