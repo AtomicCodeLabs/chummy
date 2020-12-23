@@ -2,10 +2,6 @@
 yarn checkout:dev
 git add -A
 git commit -m "chore(promote): pre-promote dev to gamma"
-PID=$!
-sleep 2
-kill $PID
-
 git push -u origin extension/dev
 
 # Checkout target branch
