@@ -1,6 +1,19 @@
 const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ci = require('ci-info');
+
+if (ci.isCI) {
+  console.log(`Building on ${ci.name}.`);
+} else {
+  console.log(
+    `Building a local production build with \`.env.production\` file.`
+  );
+  // eslint-disable-next-line global-require
+  require('dotenv').config({
+    path: path.join(__dirname, '../.env.production')
+  });
+}
 
 const packageInfo = JSON.parse(
   JSON.stringify(
@@ -25,17 +38,13 @@ module.exports = {
     filename: `[name]_${packageInfo.version}.js`
   },
   resolve: {
-    extensions: ['.mjs', '.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.css'],
     fallback: {
       path: require.resolve('path-browserify'),
-      url: require.resolve('url/')
+      url: require.resolve('url/'),
+      crypto: false,
+      stream: false
     }
-  },
-  devServer: {
-    contentBase: path.join(__dirname, '../dist/moz'),
-    compress: true,
-    port: 8080,
-    historyApiFallback: true
   },
   module: {
     rules: [
@@ -43,6 +52,12 @@ module.exports = {
         test: /\.(js)$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
       },
       {
         test: /\.tsx?$/,
