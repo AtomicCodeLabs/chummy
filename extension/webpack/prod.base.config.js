@@ -1,11 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const DotenvPlugin = require('dotenv-webpack');
-
-require('dotenv').config({
-  path: path.join(__dirname, '../.env.production')
-});
 
 const packageInfo = JSON.parse(
   JSON.stringify(
@@ -14,13 +9,8 @@ const packageInfo = JSON.parse(
   )
 );
 
-const env =
-  process.env && process.env.NODE_ENV.trim() === 'production'
-    ? 'production'
-    : 'development';
-
 module.exports = {
-  mode: env,
+  mode: 'production',
   context: __dirname,
   entry: {
     background: '../src/background/index.js',
@@ -71,7 +61,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.EnvironmentPlugin({ NODE_ENV: env }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+      ASSETS_PUBLIC_PATH: process.env.ASSETS_PUBLIC_PATH
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
@@ -83,8 +76,7 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
-    }),
-    new DotenvPlugin({ path: path.join(__dirname, '../.env.production') })
+    })
   ],
   optimization: {
     runtimeChunk: false

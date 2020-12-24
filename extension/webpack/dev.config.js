@@ -7,7 +7,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const path = require('path');
 
 require('dotenv').config({
-  path: path.join(__dirname, '../.env.production')
+  path: path.join(__dirname, '../.env.development')
 });
 
 const packageInfo = JSON.parse(
@@ -17,10 +17,7 @@ const packageInfo = JSON.parse(
   )
 );
 
-const env =
-  process.env && process.env.NODE_ENV.trim() === 'production'
-    ? 'production'
-    : 'development';
+const env = 'development';
 
 module.exports = {
   mode: env,

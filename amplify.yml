@@ -1,6 +1,10 @@
 version: 1
 applications:
-  - backend:
+  - appRoot: extension
+    env:
+      variables:
+        ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
+    backend:
       phases:
         build:
           commands:
@@ -44,4 +48,3 @@ applications:
         postTest:
           commands:
             - echo "copy all assets to s3"
-    appRoot: extension
