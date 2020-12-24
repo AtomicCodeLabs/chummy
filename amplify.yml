@@ -35,6 +35,7 @@ applications:
       phases:
         preTest:
           commands:
+            - aws -h
             - echo "copy web assets to s3"
         test:
           commands:
