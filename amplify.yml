@@ -5,6 +5,8 @@ applications:
       variables:
         VERSION: 1.0.0
         ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
+        WEBSITE_BASE_URL: $WEBSITE_BASE_URL
+        WEBSITE_SIGNIN: $WEBSITE_SIGNIN
     backend:
       phases:
         build:
@@ -24,7 +26,7 @@ applications:
             - yarn build:moz
             - yarn build:web
       artifacts:
-        baseDirectory: /
+        baseDirectory: /dist/web
         files:
           - "**/*"
       cache:

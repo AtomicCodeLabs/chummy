@@ -10,8 +10,7 @@ import awsExports from '../aws-exports';
 // import * as subscriptions from '../graphql/subscriptions';
 
 import { isCurrentWindow, isExtensionOpen } from './util';
-import { AccountType } from './constants.ts';
-import { APP_URLS } from '../constants/urls';
+import { AccountType, APP_URLS } from './constants.ts';
 
 class DAO {
   constructor() {
