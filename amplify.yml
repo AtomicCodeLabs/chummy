@@ -3,6 +3,7 @@ applications:
   - appRoot: extension
     env:
       variables:
+        VERSION: 1.0.0
         ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
     backend:
       phases:
@@ -32,19 +33,19 @@ applications:
     test:
       artifacts:
         baseDirectory: cypress
-        configFilePath: "**/mochawesome.json"
         files:
           - "**/*.png"
           - "**/*.mp4"
       phases:
         preTest:
           commands:
-            - aws -h
-            - echo "copy web assets to s3"
+            - "Prepublish CDN assets to S3"
+            - yarn ci:prepublish
         test:
           commands:
             - yarn cy:run:moz
             - yarn cy:run:web
         postTest:
           commands:
-            - echo "copy all assets to s3"
+            - "Publish `dist` assets to S3"
+            - yarn ci:publish

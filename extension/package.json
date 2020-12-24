@@ -22,7 +22,7 @@
     "build:dev": "cross-env NODE_ENV=production TARGET=dev webpack --mode=production --config ./webpack/dev.config.js",
     "build:web": "cross-env NODE_ENV=production TARGET=web webpack --mode=production --config ./webpack/prod.web.config.js",
     "build:moz": "cross-env NODE_ENV=production TARGET=moz webpack --mode=production --config ./webpack/prod.moz.config.js",
-    "release": "yarn standard-version -- --no-verify",
+    "release": "HUSKY_SKIP_HOOKS=1 yarn standard-version -- --no-verify",
     "release:dry": "yarn standard-version -- --dry-run",
     "prerelease": "yarn release -- --prerelease alpha",
     "clean": "rm -rf dist",
@@ -35,7 +35,9 @@
     "checkout:prod": "git checkout extension/prod && amplify env checkout prod && amplify pull --yes",
     "promote:to-dev": "./scripts/promote.dev.sh",
     "promote:to-gamma": "./scripts/promote.gamma.sh",
-    "promote:to-prod": "./scripts/promote.prod.sh"
+    "promote:to-prod": "./scripts/promote.prod.sh",
+    "ci:prepublish": "./scripts/prepublish.sh $VERSION",
+    "ci:publish": "./scripts/publish.sh $VERSION"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
