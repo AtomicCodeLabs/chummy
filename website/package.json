@@ -26,6 +26,7 @@
     "checkout:dev": "git checkout website/dev && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout website/gamma && amplify env checkout gamma && amplify pull --yes",
     "checkout:prod": "git checkout website/prod && amplify env checkout prod && amplify pull --yes",
+    "promote:to-dev": "./scripts/promote.dev.sh",
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh"
   },
