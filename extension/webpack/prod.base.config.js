@@ -78,7 +78,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
-      ASSETS_PUBLIC_PATH: process.env.ASSETS_PUBLIC_PATH
+      ASSETS_PUBLIC_PATH: process.env.ASSETS_PUBLIC_PATH,
+      WEBSITE_BASE_URL: process.env.WEBSITE_BASE_URL,
+      WEBSITE_SIGNIN: process.env.WEBSITE_SIGNIN
     }),
     new webpack.DefinePlugin({
       'process.env': {
