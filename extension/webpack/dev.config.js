@@ -2,8 +2,8 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const DotenvPlugin = require('dotenv-webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const DotenvPlugin = require('dotenv-webpack');
 const path = require('path');
 
 require('dotenv').config({
@@ -38,10 +38,12 @@ module.exports = {
     chunkFilename: '[name][id].js'
   },
   resolve: {
-    extensions: ['.mjs', '.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.css'],
     fallback: {
       path: require.resolve('path-browserify'),
-      url: require.resolve('url/')
+      url: require.resolve('url/'),
+      crypto: false,
+      stream: false
     }
   },
   devServer: {
@@ -56,6 +58,12 @@ module.exports = {
         test: /\.(js)$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
       },
       {
         test: /\.tsx?$/,
