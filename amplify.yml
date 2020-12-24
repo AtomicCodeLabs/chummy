@@ -4,7 +4,7 @@ applications:
       phases:
         build:
           commands:
-            - '# Deploy backend infra'
+            - "# Deploy backend infra"
             - amplifyPush --simple
     frontend:
       phases:
@@ -21,17 +21,17 @@ applications:
       artifacts:
         baseDirectory: /
         files:
-          - '**/*'
+          - "**/*"
       cache:
         paths:
           - node_modules/**/*
     test:
       artifacts:
         baseDirectory: cypress
-        configFilePath: '**/mochawesome.json'
+        configFilePath: "**/mochawesome.json"
         files:
-          - '**/*.png'
-          - '**/*.mp4'
+          - "**/*.png"
+          - "**/*.mp4"
       phases:
         preTest:
           commands:
@@ -43,5 +43,5 @@ applications:
             - yarn cy:run:web
         postTest:
           commands:
--           - echo "copy all assets to s3"
+            - echo "copy all assets to s3"
     appRoot: extension
