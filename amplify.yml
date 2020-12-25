@@ -1,6 +1,6 @@
 version: 1
 applications:
-  - appRoot: /extension
+  - appRoot: extension
     env:
       variables:
         VERSION: 1.0.0
@@ -16,7 +16,6 @@ applications:
       phases:
         preBuild:
           commands:
-            - cd extension
             - echo $KEY_PEM > ./key.pem
             - yarn install --frozen-lockfile
             - yarn lint:check
