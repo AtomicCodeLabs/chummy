@@ -25,18 +25,13 @@ frontend:
         - yarn build:moz
         - yarn build:web
   artifacts:
-    baseDirectory: dist
+    baseDirectory: extension/dist
     files:
       - "**/*"
   cache:
     paths:
       - node_modules/**/*
 test:
-  artifacts:
-    baseDirectory: cypress
-    files:
-      - "**/*.png"
-      - "**/*.mp4"
   phases:
     preTest:
       commands:
@@ -50,3 +45,8 @@ test:
       commands:
         - echo "Publish `dist` assets to S3"
         - yarn ci:publish
+  artifacts:
+    baseDirectory: cypress
+    files:
+      - "**/*.png"
+      - "**/*.mp4"
