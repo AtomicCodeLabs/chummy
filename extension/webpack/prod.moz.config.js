@@ -36,6 +36,14 @@ module.exports = {
                   gecko: {
                     id: packageInfo.extensionId
                   }
+                },
+                externally_connectable: {
+                  matches: [
+                    new URL(
+                      process.env.WEBSITE_REDIRECT,
+                      process.env.WEBSITE_BASE_URL
+                    ).toString()
+                  ]
                 }
               },
               null,

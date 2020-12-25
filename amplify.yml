@@ -3,7 +3,7 @@ applications:
   - appRoot: extension
     env:
       variables:
-        VERSION: 1.0.0
+        VERSION: "1.0.0"
         ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
         WEBSITE_BASE_URL: $WEBSITE_BASE_URL
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
@@ -37,6 +37,7 @@ applications:
         preTest:
           commands:
             - echo "Prepublish CDN assets to S3"
+            - echo $VERSION
             - yarn ci:prepublish
         test:
           commands:
