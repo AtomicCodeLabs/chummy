@@ -38,26 +38,22 @@ applications:
         preTest:
           commands:
             - echo "Prepublish CDN assets to S3"
-            - echo $VERSION
-            - yarn add -D wait-on
-            - yarn add -D mocha@5.2.0 mochawesome mochawesome-merge mochawesome-report-generator
-            - npx wait-on http://localhost:8080
-            - yarn ci:prepublish
+            - if [ "${AWS_BRANCH}" = "extension/gamma" ]; then yarn ci:prepublish gamma; fi
+            - if [ "${AWS_BRANCH}" = "extension/prod" ]; then yarn ci:prepublish prod; fi
         test:
           commands:
-            - 'yarn cy:run:moz --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
-            - 'yarn cy:run:web --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
+            - yarn cy:run:moz
+            - yarn cy:run:web
         postTest:
           commands:
-            - npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
             - echo "Publish `dist` assets to S3"
-            - yarn ci:publish
+            - if [ "${AWS_BRANCH}" = "extension/gamma" ]; then yarn ci:publish gamma; fi
+            - if [ "${AWS_BRANCH}" = "extension/prod" ]; then yarn ci:publish prod; fi
       artifacts:
         files:
           - "**/*.png"
           - "**/*.mp4"
         baseDirectory: cypress
-        configFilePath: '**/mochawesome.json'
     artifacts:
       files:
         - "**/*"
