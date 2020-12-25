@@ -7,11 +7,7 @@ applications:
         ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
         WEBSITE_BASE_URL: $WEBSITE_BASE_URL
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
-    backend:
-      phases:
-        build:
-          commands:
-            - amplifyPush --simple
+        WEBSITE_REDIRECT: $WEBSITE_REDIRECT
     frontend:
       phases:
         preBuild:
