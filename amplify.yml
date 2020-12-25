@@ -41,7 +41,7 @@ applications:
       phases:
         preTest:
           commands:
-            - "Prepublish CDN assets to S3"
+            - echo "Prepublish CDN assets to S3"
             - yarn ci:prepublish
         test:
           commands:
@@ -49,5 +49,5 @@ applications:
             - yarn cy:run:web
         postTest:
           commands:
-            - "Publish `dist` assets to S3"
+            - echo "Publish `dist` assets to S3"
             - yarn ci:publish
