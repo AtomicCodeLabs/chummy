@@ -44,7 +44,8 @@ module.exports = {
           }
         },
         { from: '../public/icon', to: './icon' },
-        { from: '../key.pem', to: './key.pem' }
+        { from: '../key.pem', to: './key.pem' },
+        { from: '../public/index.html', to: '../index.html' }
       ]
     }),
     new HtmlWebpackPlugin({

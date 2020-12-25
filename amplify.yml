@@ -26,7 +26,7 @@ applications:
             - yarn build:moz
             - yarn build:web
       artifacts:
-        baseDirectory: /dist/web
+        baseDirectory: dist
         files:
           - "**/*"
       cache:
