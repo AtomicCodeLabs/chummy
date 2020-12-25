@@ -1,7 +1,16 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/node-apis/
- */
+const packageInfo = JSON.parse(
+  JSON.stringify(
+    // eslint-disable-next-line import/no-dynamic-require
+    require(path.join(__dirname, 'package.json'))
+  )
+);
 
-// You can delete this file if you're not using it
+exports.onCreateWebpackConfig = ({ stage, plugins, actions }) => {
+  actions.setWebpackConfig({
+    plugins: [
+      plugins.define({
+        'process.env.EXTENSION_ID': packageInfo.extensionId
+      })
+    ]
+  });
+};
