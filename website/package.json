@@ -1,6 +1,7 @@
 {
   "name": "chummy-website",
   "description": "Website for Chummy Extension",
+  "extensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
   "version": "1.0.0",
   "author": "Alex Kim",
   "license": "AGPL-3.0-only",
@@ -68,12 +69,10 @@
   ],
   "lint-staged": {
     "**/*.+(js|jsx|json|css|md)": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "**/*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "husky": {
