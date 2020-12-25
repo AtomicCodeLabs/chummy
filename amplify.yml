@@ -8,6 +8,11 @@ applications:
         WEBSITE_BASE_URL: $WEBSITE_BASE_URL
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
         WEBSITE_REDIRECT: $WEBSITE_REDIRECT
+    backend:
+      phases:
+        build:
+          commands:
+            - amplifyPush --simple
     frontend:
       phases:
         preBuild:
