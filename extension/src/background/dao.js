@@ -12,6 +12,7 @@ import awsExports from '../aws-exports';
 import { isCurrentWindow, isExtensionOpen } from './util';
 import { AccountType, APP_URLS } from './constants.ts';
 
+console.log('HELO');
 class DAO {
   constructor() {
     // Initialize firebase in background script
@@ -223,7 +224,7 @@ class DAO {
       };
 
       // Listen for sign-in-complete message
-      browser.runtime.onMessage.addListener((request) => {
+      browser.runtime.onMessageExternal.addListener((request) => {
         if (request.action === 'sign-in-complete') {
           console.log('Received sign-in-complete request', request);
           return continueSignIn(request);
