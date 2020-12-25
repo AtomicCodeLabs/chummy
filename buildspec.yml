@@ -46,8 +46,7 @@ applications:
           commands:
             - echo "Publish `dist` assets to S3"
             - yarn ci:publish
-      artifacts:
-        files:
-          - "**/*.png"
-          - "**/*.mp4"
-        baseDirectory: cypress
+    artifacts:
+      files:
+        - "**/*"
+      baseDirectory: dist
