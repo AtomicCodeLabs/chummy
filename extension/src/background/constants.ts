@@ -30,3 +30,10 @@ export enum AccountType {
 }
 
 export const NO_WINDOW_EXTENSION_ID = -1; // -3 if it doesn't exist
+
+export const APP_URLS = {
+  WEBSITE: {
+    BASE: process.env.WEBSITE_BASE_URL,
+    SIGNIN: process.env.WEBSITE_SIGNIN
+  }
+};

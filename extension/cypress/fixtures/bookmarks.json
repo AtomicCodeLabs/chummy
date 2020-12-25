@@ -43,14 +43,6 @@
         "branch": { "name": "master" }
       },
       {
-        "branch": { "name": "master" },
-        "name": "env.production.gpg",
-        "repo": { "owner": "alexkim205", "name": "chummy" },
-        "bookmarkId": "bookmark-alexkim205:chummy:envs/env.production.gpg",
-        "pinned": false,
-        "path": "envs/env.production.gpg"
-      },
-      {
         "bookmarkId": "bookmark-alexkim205:chummy:.gitignore",
         "name": ".gitignore",
         "pinned": false,

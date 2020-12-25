@@ -2,12 +2,12 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const DotenvPlugin = require('dotenv-webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const DotenvPlugin = require('dotenv-webpack');
 const path = require('path');
 
 require('dotenv').config({
-  path: path.join(__dirname, '../.env.production')
+  path: path.join(__dirname, '../.env.development')
 });
 
 const packageInfo = JSON.parse(
@@ -17,10 +17,7 @@ const packageInfo = JSON.parse(
   )
 );
 
-const env =
-  process.env && process.env.NODE_ENV.trim() === 'production'
-    ? 'production'
-    : 'development';
+const env = 'development';
 
 module.exports = {
   mode: env,
@@ -41,10 +38,12 @@ module.exports = {
     chunkFilename: '[name][id].js'
   },
   resolve: {
-    extensions: ['.mjs', '.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.css'],
     fallback: {
       path: require.resolve('path-browserify'),
-      url: require.resolve('url/')
+      url: require.resolve('url/'),
+      crypto: false,
+      stream: false
     }
   },
   devServer: {
@@ -59,6 +58,12 @@ module.exports = {
         test: /\.(js)$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
       },
       {
         test: /\.tsx?$/,

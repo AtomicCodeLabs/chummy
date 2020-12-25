@@ -1,24 +1,29 @@
 const fs = require('fs');
 const detectNewline = require('detect-newline');
 
-// Read contents of a Jenkinsfile and update the version variable on the first line
 const tracker = {
-  filename: '../Jenkinsfile',
+  filename: './package.json',
+  type: 'json'
+};
+
+const buildConfig = {
+  filename: '../amplify.yml',
   updater: {
     readVersion: (contents) => {
       const newLine = detectNewline(contents);
-      return contents.match(new RegExp(`version = (.*)${newLine}`)).pop();
+      return contents.match(new RegExp(`VERSION: (.*)${newLine}`)).pop();
     },
     writeVersion: (contents, version) => {
       const newLine = detectNewline(contents);
       return contents.replace(
-        new RegExp(`version = (.*)${newLine}`),
-        `version = ${version}${newLine}`
+        new RegExp(`VERSION: (.*)${newLine}`),
+        `VERSION: ${version}${newLine}`
       );
     }
   }
 };
 
 module.exports = {
-  bumpFiles: [tracker]
+  bumpFiles: [tracker, buildConfig],
+  packageFiles: [tracker]
 };
