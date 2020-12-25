@@ -1,53 +1,52 @@
 version: 1
-applications:
-  - appRoot: extension
-    env:
-      variables:
-        VERSION: 1.0.0
-        ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
-        WEBSITE_BASE_URL: $WEBSITE_BASE_URL
-        WEBSITE_SIGNIN: $WEBSITE_SIGNIN
-    backend:
-      phases:
-        build:
-          commands:
-            - "# Deploy backend infra"
-            - amplifyPush --simple
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - echo $KEY_PEM > ./key.pem
-            - yarn install --frozen-lockfile
-            - yarn lint:check
-            - yarn format:check
-        build:
-          commands:
-            - yarn build:moz
-            - yarn build:web
-      artifacts:
-        baseDirectory: dist
-        files:
-          - "**/*"
-      cache:
-        paths:
-          - node_modules/**/*
+env:
+  variables:
+    VERSION: 1.0.0
+    ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
+    WEBSITE_BASE_URL: $WEBSITE_BASE_URL
+    WEBSITE_SIGNIN: $WEBSITE_SIGNIN
+backend:
+  phases:
+    build:
+      commands:
+        - "# Deploy backend infra"
+        - amplifyPush --simple
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd extension
+        - echo $KEY_PEM > ./key.pem
+        - yarn install --frozen-lockfile
+        - yarn lint:check
+        - yarn format:check
+    build:
+      commands:
+        - yarn build:moz
+        - yarn build:web
+  artifacts:
+    baseDirectory: dist
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+test:
+  artifacts:
+    baseDirectory: cypress
+    files:
+      - "**/*.png"
+      - "**/*.mp4"
+  phases:
+    preTest:
+      commands:
+        - echo "Prepublish CDN assets to S3"
+        - yarn ci:prepublish
     test:
-      artifacts:
-        baseDirectory: cypress
-        files:
-          - "**/*.png"
-          - "**/*.mp4"
-      phases:
-        preTest:
-          commands:
-            - echo "Prepublish CDN assets to S3"
-            - yarn ci:prepublish
-        test:
-          commands:
-            - yarn cy:run:moz
-            - yarn cy:run:web
-        postTest:
-          commands:
-            - echo "Publish `dist` assets to S3"
-            - yarn ci:publish
+      commands:
+        - yarn cy:run:moz
+        - yarn cy:run:web
+    postTest:
+      commands:
+        - echo "Publish `dist` assets to S3"
+        - yarn ci:publish
