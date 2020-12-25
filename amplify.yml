@@ -24,6 +24,11 @@ applications:
           commands:
             - yarn build:moz
             - yarn build:web
+      artifacts:
+        files:
+          - "**/*"
+        discard-paths: yes
+        baseDirectory: dist
       cache:
         paths:
           - node_modules/**/*
