@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DotenvPlugin = require('dotenv-webpack');
+const CreateFileWebpack = require('create-file-webpack');
 const path = require('path');
 
 require('dotenv').config({
@@ -110,6 +111,11 @@ module.exports = {
         },
         { from: '../public/icon', to: './icon' }
       ]
+    }),
+    new CreateFileWebpack({
+      path: path.join(__dirname, '../dist/'),
+      fileName: '.version',
+      content: packageInfo.version
     }),
     new HtmlWebpackPlugin({
       title: 'Chummy',

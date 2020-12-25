@@ -1,4 +1,6 @@
-VERSION=$1
+cd dist
+
+VERSION=$(cat ".version")
 
 zip -r dist_$VERSION.moz.zip moz
 aws s3 cp dist_$VERSION.moz.zip s3://chummy-assets/$VERSiON/
