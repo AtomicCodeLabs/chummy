@@ -32,7 +32,10 @@
             "folder": "Extension",
             "name": "Launch Chrome"
           },
-          "Attach Chrome"
+          {
+            "folder": "Website",
+            "name": "Launch Dev Server"
+          }
         ]
       },
       {
