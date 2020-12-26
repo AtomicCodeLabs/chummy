@@ -1,14 +1,13 @@
 const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CreateFileWebpack = require('create-file-webpack');
 const ci = require('ci-info');
 
 if (ci.isCI) {
   console.log(`Building on ${ci.name}.`);
 } else {
-  console.log(
-    `Building a local production build with \`.env.production\` file.`
-  );
+  console.log(`Building on local with \`.env.production\`.`);
   // eslint-disable-next-line global-require
   require('dotenv').config({
     path: path.join(__dirname, '../.env.production')
@@ -76,6 +75,11 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CreateFileWebpack({
+      path: path.join(__dirname, '../dist/'),
+      fileName: '.version',
+      content: packageInfo.version
+    }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       ASSETS_PUBLIC_PATH: process.env.ASSETS_PUBLIC_PATH,

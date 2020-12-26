@@ -3,7 +3,7 @@ applications:
   - appRoot: extension
     env:
       variables:
-        VERSION: "1.0.0"
+        VERSION: 1.0.0
         ASSETS_PUBLIC_PATH: $ASSETS_PUBLIC_PATH
         WEBSITE_BASE_URL: $WEBSITE_BASE_URL
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
@@ -38,8 +38,8 @@ applications:
         preTest:
           commands:
             - echo "Prepublish CDN assets to S3"
-            - echo $VERSION
-            - yarn ci:prepublish
+            - if [ "${AWS_BRANCH}" = "extension/gamma" ]; then yarn ci:prepublish gamma; fi
+            - if [ "${AWS_BRANCH}" = "extension/prod" ]; then yarn ci:prepublish prod; fi
         test:
           commands:
             - yarn cy:run:moz
@@ -47,7 +47,13 @@ applications:
         postTest:
           commands:
             - echo "Publish `dist` assets to S3"
-            - yarn ci:publish
+            - if [ "${AWS_BRANCH}" = "extension/gamma" ]; then yarn ci:publish gamma; fi
+            - if [ "${AWS_BRANCH}" = "extension/prod" ]; then yarn ci:publish prod; fi
+      artifacts:
+        files:
+          - "**/*.png"
+          - "**/*.mp4"
+        baseDirectory: cypress
     artifacts:
       files:
         - "**/*"

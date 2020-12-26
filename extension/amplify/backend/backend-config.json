@@ -9,7 +9,7 @@
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 7,
-              "description": "API for Chummy"
+              "description": "Key for Chummy API"
             }
           },
           "additionalAuthenticationProviders": []
@@ -18,7 +18,7 @@
     }
   },
   "auth": {
-    "chummy2b6ddd64": {
+    "chummy9948bcd5": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],

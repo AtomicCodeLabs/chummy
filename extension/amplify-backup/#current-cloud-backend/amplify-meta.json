@@ -1,0 +1,67 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chummy-dev-191547-authRole",
+      "UnauthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-dev-191547-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::202575095365:role/amplify-chummy-dev-191547-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-chummy-dev-191547-deployment",
+      "UnauthRoleName": "amplify-chummy-dev-191547-unauthRole",
+      "StackName": "amplify-chummy-dev-191547",
+      "StackId": "arn:aws:cloudformation:us-west-2:202575095365:stack/amplify-chummy-dev-191547/bf9ef6e0-4321-11eb-b5aa-02cc60371653",
+      "AmplifyAppId": "d32qeprsvk89q0"
+    }
+  },
+  "api": {
+    "chummy": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7,
+              "description": "API for Chummy"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        },
+        "GraphQLAPIIdOutput": "ivkye4hz5zbcze3iuddn2vxc7e",
+        "GraphQLAPIEndpointOutput": "https://fxfdwufggbatzev4libwrbqrgq.appsync-api.us-west-2.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-gy3g2tmhrvcj7pz2edspoh4kba"
+      },
+      "lastPushTimeStamp": "2020-12-23T07:38:42.026Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-chummy-dev-191547-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apichummy"
+      },
+      "lastPushDirHash": "9jtTgQ/T5syK6bdb4Zg0kManv6o="
+    }
+  },
+  "auth": {
+    "chummy2b6ddd64": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "AppClientSecret": "1414fgj71k679h3np2gvghps112qkn6k1qq84j2tc0lj0g95o3v",
+        "UserPoolId": "us-west-2_3MADHDhR4",
+        "AppClientIDWeb": "596k8saduph85tp8ls7japaopc",
+        "AppClientID": "10de2mkg12r7forbcgabohdd3h",
+        "HostedUIDomain": "chummy-dev",
+        "IdentityPoolId": "us-west-2:8ae1ecb4-0556-44f2-b765-54366e361775",
+        "IdentityPoolName": "chummy2b6ddd64_identitypool_2b6ddd64__dev",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8000/account/\"],\"LogoutURLs\":[\"http://localhost:8000/\"]}",
+        "UserPoolName": "chummy2b6ddd64_userpool_2b6ddd64"
+      },
+      "lastPushTimeStamp": "2020-12-23T07:38:42.026Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-chummy-dev-191547-deployment/amplify-cfn-templates/auth/chummy2b6ddd64-cloudformation-template.yml",
+        "logicalId": "authchummy2b6ddd64"
+      },
+      "lastPushDirHash": "yjb5vBS+q4yptZDuF+2HuPWRmuw="
+    }
+  }
+}
