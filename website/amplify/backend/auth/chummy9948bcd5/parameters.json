@@ -54,6 +54,5 @@
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://gamma.atomiccode.io/account/\"],\"LogoutURLs\":[\"https://gamma.atomiccode.io/\"]}"
+    "dependsOn": []
 }
