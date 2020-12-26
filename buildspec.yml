@@ -2,66 +2,40 @@ version: 0.2
 
 env:
   variables:
-    key: "value"
-    key: "value"
-  exported-variables:
-    - variable
-    - variable
+    WEBSITE_SIGNIN: "signin/"
+    WEBSITE_REDIRECT: "account/"
 
 proxy:
   upload-artifacts: no
   logs: no
 
-batch:
-  fast-fail: false | true
-  # build-list:
-  # build-matrix:
-  # build-graph:
-        
 phases:
   pre_build:
     commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
+      - cd extension
+      - echo $CHUMMY_KEY_PEM > ./key.pem
+      - yarn install --frozen-lockfile
+      - yarn lint:check
+      - yarn format:check
   build:
     commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
-  post_build:
-    commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
-
-reports:
-    files:
-      - location
-      - location
-    base-directory: location
-    discard-paths: no | yes
-    file-format: report-format
+      - yarn build:moz
+      - yarn build:web
 
 artifacts:
+  base-directory: "extension/dist"
   files:
-    - '**/*'
+    - "**/*"
   secondary-artifacts:
     artifact1:
       files:
-        - 'dist/moz/*'
+        - "moz/*"
       name: dist.moz
     artifact2:
       files:
-        - 'dist/web/*'
+        - "web/*"
       name: dist.web
 
 cache:
   paths:
-    - node_modules/**/*
+    - "extension/node_modules/**/*"
