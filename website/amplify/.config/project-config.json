@@ -1,5 +1,4 @@
 {
-  "providers": ["awscloudformation"],
   "projectName": "chummy",
   "version": "3.0",
   "frontend": "javascript",
@@ -7,9 +6,12 @@
     "framework": "react",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "public",
-      "BuildCommand": "yarn build",
+      "DistributionDir": "dist",
+      "BuildCommand": "yarn build:web",
       "StartCommand": "yarn dev"
     }
-  }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
 }
