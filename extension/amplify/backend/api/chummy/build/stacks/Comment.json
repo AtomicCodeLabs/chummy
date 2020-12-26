@@ -86,7 +86,7 @@
         }
     },
     "Resources": {
-        "BookmarkTable": {
+        "CommentTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
@@ -96,7 +96,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Bookmark",
+                                    "Comment",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     },
@@ -110,7 +110,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Bookmark",
+                                    "Comment",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     }
@@ -128,6 +128,14 @@
                 "AttributeDefinitions": [
                     {
                         "AttributeName": "id",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "postID",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "content",
                         "AttributeType": "S"
                     }
                 ],
@@ -178,11 +186,45 @@
                             "Ref": "AWS::NoValue"
                         }
                     ]
-                }
+                },
+                "GlobalSecondaryIndexes": [
+                    {
+                        "IndexName": "byPost",
+                        "KeySchema": [
+                            {
+                                "AttributeName": "postID",
+                                "KeyType": "HASH"
+                            },
+                            {
+                                "AttributeName": "content",
+                                "KeyType": "RANGE"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "Fn::If": [
+                                "ShouldUsePayPerRequestBilling",
+                                {
+                                    "Ref": "AWS::NoValue"
+                                },
+                                {
+                                    "ReadCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableReadIOPS"
+                                    },
+                                    "WriteCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableWriteIOPS"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
             },
             "DeletionPolicy": "Delete"
         },
-        "BookmarkIAMRole": {
+        "CommentIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
@@ -192,7 +234,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Bookmark284f38",
+                                    "Comment82f00f",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -207,7 +249,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Bookmarkda91da",
+                                    "Comment8cf4ef",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -259,7 +301,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Bookmark",
+                                                                        "Comment",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -273,7 +315,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Bookmark",
+                                                                        "Comment",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -296,7 +338,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Bookmark",
+                                                                        "Comment",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -310,7 +352,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "Bookmark",
+                                                                        "Comment",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -330,17 +372,17 @@
                 ]
             }
         },
-        "BookmarkDataSource": {
+        "CommentDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
                     "Ref": "GetAttGraphQLAPIApiId"
                 },
-                "Name": "BookmarkTable",
+                "Name": "CommentTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "BookmarkIAMRole",
+                        "CommentIAMRole",
                         "Arn"
                     ]
                 },
@@ -355,7 +397,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "Bookmark",
+                                        "Comment",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         },
@@ -369,7 +411,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "Bookmark",
+                                        "Comment",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         }
@@ -381,10 +423,10 @@
                 }
             },
             "DependsOn": [
-                "BookmarkIAMRole"
+                "CommentIAMRole"
             ]
         },
-        "GetBookmarkResolver": {
+        "GetCommentResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -392,11 +434,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "BookmarkDataSource",
+                        "CommentDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getBookmark",
+                "FieldName": "getComment",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -413,7 +455,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getBookmark",
+                                        "getComment",
                                         "req",
                                         "vtl"
                                     ]
@@ -437,7 +479,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getBookmark",
+                                        "getComment",
                                         "res",
                                         "vtl"
                                     ]
@@ -448,7 +490,7 @@
                 }
             }
         },
-        "ListBookmarkResolver": {
+        "ListCommentResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -456,11 +498,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "BookmarkDataSource",
+                        "CommentDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listBookmarks",
+                "FieldName": "listComments",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -477,7 +519,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listBookmarks",
+                                        "listComments",
                                         "req",
                                         "vtl"
                                     ]
@@ -501,7 +543,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listBookmarks",
+                                        "listComments",
                                         "res",
                                         "vtl"
                                     ]
@@ -512,7 +554,7 @@
                 }
             }
         },
-        "CreateBookmarkResolver": {
+        "CreateCommentResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -520,11 +562,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "BookmarkDataSource",
+                        "CommentDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createBookmark",
+                "FieldName": "createComment",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -541,7 +583,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createBookmark",
+                                        "createComment",
                                         "req",
                                         "vtl"
                                     ]
@@ -565,7 +607,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createBookmark",
+                                        "createComment",
                                         "res",
                                         "vtl"
                                     ]
@@ -576,7 +618,7 @@
                 }
             }
         },
-        "UpdateBookmarkResolver": {
+        "UpdateCommentResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -584,11 +626,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "BookmarkDataSource",
+                        "CommentDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateBookmark",
+                "FieldName": "updateComment",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -605,7 +647,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateBookmark",
+                                        "updateComment",
                                         "req",
                                         "vtl"
                                     ]
@@ -629,7 +671,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateBookmark",
+                                        "updateComment",
                                         "res",
                                         "vtl"
                                     ]
@@ -640,7 +682,7 @@
                 }
             }
         },
-        "DeleteBookmarkResolver": {
+        "DeleteCommentResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -648,11 +690,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "BookmarkDataSource",
+                        "CommentDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteBookmark",
+                "FieldName": "deleteComment",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -669,7 +711,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteBookmark",
+                                        "deleteComment",
                                         "req",
                                         "vtl"
                                     ]
@@ -693,7 +735,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteBookmark",
+                                        "deleteComment",
                                         "res",
                                         "vtl"
                                     ]
@@ -706,11 +748,11 @@
         }
     },
     "Outputs": {
-        "GetAttBookmarkTableStreamArn": {
+        "GetAttCommentTableStreamArn": {
             "Description": "Your DynamoDB table StreamArn.",
             "Value": {
                 "Fn::GetAtt": [
-                    "BookmarkTable",
+                    "CommentTable",
                     "StreamArn"
                 ]
             },
@@ -723,18 +765,18 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "BookmarkTable",
+                            "CommentTable",
                             "StreamArn"
                         ]
                     ]
                 }
             }
         },
-        "GetAttBookmarkDataSourceName": {
+        "GetAttCommentDataSourceName": {
             "Description": "Your model DataSource name.",
             "Value": {
                 "Fn::GetAtt": [
-                    "BookmarkDataSource",
+                    "CommentDataSource",
                     "Name"
                 ]
             },
@@ -747,17 +789,17 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "BookmarkDataSource",
+                            "CommentDataSource",
                             "Name"
                         ]
                     ]
                 }
             }
         },
-        "GetAttBookmarkTableName": {
+        "GetAttCommentTableName": {
             "Description": "Your DynamoDB table name.",
             "Value": {
-                "Ref": "BookmarkTable"
+                "Ref": "CommentTable"
             },
             "Export": {
                 "Name": {
@@ -768,7 +810,7 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "BookmarkTable",
+                            "CommentTable",
                             "Name"
                         ]
                     ]

@@ -7,9 +7,11 @@
     "config": {
       "SourceDir": "src",
       "DistributionDir": "dist",
-      "BuildCommand": "yarn build:dev",
+      "BuildCommand": "yarn build:web",
       "StartCommand": "yarn dev"
     }
   },
-  "providers": ["awscloudformation"]
+  "providers": [
+    "awscloudformation"
+  ]
 }

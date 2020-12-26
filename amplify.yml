@@ -37,9 +37,6 @@ applications:
       phases:
         preTest:
           commands:
-            - wget -O- "https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US" | tar -jx -C /usr/local/
-            - echo "exclude=firefox" >> /etc/dnf/dnf.conf
-            - ln -s /usr/local/firefox/firefox /usr/bin/firefox
             - echo "Prepublish CDN assets to S3"
             - if [ "${AWS_BRANCH}" = "extension/gamma" ]; then yarn ci:prepublish gamma; fi
             - if [ "${AWS_BRANCH}" = "extension/prod" ]; then yarn ci:prepublish prod; fi
