@@ -1,0 +1,15 @@
+{
+  "projectName": "chummy",
+  "version": "3.0",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "react",
+    "config": {
+      "SourceDir": "src",
+      "DistributionDir": "dist",
+      "BuildCommand": "yarn build:dev",
+      "StartCommand": "yarn dev"
+    }
+  },
+  "providers": ["awscloudformation"]
+}
