@@ -1,7 +1,26 @@
-type Bookmark {
+type Blog {
   id: ID!
   name: String!
-  description: String
+  posts(filter: ModelPostFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPostConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  blogID: ID!
+  blog: Blog
+  comments(content: ModelStringKeyConditionInput, filter: ModelCommentFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelCommentConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Comment {
+  id: ID!
+  postID: ID!
+  post: Post
+  content: String!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -11,8 +30,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelBookmarkConnection {
-  items: [Bookmark]
+type ModelBlogConnection {
+  items: [Blog]
   nextToken: String
 }
 
@@ -89,13 +108,12 @@ input ModelSizeInput {
   between: [Int]
 }
 
-input ModelBookmarkFilterInput {
+input ModelBlogFilterInput {
   id: ModelIDInput
   name: ModelStringInput
-  description: ModelStringInput
-  and: [ModelBookmarkFilterInput]
-  or: [ModelBookmarkFilterInput]
-  not: ModelBookmarkFilterInput
+  and: [ModelBlogFilterInput]
+  or: [ModelBlogFilterInput]
+  not: ModelBlogFilterInput
 }
 
 enum ModelAttributeTypes {
@@ -112,42 +130,141 @@ enum ModelAttributeTypes {
 }
 
 type Query {
-  getBookmark(id: ID!): Bookmark
-  listBookmarks(filter: ModelBookmarkFilterInput, limit: Int, nextToken: String): ModelBookmarkConnection
+  getBlog(id: ID!): Blog
+  listBlogs(filter: ModelBlogFilterInput, limit: Int, nextToken: String): ModelBlogConnection
+  getPost(id: ID!): Post
+  listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
+  getComment(id: ID!): Comment
+  listComments(filter: ModelCommentFilterInput, limit: Int, nextToken: String): ModelCommentConnection
 }
 
-input CreateBookmarkInput {
+input CreateBlogInput {
   id: ID
   name: String!
-  description: String
 }
 
-input UpdateBookmarkInput {
+input UpdateBlogInput {
   id: ID!
   name: String
-  description: String
 }
 
-input DeleteBookmarkInput {
+input DeleteBlogInput {
   id: ID
 }
 
 type Mutation {
-  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
-  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
-  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
+  createBlog(input: CreateBlogInput!, condition: ModelBlogConditionInput): Blog
+  updateBlog(input: UpdateBlogInput!, condition: ModelBlogConditionInput): Blog
+  deleteBlog(input: DeleteBlogInput!, condition: ModelBlogConditionInput): Blog
+  createPost(input: CreatePostInput!, condition: ModelPostConditionInput): Post
+  updatePost(input: UpdatePostInput!, condition: ModelPostConditionInput): Post
+  deletePost(input: DeletePostInput!, condition: ModelPostConditionInput): Post
+  createComment(input: CreateCommentInput!, condition: ModelCommentConditionInput): Comment
+  updateComment(input: UpdateCommentInput!, condition: ModelCommentConditionInput): Comment
+  deleteComment(input: DeleteCommentInput!, condition: ModelCommentConditionInput): Comment
 }
 
-input ModelBookmarkConditionInput {
+input ModelBlogConditionInput {
   name: ModelStringInput
-  description: ModelStringInput
-  and: [ModelBookmarkConditionInput]
-  or: [ModelBookmarkConditionInput]
-  not: ModelBookmarkConditionInput
+  and: [ModelBlogConditionInput]
+  or: [ModelBlogConditionInput]
+  not: ModelBlogConditionInput
 }
 
 type Subscription {
-  onCreateBookmark: Bookmark @aws_subscribe(mutations: ["createBookmark"])
-  onUpdateBookmark: Bookmark @aws_subscribe(mutations: ["updateBookmark"])
-  onDeleteBookmark: Bookmark @aws_subscribe(mutations: ["deleteBookmark"])
+  onCreateBlog: Blog @aws_subscribe(mutations: ["createBlog"])
+  onUpdateBlog: Blog @aws_subscribe(mutations: ["updateBlog"])
+  onDeleteBlog: Blog @aws_subscribe(mutations: ["deleteBlog"])
+  onCreatePost: Post @aws_subscribe(mutations: ["createPost"])
+  onUpdatePost: Post @aws_subscribe(mutations: ["updatePost"])
+  onDeletePost: Post @aws_subscribe(mutations: ["deletePost"])
+  onCreateComment: Comment @aws_subscribe(mutations: ["createComment"])
+  onUpdateComment: Comment @aws_subscribe(mutations: ["updateComment"])
+  onDeleteComment: Comment @aws_subscribe(mutations: ["deleteComment"])
+}
+
+type ModelPostConnection {
+  items: [Post]
+  nextToken: String
+}
+
+input ModelPostFilterInput {
+  id: ModelIDInput
+  title: ModelStringInput
+  blogID: ModelIDInput
+  and: [ModelPostFilterInput]
+  or: [ModelPostFilterInput]
+  not: ModelPostFilterInput
+}
+
+input CreatePostInput {
+  id: ID
+  title: String!
+  blogID: ID!
+}
+
+input UpdatePostInput {
+  id: ID!
+  title: String
+  blogID: ID
+}
+
+input DeletePostInput {
+  id: ID
+}
+
+input ModelPostConditionInput {
+  title: ModelStringInput
+  blogID: ModelIDInput
+  and: [ModelPostConditionInput]
+  or: [ModelPostConditionInput]
+  not: ModelPostConditionInput
+}
+
+type ModelCommentConnection {
+  items: [Comment]
+  nextToken: String
+}
+
+input ModelCommentFilterInput {
+  id: ModelIDInput
+  postID: ModelIDInput
+  content: ModelStringInput
+  and: [ModelCommentFilterInput]
+  or: [ModelCommentFilterInput]
+  not: ModelCommentFilterInput
+}
+
+input CreateCommentInput {
+  id: ID
+  postID: ID!
+  content: String!
+}
+
+input UpdateCommentInput {
+  id: ID!
+  postID: ID
+  content: String
+}
+
+input DeleteCommentInput {
+  id: ID
+}
+
+input ModelCommentConditionInput {
+  postID: ModelIDInput
+  content: ModelStringInput
+  and: [ModelCommentConditionInput]
+  or: [ModelCommentConditionInput]
+  not: ModelCommentConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
 }
