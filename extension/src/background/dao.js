@@ -12,6 +12,8 @@ import awsExports from '../aws-exports';
 import { isCurrentWindow, isExtensionOpen } from './util';
 import { AccountType, APP_URLS } from './constants.ts';
 
+console.log('HALLO');
+
 class DAO {
   constructor() {
     // Initialize firebase in background script
