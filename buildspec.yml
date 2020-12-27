@@ -29,13 +29,16 @@ phases:
       - yarn build:web
 
 artifacts:
+  base-directory: "extension/dist"
+  files:
+    - "**/*"
   secondary-artifacts:
-    artifact1:
+    PublishMozAssets:
       base-directory: "extension/dist/moz"
       files:
         - "**/*"
       name: $VERSION/dist_$VERSION.moz
-    artifact2:
+    PublishWebAssets:
       base-directory: "extension/dist/web"
       files:
         - "**/*"
