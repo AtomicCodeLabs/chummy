@@ -7,17 +7,17 @@ const tracker = {
 };
 
 const buildConfig = {
-  filename: '../amplify.yml',
+  filename: '../buildspec.yml',
   updater: {
     readVersion: (contents) => {
       const newLine = detectNewline(contents);
-      return contents.match(new RegExp(`VERSION: (.*)${newLine}`)).pop();
+      return contents.match(new RegExp(`VERSION: "(.*)"${newLine}`)).pop();
     },
     writeVersion: (contents, version) => {
       const newLine = detectNewline(contents);
       return contents.replace(
-        new RegExp(`VERSION: (.*)${newLine}`),
-        `VERSION: ${version}${newLine}`
+        new RegExp(`VERSION: "(.*)"${newLine}`),
+        `VERSION: "${version}"${newLine}`
       );
     }
   }
