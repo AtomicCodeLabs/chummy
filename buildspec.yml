@@ -41,4 +41,4 @@ artifacts:
 
 cache:
   paths:
-    - "extension/node_modules/**/*"
+    - "~/.cache"
