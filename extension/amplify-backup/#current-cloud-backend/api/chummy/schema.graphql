@@ -1,5 +1,0 @@
-type Bookmark @model {
-  id: ID!
-  name: String!
-  description: String
-}
