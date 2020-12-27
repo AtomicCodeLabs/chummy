@@ -1,4 +1,5 @@
 cd $CODEBUILD_SRC_DIR/extension/dist
+ls
 pwd
 
 VERSION=$(cat ".version")
