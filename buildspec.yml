@@ -29,25 +29,15 @@ phases:
       - yarn build:web
   post_build:
     commands:
-      - yarn ci:prepublish
+      - yarn ci:prepublish $STAGE
       - yarn cy:run:moz
       - yarn cy:run:web
+      - yarn ci:publish $STAGE
 
 artifacts:
   base-directory: "extension/dist"
   files:
     - "**/*"
-  secondary-artifacts:
-    PublishMozAssets:
-      base-directory: "extension/dist/moz"
-      files:
-        - "**/*"
-      name: /$VERSION/dist_$VERSION.moz
-    PublishWebAssets:
-      base-directory: "extension/dist/web"
-      files:
-        - "**/*"
-      name: /$VERSION/dist_$VERSION.web
 
 cache:
   paths:

@@ -1,4 +1,5 @@
-cd dist
+cd $CODEBUILD_SRC_DIR/extension/dist
+pwd
 
 VERSION=$(cat ".version")
 STAGE=$1
@@ -8,3 +9,5 @@ aws s3 cp dist_$VERSION.moz.zip s3://chummy-assets-$STAGE/$VERSION/
 
 zip -r dist_$VERSION.web.zip web
 aws s3 cp dist_$VERSION.web.zip s3://chummy-assets-$STAGE/$VERSION/
+
+cd $CODEBUILD_SRC_DIR/extension
