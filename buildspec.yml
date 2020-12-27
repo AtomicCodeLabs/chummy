@@ -4,6 +4,12 @@ env:
   variables:
     WEBSITE_SIGNIN: "signin/"
     WEBSITE_REDIRECT: "account/"
+    AMPLIFY: "{\
+      \"projectName\":\"chummy\",\
+      \"appId\":\"d37x99ddsw850\",\
+      \"envName\":\"$STAGE\",\
+      \"defaultEditor\":\"code\"\
+      }"
 
 proxy:
   upload-artifacts: no
@@ -13,7 +19,7 @@ phases:
   pre_build:
     commands:
       - cd extension
-      - amplify pull --appId d37x99ddsw850 --envName $STAGE
+      - amplify pull --amplify $AMPLIFY --yes
       - echo $CHUMMY_KEY_PEM > ./key.pem
       - yarn install --frozen-lockfile
       - yarn lint:check
