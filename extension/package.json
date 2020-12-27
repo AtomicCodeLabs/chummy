@@ -34,8 +34,8 @@
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh",
     "promote:all": "yarn promote:to-dev && yarn promote:to-gamma && yarn promote:to-prod",
-    "ci:prepublish": "./scripts/prepublish.sh $VERSION",
-    "ci:publish": "./scripts/publish.sh $VERSION",
+    "ci:prepublish": "./scripts/prepublish.sh $STAGE",
+    "ci:publish": "./scripts/publish.sh $STAGE",
     "docker:build": "docker build -f ../Dockerfile.chummy-builder -t alexkim205/ci:chummy-builder .",
     "docker:push": "yarn docker:build && docker push alexkim205/ci:chummy-builder"
   },
@@ -52,6 +52,7 @@
     "mobx": "^5.15.6",
     "mobx-react-lite": "^2.2.1",
     "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
     "prop-types": "^15.7.2",
     "quick-score": "^0.0.9",
     "react": "^16.13.1",

@@ -2,18 +2,15 @@ version: 0.2
 
 env:
   variables:
+    VERSION: "1.0.0"
     WEBSITE_SIGNIN: "signin/"
     WEBSITE_REDIRECT: "account/"
   parameter-store:
     ROOT_ACCESS_KEY_ID: "ROOT_ACCESS_KEY_ID"
     ROOT_SECRET_ACCESS_KEY: "ROOT_SECRET_ACCESS_KEY"
 
-proxy:
-  upload-artifacts: no
-  logs: no
-
 phases:
-  pre_build:
+  install:
     commands:
       - cd extension
       - REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"yarn build:web\",\"StartCommand\":\"yarn dev\"}"
@@ -24,27 +21,26 @@ phases:
       - amplify init --amplify $AMPLIFY --frontend $FRONTEND --providers $PROVIDERS --yes
       - echo $CHUMMY_KEY_PEM > ./key.pem
       - yarn install --frozen-lockfile
+  pre_build:
+    commands:
       - yarn lint:check
       - yarn format:check
   build:
     commands:
       - yarn build:moz
       - yarn build:web
+  post_build:
+    commands:
+      - yarn ci:prepublish
+      - yarn cy:run:moz
+      - yarn cy:run:web
+      - yarn ci:publish
 
 artifacts:
   base-directory: "extension/dist"
   files:
     - "**/*"
-  secondary-artifacts:
-    artifact1:
-      files:
-        - "moz/*"
-      name: dist.moz
-    artifact2:
-      files:
-        - "web/*"
-      name: dist.web
 
 cache:
   paths:
-    - "extension/node_modules/**/*"
+    - "~/.cache"

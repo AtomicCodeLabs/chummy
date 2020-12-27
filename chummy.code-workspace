@@ -22,31 +22,18 @@
     "configurations": [],
     "compounds": [
       {
-        "name": "Extension Development",
+        "name": "Dev",
         "configurations": [
           {
             "folder": "Extension",
             "name": "Launch Dev Server"
           },
           {
+            "folder": "Website",
+            "name": "Launch Dev Server"
+          },
+          {
             "folder": "Extension",
-            "name": "Launch Chrome"
-          },
-          {
-            "folder": "Website",
-            "name": "Launch Dev Server"
-          }
-        ]
-      },
-      {
-        "name": "Website Development",
-        "configurations": [
-          {
-            "folder": "Website",
-            "name": "Launch Dev Server"
-          },
-          {
-            "folder": "Website",
             "name": "Launch Chrome"
           }
         ]

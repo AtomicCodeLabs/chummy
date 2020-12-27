@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Checkout source branch first
 yarn checkout:gamma
 git add -A
