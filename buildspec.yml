@@ -10,7 +10,7 @@ env:
     ROOT_SECRET_ACCESS_KEY: "ROOT_SECRET_ACCESS_KEY"
 
 phases:
-  pre_build:
+  install:
     commands:
       - cd extension
       - REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"yarn build:web\",\"StartCommand\":\"yarn dev\"}"
@@ -21,6 +21,8 @@ phases:
       - amplify init --amplify $AMPLIFY --frontend $FRONTEND --providers $PROVIDERS --yes
       - echo $CHUMMY_KEY_PEM > ./key.pem
       - yarn install --frozen-lockfile
+  pre_build:
+    commands:
       - yarn lint:check
       - yarn format:check
   build:

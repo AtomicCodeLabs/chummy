@@ -21,8 +21,10 @@ const packageInfo = JSON.parse(
   )
 );
 
+const env = 'production';
+
 module.exports = {
-  mode: 'production',
+  mode: env,
   context: __dirname,
   entry: {
     background: '../src/background/index.js',
@@ -80,18 +82,19 @@ module.exports = {
       fileName: '.version',
       content: packageInfo.version
     }),
-    new webpack.EnvironmentPlugin({
-      NODE_ENV: 'production',
-      ASSETS_PUBLIC_PATH: process.env.ASSETS_PUBLIC_PATH,
-      WEBSITE_BASE_URL: process.env.WEBSITE_BASE_URL,
-      WEBSITE_SIGNIN: process.env.WEBSITE_SIGNIN
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
     }),
     new webpack.DefinePlugin({
       'process.env': {
+        NODE_ENV: JSON.stringify(env),
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
-        SC_DISABLE_SPEEDY: true
+        SC_DISABLE_SPEEDY: true,
+        ASSETS_PUBLIC_PATH: JSON.stringify(process.env.ASSETS_PUBLIC_PATH),
+        WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL),
+        WEBSITE_SIGNIN: JSON.stringify(process.env.WEBSITE_SIGNIN)
       }
     }),
     new webpack.LoaderOptionsPlugin({
