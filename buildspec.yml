@@ -13,6 +13,7 @@ phases:
   pre_build:
     commands:
       - cd extension
+      - amplify pull --appId d37x99ddsw850 --envName $STAGE
       - echo $CHUMMY_KEY_PEM > ./key.pem
       - yarn install --frozen-lockfile
       - yarn lint:check
