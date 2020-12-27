@@ -4,11 +4,30 @@ env:
   variables:
     WEBSITE_SIGNIN: "signin/"
     WEBSITE_REDIRECT: "account/"
+    REACTCONFIG: "{\
+      \"SourceDir\":\"src\",\
+      \"DistributionDir\":\"dist\",\
+      \"BuildCommand\":\"yarn build:web\",\
+      \"StartCommand\":\"yarn dev\"\
+      }"
+    AWSCLOUDFORMATIONCONFIG: "{\
+      \"configLevel\":\"project\",\
+      \"useProfile\":true,\
+      \"profileName\":\"default\"\
+      }"
     AMPLIFY: "{\
       \"projectName\":\"chummy\",\
       \"appId\":\"d37x99ddsw850\",\
       \"envName\":\"$STAGE\",\
       \"defaultEditor\":\"code\"\
+      }"
+    FRONTEND: "{\
+      \"frontend\":\"javascript\",\
+      \"framework\":\"react\",\
+      \"config\":$REACTCONFIG\
+      }"
+    PROVIDERS: "{\
+      \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
       }"
 
 proxy:
