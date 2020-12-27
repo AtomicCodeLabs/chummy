@@ -38,6 +38,9 @@ phases:
   pre_build:
     commands:
       - cd extension
+      - echo $AMPLIFY
+      - echo $FRONTEND
+      - echo $PROVIDERS
       - amplify init --amplify $AMPLIFY --frontend $FRONTEND --providers $PROVIDERS --yes
       - echo $CHUMMY_KEY_PEM > ./key.pem
       - yarn install --frozen-lockfile
