@@ -29,7 +29,9 @@ phases:
       - yarn build:web
   post_build:
     commands:
-      - 
+      - yarn ci:prepublish
+      - yarn cy:run:moz
+      - yarn cy:run:web
 
 artifacts:
   base-directory: "extension/dist"
