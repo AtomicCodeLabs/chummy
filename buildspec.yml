@@ -2,15 +2,12 @@ version: 0.2
 
 env:
   variables:
+    VERSION: "1.0.0"
     WEBSITE_SIGNIN: "signin/"
     WEBSITE_REDIRECT: "account/"
   parameter-store:
     ROOT_ACCESS_KEY_ID: "ROOT_ACCESS_KEY_ID"
     ROOT_SECRET_ACCESS_KEY: "ROOT_SECRET_ACCESS_KEY"
-
-proxy:
-  upload-artifacts: no
-  logs: no
 
 phases:
   pre_build:
@@ -39,11 +36,11 @@ artifacts:
     artifact1:
       files:
         - "moz/*"
-      name: dist.moz
+      name: $VERSION/dist_$VERSION.moz
     artifact2:
       files:
         - "web/*"
-      name: dist.web
+      name: $VERSION/dist_$VERSION.web
 
 cache:
   paths:
