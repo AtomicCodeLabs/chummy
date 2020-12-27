@@ -4,6 +4,9 @@ env:
   variables:
     WEBSITE_SIGNIN: "signin/"
     WEBSITE_REDIRECT: "account/"
+  parameter-store:
+    ROOT_ACCESS_KEY_ID: "ROOT_ACCESS_KEY_ID"
+    ROOT_SECRET_ACCESS_KEY: "ROOT_SECRET_ACCESS_KEY"
 
 proxy:
   upload-artifacts: no
@@ -14,7 +17,7 @@ phases:
     commands:
       - cd extension
       - REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"yarn build:web\",\"StartCommand\":\"yarn dev\"}"
-      - AWSCLOUDFORMATIONCONFIG="{\"configLevel\":\"project\",\"useProfile\":true,\"profileName\":\"default\"}"
+      - AWSCLOUDFORMATIONCONFIG="{\"configLevel\":\"project\",\"useProfile\":false,\"profileName\":\"default\",\"accessKeyId\":\"$ROOT_ACCESS_KEY_ID\",\"secretAccessKey\":\"$ROOT_SECRET_ACCESS_KEY\",\"region\":\"$AWS_DEFAULT_REGION\"}"
       - AMPLIFY="{\"projectName\":\"chummy\",\"appId\":\"d37x99ddsw850\",\"envName\":\"$STAGE\",\"defaultEditor\":\"code\"}"
       - FRONTEND="{\"frontend\":\"javascript\",\"framework\":\"react\",\"config\":$REACTCONFIG}"
       - PROVIDERS="{\"awscloudformation\":$AWSCLOUDFORMATIONCONFIG}"
