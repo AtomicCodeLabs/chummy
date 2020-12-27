@@ -27,6 +27,9 @@ phases:
     commands:
       - yarn build:moz
       - yarn build:web
+  post_build:
+    commands:
+      - 
 
 artifacts:
   base-directory: "extension/dist"
@@ -37,12 +40,12 @@ artifacts:
       base-directory: "extension/dist/moz"
       files:
         - "**/*"
-      name: $VERSION/dist_$VERSION.moz
+      name: /$VERSION/dist_$VERSION.moz
     PublishWebAssets:
       base-directory: "extension/dist/web"
       files:
         - "**/*"
-      name: $VERSION/dist_$VERSION.web
+      name: /$VERSION/dist_$VERSION.web
 
 cache:
   paths:
