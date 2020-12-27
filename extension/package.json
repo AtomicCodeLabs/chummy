@@ -33,6 +33,7 @@
     "promote:to-dev": "./scripts/promote.dev.sh",
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh",
+    "promote:all": "yarn promote:to-dev && yarn promote:to-gamma && yarn promote:to-prod",
     "ci:prepublish": "./scripts/prepublish.sh $VERSION",
     "ci:publish": "./scripts/publish.sh $VERSION"
   },
