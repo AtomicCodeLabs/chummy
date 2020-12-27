@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd $CODEBUILD_SRC_DIR/extension/dist
 ls
 pwd
