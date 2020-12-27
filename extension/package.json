@@ -34,7 +34,9 @@
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh",
     "ci:prepublish": "./scripts/prepublish.sh $VERSION",
-    "ci:publish": "./scripts/publish.sh $VERSION"
+    "ci:publish": "./scripts/publish.sh $VERSION",
+    "docker:build": "docker build -f ../Dockerfile.chummy-builder -t alexkim205/ci:chummy-builder .",
+    "docker:push": "yarn docker:build && docker push alexkim205/ci:chummy-builder"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",

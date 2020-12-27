@@ -1,0 +1,41 @@
+FROM node:12.19.0
+LABEL AUTHOR=alexkim205
+
+# Install other prerequisites
+RUN apt-get update && \
+  apt-get install -y \
+  zip \
+  unzip
+
+# Install AWS CLI
+RUN apt-get install -y \
+  python3 \
+  python3-pip \
+  python3-setuptools \
+  groff \
+  less \
+  && pip3 install --upgrade pip \
+  && apt-get clean
+
+RUN pip3 --no-cache-dir install --upgrade awscli
+
+# Install Amplify CLI @latest
+RUN npm install -g @aws-amplify/cli
+
+# Install Cypress prerequisites
+RUN apt-get update && \
+  apt-get install -y \
+  libgtk2.0-0 \
+  libgtk-3-0 \
+  libgbm-dev \
+  libnotify-dev \
+  libgconf-2-4 \
+  libnss3 \
+  libxss1 \
+  libasound2 \
+  libxtst6 \
+  xauth \
+  xvfb \
+  firefox-esr
+
+USER root
