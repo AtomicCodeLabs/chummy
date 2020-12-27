@@ -136,9 +136,12 @@ module.exports = {
       filename: 'background.html',
       cache: false
     }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: env }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
+    }),
     new webpack.DefinePlugin({
       'process.env': {
+        NODE_ENV: JSON.stringify('development'),
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
