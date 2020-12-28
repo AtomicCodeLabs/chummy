@@ -15,6 +15,10 @@
     {
       "name": "CI",
       "path": "../chummy-ci"
+    },
+    {
+      "name": "Github Cognito Shim",
+      "path": "../github-cognito-openid-wrapper"
     }
   ],
   "settings": {},

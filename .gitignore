@@ -8,7 +8,6 @@ extension/dist
 extension/webpack/reports/**/*
 extension/cypress/screenshots
 extension/cypress/videos
-extension/github-cognito-openid-wrapper
 ## Amplify
 extension/amplify-backup
 extension/amplify/\#current-cloud-backend
