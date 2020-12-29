@@ -18,6 +18,7 @@ applications:
       phases:
         preBuild:
           commands:
+            - yum install jq
             - yarn install
             - aws ssm get-parameters --names "ROOT_ACCESS_KEY_ID" "ROOT_SECRET_ACCESS_KEY" --with-decryption --query "Parameters" | jq -r 'map( "export " + .Name + "=" + .Value )[]' >~/.env.ci
             - . ~/.env.ci
