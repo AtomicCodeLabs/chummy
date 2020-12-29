@@ -129,24 +129,11 @@
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1609564967
+                        1609841718
                     ]
                 }
             },
             "Condition": "ShouldCreateAPIKey"
-        },
-        "NoneDataSource": {
-            "Type": "AWS::AppSync::DataSource",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "Name": "NONE",
-                "Type": "NONE"
-            }
         },
         "GraphQLSchema": {
             "Type": "AWS::AppSync::GraphQLSchema",
@@ -172,7 +159,7 @@
                 }
             }
         },
-        "User": {
+        "Blog": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -237,17 +224,16 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "User.json"
+                            "Blog.json"
                         ]
                     ]
                 }
             },
             "DependsOn": [
-                "GraphQLSchema",
-                "NoneDataSource"
+                "GraphQLSchema"
             ]
         },
-        "Bookmark": {
+        "Post": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -312,14 +298,87 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "Bookmark.json"
+                            "Post.json"
                         ]
                     ]
                 }
             },
             "DependsOn": [
-                "GraphQLSchema",
-                "NoneDataSource"
+                "GraphQLSchema"
+            ]
+        },
+        "Comment": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "AppSyncApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "AppSyncApiName": {
+                        "Ref": "AppSyncApiName"
+                    },
+                    "APIKeyExpirationEpoch": {
+                        "Ref": "APIKeyExpirationEpoch"
+                    },
+                    "CreateAPIKey": {
+                        "Ref": "CreateAPIKey"
+                    },
+                    "AuthCognitoUserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "env": {
+                        "Ref": "env"
+                    },
+                    "S3DeploymentBucket": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "S3DeploymentRootKey": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "GetAttGraphQLAPIApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "https://s3.amazonaws.com",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "stacks",
+                            "Comment.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLSchema"
             ]
         },
         "ConnectionStack": {
@@ -394,8 +453,9 @@
             },
             "DependsOn": [
                 "GraphQLSchema",
-                "NoneDataSource",
-                "Bookmark"
+                "Post",
+                "Blog",
+                "Comment"
             ]
         },
         "CustomResourcesjson": {
@@ -441,8 +501,9 @@
             "DependsOn": [
                 "GraphQLAPI",
                 "GraphQLSchema",
-                "User",
-                "Bookmark",
+                "Blog",
+                "Post",
+                "Comment",
                 "ConnectionStack"
             ]
         }

@@ -86,7 +86,7 @@
         }
     },
     "Resources": {
-        "UserTable": {
+        "BlogTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
@@ -96,7 +96,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "Blog",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     },
@@ -110,7 +110,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "Blog",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     }
@@ -182,7 +182,7 @@
             },
             "DeletionPolicy": "Delete"
         },
-        "UserIAMRole": {
+        "BlogIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
@@ -192,7 +192,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "Usercb3b2b",
+                                    "Blog5a0ed0",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -207,7 +207,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User64da07",
+                                    "Blog0e5d83",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -259,7 +259,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "Blog",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -273,7 +273,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "Blog",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -296,7 +296,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "Blog",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -310,7 +310,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "Blog",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -330,17 +330,17 @@
                 ]
             }
         },
-        "UserDataSource": {
+        "BlogDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
                     "Ref": "GetAttGraphQLAPIApiId"
                 },
-                "Name": "UserTable",
+                "Name": "BlogTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "UserIAMRole",
+                        "BlogIAMRole",
                         "Arn"
                     ]
                 },
@@ -355,7 +355,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "User",
+                                        "Blog",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         },
@@ -369,7 +369,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "User",
+                                        "Blog",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         }
@@ -381,10 +381,10 @@
                 }
             },
             "DependsOn": [
-                "UserIAMRole"
+                "BlogIAMRole"
             ]
         },
-        "GetUserResolver": {
+        "GetBlogResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -392,11 +392,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "BlogDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getUser",
+                "FieldName": "getBlog",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -413,7 +413,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getUser",
+                                        "getBlog",
                                         "req",
                                         "vtl"
                                     ]
@@ -437,7 +437,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "getUser",
+                                        "getBlog",
                                         "res",
                                         "vtl"
                                     ]
@@ -448,7 +448,7 @@
                 }
             }
         },
-        "ListUserResolver": {
+        "ListBlogResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -456,11 +456,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "BlogDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listUsers",
+                "FieldName": "listBlogs",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -477,7 +477,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listUsers",
+                                        "listBlogs",
                                         "req",
                                         "vtl"
                                     ]
@@ -501,7 +501,7 @@
                                     ".",
                                     [
                                         "Query",
-                                        "listUsers",
+                                        "listBlogs",
                                         "res",
                                         "vtl"
                                     ]
@@ -512,7 +512,7 @@
                 }
             }
         },
-        "CreateUserResolver": {
+        "CreateBlogResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -520,11 +520,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "BlogDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createUser",
+                "FieldName": "createBlog",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -541,7 +541,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createUser",
+                                        "createBlog",
                                         "req",
                                         "vtl"
                                     ]
@@ -565,7 +565,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createUser",
+                                        "createBlog",
                                         "res",
                                         "vtl"
                                     ]
@@ -576,7 +576,7 @@
                 }
             }
         },
-        "UpdateUserResolver": {
+        "UpdateBlogResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -584,11 +584,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "BlogDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateUser",
+                "FieldName": "updateBlog",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -605,7 +605,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateUser",
+                                        "updateBlog",
                                         "req",
                                         "vtl"
                                     ]
@@ -629,7 +629,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateUser",
+                                        "updateBlog",
                                         "res",
                                         "vtl"
                                     ]
@@ -640,7 +640,7 @@
                 }
             }
         },
-        "DeleteUserResolver": {
+        "DeleteBlogResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -648,11 +648,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "BlogDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteUser",
+                "FieldName": "deleteBlog",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -669,7 +669,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteUser",
+                                        "deleteBlog",
                                         "req",
                                         "vtl"
                                     ]
@@ -693,184 +693,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteUser",
-                                        "res",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "SubscriptiononCreateUserResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Ref": "GetAttGraphQLAPIApiId"
-                },
-                "DataSourceName": "NONE",
-                "FieldName": "onCreateUser",
-                "TypeName": "Subscription",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onCreateUser",
-                                        "req",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onCreateUser",
-                                        "res",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "SubscriptiononUpdateUserResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Ref": "GetAttGraphQLAPIApiId"
-                },
-                "DataSourceName": "NONE",
-                "FieldName": "onUpdateUser",
-                "TypeName": "Subscription",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onUpdateUser",
-                                        "req",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onUpdateUser",
-                                        "res",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "SubscriptiononDeleteUserResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Ref": "GetAttGraphQLAPIApiId"
-                },
-                "DataSourceName": "NONE",
-                "FieldName": "onDeleteUser",
-                "TypeName": "Subscription",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onDeleteUser",
-                                        "req",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Subscription",
-                                        "onDeleteUser",
+                                        "deleteBlog",
                                         "res",
                                         "vtl"
                                     ]
@@ -883,11 +706,11 @@
         }
     },
     "Outputs": {
-        "GetAttUserTableStreamArn": {
+        "GetAttBlogTableStreamArn": {
             "Description": "Your DynamoDB table StreamArn.",
             "Value": {
                 "Fn::GetAtt": [
-                    "UserTable",
+                    "BlogTable",
                     "StreamArn"
                 ]
             },
@@ -900,18 +723,18 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserTable",
+                            "BlogTable",
                             "StreamArn"
                         ]
                     ]
                 }
             }
         },
-        "GetAttUserDataSourceName": {
+        "GetAttBlogDataSourceName": {
             "Description": "Your model DataSource name.",
             "Value": {
                 "Fn::GetAtt": [
-                    "UserDataSource",
+                    "BlogDataSource",
                     "Name"
                 ]
             },
@@ -924,17 +747,17 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserDataSource",
+                            "BlogDataSource",
                             "Name"
                         ]
                     ]
                 }
             }
         },
-        "GetAttUserTableName": {
+        "GetAttBlogTableName": {
             "Description": "Your DynamoDB table name.",
             "Value": {
-                "Ref": "UserTable"
+                "Ref": "BlogTable"
             },
             "Export": {
                 "Name": {
@@ -945,7 +768,7 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserTable",
+                            "BlogTable",
                             "Name"
                         ]
                     ]
