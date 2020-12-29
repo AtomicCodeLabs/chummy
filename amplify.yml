@@ -9,6 +9,8 @@ applications:
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
         WEBSITE_REDIRECT: $WEBSITE_REDIRECT
         STAGE: $STAGE
+        ROOT_ACCESS_KEY_ID: $ROOT_ACCESS_KEY_ID
+        ROOT_SECRET_ACCESS_KEY: $ROOT_SECRET_ACCESS_KEY
     backend:
       phases:
         build:
@@ -18,10 +20,7 @@ applications:
       phases:
         preBuild:
           commands:
-            - yum install jq
             - yarn install
-            - aws ssm get-parameters --names "ROOT_ACCESS_KEY_ID" "ROOT_SECRET_ACCESS_KEY" --with-decryption --query "Parameters" | jq -r 'map( "export " + .Name + "=" + .Value )[]' >~/.env.ci
-            - . ~/.env.ci
             - REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"yarn build:web\",\"StartCommand\":\"yarn dev\"}"
             - AWSCLOUDFORMATIONCONFIG="{\"configLevel\":\"project\",\"useProfile\":false,\"profileName\":\"default\",\"accessKeyId\":\"$ROOT_ACCESS_KEY_ID\",\"secretAccessKey\":\"$ROOT_SECRET_ACCESS_KEY\",\"region\":\"$AWS_DEFAULT_REGION\"}"
             - AMPLIFY="{\"projectName\":\"chummy\",\"appId\":\"d37x99ddsw850\",\"envName\":\"$STAGE\",\"defaultEditor\":\"code\"}"
