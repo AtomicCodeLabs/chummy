@@ -8,7 +8,7 @@ import App from '../pages/App';
 import ThemeProvider from '../config/theme/context';
 import RootStoreContext from '../config/store/context.ts';
 import rootStore from '../config/store/root.store.ts';
-import FirebaseProvider from '../config/firebase';
+import FirebaseProvider from '../config/dao';
 import OctoProvider from '../config/octokit';
 import './index.css';
 

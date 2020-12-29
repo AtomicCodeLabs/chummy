@@ -1,11 +1,9 @@
 const webpack = require('webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DotenvPlugin = require('dotenv-webpack');
 const CreateFileWebpack = require('create-file-webpack');
-const path = require('path');
 
 require('dotenv').config({
   path: path.join(__dirname, '../.env.development')
@@ -30,11 +28,11 @@ module.exports = {
     'background.dao': '../src/background/dao.js',
     'background.storage': '../src/background/storage.js',
     'background.redirect.inject': '../src/background/redirect.inject.js',
+    'background.signin.inject': '../src/background/signin.inject.js',
     'content-script': '../src/content-scripts/index.js',
     popup: '../src/popup/index.js'
   },
   output: {
-    path: path.join(__dirname, '../dist/dev'),
     filename: '[name].js',
     chunkFilename: '[name][id].js'
   },
@@ -87,31 +85,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: '../manifest-base.json',
-          to: './manifest.json',
-          transform(content) {
-            return JSON.stringify(
-              {
-                ...JSON.parse(content),
-                description: packageInfo.description,
-                version: packageInfo.version,
-                key:
-                  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkZ7eURkxU+9PPkvVaVDUK88dZX39ZXKS9zRtpkAY6so1omoDZ6L3AWjy4e3ds8vz6OxeFcPzgycgTDVaPa2LAgvk2i+/eSbmFO8wvbp8Ce0/iPf2Vp0IqR1MQ+aRT+qD+6swNXvIJuAwFcuPP0LnDMe4veGVHyvI4uoelEVJ7P7RrnrskU4vscUAKHi5FygZLnfXzifrY2Vy6GA2wNipmd2I4+gW4ZnvSTzMs1u6s/k3LSg96cFxOl62AanEnuOcahUrCPl2/aTlU8OrOdgyiGvWKw4DxXsLC7XNZ589QvVP9uRdSsj7sAie/bGkTWRM3/NqYts8YhsMypWCCCxnQQIDAQAB',
-                externally_connectable: {
-                  matches: ['http://localhost:8000/account']
-                }
-              },
-              null,
-              2
-            );
-          }
-        },
-        { from: '../public/icon', to: './icon' }
-      ]
-    }),
     new CreateFileWebpack({
       path: path.join(__dirname, '../dist/'),
       fileName: '.version',
@@ -145,19 +118,13 @@ module.exports = {
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
-        SC_DISABLE_SPEEDY: true
+        SC_DISABLE_SPEEDY: true,
+        EXTENSION_ID: JSON.stringify(packageInfo.extensionId)
       }
     }),
     new webpack.HotModuleReplacementPlugin(),
     new DotenvPlugin({
       path: path.join(__dirname, '../.env.development')
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: path.join(__dirname, './reports/report.dev.html'),
-      statsFilename: path.join(__dirname, './reports/stats.dev.json'),
-      generateStatsFile: true,
-      openAnalyzer: false
     })
   ]
 };

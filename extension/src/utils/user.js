@@ -1,5 +1,14 @@
 import browser from 'webextension-polyfill';
 
+export const onSignInComplete = (callback = () => {}) => {
+  const toCall = (request) => {
+    if (request.action === 'sign-in-complete') {
+      callback(request.payload);
+    }
+  };
+  browser.runtime.onMessage.addListener(toCall);
+};
+
 export const getAllBookmarks = async () => {
   try {
     const request = {
@@ -65,5 +74,6 @@ export default {
   getAllBookmarks,
   addBookmark,
   updateBookmark,
-  removeBookmark
+  removeBookmark,
+  onSignInComplete
 };

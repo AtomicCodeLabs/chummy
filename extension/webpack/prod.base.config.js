@@ -32,6 +32,7 @@ module.exports = {
     'background.dao': '../src/background/dao.js',
     'background.storage': '../src/background/storage.js',
     'background.redirect.inject': '../src/background/redirect.inject.js',
+    'background.signin.inject': '../src/background/signin.inject.js',
     'content-script': '../src/content-scripts/index.js',
     popup: '../src/popup/index.js'
   },
@@ -92,9 +93,11 @@ module.exports = {
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
         SC_DISABLE_SPEEDY: true,
+        EXTENSION_ID: JSON.stringify(packageInfo.extensionId),
         ASSETS_PUBLIC_PATH: JSON.stringify(process.env.ASSETS_PUBLIC_PATH),
         WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL),
-        WEBSITE_SIGNIN: JSON.stringify(process.env.WEBSITE_SIGNIN)
+        WEBSITE_SIGNIN: JSON.stringify(process.env.WEBSITE_SIGNIN),
+        WEBSITE_REDIRECT: JSON.stringify(process.env.WEBSITE_REDIRECT)
       }
     }),
     new webpack.LoaderOptionsPlugin({

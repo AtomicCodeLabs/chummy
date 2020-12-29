@@ -8,15 +8,21 @@ import { objectMap } from '../../utils';
 
 export default class UserStore implements IUserStore {
   uiStore: IUiStore;
+
   fileStore: IFileStore;
 
   @observable user: User = null;
+
   @observable userBookmarks: Map<string, Repo> = new Map(); // key is owner:branchName
+
   @observable numOfBookmarks: number = 0;
+
   @observable userSessions: Map<string, Session> = new Map(); // key is session id
+
   @observable numOfSessions: number = 0;
 
   @observable isPending: boolean; // keep boolean bc user pending requests are binary
+
   @observable error: Error = null; // sign in error, null if none
 
   constructor(rootStore: IRootStore) {
@@ -24,7 +30,7 @@ export default class UserStore implements IUserStore {
     this.fileStore = rootStore.fileStore; // Store to access file stores
   }
 
-  /** Firebase Auth - sync firebase with user in store **/
+  /** Firebase Auth - sync firebase with user in store * */
 
   @action.bound setUser({ user }: { user: User }): void {
     if (!user) {
@@ -56,7 +62,7 @@ export default class UserStore implements IUserStore {
     this.userBookmarks.clear();
   }
 
-  /** Firebase Firestore - sync user properties in firestore with user store **/
+  /** Firebase Firestore - sync user properties in firestore with user store * */
 
   // userBookmarks
   @action.bound getUserBookmarkRepo = (owner: string, repoName: string) => {
@@ -131,7 +137,7 @@ export default class UserStore implements IUserStore {
 
   @action.bound cleanupUserBookmarks(repoBookmarksToSet: Repo[]) {
     // Loop through all the open repos and remove the tabs that aren't open
-    let activeBookmarkIds = new Set();
+    const activeBookmarkIds = new Set();
     repoBookmarksToSet.forEach((r: Repo) =>
       Object.values(r.bookmarks).forEach((b: Bookmark) =>
         activeBookmarkIds.add(b.bookmarkId)
@@ -216,7 +222,7 @@ export default class UserStore implements IUserStore {
 
   @action.bound addUserSession = (session: Session) => {
     this.userSessions.set(session.id, session);
-    this.numOfSessions = this.numOfSessions + 1;
+    this.numOfSessions += 1;
   };
 
   @action.bound updateUserSession = (session: Session) => {
@@ -232,7 +238,7 @@ export default class UserStore implements IUserStore {
     this.numOfSessions = Math.min(0, this.numOfBookmarks - 1);
   };
 
-  /** Util **/
+  /** Util * */
   @action.bound setPending(isPending: boolean): void {
     this.isPending = isPending;
     if (isPending) {

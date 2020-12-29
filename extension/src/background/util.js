@@ -284,3 +284,46 @@ export class UrlParser {
 
   #handleSettingsSubpage = () => this.payloadRepoInfo;
 }
+
+const decodePayload = (jwtToken) => {
+  const payload = jwtToken.split('.')[1];
+  try {
+    return JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+  } catch (err) {
+    return {};
+  }
+};
+
+const calculateClockDrift = (iatAccessToken, iatIdToken) => {
+  const now = Math.floor(new Date() / 1000);
+  const iat = Math.min(iatAccessToken, iatIdToken);
+  return now - iat;
+};
+
+export const storeTokens = (storage, data, clientId) => {
+  // Manually login with credentials received from another window
+  // https://github.com/aws-amplify/amplify-js/issues/825
+  const idTokenData = decodePayload(data.idToken);
+  const accessTokenData = decodePayload(data.accessToken);
+
+  storage.setItem(
+    `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`,
+    idTokenData['cognito:username']
+  );
+  storage.setItem(
+    `CognitoIdentityServiceProvider.${clientId}.${idTokenData['cognito:username']}.idToken`,
+    data.idToken
+  );
+  storage.setItem(
+    `CognitoIdentityServiceProvider.${clientId}.${idTokenData['cognito:username']}.accessToken`,
+    data.accessToken
+  );
+  storage.setItem(
+    `CognitoIdentityServiceProvider.${clientId}.${idTokenData['cognito:username']}.refreshToken`,
+    data.refreshToken
+  );
+  storage.setItem(
+    `CognitoIdentityServiceProvider.${clientId}.${idTokenData['cognito:username']}.clockDrift`,
+    `${calculateClockDrift(accessTokenData.iat, idTokenData.iat)}`
+  );
+};

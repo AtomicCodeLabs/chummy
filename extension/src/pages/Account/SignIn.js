@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { OctofaceIcon } from '@primer/octicons-react';
+import { MarkGithubIcon } from '@primer/octicons-react';
 
 import SplashSpinner from '../../components/Loading/SplashSpinner';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
@@ -10,6 +10,7 @@ import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
 import { H3 } from '../../components/Text';
 import { ICON } from '../../constants/sizes';
 import useTheme from '../../hooks/useTheme';
+import { onSignInComplete } from '../../utils/user';
 
 const Container = styled.div`
   display: flex;
@@ -31,12 +32,20 @@ export default observer(() => {
   const { error, isPending } = useUserStore();
   checkCurrentUser();
 
-  // Set splash screen for 2 seconds
+  // Set splash screen for 1 second
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplashScreen(false);
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // set listener for sign in complete messages from bg
+  useEffect(() => {
+    const removeListener = onSignInComplete((payload) => {
+      firebase.signInComplete(payload);
+    });
+    return removeListener;
   }, []);
 
   const renderContents = () => {
@@ -57,7 +66,7 @@ export default observer(() => {
       <>
         <SignInContainer>
           <IconAndTextButton
-            Icon={<OctofaceIcon />}
+            Icon={<MarkGithubIcon />}
             iconSize={ICON.SIZE(STPayload) + 4}
             onClick={() => {
               firebase.signIn();

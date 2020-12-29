@@ -11,7 +11,6 @@ export default () => {
     cy.fixture('bookmarks').then((bookmarks) => {
       cy.fixture('repositories').then((repositories) => {
         cy.fixture('store').then((store) => {
-          // browser.runtime.sendMessage.yields('HELLO');
           browser.runtime.sendMessage
             .withArgs({ action: 'get-current-user' })
             .yields(user);
