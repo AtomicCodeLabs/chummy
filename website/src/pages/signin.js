@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'gatsby';
 import { Auth } from 'aws-amplify';
 
@@ -12,19 +12,25 @@ import SEO from '../components/seo';
  * redirects to the account page of the signed in user. On load, this account page
  * will send a message to the extension.
  */
-const SignIn = () => (
-  <Layout>
-    <SEO title="Sign In" />
-    <h1>Sign In</h1>
-    <button
-      type="submit"
-      onClick={() => Auth.federatedSignIn({ provider: 'Github' })}
-    >
-      Sign in with Github
-    </button>
+const SignIn = () => {
+  useEffect(() => {
+    Auth.federatedSignIn({ provider: 'Github' });
+  }, []);
 
-    <Link to="/">Go back to the homepage</Link>
-  </Layout>
-);
+  return (
+    <Layout>
+      <SEO title="Sign In" />
+      <h1>Sign In</h1>
+      {/* <button
+        type="submit"
+        onClick={() => Auth.federatedSignIn({ provider: 'Github' })}
+      >
+        Sign in with Github
+      </button> */}
+
+      <Link to="/">Go back to the homepage</Link>
+    </Layout>
+  );
+};
 
 export default SignIn;
