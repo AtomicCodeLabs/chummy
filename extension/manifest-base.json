@@ -13,7 +13,10 @@
     "page": "background.html",
     "persistent": false
   },
-  "web_accessible_resources": ["background.redirect.inject.js"],
+  "web_accessible_resources": [
+    "background.redirect.inject.js",
+    "background.signin.inject.js"
+  ],
   "permissions": ["tabs", "storage", "*://github.com/*"],
   "icons": {
     "16": "icon/chummy16.png",

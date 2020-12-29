@@ -34,7 +34,9 @@ export default observer(() => {
           onChange={(option) => {
             setTheme(option.value);
           }}
-          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
+          isOptionDisabled={(option) =>
+            !option.tiers.includes(user.accountType)
+          }
         />
       </Panel>
       <PanelDivider />
@@ -50,7 +52,9 @@ export default observer(() => {
           onChange={(option) => {
             setSpacing(option.value);
           }}
-          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
+          isOptionDisabled={(option) =>
+            !option.tiers.includes(user.accountType)
+          }
         />
       </Panel>
       <PanelDivider />
@@ -66,7 +70,9 @@ export default observer(() => {
           onChange={(option) => {
             setIsStickyWindow(option.value);
           }}
-          isOptionDisabled={(option) => option.tiers.includes(user.accountType)}
+          isOptionDisabled={(option) =>
+            !option.tiers.includes(user.accountType)
+          }
         />
       </Panel>
     </PanelsContainer>

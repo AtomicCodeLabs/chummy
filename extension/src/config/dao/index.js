@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import browser from 'webextension-polyfill';
 
 import useOctoDAO from '../../hooks/octokit';
+import { isBlank } from '../../utils';
 import userUtils from '../../utils/user';
 import {
   transformBookmarks,
@@ -46,21 +47,31 @@ class FirebaseDAO {
         request
       );
       const response = await browser.runtime.sendMessage(request);
-      console.log('Response', response);
 
-      if (response) {
-        // Set user store
-        this.userStore.setUser({
-          user: response.payload.user
-        });
-        this.octoDAO.authenticate(response.payload.user?.apiKey);
+      // The extension receives a sign in triggered action
+      if (response.error) {
+        throw new Error(response.error);
       }
-      // Fetch user's bookmarks
-      this.getAllBookmarks();
     } catch (error) {
       console.warn('Error signing in', error);
       this.userStore.setError(error);
+    } finally {
+      this.userStore.setPending(false);
     }
+  };
+
+  signInComplete = (payload) => {
+    console.log('sign-incomplete', payload);
+    this.userStore.setPending(true);
+
+    // Set user store
+    this.userStore.setUser({
+      user: payload.user
+    });
+    this.octoDAO.authenticate(payload.user?.apiKey);
+
+    // Fetch user's bookmarks
+    this.getAllBookmarks();
 
     this.userStore.setPending(false);
   };
@@ -94,15 +105,15 @@ class FirebaseDAO {
       this.handleUserResponse(response);
     } catch (error) {
       console.warn('Error getting current user', error);
+    } finally {
+      this.userStore.setPending(false);
     }
-
-    this.userStore.setPending(false);
   };
 
   // Util method to handle user payload from bg script
   handleUserResponse = (response) => {
     if (response?.payload) {
-      if (response.payload.user) {
+      if (!isBlank(response.payload.user)) {
         // If user is signed in
         this.userStore.setUser({
           user: response.payload.user
@@ -139,8 +150,9 @@ class FirebaseDAO {
       }
     } catch (error) {
       console.warn('Error getting all bookmarks', error);
+    } finally {
+      this.userStore.setPending(false);
     }
-    this.userStore.setPending(false);
   };
 
   addBookmark = async (bookmark) => {
@@ -160,8 +172,9 @@ class FirebaseDAO {
       this.userStore.addBookmark(bookmarkRepo);
     } catch (error) {
       console.warn('Error creating bookmark', error);
+    } finally {
+      this.userStore.setPending(false);
     }
-    this.userStore.setPending(false);
   };
 
   updateBookmark = async (bookmark) => {
@@ -172,8 +185,9 @@ class FirebaseDAO {
       this.userStore.updateBookmark(bookmark);
     } catch (error) {
       console.warn('Error updating bookmark', error);
+    } finally {
+      this.userStore.setPending(false);
     }
-    this.userStore.setPending(false);
   };
 
   removeBookmark = async (bookmark) => {
@@ -192,8 +206,9 @@ class FirebaseDAO {
       this.userStore.removeBookmark(bookmarkRepo);
     } catch (error) {
       console.warn('Error remove bookmark', error);
+    } finally {
+      this.userStore.setPending(false);
     }
-    this.userStore.setPending(false);
   };
 }
 
