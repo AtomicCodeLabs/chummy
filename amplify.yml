@@ -8,6 +8,7 @@ applications:
         WEBSITE_BASE_URL: $WEBSITE_BASE_URL
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
         WEBSITE_REDIRECT: $WEBSITE_REDIRECT
+        STAGE: $STAGE
     backend:
       phases:
         build:
@@ -18,9 +19,10 @@ applications:
         preBuild:
           commands:
             - yarn install
+            - amplify pull --appId d37x99ddsw850 --envName STAGE
         build:
           commands:
-            - yarn run build
+            - yarn build
       artifacts:
         baseDirectory: public
         files:
