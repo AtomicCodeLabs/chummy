@@ -14,6 +14,10 @@ const packageInfo = JSON.parse(
 
 module.exports = {
   ...base,
+  output: {
+    ...base.outputs,
+    path: path.join(__dirname, '../dist/dev.moz')
+  },
   plugins: [
     ...base.plugins,
     new CopyPlugin({
@@ -22,13 +26,18 @@ module.exports = {
           from: '../manifest-base.json',
           to: './manifest.json',
           transform(content) {
+            const baseManifest = formBaseManifest(content);
             return JSON.stringify({
-              ...formBaseManifest(content),
+              ...baseManifest,
               browser_specific_settings: {
                 gecko: {
                   id: packageInfo.email // packageInfo.extensionId
                 }
-              }
+              },
+              permissions: [
+                ...baseManifest.permissions.slice(0, -1),
+                'http://localhost/' // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns
+              ]
             });
           }
         },

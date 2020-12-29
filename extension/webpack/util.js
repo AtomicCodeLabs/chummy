@@ -11,19 +11,15 @@ const packageInfo = JSON.parse(
 // eslint-disable-next-line import/prefer-default-export
 function formBaseManifest(content) {
   const baseManifest = JSON.parse(content);
-  return JSON.stringify(
-    {
-      ...baseManifest,
-      description: packageInfo.description,
-      version: packageInfo.version,
-      permissions: [
-        ...baseManifest.permissions,
-        `${process.env.WEBSITE_BASE_URL}*`
-      ]
-    },
-    null,
-    2
-  );
+  return {
+    ...baseManifest,
+    description: packageInfo.description,
+    version: packageInfo.version,
+    permissions: [
+      ...baseManifest.permissions,
+      `${process.env.WEBSITE_BASE_URL}*`
+    ]
+  };
 }
 
 module.exports.formBaseManifest = formBaseManifest;

@@ -33,7 +33,6 @@ module.exports = {
     popup: '../src/popup/index.js'
   },
   output: {
-    path: path.join(__dirname, '../dist/dev'),
     filename: '[name].js',
     chunkFilename: '[name][id].js'
   },

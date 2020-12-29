@@ -7,6 +7,10 @@ const { formBaseManifest } = require('./util');
 
 module.exports = {
   ...base,
+  output: {
+    ...base.outputs,
+    path: path.join(__dirname, '../dist/dev.web')
+  },
   plugins: [
     ...base.plugins,
     new CopyPlugin({
