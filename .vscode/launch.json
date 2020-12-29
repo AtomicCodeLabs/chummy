@@ -9,7 +9,7 @@
       "request": "launch",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}/extension",
-      "runtimeArgs": ["dev"],
+      "runtimeArgs": ["dev:web"],
       "type": "pwa-node",
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",
@@ -21,7 +21,7 @@
       "request": "launch",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}/extension",
-      "runtimeArgs": ["build"],
+      "runtimeArgs": ["build:web"],
       "type": "pwa-node",
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",

@@ -1,42 +1,52 @@
-import Amplify, { API, Auth } from 'aws-amplify';
+import Amplify, { StorageHelper } from '@aws-amplify/core';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import Auth from '@aws-amplify/auth';
 import browser from 'webextension-polyfill';
 
-import 'regenerator-runtime/runtime'; // for async/await to work
-import 'core-js/stable'; // or a more selective import such as "core-js/es/array"
-
 import awsExports from '../aws-exports';
-// import * as queries from '../graphql/queries';
-// import * as mutations from '../graphql/mutations';
-// import * as subscriptions from '../graphql/subscriptions';
+import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
+import * as compositeQueries from '../config/dao/queries';
 
-import { isCurrentWindow, isExtensionOpen } from './util';
+import { isCurrentWindow, isExtensionOpen, storeTokens } from './util';
 import { AccountType, APP_URLS } from './constants.ts';
 
 class DAO {
   constructor() {
-    // Initialize firebase in background script
+    // Initialize DAO in background script
     try {
       Amplify.configure(awsExports);
-      this.graphql = API.graphql;
+      this.api = API;
       this.auth = Auth;
+      this.storage = new StorageHelper().getStorage();
+      this.auth.configure({ storage: this.storage });
     } catch (error) {
       console.warn('Error configuring DAO', error);
       return;
     }
 
     // Additional properties on this.auth.currentUser
-    this.githubApiKey = null; // Keep API key to make requests with on hand
-    this.accountType = null; // Keep accountType to know which request user is allowed to make
-    this.bookmarks = [];
+    this.user = {
+      uid: null,
+      accountType: null,
+      email: null,
+      displayName: null,
+      photoURL: null,
+      bookmarks: [],
+      apiKey: null
+    };
+    // this.githubApiKey = null; // Keep API key to make requests with on hand
+    // this.accountType = null; // Keep accountType to know which request user is allowed to make
+    // this.bookmarks = [];
     this.listeners = null;
 
     // If user hasn't signed out yet, apiKey will still be in
     // chrome storage. Use that for future requests.
-    browser.storage.sync.get(['apiKey']).then((items) => {
-      if (items.apiKey) {
-        this.setGithubApiKey(items.apiKey);
-      }
-    });
+    // browser.storage.sync.get(['apiKey']).then((items) => {
+    //   if (items.apiKey) {
+    //     this.setUser({ apiKey: items.apiKey });
+    //   }
+    // });
 
     // Subscribe only once
     if (!this.listeners) {
@@ -45,10 +55,17 @@ class DAO {
   }
 
   // *** Listeners ***
-  // Expose firebase Auth API that content script can query
+  // Expose DAO Auth API that content script can query
 
   cleanupAuthListener = (request) => {
-    if (['sign-in', 'sign-out', 'get-current-user'].includes(request.action)) {
+    if (
+      [
+        'sign-in',
+        'sign-out',
+        'get-current-user',
+        'auth-from-content-script'
+      ].includes(request.action)
+    ) {
       return (async () => {
         // Sign In
         if (request.action === 'sign-in') {
@@ -57,7 +74,7 @@ class DAO {
           let error;
           try {
             await this.signInWithGithub();
-            payload = this.getCurrentUser();
+            payload = { triggered: true };
             success = true;
           } catch (e) {
             error = e;
@@ -72,11 +89,34 @@ class DAO {
           this.signOut();
           return null;
         }
+        // Post Sign In Complete
+        if (request.action === 'auth-from-content-script') {
+          let success = false;
+          let payload;
+          let error;
+          try {
+            await this.setUserAfterSignIn(request);
+            payload = this.getCurrentUserPayload();
+            success = true;
+          } catch (e) {
+            error = e;
+          }
+          // Send sign in complete message to extension
+          const data = success ? { payload } : { error };
+          this.sendMessageToExtension({
+            ...data,
+            action: 'sign-in-complete'
+          });
+          return {
+            ...data,
+            action: request.action
+          };
+        }
         // Get current user
         if (request.action === 'get-current-user') {
           return {
             action: request.action,
-            payload: this.getCurrentUser()
+            payload: this.getCurrentUserPayload()
           };
         }
         return null;
@@ -156,187 +196,285 @@ class DAO {
 
   // *** Class Methods ***
 
-  setGithubApiKey = async (apiKey) => {
-    this.githubApiKey = apiKey;
-    // Set chrome storage with apiKey and loggedin state
-    await browser.storage.sync.set({
-      apiKey: this.githubApiKey,
-      isLoggedIn: true
+  setUser = async (user) => {
+    // Only set the attributes that are available
+    Object.keys(user).forEach((attr) => {
+      if (
+        [
+          'uid',
+          'email',
+          'displayName',
+          'photoURL',
+          'apiKey',
+          'accountType',
+          'bookmarks'
+        ].includes(attr)
+      ) {
+        // Transform bookmarks into compatible format before assigning them
+        if (attr === 'bookmarks') {
+          // If repo/branch are already javascript objects, they've already
+          // been converted. If at least one is in string format, that means
+          // createBookmark method was called, as only the recently fetched one
+          // is stringified.
+          user.bookmarks = user.bookmarks.map((b) => ({
+            bookmarkId: b.id || b.bookmarkId,
+            name: b.name,
+            path: b.path,
+            pinned: b.pinned,
+            repo: typeof b.repo === 'string' ? JSON.parse(b.repo) : b.repo,
+            branch:
+              typeof b.branch === 'string' ? JSON.parse(b.branch) : b.branch
+          }));
+        }
+
+        this.user[attr] = user[attr];
+
+        // Persist some attributes to storage
+        if (attr === 'apiKey') {
+          browser.storage.sync.set({
+            apiKey: user[attr]
+          });
+        }
+      }
     });
   };
 
-  setAccountType = (accountType) => {
-    this.accountType = accountType;
+  getCurrentUserPayload = () => {
+    return { user: this.user };
   };
 
   setBookmarks = (bookmarks) => {
-    this.bookmarks = bookmarks;
+    this.setUser({ bookmarks });
   };
 
   // *** Auth API ***
 
   /*
-   * Create new tab that redirects to https://<website>/signin
-   * Extenion will start listening for "sign-in-complete" message
-   * This page will
-   *  1. auto click the "Sign in With Github" button
-   *  2. login with github
-   *  3. redirect to https://<website>/account
-   * This callback page will
-   *  1. Find the id of the Chummy chrome extension
-   *  2. sendMessage to chrome extension
-   * Extension receives message and removes listener
-   * Continue with sign in.
+   * 1. Create new tab that redirects to https://<website>/signin
+   * 2. That site will call Auth.signIn() on page load
+   * 3. After the user logs in, they are redirected to https://<website>/account
+   * 4. This whole time, background will have a tab listener for the tab it created that triggers a
+   *  script inject when this redirect is made.
+   * 5. This content script will send a 'post-sign-in' message to background with the user
+   * 6. Bg script sets the user and sends a sign-in-complete to extension popup window.
    */
   signInWithGithub = async () => {
+    const signInUrl = new URL(
+      APP_URLS.WEBSITE.SIGNIN,
+      APP_URLS.WEBSITE.BASE
+    ).toString();
+    const redirectUrl = new URL(
+      APP_URLS.WEBSITE.REDIRECT,
+      APP_URLS.WEBSITE.BASE
+    ).toString();
+
     try {
       // Create new tab
       const newTab = {
-        url: new URL(APP_URLS.WEBSITE.SIGNIN, APP_URLS.WEBSITE.BASE).toString(),
+        url: signInUrl,
         active: true
       };
-      console.log('Creating new tab', newTab);
-      await browser.tabs.create(newTab);
+      const createdTab = await browser.tabs.create(newTab);
 
-      // Call this method once browser receives sign-in-message
-      const continueSignIn = async (request) => {
-        const response = request?.payload;
+      // Create tab listener to inject content script on redirect
+      browser.tabs.onUpdated.addListener(function injectListener(
+        tabId,
+        _changeInfo,
+        tab
+      ) {
+        // make sure the status is 'complete' and it's the right tab
+        if (
+          tabId === createdTab.id &&
+          tab.url.indexOf(redirectUrl) !== -1 &&
+          tab.status === 'complete'
+        ) {
+          // Remove listener after one inject
+          browser.tabs.onUpdated.removeListener(injectListener);
 
-        // Query store for user's account type, it will create one
-        // if it doesn't exist
-        if (!response || !response.user) {
-          throw new Error('Sign in response is empty');
-        }
-        const { isNewUser } = response.additionalUserInfo;
-        if (isNewUser) {
-          // Create new firestore collection if user is new
-          this.createNewUserCollection(response.user.uid);
-        } else {
-          // Get user data
-          this.getUserCollection(response.user.uid);
-        }
-
-        // Set api key property
-        this.setGithubApiKey(response.credential?.accessToken);
-
-        return response;
-      };
-
-      // Listen for sign-in-complete message
-      browser.runtime.onMessageExternal.addListener((request) => {
-        if (request.action === 'sign-in-complete') {
-          console.log('Received sign-in-complete request', request);
-          return continueSignIn(request);
+          // Inject script
+          browser.tabs
+            .executeScript(tabId, {
+              file: 'background.signin.inject.js'
+            })
+            .catch((e) => {
+              console.log('Error injecting', e);
+            });
         }
       });
     } catch (error) {
       console.warn('Error signing in with Github', error);
+      throw error;
+    }
+  };
+
+  setUserAfterSignIn = async (request) => {
+    try {
+      // Call this method once browser receives sign-in-message
+      const response = request?.payload?.user;
+
+      // Query store for user's account type, it will create one
+      // if it doesn't exist
+      if (!response) {
+        throw new Error('Sign in response is empty');
+      }
+
+      storeTokens(
+        this.storage,
+        response,
+        awsExports.aws_user_pools_web_client_id
+      );
+
+      // Get user's collection or create if it doesn't exist
+      const user = await this.createOrGetUserCollection(response.sub);
+
+      // Now that a user doc has been fetched/created, set the user's properties in memory
+      this.setUser({
+        uid: response.sub,
+        email: response.email,
+        displayName: response.name,
+        photoURL: response.picture,
+        apiKey: response['custom:access_token'],
+        accountType: user.accountType,
+        bookmarks: user.bookmarks.items
+      });
+    } catch (error) {
+      console.warn('Error setting user after sign in', error);
     }
   };
 
   signOut = async () => {
     try {
       this.auth.signOut();
-      this.setGithubApiKey(null);
-      this.setAccountType(null);
+      this.setUser({
+        apiKey: null
+      });
       this.setBookmarks([]);
-      // eslint-disable-next-line object-shorthand
-      await browser.storage.sync.set({ apiKey: null, isLoggedIn: false });
       console.log('Api key removed from chrome storage');
     } catch (error) {
       console.warn('Error signing out', error);
     }
   };
 
-  getCurrentUser = () => {
-    if (!this.auth.currentUser) {
-      console.warn('User is not authenticated.');
-      return null;
-    }
-    const { uid, displayName, email, photoURL } = this.auth.currentUser;
-    return {
-      user: {
-        uid,
-        email,
-        displayName,
-        photoURL,
-        apiKey: this.githubApiKey,
-        accountType: this.accountType
-      }
-    };
+  sendMessageToExtension = (message) => {
+    browser.runtime.sendMessage(message);
   };
 
-  // *** Firestore API ***
-  createNewUserCollection = (userUuid) => {
-    try {
-      const newCollection = {
-        accountType: AccountType.Community,
-        bookmarks: []
-      };
-      console.log(
-        '%c[WRITE] New user collection created',
-        'background-color: green; color: white;'
-      );
-      this.dbUsers.doc(userUuid).set(newCollection, { merge: true });
-      this.setAccountType(newCollection.accountType);
-      this.setBookmarks(newCollection.bookmarks);
-    } catch (error) {
-      console.warn('Error creating new user collection', error);
-    }
-  };
+  // *** Data API ***
+  createOrGetUserCollection = async (userUuid) => {
+    let userDoc;
+    let isNewSignup = true;
+    let error;
 
-  getUserCollection = async (userUuid) => {
     try {
+      // Try fetching
       console.log(
-        '%c[READ] User collection read',
+        '%c[READ] User collection + all user bookmarks read',
         'background-color: blue; color: white;'
       );
-      const userDoc = await this.dbUsers.doc(userUuid).get();
-      if (userDoc.exists) {
-        const user = userDoc.data();
-        this.setAccountType(user.accountType);
-        this.setBookmarks(user.bookmarks);
+
+      userDoc = (
+        await this.api.graphql(
+          graphqlOperation(queries.getUser, { id: userUuid })
+        )
+      )?.data?.getUser;
+      if (userDoc) {
+        isNewSignup = false;
       }
-    } catch (error) {
-      console.warn('Error creating new user collection', error);
+    } catch (e) {
+      console.warn('Error getting user collection', e);
+      error = e;
     }
+
+    // If user doesn't exist, try creating one.
+    if (isNewSignup) {
+      try {
+        // User doesn't exist, so create one
+        console.log(
+          '%c[WRITE] User collection created',
+          'background-color: green; color: white;'
+        );
+        const newUser = {
+          id: userUuid,
+          accountType: AccountType.Community
+        };
+        userDoc = (
+          await this.api.graphql(
+            graphqlOperation(mutations.createUser, { input: newUser })
+          )
+        )?.data?.createUser;
+      } catch (e) {
+        console.warn('Error creating user collection', e);
+        error = e;
+      }
+    }
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    return userDoc;
   };
 
+  /* Structure of bookmark referenced from `I.user.store.ts`
+      export interface Node {
+        oid: string;
+        name: string;
+        type: NodeType;
+        path: string;
+        children?: Node[];
+        repo: Repo;
+        branch: Branch;
+        isOpen?: boolean;
+      }
+
+      export interface Bookmark extends Node {
+        bookmarkId: string;
+        pinned?: boolean;
+      }
+    */
   createBookmark = async (bookmark) => {
-    const currentUserUuid = this.getCurrentUser()?.user.uid;
+    const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
     if (!currentUserUuid) {
       console.warn('Error adding bookmark because user is not logged in.');
       return;
     }
-    /* From I.user.store.ts
-    export interface Bookmark {
-      uid: string;
-      tab: Branch; // Contains repo, nodeName, and subpage info
-    }
-    */
     // Add bookmark in cloud db
     console.log(
       '%c[WRITE] New bookmark created',
       'background-color: green; color: white;'
     );
-    // await this.dbUsers.doc(currentUserUuid).update({
-    //   bookmarks: firebase.firestore.FieldValue.arrayUnion(bookmark)
-    // });
+    const newBookmark = {
+      id: bookmark.bookmarkId,
+      userId: currentUserUuid,
+      name: bookmark.name,
+      path: bookmark.path,
+      pinned: bookmark.pinned,
+      branch: JSON.stringify(bookmark.branch),
+      repo: JSON.stringify(bookmark.repo)
+    };
+
+    // Make create request
+    await this.api.graphql(
+      graphqlOperation(mutations.createBookmark, { input: newBookmark })
+    );
 
     // Add to local cache of bookmarks
-    this.setBookmarks([...this.bookmarks, bookmark]);
+    this.setBookmarks([...this.user.bookmarks, bookmark]);
   };
 
   removeBookmark = async (bookmark) => {
-    const currentUserUuid = this.getCurrentUser()?.user.uid;
+    const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
       console.warn('Error removing bookmark because user is not logged in.');
       return;
     }
-    // Remove from cloud db
-    // await this.dbUsers.doc(currentUserUuid).update({
-    //   bookmarks: firebase.firestore.FieldValue.arrayRemove(bookmark)
-    // });
+
+    // Make delete request
+    await this.api.graphql(
+      graphqlOperation(mutations.deleteBookmark, {
+        input: { id: bookmark.bookmarkId }
+      })
+    );
     console.log(
       '%c[WRITE] Bookmark deleted',
       'background-color: green; color: white;'
@@ -344,14 +482,20 @@ class DAO {
 
     // Remove from local cache of bookmarks
     this.setBookmarks(
-      this.bookmarks.filter((b) => b.bookmarkId !== bookmark.bookmarkId)
+      this.user.bookmarks.filter((b) => b.bookmarkId !== bookmark.bookmarkId)
     );
   };
 
   updateBookmark = async (bookmark) => {
-    const currentUserUuid = this.getCurrentUser()?.user.uid;
+    if (!bookmark.bookmarkId) {
+      console.warn(
+        'Error updating bookmark because bookmark id is not specified'
+      );
+      return;
+    }
+    const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
-      console.warn('Error removing bookmark because user is not logged in.');
+      console.warn('Error updating bookmark because user is not logged in.');
       return;
     }
 
@@ -361,55 +505,59 @@ class DAO {
       'background-color: green; color: white;'
     );
 
-    const userRef = this.dbUsers.doc(currentUserUuid);
-    await this.db.runTransaction(async (t) => {
-      const doc = await t.get(userRef);
+    const newBookmark = {
+      id: bookmark.bookmarkId,
+      ...(currentUserUuid && { userId: currentUserUuid }),
+      ...(bookmark.name && { name: bookmark.name }),
+      ...(bookmark.path && { path: bookmark.path }),
+      ...(bookmark.pinned && { pinned: bookmark.pinned }),
+      ...(bookmark.branch && { branch: JSON.stringify(bookmark.branch) }),
+      ...(bookmark.repo && { repo: JSON.stringify(bookmark.repo) })
+    };
 
-      // Atomic transaction
-      const newBookmarks = [
-        ...doc
-          .data()
-          .bookmarks.filter(
-            (bInDoc) => bInDoc.bookmarkId !== bookmark.bookmarkId
-          ),
-        bookmark
-      ];
-      t.update(userRef, { bookmarks: newBookmarks });
-    });
+    // Make create request
+    await this.api.graphql(
+      graphqlOperation(mutations.updateBookmark, { input: newBookmark })
+    );
 
     // Update local cache of bookmark
     this.setBookmarks([
-      ...this.bookmarks.filter((b) => b.bookmarkId !== bookmark.bookmarkId),
+      ...this.user.bookmarks.filter(
+        (b) => b.bookmarkId !== bookmark.bookmarkId
+      ),
       bookmark
     ]);
   };
 
   getAllBookmarks = async () => {
-    const currentUserUuid = this.getCurrentUser()?.user.uid;
+    const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
       console.warn('Cannot get bookmarks because user is not logged in.');
       return [];
     }
 
     // If locally cached in background
-    if (this.bookmarks.length !== 0) {
+    if (this.user.bookmarks?.length !== 0) {
       console.log(
-        `Using cached bookmarks, retrieved ${this.bookmarks.length} bookmarks`
+        `Using cached bookmarks, retrieved ${this.user.bookmarks.length} bookmarks`
       );
-      return { bookmarks: this.bookmarks };
+      return { bookmarks: this.user.bookmarks };
     }
 
-    // If not cached, make fetch request
+    // Fallback option is to make request for just bookmarks
     console.log(
       '%c[READ] Get all bookmarks',
       'background-color: blue; color: white;'
     );
 
-    let bookmarks = [];
-    const user = await this.dbUsers.doc(currentUserUuid).get();
-    if (user.exists) {
-      bookmarks = user.data().bookmarks;
-    }
+    const bookmarks =
+      (
+        await this.api.graphql(
+          graphqlOperation(compositeQueries.getUserBookmarks, {
+            userId: currentUserUuid
+          })
+        )
+      )?.data?.getUser?.bookmarks?.items || [];
 
     // Update local cache of bookmark
     this.setBookmarks(bookmarks);
@@ -429,7 +577,7 @@ const onBrowserActionClickedListener = async () => {
     if (await isExtensionOpen()) {
       return;
     }
-    console.log('Initialize dao listeners');
+    console.log('Initialize DAO listeners');
     daoStore.subscribeListeners();
   } catch (error) {
     console.warn('Error initializing extension listeners', error);

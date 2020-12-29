@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useUserStore } from './store';
-import { FirebaseContext } from '../config/firebase';
+import { FirebaseContext } from '../config/dao';
 import useOctoDAO from './octokit';
 
 const useFirebaseDAO = () => {
