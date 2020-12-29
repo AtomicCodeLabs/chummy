@@ -102,16 +102,7 @@
                         }
                     ]
                 },
-                "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
-                "UserPoolConfig": {
-                    "UserPoolId": {
-                        "Ref": "AuthCognitoUserPoolId"
-                    },
-                    "AwsRegion": {
-                        "Ref": "AWS::Region"
-                    },
-                    "DefaultAction": "ALLOW"
-                }
+                "AuthenticationType": "API_KEY"
             }
         },
         "GraphQLAPIKey": {
@@ -123,13 +114,14 @@
                         "ApiId"
                     ]
                 },
+                "Description": "Key for Chummy API",
                 "Expires": {
                     "Fn::If": [
                         "APIKeyExpirationEpochIsPositive",
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1609841718
+                        1609564967
                     ]
                 }
             },
