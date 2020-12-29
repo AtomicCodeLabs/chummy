@@ -22,7 +22,7 @@ applications:
             - amplify pull --appId d37x99ddsw850 --envName STAGE
         build:
           commands:
-            - yarn run build
+            - yarn build
       artifacts:
         baseDirectory: public
         files:
