@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "chummy2b6ddd64_identitypool_2b6ddd64",
+    "identityPoolName": "chummy9948bcd5_identitypool_9948bcd5",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "chummy2b6ddd64",
-    "userPoolName": "chummy2b6ddd64_userpool_2b6ddd64",
+    "resourceNameTruncated": "chummy9948bcd5",
+    "userPoolName": "chummy9948bcd5_userpool_9948bcd5",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "chummy2b6ddd64_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "chummy9948bcd5_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "2b6ddd64",
-    "resourceName": "chummy2b6ddd64",
+    "sharedId": "9948bcd5",
+    "resourceName": "chummy9948bcd5",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -47,9 +47,10 @@
     },
     "useDefault": "defaultSocial",
     "hostedUI": true,
-    "hostedUIDomainName": "chummy",
+    "hostedUIDomainName": "chummy9948bcd5-9948bcd5",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8000/account/\"],\"LogoutURLs\":[\"http://localhost:8000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
