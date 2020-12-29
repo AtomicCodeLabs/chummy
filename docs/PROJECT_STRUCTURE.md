@@ -51,7 +51,11 @@ Because the extension is a browser extension, its entry point will look a little
 
 ### Deployment
 
-#### v1.0.1
+#### v1.0.0c
+
+With the move away from Firebase to Amplify, we're moving away from Jenkins and using Amplify Console as a built in CI/CD solution. AWS Amplify takes care of environment variables that live securely in the AWS world, and we no longer need to bootstrap our own process of fetching credentials, passing them to Docker, passing them to the individual build images, and exposing them.
+
+#### v1.0.0b
 
 We've homebrewed our own CI/CD server, and now use Jenkins on EC2!
 
@@ -59,6 +63,6 @@ In this version, we move on from Github actions to Jenkins on AWS to take more c
 
 This process required that we automate the process for spinning up a pre-configured Jenkins docker image on AWS EC2. Credentials are retrieved via AWS CLI and copied into a volume that Jenkins and the EC2 host shares. We configured Jenkins so that it can execute builds on Docker node images (yes, you heard it right, it's Docker-ception) on all branches in the `alexkim205/chummy` repo that contain a `Jenkinsfile`.
 
-#### v1.0.0
+#### v1.0.0a
 
 CI workflows to test and build the extension and build the website _separately_ are defined in the `.github/workflows` folder. In order to expose the production environment variables (Firebase project API and Github app API keys) to Github Actions, we use `gpg` per the official Github documentation [here](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#limits-for-secrets). Encryption and decryption scripts are placed in the `./scripts/` folder so that local `./{extension|website}.env.production` files can be encrypted locally, pushed to the repository, and decrypted in the workflow with a Github secret. You might be wondering how any of your pull-requests are going to pass these workflow checks if you don't have access to these secrets. But rest assured, a successful build isn't contingent on having access to this secret key—-in other words, you won't need special privileges in order for pull-request build to succeed because the extension/website will build just fine without env keys.

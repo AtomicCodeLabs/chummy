@@ -36,13 +36,15 @@ All types of contributions are encouraged and valued. We hope to see you around!
     - [Your First Code Contribution](#your-first-code-contribution)
     - [Improving The Documentation](#improving-the-documentation)
   - [Styleguides](#styleguides)
+    - [Linting and Formatting](#linting-and-formatting)
     - [Commit Messages](#commit-messages)
+      - [Common Types](#common-types)
   - [Attribution](#attribution)
 
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[Chummy Code of Conduct](https://github.com/alexkim205/chummy/blob/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to alexgkim205@gmail.com.
+[Chummy Code of Conduct](https://github.com/alexkim205/chummy/blob/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to chummy@atomiccode.io.
 
 ## I Have a Question
 
@@ -83,7 +85,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 
 #### How Do I Submit a Good Bug Report?
 
-> You must never report security related issues, vulnerabilities or bugs to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to <alexgkim205@gmail.com>.
+> You must never report security related issues, vulnerabilities or bugs to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to <chummy@atomiccode.io>.
 
 We use GitHub issues to track bugs and errors. If you run into an issue with the project:
 
@@ -135,26 +137,40 @@ Updating, improving and correcting the documentation
 
 ## Styleguides
 
+### Linting and Formatting
+
+Eslint and Prettier are used to enforce styling for this project. You don't have to worry about styling for the most part, as both of this tools will be run in a pre-commit hook by Husky during each commit. Check out how the guidelines are configured in `.prettierrc` and `.eslintrc`.
+
 ### Commit Messages
 
-This project uses Conventional Changelog's [commitlint](https://github.com/conventional-changelog/commitlint) package to standardize commit messages. Make sure to prefix all commits with one of the common types below:
+Be a good commitzen! This project follows the commit standards that are enforced by [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). You can commit your changes a couple of ways:
+
+- `git commit` - (Recommended) Husky will hook in an interactive interface that will let you choose the type of commit message.
+- `npx cz` - Does the same thing as above without running Husky's pre-commit eslint and prettier hooks.
+
+#### Common Types
+
+Please check out the [Conventional Commits Specifications](https://www.conventionalcommits.org/en/v1.0.0/) for more information about the different commit types and when to use them. The `git commit` method gives you a pretty concise explanation.
 
 - build
 - ci
 - chore
 - docs
-- feat
-- fix
+- feat (auto bumps MINOR version)
+- fix (auto bumps PATCH version)
 - perf
 - refactor
 - revert
 - style
 - test
+- {type}! (appending ! to any type auto bumps MAJOR version)
 
-```txt
-// Example Commit Message
+Examples
+
+```text
 feat: added bookmarking page and corresponding store values
 fix: fixed random unauth bug
+refactor!: drop support for Node 6
 ```
 
 Check out the [`.commitlintrc.js`](../.commitlintrc.js) file for the full rules configuration.

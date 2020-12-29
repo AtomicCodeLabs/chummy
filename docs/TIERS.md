@@ -5,16 +5,23 @@
 - Repositories and Tab management
 - Search code
 - Vanilla light theme
+- Cozy spacing
 - Private repositories
 - Up to 10 bookmarks
+- Bookmarks search
 - Lazy loaded repository files
 
 ## Professional (30 day trial)
 
-- Everything in Basic
-- Sticky window
+- Everything in Community
 - Unlimited bookmarks
-- Bookmarks search
-- Dark mode + customizable themes
+- Dark mode + more themes
+- More spacing options!
+- Sticky window
 - Priority email support
-- (In development) - Custom cache TTL's
+- Priority feature development
+
+## Enterprise (Teams of 5+)
+
+- Everything in Professional
+- License management
