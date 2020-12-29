@@ -5,6 +5,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const AssetsPlugin = require('assets-webpack-plugin');
 
 const base = require('./prod.base.config');
+const { formBaseManifest } = require('./util');
 
 const packageInfo = JSON.parse(
   JSON.stringify(
@@ -27,28 +28,14 @@ module.exports = {
           from: '../manifest-base.json',
           to: './manifest.json',
           transform(content) {
-            return JSON.stringify(
-              {
-                ...JSON.parse(content),
-                description: packageInfo.description,
-                version: packageInfo.version,
-                browser_specific_settings: {
-                  gecko: {
-                    id: packageInfo.extensionId
-                  }
-                },
-                externally_connectable: {
-                  matches: [
-                    new URL(
-                      process.env.WEBSITE_REDIRECT,
-                      process.env.WEBSITE_BASE_URL
-                    ).toString()
-                  ]
+            return JSON.stringify({
+              ...formBaseManifest(content),
+              browser_specific_settings: {
+                gecko: {
+                  id: packageInfo.email // packageInfo.extensionId
                 }
-              },
-              null,
-              2
-            );
+              }
+            });
           }
         },
         { from: '../public/icon', to: './icon' },
