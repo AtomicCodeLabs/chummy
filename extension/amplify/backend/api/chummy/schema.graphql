@@ -1,20 +1,18 @@
-type Blog @model {
+type User @model @auth(rules: [{ allow: owner }]) {
   id: ID!
+  accountType: String!
+  bookmarks: [Bookmark] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type Bookmark
+  @model
+  @auth(rules: [{ allow: owner }])
+  @key(name: "byUser", fields: ["userId", "name"]) {
+  id: ID!
+  userId: ID!
   name: String!
-  posts: [Post] @connection(keyName: "byBlog", fields: ["id"])
-}
-
-type Post @model @key(name: "byBlog", fields: ["blogID"]) {
-  id: ID!
-  title: String!
-  blogID: ID!
-  blog: Blog @connection(fields: ["blogID"])
-  comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
-}
-
-type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
-  id: ID!
-  postID: ID!
-  post: Post @connection(fields: ["postID"])
-  content: String!
+  path: String!
+  pinned: String! # We have to use String type because Boolean types can't be sort keys
+  branch: String!
+  repo: String!
 }

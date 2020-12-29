@@ -102,7 +102,16 @@
                         }
                     ]
                 },
-                "AuthenticationType": "API_KEY"
+                "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+                "UserPoolConfig": {
+                    "UserPoolId": {
+                        "Ref": "AuthCognitoUserPoolId"
+                    },
+                    "AwsRegion": {
+                        "Ref": "AWS::Region"
+                    },
+                    "DefaultAction": "ALLOW"
+                }
             }
         },
         "GraphQLAPIKey": {
@@ -114,18 +123,30 @@
                         "ApiId"
                     ]
                 },
-                "Description": "Key for Chummy API",
                 "Expires": {
                     "Fn::If": [
                         "APIKeyExpirationEpochIsPositive",
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1609556591
+                        1609843622
                     ]
                 }
             },
             "Condition": "ShouldCreateAPIKey"
+        },
+        "NoneDataSource": {
+            "Type": "AWS::AppSync::DataSource",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "Name": "NONE",
+                "Type": "NONE"
+            }
         },
         "GraphQLSchema": {
             "Type": "AWS::AppSync::GraphQLSchema",
@@ -151,7 +172,7 @@
                 }
             }
         },
-        "Blog": {
+        "User": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -216,16 +237,17 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "Blog.json"
+                            "User.json"
                         ]
                     ]
                 }
             },
             "DependsOn": [
-                "GraphQLSchema"
+                "GraphQLSchema",
+                "NoneDataSource"
             ]
         },
-        "Post": {
+        "Bookmark": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -290,87 +312,14 @@
                                 "Ref": "S3DeploymentRootKey"
                             },
                             "stacks",
-                            "Post.json"
+                            "Bookmark.json"
                         ]
                     ]
                 }
             },
             "DependsOn": [
-                "GraphQLSchema"
-            ]
-        },
-        "Comment": {
-            "Type": "AWS::CloudFormation::Stack",
-            "Properties": {
-                "Parameters": {
-                    "AppSyncApiId": {
-                        "Fn::GetAtt": [
-                            "GraphQLAPI",
-                            "ApiId"
-                        ]
-                    },
-                    "DynamoDBModelTableReadIOPS": {
-                        "Ref": "DynamoDBModelTableReadIOPS"
-                    },
-                    "DynamoDBModelTableWriteIOPS": {
-                        "Ref": "DynamoDBModelTableWriteIOPS"
-                    },
-                    "DynamoDBBillingMode": {
-                        "Ref": "DynamoDBBillingMode"
-                    },
-                    "DynamoDBEnablePointInTimeRecovery": {
-                        "Ref": "DynamoDBEnablePointInTimeRecovery"
-                    },
-                    "DynamoDBEnableServerSideEncryption": {
-                        "Ref": "DynamoDBEnableServerSideEncryption"
-                    },
-                    "AppSyncApiName": {
-                        "Ref": "AppSyncApiName"
-                    },
-                    "APIKeyExpirationEpoch": {
-                        "Ref": "APIKeyExpirationEpoch"
-                    },
-                    "CreateAPIKey": {
-                        "Ref": "CreateAPIKey"
-                    },
-                    "AuthCognitoUserPoolId": {
-                        "Ref": "AuthCognitoUserPoolId"
-                    },
-                    "env": {
-                        "Ref": "env"
-                    },
-                    "S3DeploymentBucket": {
-                        "Ref": "S3DeploymentBucket"
-                    },
-                    "S3DeploymentRootKey": {
-                        "Ref": "S3DeploymentRootKey"
-                    },
-                    "GetAttGraphQLAPIApiId": {
-                        "Fn::GetAtt": [
-                            "GraphQLAPI",
-                            "ApiId"
-                        ]
-                    }
-                },
-                "TemplateURL": {
-                    "Fn::Join": [
-                        "/",
-                        [
-                            "https://s3.amazonaws.com",
-                            {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "stacks",
-                            "Comment.json"
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": [
-                "GraphQLSchema"
+                "GraphQLSchema",
+                "NoneDataSource"
             ]
         },
         "ConnectionStack": {
@@ -445,9 +394,8 @@
             },
             "DependsOn": [
                 "GraphQLSchema",
-                "Post",
-                "Blog",
-                "Comment"
+                "NoneDataSource",
+                "Bookmark"
             ]
         },
         "CustomResourcesjson": {
@@ -493,9 +441,8 @@
             "DependsOn": [
                 "GraphQLAPI",
                 "GraphQLSchema",
-                "Blog",
-                "Post",
-                "Comment",
+                "User",
+                "Bookmark",
                 "ConnectionStack"
             ]
         }
