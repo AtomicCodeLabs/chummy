@@ -4,6 +4,7 @@
   "extensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
   "version": "1.0.0",
   "author": "Alex Kim",
+  "email": "chummy@atomiccode.io",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
@@ -24,9 +25,9 @@
     "format": "prettier '**/*.{js,jsx}' --write",
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
-    "checkout:dev": "git checkout website/dev && amplify env checkout dev && amplify pull --yes",
-    "checkout:gamma": "git checkout website/gamma && amplify env checkout gamma && amplify pull --yes",
-    "checkout:prod": "git checkout website/prod && amplify env checkout prod && amplify pull --yes",
+    "checkout:dev": "git checkout website/dev && git pull && amplify env checkout dev && amplify pull --yes",
+    "checkout:gamma": "git checkout website/gamma && git pull && amplify env checkout gamma && amplify pull --yes",
+    "checkout:prod": "git checkout website/prod && git pull && amplify env checkout prod && amplify pull --yes",
     "promote:to-dev": "./scripts/promote.dev.sh",
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh"
@@ -48,8 +49,7 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
     "styled-components": "^5.2.1",
-    "styled-theming": "^2.2.0",
-    "webextension-polyfill": "^0.7.0"
+    "styled-theming": "^2.2.0"
   },
   "devDependencies": {
     "commitizen": "^4.2.2",
