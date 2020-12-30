@@ -9,6 +9,8 @@ applications:
         WEBSITE_SIGNIN: $WEBSITE_SIGNIN
         WEBSITE_REDIRECT: $WEBSITE_REDIRECT
         STAGE: $STAGE
+        ROOT_ACCESS_KEY_ID: $ROOT_ACCESS_KEY_ID
+        ROOT_SECRET_ACCESS_KEY: $ROOT_SECRET_ACCESS_KEY
     backend:
       phases:
         build:
@@ -19,14 +21,19 @@ applications:
         preBuild:
           commands:
             - yarn install
-            - amplify pull --appId d37x99ddsw850 --envName STAGE
+            - REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"yarn build:web\",\"StartCommand\":\"yarn dev\"}"
+            - AWSCLOUDFORMATIONCONFIG="{\"configLevel\":\"project\",\"useProfile\":false,\"profileName\":\"default\",\"accessKeyId\":\"$ROOT_ACCESS_KEY_ID\",\"secretAccessKey\":\"$ROOT_SECRET_ACCESS_KEY\",\"region\":\"$AWS_DEFAULT_REGION\"}"
+            - AMPLIFY="{\"projectName\":\"chummy\",\"appId\":\"d37x99ddsw850\",\"envName\":\"$STAGE\",\"defaultEditor\":\"code\"}"
+            - FRONTEND="{\"frontend\":\"javascript\",\"framework\":\"react\",\"config\":$REACTCONFIG}"
+            - PROVIDERS="{\"awscloudformation\":$AWSCLOUDFORMATIONCONFIG}"
+            - amplify init --amplify $AMPLIFY --frontend $FRONTEND --providers $PROVIDERS --yes
         build:
           commands:
             - yarn build
       artifacts:
         baseDirectory: public
         files:
-          - '**/*'
+          - "**/*"
       cache:
         paths:
           - node_modules/**/*
