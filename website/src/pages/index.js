@@ -1,13 +1,9 @@
 import React from 'react';
 import { Link } from 'gatsby';
 
-import initializeApp from '../config/amplify';
-
 import Layout from '../components/layout';
 import Image from '../components/image';
 import SEO from '../components/seo';
-
-initializeApp();
 
 const IndexPage = () => (
   <Layout>
