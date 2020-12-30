@@ -1,13 +1,16 @@
+#!/bin/bash
+set -e
+
 # Checkout source branch first
 yarn checkout:gamma
 git add -A
-HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push gamma [skip-cd]"
+git diff-index --quiet HEAD || HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push gamma [skip-cd]"
 git push -u origin website/gamma
 
 # Checkout target branch
 yarn checkout:prod
 git add -A
-HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push prod [skip-cd]"
+git diff-index --quiet HEAD || HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promote): push prod [skip-cd]"
 git push -u origin website/prod
 
 # Merge
