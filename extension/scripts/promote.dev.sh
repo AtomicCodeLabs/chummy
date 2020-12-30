@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Checkout source branch first
 yarn checkout:dev
