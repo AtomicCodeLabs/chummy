@@ -1,0 +1,235 @@
+type User {
+  id: ID!
+  accountType: String!
+  bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Bookmark {
+  id: ID!
+  userId: ID!
+  name: String!
+  path: String!
+  pinned: String!
+  branch: String!
+  repo: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelUserConnection {
+  items: [User]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  accountType: ModelStringInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getUser(id: ID!): User
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  getBookmark(id: ID!): Bookmark
+  listBookmarks(filter: ModelBookmarkFilterInput, limit: Int, nextToken: String): ModelBookmarkConnection
+}
+
+input CreateUserInput {
+  id: ID
+  accountType: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  accountType: String
+}
+
+input DeleteUserInput {
+  id: ID
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
+  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
+  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
+  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
+}
+
+input ModelUserConditionInput {
+  accountType: ModelStringInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+type Subscription {
+  onCreateUser(owner: String!): User @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser(owner: String!): User @aws_subscribe(mutations: ["updateUser"])
+  onDeleteUser(owner: String!): User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["createBookmark"])
+  onUpdateBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["updateBookmark"])
+  onDeleteBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["deleteBookmark"])
+}
+
+type ModelBookmarkConnection {
+  items: [Bookmark]
+  nextToken: String
+}
+
+input ModelBookmarkFilterInput {
+  id: ModelIDInput
+  userId: ModelIDInput
+  name: ModelStringInput
+  path: ModelStringInput
+  pinned: ModelStringInput
+  branch: ModelStringInput
+  repo: ModelStringInput
+  and: [ModelBookmarkFilterInput]
+  or: [ModelBookmarkFilterInput]
+  not: ModelBookmarkFilterInput
+}
+
+input CreateBookmarkInput {
+  id: ID
+  userId: ID!
+  name: String!
+  path: String!
+  pinned: String!
+  branch: String!
+  repo: String!
+}
+
+input UpdateBookmarkInput {
+  id: ID!
+  userId: ID
+  name: String
+  path: String
+  pinned: String
+  branch: String
+  repo: String
+}
+
+input DeleteBookmarkInput {
+  id: ID
+}
+
+input ModelBookmarkConditionInput {
+  userId: ModelIDInput
+  name: ModelStringInput
+  path: ModelStringInput
+  pinned: ModelStringInput
+  branch: ModelStringInput
+  repo: ModelStringInput
+  and: [ModelBookmarkConditionInput]
+  or: [ModelBookmarkConditionInput]
+  not: ModelBookmarkConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
+}

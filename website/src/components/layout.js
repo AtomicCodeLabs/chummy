@@ -5,10 +5,11 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useStaticQuery, graphql } from 'gatsby';
 
+import initializeAmplify from '../config/amplify';
 import Header from './header';
 import './layout.css';
 
@@ -22,6 +23,11 @@ const Layout = ({ children }) => {
       }
     }
   `);
+
+  // Initialize Amplify
+  useEffect(() => {
+    initializeAmplify();
+  }, []);
 
   return (
     <>
