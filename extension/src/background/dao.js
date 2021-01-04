@@ -8,6 +8,7 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 import * as compositeQueries from '../config/dao/queries';
 
+import log from '../config/log';
 import { isCurrentWindow, isExtensionOpen, storeTokens } from './util';
 import { AccountType, APP_URLS } from './constants.ts';
 
@@ -15,13 +16,19 @@ class DAO {
   constructor() {
     // Initialize DAO in background script
     try {
-      Amplify.configure(awsExports);
+      Amplify.configure({
+        ...awsExports,
+        graphql_headers: async () => {
+          const currentSession = await Auth.currentSession();
+          return { Authorization: currentSession.getIdToken().getJwtToken() };
+        }
+      });
       this.api = API;
       this.auth = Auth;
       this.storage = new StorageHelper().getStorage();
       this.auth.configure({ storage: this.storage });
     } catch (error) {
-      console.warn('Error configuring DAO', error);
+      log.error('Error configuring DAO', error);
       return;
     }
 
@@ -145,7 +152,7 @@ class DAO {
             success = true;
           } catch (e) {
             error = e;
-            console.warn(`Error handling ${request.action} action`, e);
+            log.error(`Error handling ${request.action} action`, e);
           }
           return {
             action: request.action,
@@ -157,7 +164,7 @@ class DAO {
           try {
             await this.updateBookmark(request.payload);
           } catch (e) {
-            console.warn(`Error handling ${request.action} action`, e);
+            log.error(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -166,7 +173,7 @@ class DAO {
           try {
             await this.createBookmark(request.payload);
           } catch (e) {
-            console.warn(`Error handling ${request.action} action`, e);
+            log.error(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -175,7 +182,7 @@ class DAO {
           try {
             await this.removeBookmark(request.payload);
           } catch (e) {
-            console.warn(`Error handling ${request.action} action`, e);
+            log.error(`Error handling ${request.action} action`, e);
           }
           return null;
         }
@@ -297,12 +304,12 @@ class DAO {
               file: 'background.signin.inject.js'
             })
             .catch((e) => {
-              console.log('Error injecting', e);
+              log.error('Error injecting signin script', e);
             });
         }
       });
     } catch (error) {
-      console.warn('Error signing in with Github', error);
+      log.error('Error signing in with Github', error);
       throw error;
     }
   };
@@ -338,7 +345,8 @@ class DAO {
         bookmarks: user.bookmarks.items
       });
     } catch (error) {
-      console.warn('Error setting user after sign in', error);
+      log.error('Error setting user after sign in', error);
+      throw error;
     }
   };
 
@@ -349,9 +357,8 @@ class DAO {
         apiKey: null
       });
       this.setBookmarks([]);
-      console.log('Api key removed from chrome storage');
     } catch (error) {
-      console.warn('Error signing out', error);
+      log.error('Error signing out', error);
     }
   };
 
@@ -367,10 +374,7 @@ class DAO {
 
     try {
       // Try fetching
-      console.log(
-        '%c[READ] User collection + all user bookmarks read',
-        'background-color: blue; color: white;'
-      );
+      log.apiRead('[READ] User collection + all user bookmarks read');
 
       userDoc = (
         await this.api.graphql(
@@ -381,7 +385,6 @@ class DAO {
         isNewSignup = false;
       }
     } catch (e) {
-      console.warn('Error getting user collection', e);
       error = e;
     }
 
@@ -389,10 +392,8 @@ class DAO {
     if (isNewSignup) {
       try {
         // User doesn't exist, so create one
-        console.log(
-          '%c[WRITE] User collection created',
-          'background-color: green; color: white;'
-        );
+        log.apiWrite('[WRITE] User collection created');
+
         const newUser = {
           id: userUuid,
           accountType: AccountType.Community
@@ -403,13 +404,12 @@ class DAO {
           )
         )?.data?.createUser;
       } catch (e) {
-        console.warn('Error creating user collection', e);
         error = e;
       }
     }
 
     if (error) {
-      throw new Error(error);
+      throw error;
     }
 
     return userDoc;
@@ -435,14 +435,11 @@ class DAO {
   createBookmark = async (bookmark) => {
     const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
     if (!currentUserUuid) {
-      console.warn('Error adding bookmark because user is not logged in.');
+      log.error('Error adding bookmark because user is not logged in.');
       return;
     }
     // Add bookmark in cloud db
-    console.log(
-      '%c[WRITE] New bookmark created',
-      'background-color: green; color: white;'
-    );
+    log.error('[WRITE] New bookmark created');
     const newBookmark = {
       id: bookmark.bookmarkId,
       userId: currentUserUuid,
@@ -465,7 +462,7 @@ class DAO {
   removeBookmark = async (bookmark) => {
     const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
-      console.warn('Error removing bookmark because user is not logged in.');
+      log.error('Error removing bookmark because user is not logged in.');
       return;
     }
 
@@ -475,10 +472,7 @@ class DAO {
         input: { id: bookmark.bookmarkId }
       })
     );
-    console.log(
-      '%c[WRITE] Bookmark deleted',
-      'background-color: green; color: white;'
-    );
+    log.apiWrite('[WRITE] Bookmark deleted');
 
     // Remove from local cache of bookmarks
     this.setBookmarks(
@@ -488,22 +482,17 @@ class DAO {
 
   updateBookmark = async (bookmark) => {
     if (!bookmark.bookmarkId) {
-      console.warn(
-        'Error updating bookmark because bookmark id is not specified'
-      );
+      log.error('Error updating bookmark because bookmark id is not specified');
       return;
     }
     const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
-      console.warn('Error updating bookmark because user is not logged in.');
+      log.error('Error updating bookmark because user is not logged in.');
       return;
     }
 
     // Update in cloud db
-    console.log(
-      '%c[WRITE] Bookmark updated',
-      'background-color: green; color: white;'
-    );
+    log.apiWrite('[WRITE] Bookmark updated');
 
     const newBookmark = {
       id: bookmark.bookmarkId,
@@ -532,23 +521,20 @@ class DAO {
   getAllBookmarks = async () => {
     const currentUserUuid = this.user?.uid;
     if (!currentUserUuid) {
-      console.warn('Cannot get bookmarks because user is not logged in.');
+      log.warn('Cannot get bookmarks because user is not logged in.');
       return [];
     }
 
     // If locally cached in background
     if (this.user.bookmarks?.length !== 0) {
-      console.log(
+      log.log(
         `Using cached bookmarks, retrieved ${this.user.bookmarks.length} bookmarks`
       );
       return { bookmarks: this.user.bookmarks };
     }
 
     // Fallback option is to make request for just bookmarks
-    console.log(
-      '%c[READ] Get all bookmarks',
-      'background-color: blue; color: white;'
-    );
+    log.apiRead('[READ] Get all bookmarks');
 
     const bookmarks =
       (
@@ -577,10 +563,10 @@ const onBrowserActionClickedListener = async () => {
     if (await isExtensionOpen()) {
       return;
     }
-    console.log('Initialize DAO listeners');
+    log.log('Initialize DAO listeners');
     daoStore.subscribeListeners();
   } catch (error) {
-    console.warn('Error initializing extension listeners', error);
+    log.error('Error initializing extension listeners', error);
   }
 };
 browser.browserAction.onClicked.addListener(() => {
@@ -597,7 +583,7 @@ const onWindowRemoveListener = async (windowId) => {
       daoStore.unsubscribeListeners();
     }
   } catch (error) {
-    console.warn('Error cleaning up listeners', error);
+    log.error('Error cleaning up listeners', error);
   }
 };
 browser.windows.onRemoved.addListener((windowId) => {

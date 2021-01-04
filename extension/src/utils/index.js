@@ -1,4 +1,6 @@
 import browser from 'webextension-polyfill';
+// eslint-disable-next-line import/no-cycle
+import log from '../config/log';
 
 /* eslint-disable no-unused-vars */
 export const sortFiles = (a, b) => {
@@ -37,11 +39,7 @@ export const redirectToUrl = (url) => {
     action: 'redirect-to-url',
     payload: { url }
   };
-  console.log(
-    '%Redirect to url request -> bg',
-    'background-color: #00c853; color: white;',
-    request
-  );
+  log.toBg('Redirect to url request -> bg', request);
   browser.runtime.sendMessage(request);
 };
 
@@ -53,3 +51,27 @@ export const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export const areArraysEqual = (a, b) =>
   a.length === b.length && a.every((ai, i) => ai === b[i]);
+
+export const isProduction = () => {
+  return process.env.NODE_ENV === 'production';
+};
+
+// https://stackoverflow.com/questions/4456969/how-to-tell-if-a-script-is-run-as-content-script-or-background-script
+export const getExtensionContext = () => {
+  if (
+    browser?.extension?.getBackgroundPage &&
+    browser.extension.getBackgroundPage() === window
+  ) {
+    return 'BACKGROUND';
+  }
+  if (
+    browser?.extension?.getBackgroundPage &&
+    browser.extension.getBackgroundPage() !== window
+  ) {
+    return 'POPUP';
+  }
+  if (!browser || !browser.runtime || !browser.runtime.onMessage) {
+    return 'WEB';
+  }
+  return 'CONTENT';
+};

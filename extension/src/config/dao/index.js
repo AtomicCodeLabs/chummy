@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import browser from 'webextension-polyfill';
 
+import log from '../log';
 import useOctoDAO from '../../hooks/octokit';
 import { isBlank } from '../../utils';
 import userUtils from '../../utils/user';
@@ -41,11 +42,7 @@ class FirebaseDAO {
       const request = {
         action: 'sign-in'
       };
-      console.log(
-        '%cSign in request -> bg',
-        'background-color: #00c853; color: white;',
-        request
-      );
+      log.toBg('Sign in request -> bg', request);
       const response = await browser.runtime.sendMessage(request);
 
       // The extension receives a sign in triggered action
@@ -53,22 +50,34 @@ class FirebaseDAO {
         throw new Error(response.error);
       }
     } catch (error) {
-      console.warn('Error signing in', error);
+      log.error('Error signing in', error);
       this.userStore.setError(error);
     } finally {
       this.userStore.setPending(false);
     }
   };
 
-  signInComplete = (payload) => {
-    console.log('sign-incomplete', payload);
+  signInComplete = (req) => {
     this.userStore.setPending(true);
+
+    // Check for error and handle
+    if (req.error) {
+      this.userStore.setError(req.error);
+      this.userStore.setPending(false);
+      return;
+    }
+
+    if (!req?.payload?.user || isBlank(req.payload.user)) {
+      this.userStore.setError('Error: User missing in payload.');
+      this.userStore.setPending(false);
+      return;
+    }
 
     // Set user store
     this.userStore.setUser({
-      user: payload.user
+      user: req.payload.user
     });
-    this.octoDAO.authenticate(payload.user?.apiKey);
+    this.octoDAO.authenticate(req?.payload?.user?.apiKey);
 
     // Fetch user's bookmarks
     this.getAllBookmarks();
@@ -78,11 +87,7 @@ class FirebaseDAO {
 
   signOut = () => {
     const request = { action: 'sign-out' };
-    console.log(
-      '%cSign out request -> bg',
-      'background-color: #00c853; color: white;',
-      request
-    );
+    log.toBg('Sign out request -> bg', request);
     browser.runtime.sendMessage(request);
     this.userStore.clearUser(); // cleans up user and user's bookmarks
     this.octoDAO.unauthenticate();
@@ -95,16 +100,12 @@ class FirebaseDAO {
       const request = {
         action: 'get-current-user'
       };
-      console.log(
-        '%cGet current user -> bg',
-        'background-color: #00c853; color: white;',
-        request
-      );
+      log.toBg('Get current user -> bg', request);
       const response = await browser.runtime.sendMessage(request);
-      console.log('Response', response);
+      log.debug('Response', response);
       this.handleUserResponse(response);
     } catch (error) {
-      console.warn('Error getting current user', error);
+      log.error('Error getting current user', error);
     } finally {
       this.userStore.setPending(false);
     }
@@ -131,7 +132,7 @@ class FirebaseDAO {
 
   getAllBookmarks = async () => {
     if (!this.userStore.isLoggedIn) {
-      console.warn('Firebase is not authenticated.');
+      log.warn('Firebase is not authenticated.');
       return null;
     }
     // Check if cached bookmarks exist in store first
@@ -149,7 +150,7 @@ class FirebaseDAO {
         );
       }
     } catch (error) {
-      console.warn('Error getting all bookmarks', error);
+      log.error('Error getting all bookmarks', error);
     } finally {
       this.userStore.setPending(false);
     }
@@ -171,7 +172,7 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.addBookmark(bookmarkRepo);
     } catch (error) {
-      console.warn('Error creating bookmark', error);
+      log.error('Error creating bookmark', error);
     } finally {
       this.userStore.setPending(false);
     }
@@ -184,7 +185,7 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.updateBookmark(bookmark);
     } catch (error) {
-      console.warn('Error updating bookmark', error);
+      log.error('Error updating bookmark', error);
     } finally {
       this.userStore.setPending(false);
     }
@@ -205,7 +206,7 @@ class FirebaseDAO {
       };
       this.userStore.removeBookmark(bookmarkRepo);
     } catch (error) {
-      console.warn('Error remove bookmark', error);
+      log.error('Error remove bookmark', error);
     } finally {
       this.userStore.setPending(false);
     }

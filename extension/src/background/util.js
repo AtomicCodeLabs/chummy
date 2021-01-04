@@ -2,6 +2,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-globals */
 import browser from 'webextension-polyfill';
+import log from '../config/log';
 import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
 import {
   SUBPAGES,
@@ -33,7 +34,7 @@ export const isExtensionOpen = async () => {
     }
     return true;
   } catch (error) {
-    console.warn('Error checking if extension is open', error);
+    log.error('Error checking if extension is open', error);
     return false;
   }
 };

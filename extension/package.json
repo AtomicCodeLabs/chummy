@@ -51,6 +51,8 @@
     "@octokit/plugin-throttling": "^3.3.1",
     "@octokit/rest": "^18.0.6",
     "@primer/octicons-react": "^11.0.0",
+    "chalk": "^4.1.0",
+    "lodash.clonedeep": "^4.5.0",
     "mobx": "^5.15.6",
     "mobx-react-lite": "^2.2.1",
     "path-browserify": "^1.0.1",

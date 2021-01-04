@@ -138,11 +138,6 @@ const SplitSections = ({
         ]);
       }
 
-      // console.log('diffY', diffY);
-      // console.log('ioofminimizable', iOfMinimizableSection);
-      // console.log('heights', _heights, heights, _heightsDebounced);
-      // console.log('minimized', _minimized, minimized);
-
       return fillHeights([
         ..._heights.slice(0, iOfMinimizableSection), // everything before section to minimize
         Math.max(_heights[iOfMinimizableSection] + diffY, NODE_MIN_HEIGHT), // section to minimize

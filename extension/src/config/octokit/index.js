@@ -9,6 +9,7 @@ import {
   formSearchQuery
 } from './queries';
 import { sortFiles } from '../../utils';
+import log from '../log';
 
 let isInitialized = false;
 
@@ -29,9 +30,7 @@ class OctoDAO {
 
   authenticate = (apiKey) => {
     if (!this.userStore.user?.apiKey && !apiKey) {
-      console.warn(
-        'Cannot authenticate octokit because user is not signed in.'
-      );
+      log.warn('Cannot authenticate octokit because user is not signed in.');
       return;
     }
     if (this.isAuthenticated()) {
@@ -55,7 +54,7 @@ class OctoDAO {
 
           // Retry twice after hitting a rate limit error, then give up
           if (options.request.retryCount <= 2) {
-            console.log(`Retrying after ${retryAfter} seconds!`);
+            log.debug(`Retrying after ${retryAfter} seconds!`);
             return true;
           }
         },
@@ -79,7 +78,7 @@ class OctoDAO {
   // Repo API
   getRepositoryNodes = async (owner, repo, branch, treePath = '') => {
     if (!this.isAuthenticated()) {
-      console.warn('Octokit is not authenticated.');
+      log.warn('Octokit is not authenticated.');
       return null;
     }
 
@@ -121,7 +120,7 @@ class OctoDAO {
       this.fileStore.setNode(node);
       return files;
     } catch (error) {
-      console.warn(
+      log.error(
         'Error getting specific branch repository root nodes.',
         owner,
         repo,
@@ -135,7 +134,7 @@ class OctoDAO {
   // Search API
   searchCode = async (owner, repo, query, language = null) => {
     if (!this.isAuthenticated()) {
-      console.warn('Octokit is not authenticated.');
+      log.warn('Octokit is not authenticated.');
       return null;
     }
 
@@ -151,14 +150,7 @@ class OctoDAO {
       });
       return response?.data?.items;
     } catch (error) {
-      console.warn(
-        'Error searching code.',
-        owner,
-        repo,
-        query,
-        language,
-        error
-      );
+      log.error('Error searching code.', owner, repo, query, language, error);
       return null;
     }
   };

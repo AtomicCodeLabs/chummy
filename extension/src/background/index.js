@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import log from '../config/log';
 import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
 import {
   getSidebarWidth,
@@ -18,7 +19,7 @@ const onBrowserActionClickedListener = async () => {
       sidebarWidth
     } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
     if (await isExtensionOpen()) {
-      console.warn("Error opening extension because it's already open");
+      log.error("Error opening extension because it's already open");
       return;
     }
     const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
@@ -38,7 +39,7 @@ const onBrowserActionClickedListener = async () => {
     // Store extension window id in storage
     await browser.storage.sync.set({ currentWindowId: win.id });
   } catch (error) {
-    console.warn('Error opening extension popup', error);
+    log.error('Error opening extension popup', error);
   }
 };
 browser.browserAction.onClicked.addListener(() => {
@@ -55,13 +56,9 @@ const onWindowRemoveListener = async (windowId) => {
       await browser.storage.sync.set({
         currentWindowId: NO_WINDOW_EXTENSION_ID
       });
-      console.log(
-        'Current window closed and stored id',
-        NO_WINDOW_EXTENSION_ID
-      );
     }
   } catch (error) {
-    console.warn('Error resetting currentWindowId', error);
+    log.error('Error resetting currentWindowId', error);
   }
 };
 browser.windows.onRemoved.addListener((windowId) => {
@@ -105,7 +102,7 @@ const updatePopupBounds = async (mainWindow) => {
       // alwaysOnTop: true
     });
   } catch (error) {
-    console.warn('Error updating popup bounds', error);
+    log.error('Error updating popup bounds', error);
   }
 };
 
@@ -122,7 +119,7 @@ const onFocusChangeListener = async (windowId) => {
     const window = await browser.windows.get(windowId);
     updatePopupBounds(window);
   } catch (error) {
-    console.warn('Error on retrieving currentWindowId', error);
+    log.error('Error on retrieving currentWindowId', error);
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {
@@ -146,8 +143,8 @@ const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
     }
   };
   browser.runtime.sendMessage(response).catch((e) => {
-    console.log(
-      'Error sending message because extension is not open',
+    log.warn(
+      'Cannot send message because extension is not open',
       e?.message,
       response
     );
@@ -160,7 +157,7 @@ const onTabActivatedListener = async ({ windowId, tabId }) => {
     const { url, title } = await browser.tabs.get(tabId);
     sendContentChangedMessage(windowId, tabId, title, url);
   } catch (error) {
-    console.warn('Error on tab activate', error);
+    log.error('Error on tab activate', error);
   }
 };
 browser.tabs.onActivated.addListener((tabInfo) => {
@@ -181,7 +178,7 @@ const onFocusChangedListener = async (windowId) => {
 
     sendContentChangedMessage(windowId, tabId, tabTitle, url);
   } catch (error) {
-    console.warn('Error on tab focus change', error);
+    log.error('Error on tab focus change', error);
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {
