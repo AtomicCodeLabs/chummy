@@ -17,7 +17,10 @@ let app;
 function renderDevPanel() {
   app = document.getElementById('my-extension-root');
 
-  unmountComponentAtNode(app);
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Dead_object
+  window.log = console.log;
+
+  // unmountComponentAtNode(app);
   render(
     // eslint-disable-next-line react/jsx-props-no-spreading
     <RootStoreContext.Provider value={rootStore}>

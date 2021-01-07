@@ -1,8 +1,10 @@
 /* eslint-disable consistent-return */
-const url = require('url');
-const path = require('path');
-const browser = require('webextension-polyfill');
-const { UrlParser } = require('./util');
+import url from 'url';
+import path from 'path';
+
+import browser from 'webextension-polyfill';
+import log from '../config/log';
+import { UrlParser } from './util';
 
 // Respond to requests to redirect a tab
 const redirectTab = async (request) => {
@@ -21,7 +23,7 @@ const redirectTab = async (request) => {
         };
         await browser.tabs.create(newTab);
       } catch (error) {
-        console.warn('Error creating tab', error);
+        log.error('Error creating tab', error);
       }
     }
     // Send redirect event to active tab
@@ -29,23 +31,27 @@ const redirectTab = async (request) => {
       try {
         // Instead of triggering a content script which is unreliable when it doesn't load
         // on the page correctly all the time. Inject listener and then send message
-        await browser.tabs.executeScript(window.tabId, {
-          file: 'background.redirect.inject.js'
-        });
+        await browser.tabs
+          .executeScript(window.tabId, {
+            file: 'background.redirect.inject.js'
+          })
+          .catch((e) => {
+            log.error('Error injecting redirect script', e);
+          });
 
         const response = {
           action: 'redirect-content-script',
           payload: request.payload
         };
         browser.tabs.sendMessage(window.tabId, response).catch((e) => {
-          console.log(
-            'Error sending message because extension is not open',
+          log.warn(
+            'Cannot message because extension is not open',
             e?.message,
             response
           );
         });
       } catch (error) {
-        console.warn('Error redirecting active tab', error);
+        log.error('Error redirecting active tab', error);
       }
     }
     return null;
@@ -65,7 +71,7 @@ const redirectTab = async (request) => {
       };
       await browser.tabs.create(newTab);
     } catch (error) {
-      console.warn('Error redirecting to url', error);
+      log.warn('Error redirecting to url', error);
     }
     return null;
   }
@@ -96,8 +102,8 @@ const redirectTab = async (request) => {
         }
       };
       await browser.runtime.sendMessage(response).catch((e) => {
-        console.log(
-          'Error sending message because extension is not open',
+        log.warn(
+          'Cannot send message because extension is not open',
           e?.message,
           response
         );
@@ -105,7 +111,7 @@ const redirectTab = async (request) => {
       // To let frontend know when tab updates have been made.
       return { action: 'change-active-tab', complete: true };
     } catch (error) {
-      console.warn('Error changing active tab', error);
+      log.error('Error changing active tab', error);
     }
     return null;
   }
@@ -140,7 +146,7 @@ const redirectTab = async (request) => {
         payload: openRepositories
       };
     } catch (error) {
-      console.warn('Error getting all windows', error);
+      log.error('Error getting all windows', error);
     }
     return null;
   }
@@ -151,7 +157,7 @@ const redirectTab = async (request) => {
       await browser.tabs.remove(request.payload.tabId);
       return { action: 'close-tab', complete: true };
     } catch (error) {
-      console.warn('Error changing active tab', error);
+      log.error('Error changing active tab', error);
     }
     return null;
   }
@@ -190,7 +196,7 @@ const initializeOpenTabs = async () => {
       });
     });
   } catch (error) {
-    console.warn('Error initializing open tabs', error);
+    log.error('Error initializing open tabs', error);
   }
 };
 initializeOpenTabs();
@@ -222,14 +228,14 @@ const sendOpenRepositoryUpdatesMessage = async () => {
       payload: openRepositories
     };
     browser.runtime.sendMessage(response).catch((e) => {
-      console.log(
-        'Error sending message because extension is not open',
+      log.warn(
+        'Cannot send message because extension is not open',
         e?.message,
         response
       );
     });
   } catch (error) {
-    console.warn('Error updating open repositories', error);
+    log.error('Error updating open repositories', error);
   }
 };
 
@@ -257,8 +263,8 @@ const initializeTabListeners = () => {
         }
       };
       browser.runtime.sendMessage(response).catch((e) => {
-        console.log(
-          'Error sending message because extension is not open',
+        log.warn(
+          'Cannot send message because extension is not open',
           e?.message,
           response
         );

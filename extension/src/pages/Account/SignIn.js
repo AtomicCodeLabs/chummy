@@ -28,14 +28,21 @@ export default observer(() => {
   const firebase = useFirebaseDAO();
   const { theme: mode, spacing } = useTheme();
   const STPayload = { theme: { mode, spacing } };
-  const [isSplashScreen, setSplashScreen] = useState(true);
+
+  // States: isPending, isSplashScreen, isWaiting
+  const [isPendingLocal, setPendingLocal] = useState(true);
   const { error, isPending } = useUserStore();
+  useEffect(() => {
+    setPendingLocal(isPending);
+  }, [isPending]);
+
+  // First thing to do is check if there is a user currently signed in
   checkCurrentUser();
 
-  // Set splash screen for 1 second
+  // Set splash screen for 1 second on startup to give buffer time to check user
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSplashScreen(false);
+      setPendingLocal(false);
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -49,16 +56,12 @@ export default observer(() => {
   }, []);
 
   const renderContents = () => {
-    if (isSplashScreen || isPending) {
+    if (isPendingLocal || isPending) {
       return <SplashSpinner />;
     }
-    // // If signing in
-    // if (isPending) {
-    //   return 'Pending';
-    // }
+
     // If there was an error signing in
     if (error) {
-      console.log('ERROR', error);
       return 'Error';
     }
 
@@ -78,10 +81,6 @@ export default observer(() => {
       </>
     );
   };
-
-  console.log('splash', isSplashScreen);
-  console.log('pending', isPending);
-  console.log('error', error);
 
   return <Container>{renderContents()}</Container>;
 });

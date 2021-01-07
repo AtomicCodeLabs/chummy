@@ -51,9 +51,9 @@ export default observer(() => {
         />
         <H2 center>Code Review is currently in development.</H2>
         <P>
-          This new feature adds a page dedicated to managing pull requests,
-          tracking file changes, comments, approvals, and more data points in
-          your code-review process. Stay tuned for its upcoming debut!
+          Manage pull requests, track file changes, comments, approvals, and
+          everything code review related from one place. Stay tuned for its
+          upcoming debut!
         </P>
       </SplashContainer>
     </Container>

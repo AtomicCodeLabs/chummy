@@ -1,7 +1,12 @@
 import { browser } from 'webextension-polyfill-ts';
+import log from "../log";
+
+const clone = (obj: { [key: string]: any }) => {
+  return JSON.parse(JSON.stringify(obj));
+};
 
 export const setInChromeStorage = (object: { [key: string]: any }) => {
-  browser.runtime.sendMessage({ action: 'set-store', payload: object });
+  browser.runtime.sendMessage(clone({ action: 'set-store', payload: object }));
 };
 
 export const getFromChromeStorage = async (
@@ -13,17 +18,13 @@ export const getFromChromeStorage = async (
       action: 'get-store',
       payload: keys
     };
-    console.log(
-      '%cGet store request -> bg',
-      'background-color: #00c853; color: white;',
-      request
-    );
-    const response = await browser.runtime.sendMessage(request);
-    console.log('Response', response);
+    log.toBg('Get store request -> bg', request);
+    const response = await browser.runtime.sendMessage(clone(request));
+    log.debug('Response', response);
     if (response?.payload) {
       callback(response.payload);
     }
   } catch (error) {
-    console.warn('Error getting store', keys, error);
+    log.error('Error getting store', keys, error);
   }
 };

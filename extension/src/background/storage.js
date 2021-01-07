@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import log from '../config/log';
 
 // Expose chrome storage API that content script can query
 const storeAccessListener = async (request) => {
@@ -7,7 +8,7 @@ const storeAccessListener = async (request) => {
     try {
       await browser.storage.sync.set(request.payload);
     } catch (error) {
-      console.warn('Error setting store', error);
+      log.error('Error setting store', error);
     }
     return null;
   }
@@ -18,7 +19,7 @@ const storeAccessListener = async (request) => {
       const items = await browser.storage.sync.get(request.payload);
       return { action: 'get-store', payload: items };
     } catch (error) {
-      console.warn('Error getting store', error);
+      log.error('Error getting store', error);
       return null;
     }
   }
@@ -35,8 +36,8 @@ browser.runtime.onMessage.addListener((request) => {
 browser.storage.onChanged.addListener(async () => {
   try {
     const items = await browser.storage.sync.get(null);
-    console.log('DEBUG', items);
+    log.debug('DEBUG', items);
   } catch (error) {
-    console.warn('Error getting store changes for debugging', error);
+    log.error('Error getting store changes for debugging', error);
   }
 });

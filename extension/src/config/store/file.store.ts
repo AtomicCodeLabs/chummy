@@ -8,7 +8,9 @@ import { objectMap } from '../../utils';
 
 export default class FileStore implements IFileStore {
   uiStore: IUiStore;
+
   userStore: IUserStore;
+
   @observable isPending: boolean = true;
 
   /* Window/Tab Section */
@@ -16,7 +18,9 @@ export default class FileStore implements IFileStore {
 
   /* Tree Section */
   cachedNodes: Map<string, Node> = new Map();
+
   @observable openRepos: Map<string, Repo> = new Map();
+
   @observable currentBranch: Branch;
 
   /* VCS Section */
@@ -31,7 +35,6 @@ export default class FileStore implements IFileStore {
     // Add parent node to nodes if it doesn't exist yet, else just add children
     const key = `${node.repo.owner}:${node.repo.name}:${node.branch.name}:${node.path}`;
     const foundNode = this.cachedNodes.get(key);
-    // console.log('Setting node', key, foundNode, toJS(this.cachedNodes));
     if (!foundNode) {
       this.cachedNodes.set(key, node);
     } else {
@@ -127,7 +130,7 @@ export default class FileStore implements IFileStore {
 
   @action.bound cleanupOpenRepos = (reposToSet: Repo[]) => {
     // Loop through all the open repos and remove the tabs that aren't open
-    let openTabIds = new Set();
+    const openTabIds = new Set();
     reposToSet.forEach((r: Repo) =>
       Object.values(r.tabs).forEach((t: Branch) => openTabIds.add(t.tabId))
     );

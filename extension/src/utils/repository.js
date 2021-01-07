@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import log from '../config/log';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getOpenRepositories = async (callback = () => {}) => {
@@ -6,19 +7,15 @@ export const getOpenRepositories = async (callback = () => {}) => {
     const request = {
       action: 'get-open-repositories'
     };
-    console.log(
-      '%cGet open repositories request -> bg',
-      'background-color: #00c853; color: white;',
-      request
-    );
+    log.toBg('Get open repositories request -> bg', request);
     const response = await browser.runtime.sendMessage(request);
-    console.log('Response', response);
+    log.debug('Response', response);
 
     if (response) {
       callback(response.payload);
     }
   } catch (error) {
-    console.warn('Error getting open repositories', error);
+    log.error('Error getting open repositories', error);
   }
 };
 

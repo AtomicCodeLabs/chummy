@@ -54,14 +54,12 @@ export default class UiStore implements IUiStore {
     const keys: UiStorePropsArray = UiStoreKeys;
 
     // Keep some keys out of chrome storage
-    const filteredKeys = keys.filter(
-      (k) => !['pendingRequestCount', 'userStore'].includes(k)
-    ).sort();
+    const filteredKeys = keys
+      .filter((k) => !['pendingRequestCount', 'userStore'].includes(k))
+      .sort();
 
     // Get and set previous sessions' settings
     getFromChromeStorage(filteredKeys, (items: { [key: string]: any }) => {
-      console.log('GOT ITEMS', items);
-
       // Set each key
       filteredKeys.forEach((key) => {
         if (items[key]) {
@@ -127,7 +125,6 @@ export default class UiStore implements IUiStore {
 
   @action.bound toggleTreeSection = (sectionName: TreeSection) => {
     const foundTreeState = this.isTreeSectionMinimized[sectionName];
-    // console.log('before toggle', toJS(foundTreeState));
     this.isTreeSectionMinimized = {
       ...this.isTreeSectionMinimized,
       [sectionName]: {
@@ -135,7 +132,6 @@ export default class UiStore implements IUiStore {
         isMinimized: !foundTreeState.isMinimized
       }
     };
-    // console.log('after toggle', toJS(this.isTreeSectionMinimized[sectionName]));
     setInChromeStorage({
       isTreeSectionMinimized: this.isTreeSectionMinimized
     });
