@@ -1,9 +1,10 @@
 import browser from 'webextension-polyfill';
+import log from '../config/log';
 
 export const onSignInComplete = (callback = () => {}) => {
   const toCall = (request) => {
     if (request.action === 'sign-in-complete') {
-      callback(request.payload);
+      callback(request);
     }
   };
   browser.runtime.onMessage.addListener(toCall);
@@ -14,19 +15,15 @@ export const getAllBookmarks = async () => {
     const request = {
       action: 'get-bookmarks'
     };
-    console.log(
-      '%cGet bookmarks request -> bg',
-      'background-color: #00c853; color: white;',
-      request
-    );
+    log.toBg('Get bookmarks request -> bg', request);
     const response = await browser.runtime.sendMessage(request);
-    console.log('Response', response);
+    log.debug('Response', response);
 
     if (response) {
       return response;
     }
   } catch (error) {
-    console.warn('Error getting all bookmarks', error);
+    log.error('Error getting all bookmarks', error);
   }
   return null;
 };
@@ -36,11 +33,7 @@ export const addBookmark = async (bookmark) => {
     action: 'create-bookmark',
     payload: bookmark
   };
-  console.log(
-    '%cCreate bookmark request -> bg',
-    'background-color: #00c853; color: white;',
-    request
-  );
+  log.toBg('Create bookmark request -> bg', request);
   await browser.runtime.sendMessage(request);
 };
 
@@ -49,11 +42,7 @@ export const updateBookmark = async (bookmark) => {
     action: 'update-bookmark',
     payload: bookmark
   };
-  console.log(
-    '%cUpdate bookmark request -> bg',
-    'background-color: #00c853; color: white;',
-    request
-  );
+  log.toBg('Update bookmark request -> bg', request);
   await browser.runtime.sendMessage(request);
 };
 
@@ -62,11 +51,7 @@ export const removeBookmark = async (bookmark) => {
     action: 'remove-bookmark',
     payload: bookmark
   };
-  console.log(
-    '%cRemove bookmark request -> bg',
-    'background-color: #00c853; color: white;',
-    request
-  );
+  log.toBg('Remove bookmark request -> bg', request);
   await browser.runtime.sendMessage(request);
 };
 
