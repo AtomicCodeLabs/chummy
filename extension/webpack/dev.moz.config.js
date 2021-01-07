@@ -36,7 +36,7 @@ module.exports = {
               },
               permissions: [
                 ...baseManifest.permissions.slice(0, -1),
-                'https://gamma.chummy.atomiccode.io/' // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns
+                'http://localhost/*' // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns
               ]
             });
           }
