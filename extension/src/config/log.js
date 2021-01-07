@@ -4,7 +4,6 @@ import browser from 'webextension-polyfill';
 import { isProduction, getExtensionContext } from '../utils';
 
 const logWrapper = (helper, msg, ...args) => {
-  console.log('logwrapper', isProduction());
   if (!isProduction()) {
     console.log('context', getExtensionContext());
     browser.extension.getBackgroundPage().console.log(helper(msg), ...args);
