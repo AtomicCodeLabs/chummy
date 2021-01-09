@@ -4,6 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const ci = require('ci-info');
 
+const { packageInfo } = require('./util');
+
 if (ci.isCI) {
   console.log(`Building on ${ci.name}.`);
 } else {
@@ -13,13 +15,6 @@ if (ci.isCI) {
     path: path.join(__dirname, '../.env.production')
   });
 }
-
-const packageInfo = JSON.parse(
-  JSON.stringify(
-    // eslint-disable-next-line import/no-dynamic-require
-    require(path.join(__dirname, '../package.json'))
-  )
-);
 
 const env = 'production';
 
@@ -88,7 +83,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(env),
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || env),
+        VERSION: JSON.stringify(packageInfo.version),
         REACT_APP_SC_ATTR: JSON.stringify('data-styled-tomas'),
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,

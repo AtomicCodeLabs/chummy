@@ -328,3 +328,25 @@ export const storeTokens = (storage, data, clientId) => {
     `${calculateClockDrift(accessTokenData.iat, idTokenData.iat)}`
   );
 };
+
+export const isProduction = () => {
+  return process.env.NODE_ENV === 'production';
+};
+
+export const isGamma = () => {
+  return process.env.NODE_ENV === 'gamma';
+};
+
+export const isGammaOrProd = () => {
+  return isGamma() || isProduction();
+};
+
+// Figure out if we need to append the version to the end
+export const resolveInjectJSFilenames = (basename) => {
+  if (!isGammaOrProd()) {
+    // must be dev
+    return `${basename}.js`;
+  }
+  // gamma and prod files are versioned
+  return `${basename}_${process.env.VERSION}.js`;
+};

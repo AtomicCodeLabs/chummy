@@ -9,7 +9,12 @@ import * as mutations from '../graphql/mutations';
 import * as compositeQueries from '../config/dao/queries';
 
 import log from '../config/log';
-import { isCurrentWindow, isExtensionOpen, storeTokens } from './util';
+import {
+  isCurrentWindow,
+  isExtensionOpen,
+  storeTokens,
+  resolveInjectJSFilenames
+} from './util';
 import { AccountType, APP_URLS } from './constants.ts';
 
 class DAO {
@@ -301,7 +306,7 @@ class DAO {
           // Inject script
           browser.tabs
             .executeScript(tabId, {
-              file: 'background.signin.inject.js'
+              file: resolveInjectJSFilenames('background.signin.inject')
             })
             .catch((e) => {
               log.error('Error injecting signin script', e);

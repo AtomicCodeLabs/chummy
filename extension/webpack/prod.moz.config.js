@@ -1,18 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const AssetsPlugin = require('assets-webpack-plugin');
 
 const base = require('./prod.base.config');
-const { formBaseManifest } = require('./util');
-
-const packageInfo = JSON.parse(
-  JSON.stringify(
-    // eslint-disable-next-line import/no-dynamic-require
-    require(path.join(__dirname, '../package.json'))
-  )
-);
+const { formBaseManifest, generateReports, packageInfo } = require('./util');
 
 module.exports = {
   ...base,
@@ -62,16 +53,6 @@ module.exports = {
       filename: 'background.html',
       cache: false
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: path.join(__dirname, './reports/report.prod.moz.html'),
-      statsFilename: path.join(__dirname, './reports/stats.prod.moz.json'),
-      generateStatsFile: true,
-      openAnalyzer: false
-    }),
-    new AssetsPlugin({
-      filename: 'assets.prod.moz.json',
-      path: path.join(__dirname, './reports')
-    })
+    ...generateReports('prod', 'moz')
   ]
 };
