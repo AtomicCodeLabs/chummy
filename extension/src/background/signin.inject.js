@@ -1,5 +1,7 @@
 import browser from 'webextension-polyfill';
 
+console.log('INJECTING');
+
 /*
 Listen for messages from the page.
 If the message was from the page script, show an alert.

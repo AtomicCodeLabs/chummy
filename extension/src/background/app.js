@@ -4,7 +4,7 @@ import path from 'path';
 
 import browser from 'webextension-polyfill';
 import log from '../config/log';
-import { UrlParser } from './util';
+import { UrlParser, resolveInjectJSFilenames } from './util';
 
 // Respond to requests to redirect a tab
 const redirectTab = async (request) => {
@@ -33,7 +33,7 @@ const redirectTab = async (request) => {
         // on the page correctly all the time. Inject listener and then send message
         await browser.tabs
           .executeScript(window.tabId, {
-            file: 'background.redirect.inject.js'
+            file: resolveInjectJSFilenames('background.redirect.inject')
           })
           .catch((e) => {
             log.error('Error injecting redirect script', e);

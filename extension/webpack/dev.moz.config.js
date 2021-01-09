@@ -1,16 +1,8 @@
 const path = require('path');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const base = require('./dev.base.config');
-const { formBaseManifest } = require('./util');
-
-const packageInfo = JSON.parse(
-  JSON.stringify(
-    // eslint-disable-next-line import/no-dynamic-require
-    require(path.join(__dirname, '../package.json'))
-  )
-);
+const { formBaseManifest, generateReports, packageInfo } = require('./util');
 
 module.exports = {
   ...base,
@@ -36,7 +28,7 @@ module.exports = {
               },
               permissions: [
                 ...baseManifest.permissions.slice(0, -1),
-                'https://gamma.chummy.atomiccode.io/' // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns
+                'http://localhost/*' // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns
               ]
             });
           }
@@ -44,12 +36,6 @@ module.exports = {
         { from: '../public/icon', to: './icon' }
       ]
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: path.join(__dirname, './reports/report.dev.moz.html'),
-      statsFilename: path.join(__dirname, './reports/stats.dev.moz.json'),
-      generateStatsFile: true,
-      openAnalyzer: false
-    })
+    ...generateReports('dev', 'moz')
   ]
 };

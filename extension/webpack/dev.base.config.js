@@ -5,16 +5,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
 const CreateFileWebpack = require('create-file-webpack');
 
+const { packageInfo } = require('./util');
+
 require('dotenv').config({
   path: path.join(__dirname, '../.env.development')
 });
-
-const packageInfo = JSON.parse(
-  JSON.stringify(
-    // eslint-disable-next-line import/no-dynamic-require
-    require(path.join(__dirname, '../package.json'))
-  )
-);
 
 const env = 'development';
 

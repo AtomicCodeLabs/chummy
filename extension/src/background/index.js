@@ -127,9 +127,11 @@ browser.windows.onFocusChanged.addListener((windowId) => {
 });
 
 // Called when active window is dragged or resized
-browser.windows.onBoundsChanged.addListener((window) => {
-  updatePopupBounds(window);
-});
+if (browser.windows.onBoundsChanged) {
+  browser.windows.onBoundsChanged.addListener((window) => {
+    updatePopupBounds(window);
+  });
+}
 
 const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
   const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();

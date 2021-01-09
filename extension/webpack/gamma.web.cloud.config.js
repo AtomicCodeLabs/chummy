@@ -10,8 +10,7 @@ module.exports = {
   ...base,
   output: {
     ...base.output,
-    path: path.join(__dirname, '../dist/web'),
-    publicPath: '/'
+    path: path.join(__dirname, '../dist/gamma.web.cloud')
   },
   plugins: [
     ...base.plugins,
@@ -53,6 +52,6 @@ module.exports = {
       publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
       append: true
     }),
-    ...generateReports('prod', 'web')
+    ...generateReports('gamma', 'web.cloud')
   ]
 };
