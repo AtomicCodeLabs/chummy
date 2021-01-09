@@ -1,9 +1,8 @@
 const path = require('path');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const base = require('./dev.base.config');
-const { formBaseManifest } = require('./util');
+const { formBaseManifest, generateReports } = require('./util');
 
 module.exports = {
   ...base,
@@ -29,12 +28,6 @@ module.exports = {
         { from: '../public/icon', to: './icon' }
       ]
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: path.join(__dirname, './reports/report.dev.web.html'),
-      statsFilename: path.join(__dirname, './reports/stats.dev.web.json'),
-      generateStatsFile: true,
-      openAnalyzer: false
-    })
+    ...generateReports('dev', 'web')
   ]
 };

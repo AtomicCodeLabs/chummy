@@ -1,4 +1,6 @@
 const path = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const AssetsPlugin = require('assets-webpack-plugin');
 
 const packageInfo = JSON.parse(
   JSON.stringify(
@@ -22,4 +24,28 @@ function formBaseManifest(content) {
   };
 }
 
+const generateReports = (domain, browser) => {
+  return [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      reportFilename: path.join(
+        __dirname,
+        `./reports/report.${domain}.${browser}.html`
+      ),
+      statsFilename: path.join(
+        __dirname,
+        `./reports/stats.${domain}.${browser}.json`
+      ),
+      generateStatsFile: true,
+      openAnalyzer: false
+    }),
+    new AssetsPlugin({
+      filename: `assets.${domain}.${browser}.json`,
+      path: path.join(__dirname, './reports')
+    })
+  ];
+};
+
 module.exports.formBaseManifest = formBaseManifest;
+module.exports.generateReports = generateReports;
+module.exports.packageInfo = packageInfo;
