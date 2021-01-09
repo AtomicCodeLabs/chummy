@@ -4,13 +4,11 @@ import loadable from '@loadable/component';
 import {
   CodeIcon,
   SearchIcon,
-  GitBranchIcon,
   BookmarkIcon,
   GearIcon,
   PersonIcon
 } from '@primer/octicons-react';
 
-import { IconWithFeatureFlag } from '../components/Icon';
 import SplashSpinner from '../components/Loading/SplashSpinner';
 import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
 import CenterContainer from '../components/Containers/Center';
@@ -62,11 +60,11 @@ export const sidebarRoutes = [
     icon: <BookmarkIcon size={22} />,
     title: 'Bookmarks'
   },
-  {
-    pathname: '/vcs',
-    icon: <IconWithFeatureFlag Icon={<GitBranchIcon size={22} />} />,
-    title: 'Source Control'
-  },
+  // {
+  //   pathname: '/vcs',
+  //   icon: <IconWithFeatureFlag Icon={<GitBranchIcon size={22} />} />,
+  //   title: 'Source Control'
+  // },
   {
     flex: true
   },
