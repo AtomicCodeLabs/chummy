@@ -53,12 +53,12 @@ class FirebaseDAO {
       log.error('Error signing in', error);
       this.userStore.setError(error);
     } finally {
-      this.userStore.setPending(false);
+      // this.userStore.setPending(false);
     }
   };
 
   signInComplete = (req) => {
-    this.userStore.setPending(true);
+    // this.userStore.setPending(true);
 
     // Check for error and handle
     if (req.error) {

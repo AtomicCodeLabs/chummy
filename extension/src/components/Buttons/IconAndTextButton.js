@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/forbid-prop-types */
 import React, { Suspense, cloneElement } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { XIcon } from '@primer/octicons-react';
@@ -31,11 +31,25 @@ const Container = styled.div`
 
 const IconContainer = styled.div`
   padding: ${ICON.SIDE_MARGIN}px;
-  padding-right: 0;
+  ${({ iconOnLeft }) =>
+    iconOnLeft
+      ? css`
+          padding-left: 0;
+        `
+      : css`
+          padding-right: 0;
+        `}
 `;
 
 const ContentContainer = styled.div`
-  padding-right: ${ICON.SIDE_MARGIN}px;
+  ${({ iconOnLeft }) =>
+    iconOnLeft
+      ? css`
+          padding-left: ${ICON.SIDE_MARGIN}px;
+        `
+      : css`
+          padding-right: ${ICON.SIDE_MARGIN}px;
+        `}
 `;
 
 const IconAndTextButton = ({
@@ -45,16 +59,25 @@ const IconAndTextButton = ({
   disabled,
   onClick,
   children,
+  iconOnLeft,
   ...buttonProps
 }) => {
-  return (
-    <Container style={style} onClick={onClick} {...buttonProps}>
-      <ContentContainer>{children}</ContentContainer>
-      <IconContainer>
+  const renderContent = () => {
+    return [
+      <IconContainer iconOnLeft={iconOnLeft} key="icon">
         <Suspense fallback={<XIcon />}>
           {cloneElement(Icon, { size: iconSize })}
         </Suspense>
-      </IconContainer>
+      </IconContainer>,
+      <ContentContainer key="content" iconOnLeft={iconOnLeft}>
+        {children}
+      </ContentContainer>
+    ].slice(iconOnLeft ? 0 : -1);
+  };
+
+  return (
+    <Container style={style} onClick={onClick} {...buttonProps}>
+      {renderContent()}
     </Container>
   );
 };
@@ -64,14 +87,16 @@ IconAndTextButton.propTypes = {
   iconSize: PropTypes.number,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
-  children: PropTypes.node.isRequired // contains text nodes
+  children: PropTypes.node.isRequired, // contains text nodes
+  iconOnLeft: PropTypes.bool
 };
 
 IconAndTextButton.defaultProps = {
   style: {},
   iconSize: 24,
   disabled: false,
-  onClick: () => {}
+  onClick: () => {},
+  iconOnLeft: false
 };
 
 export default IconAndTextButton;

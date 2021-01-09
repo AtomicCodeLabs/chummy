@@ -6,6 +6,7 @@ import {
   LinkExternalIcon,
   ShareIcon
 } from '@primer/octicons-react';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
@@ -28,7 +29,14 @@ export default observer(() => {
   const STPayload = { theme: { spacing } };
 
   return (
-    <>
+    <Scrollbars
+      style={{
+        width: '100%',
+        height: '100%'
+      }}
+      autoHideTimeout={500}
+      autoHide
+    >
       <PanelsContainer>
         <Panel evenPadding center>
           <CircleImage
@@ -75,6 +83,6 @@ export default observer(() => {
           </TextButton>
         </Panel>
       </PanelsContainer>
-    </>
+    </Scrollbars>
   );
 });

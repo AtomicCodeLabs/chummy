@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { checkCurrentUser } from '../../hooks/firebase';
 import { useUiStore, useUserStore } from '../../hooks/store';
@@ -21,60 +22,71 @@ export default observer(() => {
   const { user } = useUserStore();
 
   return (
-    <PanelsContainer>
-      <Panel
-        title="Color Theme"
-        description="Specify which color theme to use in the extension popup and Github window."
-      >
-        <Select
-          name="themeSetting"
-          value={themeOptions.find((o) => o.value === theme)}
-          placeholder="Theme"
-          options={themeOptions}
-          onChange={(option) => {
-            setTheme(option.value);
-          }}
-          isOptionDisabled={(option) =>
-            !option.tiers.includes(user.accountType)
-          }
-        />
-      </Panel>
-      <PanelDivider />
-      <Panel
-        title="Density"
-        description="Controls the spacing and sizes of elements."
-      >
-        <Select
-          name="spacingSetting"
-          value={spacingOptions.find((o) => o.value === spacing)}
-          placeholder="Spacing"
-          options={spacingOptions}
-          onChange={(option) => {
-            setSpacing(option.value);
-          }}
-          isOptionDisabled={(option) =>
-            !option.tiers.includes(user.accountType)
-          }
-        />
-      </Panel>
-      <PanelDivider />
-      <Panel
-        title="Sticky Window"
-        description="Controls whether extension popup window will stick to the currently active window when focus is changed or window is dragged around."
-      >
-        <Select
-          name="isStickyWindowSetting"
-          value={isStickyWindowOptions.find((o) => o.value === isStickyWindow)}
-          placeholder="Sticky Window"
-          options={isStickyWindowOptions}
-          onChange={(option) => {
-            setIsStickyWindow(option.value);
-          }}
-          isOptionDisabled={(option) =>
-            !option.tiers.includes(user.accountType)
-          }
-        />
-      </Panel>
-    </PanelsContainer>
+    <Scrollbars
+      style={{
+        width: '100%',
+        height: '100%'
+      }}
+      autoHideTimeout={500}
+      autoHide
+    >
+      <PanelsContainer>
+        <Panel
+          title="Color Theme"
+          description="Specify which color theme to use in the extension popup and Github window."
+        >
+          <Select
+            name="themeSetting"
+            value={themeOptions.find((o) => o.value === theme)}
+            placeholder="Theme"
+            options={themeOptions}
+            onChange={(option) => {
+              setTheme(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Density"
+          description="Controls the spacing and sizes of elements."
+        >
+          <Select
+            name="spacingSetting"
+            value={spacingOptions.find((o) => o.value === spacing)}
+            placeholder="Spacing"
+            options={spacingOptions}
+            onChange={(option) => {
+              setSpacing(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Sticky Window"
+          description="Controls whether extension popup window will stick to the currently active window when focus is changed or window is dragged around."
+        >
+          <Select
+            name="isStickyWindowSetting"
+            value={isStickyWindowOptions.find(
+              (o) => o.value === isStickyWindow
+            )}
+            placeholder="Sticky Window"
+            options={isStickyWindowOptions}
+            onChange={(option) => {
+              setIsStickyWindow(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+      </PanelsContainer>
+    </Scrollbars>
   );
 });

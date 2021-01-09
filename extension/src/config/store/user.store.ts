@@ -253,7 +253,7 @@ export default class UserStore implements IUserStore {
   }
 
   @computed get isLoggedIn() {
-    return !!this.user;
+    return !!this.user?.apiKey;
   }
 
   @computed get hasBookmarksCached() {

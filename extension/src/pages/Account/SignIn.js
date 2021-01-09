@@ -7,7 +7,7 @@ import SplashSpinner from '../../components/Loading/SplashSpinner';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import { useUserStore } from '../../hooks/store';
 import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
-import { H3 } from '../../components/Text';
+import { H1, H3 } from '../../components/Text';
 import { ICON } from '../../constants/sizes';
 import useTheme from '../../hooks/useTheme';
 import { onSignInComplete } from '../../utils/user';
@@ -68,10 +68,13 @@ export default observer(() => {
     return (
       <>
         <SignInContainer>
+          <H1>Welcome to Chummy</H1>
           <IconAndTextButton
             Icon={<MarkGithubIcon />}
             iconSize={ICON.SIZE(STPayload) + 4}
+            iconOnLeft
             onClick={() => {
+              // open new tab and initiate sign in flow
               firebase.signIn();
             }}
           >
