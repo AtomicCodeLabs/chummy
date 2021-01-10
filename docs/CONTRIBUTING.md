@@ -6,7 +6,7 @@
 
 First off, welcome! We are happy that you've found yourself here and for taking the time to contribute! ❤️
 
-As a user of a Github productivity browser extension, you may already be familiar with how contributing to an open source project works. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved.
+As a user of a Github extension, you may already be familiar with how contributing to an open source project works. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved.
 
 All types of contributions are encouraged and valued. We hope to see you around!
 
