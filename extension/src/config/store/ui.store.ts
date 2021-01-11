@@ -1,5 +1,5 @@
 /* global chrome */
-import { observable, action, computed, toJS } from 'mobx';
+import { observable, action } from 'mobx';
 
 import IUiStore, {
   Language,
