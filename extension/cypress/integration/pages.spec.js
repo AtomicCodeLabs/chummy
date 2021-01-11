@@ -48,10 +48,10 @@ describe('Render each page', () => {
     });
   });
 
-  describe('VCS', () => {
-    it('page title is `Source Control`', () => {
-      cy.goTo('VCS');
-      // cy.findById('page-title').should('contain.text', 'Source Control');
-    });
-  });
+  // describe('VCS', () => {
+  //   it('page title is `Source Control`', () => {
+  //     cy.goTo('VCS');
+  //     // cy.findById('page-title').should('contain.text', 'Source Control');
+  //   });
+  // });
 });
