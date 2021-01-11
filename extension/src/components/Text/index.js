@@ -7,7 +7,8 @@ import {
   h2MarginSize,
   h3MarginSize,
   fontSize,
-  lineHeight
+  lineHeight,
+  textColor
 } from '../../constants/theme';
 
 export const P = styled.p`
@@ -52,4 +53,8 @@ export const H3 = styled.h3`
     css`
       text-align: center;
     `}
+`;
+
+export const A = styled.a`
+  color: ${textColor};
 `;

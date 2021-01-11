@@ -94,7 +94,7 @@ export const ExpandingContainerHeaderContainer = styled.div`
   padding-left: ${indentPadding};
 
   background-color: ${backgroundColor};
-  height: ${HEADER.HEIGHT}px;
+  min-height: ${HEADER.HEIGHT}px;
   color: ${textColor};
   font-size: ${fontSize};
   text-transform: uppercase;
