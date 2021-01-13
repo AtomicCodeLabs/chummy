@@ -18,6 +18,11 @@ export enum SidebarView {
   'Open Files'
 }
 
+export enum SidebarSide {
+  Left,
+  Right
+}
+
 export enum TreeSection {
   Sessions = 'sessions',
   OpenTabs = 'openTabs',
@@ -54,6 +59,7 @@ class CUiStore {
   // Sidebar
   sidebarView: SidebarView = null;
   sidebarWidth: number = null; // Last seen sidebar width, not 0 when sidebar is minimized
+  sidebarSide: SidebarSide = null;
   isSidebarMinimized: boolean = false;
 
   // Tree Page

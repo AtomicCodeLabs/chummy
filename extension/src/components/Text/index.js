@@ -8,7 +8,11 @@ import {
   h3MarginSize,
   fontSize,
   lineHeight,
-  textColor
+  textColor,
+  titleFontSize,
+  titleMarginSize,
+  subTitleFontSize,
+  subTitleMarginSize
 } from '../../constants/theme';
 
 export const P = styled.p`
@@ -20,6 +24,28 @@ export const P = styled.p`
     css`
       text-align: center;
     `}
+`;
+
+export const Title = styled.p`
+  font-size: ${titleFontSize};
+  font-weight: 600;
+  margin: ${titleMarginSize};
+  ${({ center }) =>
+    center &&
+    css`
+      text-align: center;
+    `};
+`;
+
+export const Subtitle = styled.p`
+  font-size: ${subTitleFontSize};
+  font-weight: 400;
+  margin: ${subTitleMarginSize};
+  ${({ center }) =>
+    center &&
+    css`
+      text-align: center;
+    `};
 `;
 
 export const H1 = styled.h1`

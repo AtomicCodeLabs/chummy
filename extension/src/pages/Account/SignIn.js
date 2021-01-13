@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { MarkGithubIcon } from '@primer/octicons-react';
+import { MarkGithubIcon, PersonIcon } from '@primer/octicons-react';
 
+import { Container, SignInContainer, Spacer } from './Signin.style';
 import SplashSpinner from '../../components/Loading/SplashSpinner';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import { useUserStore } from '../../hooks/store';
 import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
-import { H1, H3 } from '../../components/Text';
+import { H3, Title, Subtitle } from '../../components/Text';
 import { ICON } from '../../constants/sizes';
 import useTheme from '../../hooks/useTheme';
 import { onSignInComplete } from '../../utils/user';
+import Image from '../../components/Image';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-`;
-
-const SignInContainer = styled.div`
-  padding: 1rem;
-`;
+import chummyLogo from '../../../public/icon/chummy128.png';
 
 export default observer(() => {
   const firebase = useFirebaseDAO();
@@ -68,7 +59,16 @@ export default observer(() => {
     return (
       <>
         <SignInContainer>
-          <H1>Welcome to Chummy</H1>
+          <Image
+            // eslint-disable-next-line global-require
+            src={chummyLogo}
+            size={ICON.SPLASH.SIZE(STPayload)}
+            alt="chummy-icon"
+            PlaceholderIcon={<PersonIcon />}
+          />
+          <Title>Chummy</Title>
+          <Subtitle>Github made easy</Subtitle>
+          <Spacer />
           <IconAndTextButton
             Icon={<MarkGithubIcon />}
             iconSize={ICON.SIZE(STPayload) + 4}

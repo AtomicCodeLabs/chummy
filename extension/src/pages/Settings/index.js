@@ -7,7 +7,13 @@ import { useUiStore, useUserStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
-import { isStickyWindowOptions, spacingOptions, themeOptions } from './options';
+import {
+  isStickyWindowOptions,
+  sidebarSideOptions,
+  spacingOptions,
+  themeOptions
+} from './options';
+import { updateSidebarSide } from '../../utils/browser';
 
 export default observer(() => {
   checkCurrentUser();
@@ -17,7 +23,9 @@ export default observer(() => {
     spacing,
     setSpacing,
     isStickyWindow,
-    setIsStickyWindow
+    setIsStickyWindow,
+    sidebarSide,
+    setSidebarSide
   } = useUiStore();
   const { user } = useUserStore();
 
@@ -69,7 +77,7 @@ export default observer(() => {
         <PanelDivider />
         <Panel
           title="Sticky Window"
-          description="Controls whether extension popup window will stick to the currently active window when focus is changed or window is dragged around."
+          description="Controls whether extension sidebar window will stick to the currently active window when focus is changed or window is dragged around."
         >
           <Select
             name="isStickyWindowSetting"
@@ -80,6 +88,25 @@ export default observer(() => {
             options={isStickyWindowOptions}
             onChange={(option) => {
               setIsStickyWindow(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <Panel
+          title="Sidebar Side"
+          description="Choose which side of the main window the extension should appear on. Works best with sticky window on."
+        >
+          <Select
+            name="sidebarSideSetting"
+            value={sidebarSideOptions.find((o) => o.value === sidebarSide)}
+            placeholder="Sidebar Side"
+            options={sidebarSideOptions}
+            onChange={(option) => {
+              // Send message to bg to send extension to the correct side
+              updateSidebarSide(sidebarSide, option.value);
+              setSidebarSide(option.value);
             }}
             isOptionDisabled={(option) =>
               !option.tiers.includes(user.accountType)

@@ -22,6 +22,30 @@ const redirectTab = async (request) => {
           active: false
         };
         await browser.tabs.create(newTab);
+        // // focus on window that tab was created in
+        // browser.windows.update(createdTab.windowId, { focused: true });
+        // // Send active-tab-changed action to set current branch
+        // const parsed = new UrlParser(
+        //   createdTab.url,
+        //   createdTab.title,
+        //   createdTab.id
+        // ).parse();
+        // const response = {
+        //   action: 'active-tab-changed',
+        //   payload: {
+        //     ...parsed,
+        //     isGithubRepoUrl: Object.keys(parsed).length !== 0,
+        //     windowId: createdTab.windowId,
+        //     tabId: createdTab.id
+        //   }
+        // };
+        // await browser.runtime.sendMessage(response).catch((e) => {
+        //   log.warn(
+        //     'Cannot send message because extension is not open',
+        //     e?.message,
+        //     response
+        //   );
+        // });
       } catch (error) {
         log.error('Error creating tab', error);
       }

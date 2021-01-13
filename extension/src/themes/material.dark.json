@@ -25,9 +25,11 @@
     "bookmarkIconColor": "#80cbc4",
     "nodeIconColor": "#e3ded7",
     "nodeIconDarkColor": "#f2eee9",
-    "shadowColor": "rgba(0, 0, 0, 0.5)",
+    "shadowColor": "rgba(0, 0, 0, 0.2)",
     "fieldBackgroundColor": "#37474f",
-    "fieldBackgroundLightColor": "#465a63",
+    "optionBackgroundLightColor": "#465a63",
+    "optionDisabledBackgroundColor": "#273238",
+    "optionDisabledTextColor": "#627d8c",
     "fieldFocusOutlineColor": "#80cbc4",
     "borderColor": "#2e2e2e"
   }

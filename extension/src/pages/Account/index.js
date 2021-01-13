@@ -16,7 +16,8 @@ import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import TextButton from '../../components/Buttons/TextButton';
 import { useUserStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
-import { capitalize, redirectToUrl } from '../../utils';
+import { capitalize } from '../../utils';
+import { redirectToUrl } from '../../utils/browser';
 import { ICON } from '../../constants/sizes';
 import { GITHUB_URLS } from '../../constants/urls';
 
@@ -44,6 +45,7 @@ export default observer(() => {
             size={ICON.PROFILE_IMAGE.SIZE(STPayload)}
             alt="profile-picture"
             PlaceholderIcon={<PersonIcon />}
+            borderSize={1}
           />
           <H2>{user.displayName}</H2>
         </Panel>
@@ -54,8 +56,8 @@ export default observer(() => {
         <Panel title="Tier" description={capitalize(user.accountType)} />
         <PanelDivider />
         <Panel
-          title="Leave Feedback"
-          description="Found a bug? Need a feature?"
+          title="Feedback + Suggestions"
+          description="Enjoying the app? Found a bug? Need a feature?"
           center
           onClick={() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);
@@ -64,8 +66,8 @@ export default observer(() => {
         />
         <PanelDivider />
         <Panel
-          title="Enjoying the app?"
-          description="Spread the word to the other Github enthusiasts in your life!"
+          title="Share the love!"
+          description="Like what you see? Share Chummy with your Github chummies!"
           center
           onClick={() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);

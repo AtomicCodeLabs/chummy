@@ -29,6 +29,8 @@
     "fieldBackgroundColor": "#DCDCDC",
     "fieldBackgroundLightColor": "#cccccc",
     "fieldFocusOutlineColor": "#4078c0",
+    "optionDisabledBackgroundColor": "#ebebeb",
+    "optionDisabledTextColor": "#b0b0b0",
     "borderColor": "#E1E4E8"
   }
 }

@@ -50,9 +50,9 @@ export const ICON = {
   },
   SPLASH: {
     SIZE: theme('spacing', {
-      compact: 90,
-      cozy: 100,
-      comfortable: 110
+      compact: 115,
+      cozy: 120,
+      comfortable: 128
     })
   }
 };

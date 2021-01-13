@@ -31,6 +31,8 @@ export enum AccountType {
 
 export const NO_WINDOW_EXTENSION_ID = -1; // -3 if it doesn't exist
 
+export const MIN_MAIN_WINDOW_WIDTH = 500;
+
 export const APP_URLS = {
   WEBSITE: {
     BASE: process.env.WEBSITE_BASE_URL,

@@ -8,7 +8,7 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
-import { QuestionIcon } from '@primer/octicons-react';
+import { QuestionIcon, KebabHorizontalIcon } from '@primer/octicons-react';
 import loadable from '@loadable/component';
 
 import { SectionContent } from '../../components/Section';
@@ -126,6 +126,9 @@ export default observer(() => {
             open={!isSearchSectionMinimized}
             onClick={toggleSearchSection}
             highlightOnHover
+            Icon={<KebabHorizontalIcon />}
+            startDeg={90}
+            noRotate
           />
           <Form onSubmit={handleSubmit(onSearch)}>
             <Input
@@ -216,7 +219,8 @@ export default observer(() => {
                 <SearchResultFileNode
                   file={{
                     ...file,
-                    repo: { owner: parsedRepo[0], name: parsedRepo[1] }
+                    repo: { owner: parsedRepo[0], name: parsedRepo[1] },
+                    query: debouncedQuery
                   }}
                   key={file.path}
                 />

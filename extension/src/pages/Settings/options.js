@@ -25,10 +25,19 @@ export const spacingOptions = [
 ];
 
 export const isStickyWindowOptions = [
-  { value: true, label: 'yes', tiers: NOT_COMMUNITY },
+  { value: true, label: 'Yes', tiers: NOT_COMMUNITY },
   {
     value: false,
-    label: 'no',
+    label: 'No',
     tiers: ALL
+  }
+];
+
+export const sidebarSideOptions = [
+  { value: 'Left', label: 'Left', tiers: ALL },
+  {
+    value: 'Right',
+    label: 'Right',
+    tiers: NOT_COMMUNITY
   }
 ];

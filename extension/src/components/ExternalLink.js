@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { redirectToUrl } from '../utils';
+import { redirectToUrl } from '../utils/browser';
 
 const Container = styled.div`
   cursor: pointer;
