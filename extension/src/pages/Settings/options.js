@@ -34,9 +34,9 @@ export const isStickyWindowOptions = [
 ];
 
 export const sidebarSideOptions = [
-  { value: 'Left', label: 'Left', tiers: ALL },
+  { value: 'left', label: 'Left', tiers: ALL },
   {
-    value: 'Right',
+    value: 'right',
     label: 'Right',
     tiers: NOT_COMMUNITY
   }

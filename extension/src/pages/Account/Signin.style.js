@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import theme from 'styled-theming';
 
+import { spacerSpacing } from '../../constants/theme';
 import { ICON } from '../../constants/sizes';
 
 export const Container = styled.div`
@@ -16,15 +16,8 @@ export const SignInContainer = styled.div`
   margin-top: calc(15vh * -1);
   max-width: calc(2 * ${ICON.SPLASH.SIZE}px);
   min-width: calc(1.5 * ${ICON.SPLASH.SIZE}px);
-
   text-align: center;
 `;
-
-const spacerSpacing = theme('spacing', {
-  compact: '0.8rem',
-  cozy: '0.9rem',
-  comfortable: '0.9rem'
-});
 
 export const Spacer = styled.div`
   height: ${spacerSpacing};

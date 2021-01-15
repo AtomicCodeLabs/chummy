@@ -97,6 +97,12 @@ export const lineHeight = theme('spacing', {
   comfortable: '1.3rem'
 });
 
+export const spacerSpacing = theme('spacing', {
+  compact: '0.8rem',
+  cozy: '0.9rem',
+  comfortable: '0.9rem'
+});
+
 // Colors
 
 const themeCreator = (key) => theme('theme', selector(key));

@@ -76,7 +76,7 @@ export const getInitialDimensions = (
 
   const mainWindowWidth_f = mainWindowInitial.width - extensionWidth;
   const cannotShrink = mainWindowWidth_f < MIN_MAIN_WINDOW_WIDTH;
-  const isLeft = sidebarSide === 'Left';
+  const isLeft = sidebarSide === 'left';
 
   if (cannotShrink) {
     return {

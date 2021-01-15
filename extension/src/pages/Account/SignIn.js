@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { MarkGithubIcon, PersonIcon } from '@primer/octicons-react';
+import loadable from '@loadable/component';
 
-import { Container, SignInContainer, Spacer } from './Signin.style';
-import SplashSpinner from '../../components/Loading/SplashSpinner';
+import { Container, Spacer, SignInContainer } from './Signin.style';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import { useUserStore } from '../../hooks/store';
 import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
@@ -12,8 +12,14 @@ import { ICON } from '../../constants/sizes';
 import useTheme from '../../hooks/useTheme';
 import { onSignInComplete } from '../../utils/user';
 import Image from '../../components/Image';
-
 import chummyLogo from '../../../public/icon/chummy128.png';
+
+const SplashSpinner = loadable(
+  () => import('../../components/Loading/SplashSpinner'),
+  {
+    fallback: <></>
+  }
+);
 
 export default observer(() => {
   const firebase = useFirebaseDAO();
@@ -48,7 +54,9 @@ export default observer(() => {
 
   const renderContents = () => {
     if (isPendingLocal || isPending) {
-      return <SplashSpinner />;
+      // TODO: Set a timeout where if it's waiting on auth for too long, it'll
+      // suggest the user to go back to signin page
+      return <SplashSpinner text="Waiting for authentication..." />;
     }
 
     // If there was an error signing in

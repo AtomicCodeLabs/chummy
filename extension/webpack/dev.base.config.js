@@ -75,6 +75,10 @@ module.exports = {
         options: {
           outputPath: 'images'
         }
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        loader: 'url-loader'
       }
     ]
   },

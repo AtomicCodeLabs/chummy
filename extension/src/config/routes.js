@@ -9,7 +9,6 @@ import {
   PersonIcon
 } from '@primer/octicons-react';
 
-import SplashSpinner from '../components/Loading/SplashSpinner';
 import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
 import CenterContainer from '../components/Containers/Center';
 
@@ -17,11 +16,7 @@ const LoadingPage = ({ error }) => {
   if (error) {
     return <AccountSignIn />;
   }
-  return (
-    <CenterContainer>
-      <SplashSpinner />
-    </CenterContainer>
-  );
+  return <CenterContainer />;
 };
 
 // Lazy load route pages

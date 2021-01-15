@@ -1,4 +1,6 @@
 import browser from 'webextension-polyfill';
+import Bowser from 'bowser';
+
 import log from '../config/log';
 import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
 import {
@@ -8,6 +10,9 @@ import {
   isExtensionOpen,
   getInitialDimensions
 } from './util';
+
+const isMoz =
+  Bowser.getParser(window.navigator.userAgent).getBrowser().name === 'Firefox';
 
 // Called when the user clicks on the extension icon
 const onBrowserActionClickedListener = async () => {
@@ -45,7 +50,7 @@ const onBrowserActionClickedListener = async () => {
       left: nextExtensionWin.left,
       width: nextExtensionWin.width, // Take over max half of original width
       height: nextExtensionWin.height,
-      focused: true
+      ...(!isMoz && { focused: true })
     });
 
     // Update main window
@@ -121,7 +126,7 @@ const updatePopupBounds = async (mainWin) => {
     await browser.windows.update(currentWindowId, {
       top: mainWin.top,
       left:
-        sidebarSide === 'Left'
+        sidebarSide === 'left'
           ? mainWin.left - nextExtensionWidth
           : mainWin.left + mainWin.width,
       height: mainWin.height
@@ -233,7 +238,7 @@ const updatePopupSide = async (request) => {
   // Main window and extension window switch places
   const { prevSide, nextSide } = request.payload;
   // L->R
-  if (prevSide === 'Left' && nextSide === 'Right') {
+  if (prevSide === 'left' && nextSide === 'right') {
     // update extension
     await browser.windows.update(currentWindowId, {
       top: mainWindow.top,

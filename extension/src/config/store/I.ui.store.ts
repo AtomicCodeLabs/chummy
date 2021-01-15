@@ -19,8 +19,8 @@ export enum SidebarView {
 }
 
 export enum SidebarSide {
-  Left,
-  Right
+  Left = 'left',
+  Right = 'right'
 }
 
 export enum TreeSection {
