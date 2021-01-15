@@ -18,7 +18,9 @@ import {
   fontSize,
   fieldBackgroundColor,
   lighterTextColor,
-  fieldFocusOutlineColor
+  fieldFocusOutlineColor,
+  optionDisabledTextColor,
+  optionDisabledBackgroundColor
 } from '../../constants/theme';
 import useTheme from '../../hooks/useTheme';
 
@@ -28,22 +30,33 @@ const StyledOptionContainer = styled.div`
   height: ${INPUT.SELECT.OPTION.HEIGHT}px;
   padding: 0.2rem calc(0.6rem + 4px);
   font-size: ${fontSize};
-  cursor: pointer;
+  cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'pointer')};
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
 
-  background-color: ${({ isSelected, ...props }) =>
-    isSelected
+  background-color: ${({ isSelected, isDisabled, ...props }) => {
+    if (isDisabled) {
+      return `${optionDisabledBackgroundColor(props)}`;
+    }
+    return isSelected
       ? `${backgroundHighlightDarkColor(props)}`
-      : `${backgroundColor(props)}`};
-  color: ${({ isSelected, ...props }) =>
-    isSelected
-      ? `${backgroundHighlightDarkTextColor(props)}`
-      : `${lightTextColor(props)}`};
+      : `${backgroundColor(props)}`;
+  }};
 
-  ${({ isSelected, ...props }) =>
+  color: ${({ isSelected, isDisabled, ...props }) => {
+    if (isDisabled) {
+      return `${optionDisabledTextColor(props)}`;
+    }
+    return isSelected
+      ? `${backgroundHighlightDarkTextColor(props)}`
+      : `${lightTextColor(props)}`;
+  }};
+
+  ${({ isSelected, isDisabled, ...props }) =>
     !isSelected &&
+    !isDisabled &&
     css`
       &:hover {
         background-color: ${backgroundHighlightColor(props)} !important;
@@ -72,6 +85,7 @@ const Option = (props) => {
       ref={innerRef}
       css={getStyles('option', props)}
       isSelected={isSelected}
+      isDisabled={isDisabled}
       className={cx(
         {
           option: true,

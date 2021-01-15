@@ -32,7 +32,8 @@ module.exports = {
     popup: '../src/popup/index.js'
   },
   output: {
-    filename: `[name]_${packageInfo.version}.js`
+    filename: `[name]_${packageInfo.version}.js`,
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.css'],
@@ -68,6 +69,10 @@ module.exports = {
         options: {
           outputPath: 'images'
         }
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        loader: 'url-loader'
       }
     ]
   },

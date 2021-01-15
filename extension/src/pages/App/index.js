@@ -5,8 +5,6 @@ import ExtensionRootContainer from '../../components/Containers/ExtensionRootCon
 import ResizableSidebar from '../../components/ResizableSidebar';
 import { routes } from '../../config/routes';
 
-import './style.css';
-
 // Split into left sidebar and right sidebar.
 // Both are horizontal resizable containers -
 // https://elastic.github.io/eui/#/layout/resizable-container

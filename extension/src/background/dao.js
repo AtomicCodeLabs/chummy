@@ -566,6 +566,9 @@ const daoStore = new DAO();
 const onBrowserActionClickedListener = async () => {
   try {
     if (await isExtensionOpen()) {
+      log.error(
+        'Error initializing DAO listeners because extension is already open'
+      );
       return;
     }
     log.log('Initialize DAO listeners');

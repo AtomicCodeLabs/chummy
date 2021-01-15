@@ -10,7 +10,8 @@ import {
   REPO_TITLE_REGEX,
   generate_ISSUE_TITLE_REGEX,
   generate_PULL_TITLE_REGEX,
-  NO_WINDOW_EXTENSION_ID
+  NO_WINDOW_EXTENSION_ID,
+  MIN_MAIN_WINDOW_WIDTH
 } from './constants.ts';
 
 export const isExtensionOpen = async () => {
@@ -55,6 +56,61 @@ export const getSidebarWidth = (isSidebarMinimized, sidebarWidth) => {
     lastWindowWidth = sidebarWidth;
   }
   return lastWindowWidth;
+};
+
+/**
+ * Behavior: Open extension to the side of the main window that opened it.
+ * The boundaries of the extension and the main window will not exceed the
+ * boundaries of the original main window. This means that the main window
+ * will be resized to compensate for the extension. The one exception is when
+ * the final main window width would be < MIN_WINDOW_WIDTH, which in that case,
+ * the main window is not shrunken.
+ */
+export const getInitialDimensions = (
+  isSidebarMinimized,
+  sidebarWidth,
+  sidebarSide,
+  mainWindowInitial
+) => {
+  const extensionWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+
+  const mainWindowWidth_f = mainWindowInitial.width - extensionWidth;
+  const cannotShrink = mainWindowWidth_f < MIN_MAIN_WINDOW_WIDTH;
+  const isLeft = sidebarSide === 'left';
+
+  if (cannotShrink) {
+    return {
+      nextMainWin: mainWindowInitial,
+      nextExtensionWin: {
+        top: mainWindowInitial.top,
+        left: isLeft
+          ? mainWindowInitial.left - extensionWidth
+          : mainWindowInitial.left + mainWindowInitial.width,
+        width: extensionWidth,
+        height: mainWindowInitial.height
+      }
+    };
+  }
+
+  // If main window can be shrunk to make room for the extension...
+  return {
+    nextMainWin: {
+      top: mainWindowInitial.top,
+      left: isLeft
+        ? mainWindowInitial.left + extensionWidth
+        : mainWindowInitial.left,
+      width: mainWindowWidth_f,
+      height: mainWindowInitial.height
+    },
+    nextExtensionWin: {
+      top: mainWindowInitial.top,
+      left: isLeft
+        ? mainWindowInitial.left
+        : mainWindowInitial.left + mainWindowInitial.width - extensionWidth,
+      width: extensionWidth,
+      height: mainWindowInitial.height
+    }
+  };
 };
 
 export const isGithubRepoUrl = (url) => {

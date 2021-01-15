@@ -1,43 +1,66 @@
 import browser from 'webextension-polyfill';
+import Bowser from 'bowser';
+
 import log from '../config/log';
 import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
 import {
   getSidebarWidth,
   isCurrentWindow,
   UrlParser,
-  isExtensionOpen
+  isExtensionOpen,
+  getInitialDimensions
 } from './util';
+
+const isMoz =
+  Bowser.getParser(window.navigator.userAgent).getBrowser().name === 'Firefox';
 
 // Called when the user clicks on the extension icon
 const onBrowserActionClickedListener = async () => {
   try {
     // Get current window, and calculate new dimensions
-    const currentWin = await browser.windows.getCurrent();
+    const mainWin = await browser.windows.getCurrent();
     // Get isSidebarMinimized and sidebarWidth from storage
     const {
       isSidebarMinimized,
-      sidebarWidth
-    } = await browser.storage.sync.get(['isSidebarMinimized', 'sidebarWidth']);
+      sidebarWidth,
+      // lastOpenedUrl,
+      sidebarSide
+    } = await browser.storage.sync.get([
+      'isSidebarMinimized',
+      'sidebarWidth',
+      'lastOpenedUrl',
+      'sidebarSide'
+    ]);
     if (await isExtensionOpen()) {
       log.error("Error opening extension because it's already open");
       return;
     }
-    const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
-    // Create new window
-    const win = await browser.windows.create({
+    const { nextMainWin, nextExtensionWin } = getInitialDimensions(
+      isSidebarMinimized,
+      sidebarWidth,
+      sidebarSide,
+      mainWin
+    );
+
+    // Create extension window
+    const extensionWin = await browser.windows.create({
       url: browser.runtime.getURL('popup.html'),
       type: 'popup',
-      top: currentWin.top,
-      left: Math.floor(currentWin.left - newWidth),
-      width: newWidth, // Take over max half of original width
-      height: currentWin.height
+      top: nextExtensionWin.top,
+      left: nextExtensionWin.left,
+      width: nextExtensionWin.width, // Take over max half of original width
+      height: nextExtensionWin.height,
+      ...(!isMoz && { focused: true })
     });
-    await browser.windows.update(currentWin.id, {
-      left: currentWin.left,
-      width: currentWin.width
+
+    // Update main window
+    await browser.windows.update(mainWin.id, {
+      left: nextMainWin.left,
+      width: nextMainWin.width
     });
+
     // Store extension window id in storage
-    await browser.storage.sync.set({ currentWindowId: win.id });
+    await browser.storage.sync.set({ currentWindowId: extensionWin.id });
   } catch (error) {
     log.error('Error opening extension popup', error);
   }
@@ -68,38 +91,45 @@ browser.windows.onRemoved.addListener((windowId) => {
 // On window focus change or window resize, update the popup window so that
 // it follows the current window. If the sticky window setting stored in
 // chrome storage is off, ignore these events
-const updatePopupBounds = async (mainWindow) => {
+const updatePopupBounds = async (mainWin) => {
   try {
     // Retrieve saved settings
     const {
       currentWindowId,
       isStickyWindow,
       isSidebarMinimized,
-      sidebarWidth
+      sidebarWidth,
+      sidebarSide
     } = await browser.storage.sync.get([
       'currentWindowId',
       'isStickyWindow',
       'isSidebarMinimized',
-      'sidebarWidth'
+      'sidebarWidth',
+      'sidebarSide'
     ]);
 
-    // Ignore current window or if isStickyWindow is false
+    // Validate window state
     if (
-      !mainWindow ||
-      currentWindowId === NO_WINDOW_EXTENSION_ID ||
-      isCurrentWindow(mainWindow.id, currentWindowId) ||
-      !isStickyWindow
+      !isStickyWindow || // If sticky window setting isn't on
+      !mainWin || // If chosen window isn't main window
+      currentWindowId === NO_WINDOW_EXTENSION_ID || // If extension is open
+      isCurrentWindow(mainWin.id, currentWindowId) // If chosen window is extension
     ) {
       return;
     }
 
     // Get window
-    const newWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+    const nextExtensionWidth = getSidebarWidth(
+      isSidebarMinimized,
+      sidebarWidth
+    );
     await browser.windows.update(currentWindowId, {
-      top: mainWindow.top,
-      left: Math.floor(mainWindow.left - newWidth),
-      height: mainWindow.height
-      // alwaysOnTop: true
+      top: mainWin.top,
+      left:
+        sidebarSide === 'left'
+          ? mainWin.left - nextExtensionWidth
+          : mainWin.left + mainWin.width,
+      height: mainWin.height
     });
   } catch (error) {
     log.error('Error updating popup bounds', error);
@@ -107,7 +137,7 @@ const updatePopupBounds = async (mainWindow) => {
 };
 
 // Called when active window is changed
-const onFocusChangeListener = async (windowId) => {
+const focusChangedSoUpdateDimensions = async (windowId) => {
   try {
     const { currentWindowId } = await browser.storage.sync.get([
       'currentWindowId'
@@ -123,7 +153,7 @@ const onFocusChangeListener = async (windowId) => {
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {
-  onFocusChangeListener(windowId);
+  focusChangedSoUpdateDimensions(windowId);
 });
 
 // Called when active window is dragged or resized
@@ -165,7 +195,7 @@ const onTabActivatedListener = async ({ windowId, tabId }) => {
 browser.tabs.onActivated.addListener((tabInfo) => {
   onTabActivatedListener(tabInfo);
 });
-const onFocusChangedListener = async (windowId) => {
+const focusChangedSoSendContent = async (windowId) => {
   try {
     // If window is the same as extension window, don't do anything
     const { currentWindowId } = await browser.storage.sync.get([
@@ -184,5 +214,60 @@ const onFocusChangedListener = async (windowId) => {
   }
 };
 browser.windows.onFocusChanged.addListener((windowId) => {
-  onFocusChangedListener(windowId);
+  focusChangedSoSendContent(windowId);
+});
+
+// Update popup sidebar side when user toggles it
+const updatePopupSide = async (request) => {
+  // If extension isn't open don't do anything
+  if (!(await isExtensionOpen())) {
+    return;
+  }
+  // Find the main window
+  const mainWindow = await browser.windows.getLastFocused({
+    populate: false,
+    windowTypes: ['normal']
+  });
+
+  // Update extension boundaries
+  const { currentWindowId, sidebarWidth } = await browser.storage.sync.get([
+    'currentWindowId',
+    'sidebarWidth'
+  ]);
+
+  // Main window and extension window switch places
+  const { prevSide, nextSide } = request.payload;
+  // L->R
+  if (prevSide === 'left' && nextSide === 'right') {
+    // update extension
+    await browser.windows.update(currentWindowId, {
+      top: mainWindow.top,
+      left: mainWindow.left - sidebarWidth + mainWindow.width,
+      height: mainWindow.height,
+      focused: true
+    });
+    // update main window
+    await browser.windows.update(mainWindow.id, {
+      left: mainWindow.left - sidebarWidth
+    });
+  }
+  // R->L
+  else {
+    // update extension
+    await browser.windows.update(currentWindowId, {
+      top: mainWindow.top,
+      left: mainWindow.left,
+      height: mainWindow.height,
+      focused: true
+    });
+    // update main window
+    await browser.windows.update(mainWindow.id, {
+      left: mainWindow.left + sidebarWidth
+    });
+  }
+};
+browser.runtime.onMessage.addListener((request) => {
+  if (['sidebar-side-updated'].includes(request.action)) {
+    return updatePopupSide(request);
+  }
 });

@@ -1,5 +1,5 @@
 /* global chrome */
-import { observable, action } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 import IUiStore, {
   Language,
@@ -8,7 +8,8 @@ import IUiStore, {
   UiStorePropsArray,
   UiStoreKeys,
   SectionName,
-  Spacing
+  Spacing,
+  SidebarSide
 } from './I.ui.store';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
@@ -27,6 +28,7 @@ export default class UiStore implements IUiStore {
   @observable isStickyWindow = false;
   @observable sidebarView = SidebarView.Project;
   @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
+  @observable sidebarSide = SidebarSide.Left;
   @observable isSidebarMinimized = false;
   @observable isTreeSectionMinimized = {
     [TreeSection.Sessions]: { isMinimized: true, lastHeight: 200 },
@@ -101,6 +103,11 @@ export default class UiStore implements IUiStore {
   @action.bound setIsStickyWindow = (isStickyWindow: boolean): void => {
     setInChromeStorage({ isStickyWindow });
     this.isStickyWindow = isStickyWindow;
+  };
+
+  @action.bound setSidebarSide = (sidebarSide: SidebarSide): void => {
+    setInChromeStorage({ sidebarSide });    
+    this.sidebarSide = sidebarSide;
   };
 
   @action.bound setSidebarWidth = (

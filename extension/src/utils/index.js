@@ -1,7 +1,3 @@
-import browser from 'webextension-polyfill';
-// eslint-disable-next-line import/no-cycle
-import log from '../config/log';
-
 /* eslint-disable no-unused-vars */
 export const sortFiles = (a, b) => {
   // Sort by file type
@@ -34,15 +30,6 @@ export const isBlank = (o) => {
   return false;
 };
 
-export const redirectToUrl = (url) => {
-  const request = {
-    action: 'redirect-to-url',
-    payload: { url }
-  };
-  log.toBg('Redirect to url request -> bg', request);
-  browser.runtime.sendMessage(request);
-};
-
 // https://stackoverflow.com/questions/1983648/replace-spaces-with-dashes-and-make-all-letters-lower-case
 export const kebabify = (s) => s.replace(/\s+/g, '-').toLowerCase();
 
@@ -54,24 +41,4 @@ export const areArraysEqual = (a, b) =>
 
 export const isProduction = () => {
   return process.env.NODE_ENV === 'production';
-};
-
-// https://stackoverflow.com/questions/4456969/how-to-tell-if-a-script-is-run-as-content-script-or-background-script
-export const getExtensionContext = () => {
-  if (
-    browser?.extension?.getBackgroundPage &&
-    browser.extension.getBackgroundPage() === window
-  ) {
-    return 'BACKGROUND';
-  }
-  if (
-    browser?.extension?.getBackgroundPage &&
-    browser.extension.getBackgroundPage() !== window
-  ) {
-    return 'POPUP';
-  }
-  if (!browser || !browser.runtime || !browser.runtime.onMessage) {
-    return 'WEB';
-  }
-  return 'CONTENT';
 };

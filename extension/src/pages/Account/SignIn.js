@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { MarkGithubIcon } from '@primer/octicons-react';
+import { MarkGithubIcon, PersonIcon } from '@primer/octicons-react';
+import loadable from '@loadable/component';
 
-import SplashSpinner from '../../components/Loading/SplashSpinner';
+import { Container, Spacer, SignInContainer } from './Signin.style';
 import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
 import { useUserStore } from '../../hooks/store';
 import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
-import { H1, H3 } from '../../components/Text';
+import { H3, Title, Subtitle } from '../../components/Text';
 import { ICON } from '../../constants/sizes';
 import useTheme from '../../hooks/useTheme';
 import { onSignInComplete } from '../../utils/user';
+import Image from '../../components/Image';
+import chummyLogo from '../../../public/icon/chummy128.png';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-`;
-
-const SignInContainer = styled.div`
-  padding: 1rem;
-`;
+const SplashSpinner = loadable(
+  () => import('../../components/Loading/SplashSpinner'),
+  {
+    fallback: <></>
+  }
+);
 
 export default observer(() => {
   const firebase = useFirebaseDAO();
@@ -57,7 +54,9 @@ export default observer(() => {
 
   const renderContents = () => {
     if (isPendingLocal || isPending) {
-      return <SplashSpinner />;
+      // TODO: Set a timeout where if it's waiting on auth for too long, it'll
+      // suggest the user to go back to signin page
+      return <SplashSpinner text="Waiting for authentication..." />;
     }
 
     // If there was an error signing in
@@ -68,7 +67,16 @@ export default observer(() => {
     return (
       <>
         <SignInContainer>
-          <H1>Welcome to Chummy</H1>
+          <Image
+            // eslint-disable-next-line global-require
+            src={chummyLogo}
+            size={ICON.SPLASH.SIZE(STPayload)}
+            alt="chummy-icon"
+            PlaceholderIcon={<PersonIcon />}
+          />
+          <Title>Chummy</Title>
+          <Subtitle>Github made easy</Subtitle>
+          <Spacer />
           <IconAndTextButton
             Icon={<MarkGithubIcon />}
             iconSize={ICON.SIZE(STPayload) + 4}

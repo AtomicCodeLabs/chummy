@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
+import { KebabHorizontalIcon } from '@primer/octicons-react';
 
 import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
@@ -94,6 +95,9 @@ export default observer(() => {
             open={!isBookmarksSectionMinimized}
             onClick={toggleBookmarksSection}
             highlightOnHover
+            Icon={<KebabHorizontalIcon />}
+            startDeg={90}
+            noRotate
           />
           <Form>
             <Input

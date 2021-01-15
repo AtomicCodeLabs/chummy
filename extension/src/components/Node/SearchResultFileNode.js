@@ -8,7 +8,13 @@ import {
 
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
-import { getMatchFragment, createBookmark, clickedEl } from './util';
+import {
+  getMatchFragment,
+  createBookmark,
+  clickedEl,
+  redirectToUrl,
+  getNameFragmentIndices
+} from './util';
 import SearchResultMatchNode from './SearchResultMatchNode';
 import useBookmarkState from '../../hooks/useBookmarkState';
 import useTheme from '../../hooks/useTheme';
@@ -21,7 +27,8 @@ const SearchResultFileNode = ({ file }) => {
     name,
     path,
     html_url: htmlUrl,
-    repo
+    repo,
+    query
   } = file;
   const bookmark = createBookmark(repo.owner, repo.name, 'master', file);
   const bookmarkEl = useRef(null);
@@ -32,6 +39,7 @@ const SearchResultFileNode = ({ file }) => {
     'Search'
   );
   const { spacing } = useTheme();
+  const hasMatches = textMatches.length !== 0;
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -43,6 +51,12 @@ const SearchResultFileNode = ({ file }) => {
       return;
     }
 
+    // If file doesn't have any matches, clicking it should open the file
+    if (!hasMatches) {
+      redirectToUrl(htmlUrl);
+      return;
+    }
+
     // Or toggle open state
     if (open) {
       setOpen(false);
@@ -51,9 +65,30 @@ const SearchResultFileNode = ({ file }) => {
     }
   };
 
+  const renderName = (n) => {
+    if (hasMatches) {
+      return n;
+    }
+
+    // Try to find matching fragments
+    const { start, end } = getNameFragmentIndices(query, n);
+
+    if (start === -1 || end === -1) {
+      return n;
+    }
+
+    return (
+      <span className="mono">
+        {n.slice(0, start)}
+        <span className="highlight">{n.slice(start, end)}</span>
+        {n.slice(end)}
+      </span>
+    );
+  };
+
   const renderMatches = () =>
     open &&
-    textMatches &&
+    hasMatches &&
     textMatches
       .map(
         ({ fragment, matches }, fileIndex) =>
@@ -77,17 +112,19 @@ const SearchResultFileNode = ({ file }) => {
       )
       .flat();
 
+  console.log('filename', file);
+
   return (
     <>
       <StyledNode.Container className="node" onClickCapture={handleClick}>
-        <StyledNode.LeftSpacer level={0} />
-        <OpenCloseChevron open={open} />
+        <StyledNode.LeftSpacer level={0} extraIconFiller={!hasMatches} />
+        {hasMatches && <OpenCloseChevron open={open} />}
         <StyledNode.Icon>
           <FileIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
-        <StyledNode.Name>{name}</StyledNode.Name>
+        <StyledNode.Name>{renderName(name)}</StyledNode.Name>
         <StyledNode.SubName variant="smallFont">
-          {parentPath}
+          {renderName(parentPath)}
         </StyledNode.SubName>
         <StyledNode.MiddleSpacer />
         <StyledNode.RightIconContainer>
@@ -134,7 +171,8 @@ SearchResultFileNode.propTypes = {
     repo: PropTypes.shape({
       owner: PropTypes.string,
       name: PropTypes.string
-    })
+    }),
+    query: PropTypes.string
   }).isRequired
 };
 
