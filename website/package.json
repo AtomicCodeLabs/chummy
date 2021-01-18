@@ -8,10 +8,10 @@
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexkim205/chummy-website"
+    "url": "https://github.com/alexkim205/chummy"
   },
   "bugs": {
-    "url": "https://github.com/alexkim205/chummy-website/issues"
+    "url": "https://github.com/alexkim205/chummy/issues"
   },
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
