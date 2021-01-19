@@ -14,6 +14,7 @@ import {
   backgroundAlternatingDarkColor
 } from '../../constants/theme';
 import { SIDE_TAB, HEADER } from '../../constants/sizes';
+import { SidebarSide } from '../../config/store/I.ui.store.ts';
 
 export const Container = styled.div`
   background-color: ${backgroundColor};
@@ -22,7 +23,8 @@ export const Container = styled.div`
   z-index: 10000;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ sidebarSide }) =>
+    sidebarSide === SidebarSide.Left ? 'row' : 'row-reverse'};
   overflow: hidden;
 `;
 
@@ -80,7 +82,8 @@ export const ExpandingContainer = styled.div`
   height: 100vh;
   position: absolute;
   z-index: 9998;
-  left: ${SIDE_TAB.WIDTH}px;
+  left: ${({ sidebarSide }) =>
+    sidebarSide === SidebarSide.Left ? SIDE_TAB.WIDTH : 0}px;
   top: 0;
 
   background-color: ${backgroundColor};

@@ -70,6 +70,14 @@ const Title = styled.div`
   font-weight: 600;
   color: ${textColor};
   margin-bottom: ${textSpacing};
+
+  span.strikethrough {
+    text-decoration: line-through;
+  }
+
+  span {
+    margin-right: 0.2rem;
+  }
 `;
 
 const Description = styled.div`

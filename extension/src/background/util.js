@@ -10,8 +10,7 @@ import {
   REPO_TITLE_REGEX,
   generate_ISSUE_TITLE_REGEX,
   generate_PULL_TITLE_REGEX,
-  NO_WINDOW_EXTENSION_ID,
-  MIN_MAIN_WINDOW_WIDTH
+  NO_WINDOW_EXTENSION_ID
 } from './constants.ts';
 
 export const isExtensionOpen = async () => {
@@ -59,12 +58,9 @@ export const getSidebarWidth = (isSidebarMinimized, sidebarWidth) => {
 };
 
 /**
- * Behavior: Open extension to the side of the main window that opened it.
- * The boundaries of the extension and the main window will not exceed the
- * boundaries of the original main window. This means that the main window
- * will be resized to compensate for the extension. The one exception is when
- * the final main window width would be < MIN_WINDOW_WIDTH, which in that case,
- * the main window is not shrunken.
+ * Calculates the new dimensions of the extension and main window on initial extension open
+ *
+ * Just append extension to specified sidebar side
  */
 export const getInitialDimensions = (
   isSidebarMinimized,
@@ -74,43 +70,126 @@ export const getInitialDimensions = (
 ) => {
   const extensionWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
 
-  const mainWindowWidth_f = mainWindowInitial.width - extensionWidth;
-  const cannotShrink = mainWindowWidth_f < MIN_MAIN_WINDOW_WIDTH;
-  const isLeft = sidebarSide === 'left';
-
-  if (cannotShrink) {
-    return {
-      nextMainWin: mainWindowInitial,
-      nextExtensionWin: {
-        top: mainWindowInitial.top,
-        left: isLeft
-          ? mainWindowInitial.left - extensionWidth
-          : mainWindowInitial.left + mainWindowInitial.width,
-        width: extensionWidth,
-        height: mainWindowInitial.height
-      }
-    };
+  const isLeft = !sidebarSide || sidebarSide === 'left';
+  // if sidebar side is undefined (can happen on initial startup or after cache is cleared),
+  // set the sidebar side to left by default
+  if (!sidebarSide) {
+    browser.storage.sync.set({ sidebarSide: 'left' });
   }
 
-  // If main window can be shrunk to make room for the extension...
+  // Right
   return {
-    nextMainWin: {
-      top: mainWindowInitial.top,
-      left: isLeft
-        ? mainWindowInitial.left + extensionWidth
-        : mainWindowInitial.left,
-      width: mainWindowWidth_f,
-      height: mainWindowInitial.height
-    },
+    nextMainWin: mainWindowInitial,
     nextExtensionWin: {
       top: mainWindowInitial.top,
       left: isLeft
-        ? mainWindowInitial.left
-        : mainWindowInitial.left + mainWindowInitial.width - extensionWidth,
+        ? mainWindowInitial.left - extensionWidth
+        : mainWindowInitial.left + mainWindowInitial.width,
       width: extensionWidth,
       height: mainWindowInitial.height
     }
   };
+};
+
+/**
+ * Calculates the new dimensions of the extension and main window on initial extension open
+ *
+ * Just append extension to specified sidebar side
+ */
+export const getSidebarSideUpdateDimensions = async (
+  prevSide,
+  nextSide,
+  extensionId,
+  mainWindowInitial,
+  extensionWidth
+) => {
+  // const extensionWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+
+  const appendLeft = {
+    nextMainWin: mainWindowInitial,
+    nextExtensionWin: {
+      top: mainWindowInitial.top,
+      left: mainWindowInitial.left - extensionWidth,
+      width: extensionWidth,
+      height: mainWindowInitial.height
+    }
+  };
+
+  const appendRight = {
+    nextMainWin: mainWindowInitial,
+    nextExtensionWin: {
+      top: mainWindowInitial.top,
+      left: mainWindowInitial.left + mainWindowInitial.width,
+      width: extensionWidth,
+      height: mainWindowInitial.height
+    }
+  };
+
+  // L->L
+  // Make sure the extension is flush to the left of the main window
+  if (prevSide === 'left' && nextSide === 'left') {
+    return appendLeft;
+  }
+
+  // R->R
+  // Vice versa as above.
+  if (prevSide === 'right' && nextSide === 'right') {
+    return appendRight;
+  }
+
+  const extensionWin = await browser.windows.get(extensionId);
+
+  // L->R
+  // If extension isn't flush (+-10pixels) to the left of the main window
+  // just append extension to the right without updating the main window.
+  // Else make room for the extension.
+  if (prevSide === 'left' && nextSide === 'right') {
+    const isFlush =
+      Math.abs(mainWindowInitial.left - extensionWin.left - extensionWidth) <=
+      10;
+    if (isFlush) {
+      return {
+        nextMainWin: {
+          ...mainWindowInitial,
+          left: mainWindowInitial.left - extensionWidth
+        },
+        nextExtensionWin: {
+          top: mainWindowInitial.top,
+          left:
+            mainWindowInitial.left - extensionWidth + mainWindowInitial.width,
+          width: extensionWidth,
+          height: mainWindowInitial.height
+        }
+      };
+    }
+    return appendRight;
+  }
+
+  // R->L
+  // Vice versa as above.
+  if (prevSide === 'right' && nextSide === 'left') {
+    const isFlush =
+      Math.abs(
+        mainWindowInitial.left + mainWindowInitial.width - extensionWin.left
+      ) <= 10;
+    if (isFlush) {
+      return {
+        nextMainWin: {
+          ...mainWindowInitial,
+          left: mainWindowInitial.left + extensionWidth
+        },
+        nextExtensionWin: {
+          top: mainWindowInitial.top,
+          left: mainWindowInitial.left,
+          width: extensionWidth,
+          height: mainWindowInitial.height
+        }
+      };
+    }
+    return appendLeft;
+  }
+
+  return appendLeft;
 };
 
 export const isGithubRepoUrl = (url) => {

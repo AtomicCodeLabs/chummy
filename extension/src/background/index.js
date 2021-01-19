@@ -8,7 +8,8 @@ import {
   isCurrentWindow,
   UrlParser,
   isExtensionOpen,
-  getInitialDimensions
+  getInitialDimensions,
+  getSidebarSideUpdateDimensions
 } from './util';
 
 const isMoz =
@@ -33,6 +34,11 @@ const onBrowserActionClickedListener = async () => {
     ]);
     if (await isExtensionOpen()) {
       log.error("Error opening extension because it's already open");
+      // Focus on extension window
+      const { currentWindowId } = await browser.storage.sync.get([
+        'currentWindowId'
+      ]);
+      browser.windows.update(currentWindowId, { focused: true });
       return;
     }
     const { nextMainWin, nextExtensionWin } = getInitialDimensions(
@@ -111,7 +117,7 @@ const updatePopupBounds = async (mainWin) => {
     // Validate window state
     if (
       !isStickyWindow || // If sticky window setting isn't on
-      !mainWin || // If chosen window isn't main window
+      !mainWin || // If chosen window isn't null
       currentWindowId === NO_WINDOW_EXTENSION_ID || // If extension is open
       isCurrentWindow(mainWin.id, currentWindowId) // If chosen window is extension
     ) {
@@ -142,11 +148,17 @@ const focusChangedSoUpdateDimensions = async (windowId) => {
     const { currentWindowId } = await browser.storage.sync.get([
       'currentWindowId'
     ]);
+    const window = await browser.windows.get(windowId);
+    // If window is normal type and not a popup, record it in storage
+    // as the last focused window so that it can be used later.
+    if (window.type === 'normal') {
+      browser.storage.sync.set({ lastFocusedWindowId: window.id });
+    }
+
     // Ignore current window or if isStickyWindow is false
     if (isCurrentWindow(windowId, currentWindowId)) {
       return;
     }
-    const window = await browser.windows.get(windowId);
     updatePopupBounds(window);
   } catch (error) {
     log.error('Error on retrieving currentWindowId', error);
@@ -224,10 +236,40 @@ const updatePopupSide = async (request) => {
     return;
   }
   // Find the main window
-  const mainWindow = await browser.windows.getLastFocused({
-    populate: false,
-    windowTypes: ['normal']
-  });
+  let mainWindow;
+  let error = false;
+  try {
+    // First try looking for lastFocusedWindowId
+    const { lastFocusedWindowId } = await browser.storage.sync.get([
+      'lastFocusedWindowId'
+    ]);
+    if (
+      lastFocusedWindowId &&
+      lastFocusedWindowId !== NO_WINDOW_EXTENSION_ID &&
+      lastFocusedWindowId !== browser.windows.NO_WINDOW_EXTENSION_ID
+    ) {
+      mainWindow = await browser.windows.get(lastFocusedWindowId);
+    }
+    // If it doesn't exist use getLastFocused API. windowTypes is deprecated in Firefox so
+    // just don't update popup boundaries in moz. The popup will still be updated on drag.
+    else if (!isMoz) {
+      mainWindow = await browser.windows.getLastFocused({
+        populate: false,
+        ...(!isMoz && { windowTypes: ['normal'] })
+      });
+    } else {
+      throw new Error(
+        'Get last focused window operation is unsupported on this browser.'
+      );
+    }
+  } catch (e) {
+    log.error('Error getting last focused window', e);
+    error = true;
+  }
+
+  if (error) {
+    return;
+  }
 
   // Update extension boundaries
   const { currentWindowId, sidebarWidth } = await browser.storage.sync.get([
@@ -237,34 +279,33 @@ const updatePopupSide = async (request) => {
 
   // Main window and extension window switch places
   const { prevSide, nextSide } = request.payload;
-  // L->R
-  if (prevSide === 'left' && nextSide === 'right') {
-    // update extension
-    await browser.windows.update(currentWindowId, {
-      top: mainWindow.top,
-      left: mainWindow.left - sidebarWidth + mainWindow.width,
-      height: mainWindow.height,
-      focused: true
-    });
-    // update main window
-    await browser.windows.update(mainWindow.id, {
-      left: mainWindow.left - sidebarWidth
-    });
-  }
-  // R->L
-  else {
-    // update extension
-    await browser.windows.update(currentWindowId, {
-      top: mainWindow.top,
-      left: mainWindow.left,
-      height: mainWindow.height,
-      focused: true
-    });
-    // update main window
-    await browser.windows.update(mainWindow.id, {
-      left: mainWindow.left + sidebarWidth
-    });
-  }
+
+  const {
+    nextMainWin,
+    nextExtensionWin
+  } = await getSidebarSideUpdateDimensions(
+    prevSide,
+    nextSide,
+    currentWindowId,
+    mainWindow,
+    sidebarWidth
+  );
+
+  // Update extension window
+  await browser.windows.update(currentWindowId, {
+    top: nextExtensionWin.top,
+    left: nextExtensionWin.left,
+    width: nextExtensionWin.width,
+    height: nextExtensionWin.height
+  });
+
+  // Update main window
+  await browser.windows.update(mainWindow.id, {
+    top: nextMainWin.top,
+    left: nextMainWin.left,
+    width: nextMainWin.width,
+    height: nextMainWin.height
+  });
 };
 browser.runtime.onMessage.addListener((request) => {
   if (['sidebar-side-updated'].includes(request.action)) {

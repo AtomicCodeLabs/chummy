@@ -36,7 +36,9 @@ export default class UiStore implements IUiStore {
     [TreeSection.Files]: { isMinimized: false, lastHeight: 200 }
   };
   @observable isSearchSectionMinimized = true;
-  @observable selectedQuery: string = null;
+  @observable selectedQueryFilename: string = null;
+  @observable selectedQueryCode: string = null;
+  @observable selectedQueryPath: string = null;
   @observable selectedOpenRepo: string = null;
   @observable selectedLanguage: string = null;
   // @observable openSearchResultFiles: Set<string> = new Set();
@@ -106,7 +108,7 @@ export default class UiStore implements IUiStore {
   };
 
   @action.bound setSidebarSide = (sidebarSide: SidebarSide): void => {
-    setInChromeStorage({ sidebarSide });    
+    setInChromeStorage({ sidebarSide });
     this.sidebarSide = sidebarSide;
   };
 
@@ -167,8 +169,16 @@ export default class UiStore implements IUiStore {
     });
   };
 
-  @action.bound setSelectedQuery = (selectedQuery: string) => {
-    this.selectedQuery = selectedQuery;
+  @action.bound setSelectedQueryFilename = (selectedQuery: string) => {
+    this.selectedQueryFilename = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryCode = (selectedQuery: string) => {
+    this.selectedQueryCode = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryPath = (selectedQuery: string) => {
+    this.selectedQueryPath = selectedQuery;
   };
 
   @action.bound setSelectedOpenRepo = (selectedOpenRepo: string) => {

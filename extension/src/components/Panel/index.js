@@ -10,7 +10,8 @@ const Panel = ({
   evenPadding,
   center,
   onClick,
-  rightPanel
+  rightPanel,
+  flag
 }) => {
   return (
     <StyledPanel.Container
@@ -19,7 +20,12 @@ const Panel = ({
       onClick={onClick}
     >
       <StyledPanel.LeftPanel>
-        {title && <StyledPanel.Title>{title}</StyledPanel.Title>}
+        {title && (
+          <StyledPanel.Title>
+            <span className={flag ? 'strikethrough' : undefined}>{title}</span>
+            <span>{flag}</span>
+          </StyledPanel.Title>
+        )}
         {description && (
           <StyledPanel.Description isLast={!children}>
             {description}
@@ -42,7 +48,8 @@ Panel.propTypes = {
   evenPadding: PropTypes.bool,
   center: PropTypes.bool,
   onClick: PropTypes.func,
-  rightPanel: PropTypes.node
+  rightPanel: PropTypes.node,
+  flag: PropTypes.node
 };
 
 Panel.defaultProps = {
@@ -53,7 +60,8 @@ Panel.defaultProps = {
   evenPadding: false,
   center: false,
   onClick: null,
-  rightPanel: null // Contents of right panel if a vertical split is wanted
+  rightPanel: null, // Contents of right panel if a vertical split is wanted
+  flag: null // Flag next to title
 };
 
 export default Panel;

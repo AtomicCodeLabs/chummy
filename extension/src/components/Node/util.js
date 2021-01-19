@@ -244,6 +244,23 @@ export const getBookmarkUrl = (bookmark) => {
   );
 };
 
+export const renderName = (n, query) => {
+  // Try to find matching fragments
+  const { start, end } = getNameFragmentIndices(query, n);
+
+  if (start === -1 || end === -1) {
+    return n;
+  }
+
+  return (
+    <span>
+      {n.slice(0, start)}
+      <span className="highlight">{n.slice(start, end)}</span>
+      {n.slice(end)}
+    </span>
+  );
+};
+
 export const clickedEl = (ref, event) =>
   ref.current &&
   (event.target === ref.current || ref.current.contains(event.target));

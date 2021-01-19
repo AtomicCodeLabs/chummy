@@ -1,6 +1,15 @@
 import { THEME_NAMES } from '../../config/theme/selector';
 import IUserStore from './I.user.store';
 
+export enum BrowserType {
+  Chrome = 'chrome',
+  Firefox = 'firefox',
+  Edge = 'edge',
+  Safari = 'safari',
+  Opera = 'opera',
+  Brave = 'brave'
+}
+
 export enum Language {
   English = 'en_US'
 }
@@ -75,7 +84,9 @@ class CUiStore {
 
   // Search Page
   isSearchSectionMinimized: boolean = true;
-  selectedQuery: string = null;
+  selectedQueryFilename: string = null;
+  selectedQueryCode: string = null;
+  selectedQueryPath: string = null;
   selectedOpenRepo: string = null;
   selectedLanguage: string = null;
   // openSearchResultFiles: Set<string>;

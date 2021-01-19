@@ -4,8 +4,10 @@ import {
   backgroundHighlightColor,
   lighterTextColor,
   fontSize,
+  smallFontSize,
   shadowColor,
-  fieldMargin
+  fieldMargin,
+  labelMargin
 } from '../../constants/theme';
 
 export const HeaderContainer = styled.div`
@@ -54,7 +56,9 @@ export const Form = styled.form`
 `;
 
 export const Label = styled.label`
-  font-size: ${fontSize};
+  font-size: ${smallFontSize};
+  color: ${lighterTextColor};
+  ${labelMargin}
 `;
 
 export const HideContainer = styled.div`

@@ -1,3 +1,4 @@
+import { css } from 'styled-components';
 import theme from 'styled-theming';
 import selector from '../config/theme/selector';
 
@@ -12,6 +13,12 @@ export const indentPadding = theme('spacing', {
   compact: '1.3rem',
   cozy: '1.6rem',
   comfortable: '1.8rem'
+});
+
+export const smallFontSize = theme('spacing', {
+  compact: '0.68rem',
+  cozy: '0.7rem',
+  comfortable: '0.75rem'
 });
 
 export const fontSize = theme('spacing', {
@@ -101,6 +108,21 @@ export const spacerSpacing = theme('spacing', {
   compact: '0.8rem',
   cozy: '0.9rem',
   comfortable: '0.9rem'
+});
+
+export const labelMargin = theme('spacing', {
+  compact: css`
+    margin-top: 0.18rem;
+    margin-bottom: 0.1rem;
+  `,
+  cozy: css`
+    margin-top: 0.2rem;
+    margin-bottom: 0.12rem;
+  `,
+  comfortable: css`
+    margin-top: 0.4rem;
+    margin-bottom: 0.2rem;
+  `
 });
 
 // Colors

@@ -27,7 +27,8 @@ const ResizableSidebar = observer(({ children }) => {
     pendingRequestCount,
     isSidebarMinimized,
     openSidebar,
-    closeSidebar
+    closeSidebar,
+    sidebarSide
   } = useUiStore();
   const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
@@ -63,7 +64,7 @@ const ResizableSidebar = observer(({ children }) => {
   ]);
 
   return (
-    <Container>
+    <Container sidebarSide={sidebarSide}>
       <SideTab isSidebarMinimized={isSidebarMinimized}>
         {sidebarRoutes &&
           sidebarRoutes.map((route) =>
@@ -86,7 +87,10 @@ const ResizableSidebar = observer(({ children }) => {
             )
           )}
       </SideTab>
-      <ExpandingContainer isSidebarMinimized={isSidebarMinimized}>
+      <ExpandingContainer
+        isSidebarMinimized={isSidebarMinimized}
+        sidebarSide={sidebarSide}
+      >
         {isPageWithHeader(pathname) && (
           <ExpandingContainerHeaderContainer data-testid="page-title">
             {sidebarHeaderTitle}

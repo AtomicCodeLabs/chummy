@@ -8,7 +8,7 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
-import { QuestionIcon, KebabHorizontalIcon } from '@primer/octicons-react';
+import { KebabHorizontalIcon } from '@primer/octicons-react';
 import loadable from '@loadable/component';
 
 import { SectionContent } from '../../components/Section';
@@ -18,7 +18,8 @@ import {
   FormContainer,
   FormResultsDescriptionContainer,
   Form,
-  HideContainer
+  HideContainer,
+  Label
 } from '../../components/Form';
 import Input from '../../components/Form/Input';
 import { ControlledSelect } from '../../components/Form/Select';
@@ -28,8 +29,6 @@ import { useUiStore, useFileStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
 import { isBlank } from '../../utils';
 import SearchResultFileNode from '../../components/Node/SearchResultFileNode';
-import ExternalLink from '../../components/ExternalLink';
-import { GITHUB_URLS } from '../../constants/urls';
 
 const LanguagesSelect = loadable(() => import('./LanguagesSelect'));
 
@@ -42,8 +41,12 @@ export default observer(() => {
     removePendingRequest,
     isSearchSectionMinimized,
     toggleSearchSection,
-    selectedQuery,
-    setSelectedQuery,
+    selectedQueryFilename,
+    setSelectedQueryFilename,
+    selectedQueryCode,
+    setSelectedQueryCode,
+    selectedQueryPath,
+    setSelectedQueryPath,
     selectedOpenRepo,
     setSelectedOpenRepo,
     selectedLanguage,
@@ -63,7 +66,9 @@ export default observer(() => {
 
   const { control, register, watch, handleSubmit } = useForm({
     defaultValues: {
-      query: selectedQuery || '',
+      queryFilename: selectedQueryFilename || '',
+      queryCode: selectedQueryCode || '',
+      queryPath: selectedQueryPath || '',
       repository: selectedOpenRepo
         ? repoOptions.filter((o) => o.value === selectedOpenRepo)[0] // https://stackoverflow.com/questions/43495696/how-to-set-a-default-value-in-react-select
         : repoOptions.length && repoOptions[0],
@@ -77,17 +82,19 @@ export default observer(() => {
 
   const [results, setResults] = useState(false);
   // Local state query will persist after being debounced
-  // const [localQuery, setLocalQuery] = useState(selectedQuery || '');
-  const localQuery = watch('query');
-  const debouncedQuery = useDebounce(localQuery, 700);
+  const localQueryFilename = watch('queryFilename');
+  const localQueryCode = watch('queryCode');
+  const localQueryPath = watch('queryPath');
+  const debouncedQueryFilename = useDebounce(localQueryFilename, 700);
+  const debouncedQueryCode = useDebounce(localQueryCode, 700);
+  const debouncedQueryPath = useDebounce(localQueryPath, 700);
 
   const isWellFormed = useMemo(
     () =>
-      !isBlank(debouncedQuery) && !isBlank(repository) && !isBlank(language),
-    // (debouncedQuery !== selectedQuery ||
-    //   repository.value !== selectedOpenRepo ||
-    //   language.value !== selectedLanguage),
-    [debouncedQuery, repository, language]
+      (!isBlank(debouncedQueryFilename) || !isBlank(debouncedQueryCode)) &&
+      !isBlank(repository) &&
+      !isBlank(language),
+    [debouncedQueryFilename, debouncedQueryCode, repository, language]
   );
 
   // Search API call
@@ -97,16 +104,26 @@ export default observer(() => {
     const responseNodes = await octoDAO.searchCode(
       parsedRepo[0],
       parsedRepo[1],
-      debouncedQuery,
+      debouncedQueryFilename,
+      debouncedQueryCode,
+      debouncedQueryPath,
       language.value.toLowerCase()
     );
     setResults(responseNodes);
     removePendingRequest('Search');
-  }, [debouncedQuery, repository, language]);
+  }, [
+    debouncedQueryFilename,
+    debouncedQueryCode,
+    debouncedQueryPath,
+    repository,
+    language
+  ]);
 
   // Call api when user stops typing
   useEffect(() => {
-    setSelectedQuery(debouncedQuery);
+    setSelectedQueryFilename(debouncedQueryFilename);
+    setSelectedQueryCode(debouncedQueryCode);
+    setSelectedQueryPath(debouncedQueryPath);
     setSelectedOpenRepo(repository.value);
     setSelectedLanguage(language.value);
 
@@ -116,7 +133,13 @@ export default observer(() => {
     } else {
       setResults(false);
     }
-  }, [debouncedQuery, repository, language]);
+  }, [
+    debouncedQueryFilename,
+    debouncedQueryCode,
+    debouncedQueryPath,
+    repository,
+    language
+  ]);
 
   return (
     <>
@@ -131,20 +154,21 @@ export default observer(() => {
             noRotate
           />
           <Form onSubmit={handleSubmit(onSearch)}>
+            <Label htmlFor="queryFilename">Filename</Label>
             <Input
               className="input-field"
               type="text"
-              placeholder="Search"
-              id="query"
-              name="query"
+              placeholder=""
+              id="queryFilename"
+              name="queryFilename"
               ref={register({ required: true })}
-              icon={
-                <ExternalLink to={GITHUB_URLS.SEARCH_QUERY}>
-                  <QuestionIcon size={14} verticalAlign="middle" />
-                </ExternalLink>
-              }
+              // icon={
+              //   <ExternalLink to={GITHUB_URLS.SEARCH_QUERY}>
+              //     <QuestionIcon size={14} verticalAlign="middle" />
+              //   </ExternalLink>
+              // }
             />
-            {/* <Label htmlFor="repository">repository</Label> */}
+            <Label htmlFor="repository">Repository</Label>
             <ControlledSelect
               className={`input-field ${
                 isSearchSectionMinimized && 'is-technically-last'
@@ -156,7 +180,25 @@ export default observer(() => {
               options={repoOptions}
             />
             <HideContainer isHidden={isSearchSectionMinimized}>
-              {/* <Label htmlFor="language">language</Label> */}
+              <Label htmlFor="queryCode">Search in code</Label>
+              <Input
+                className="input-field"
+                type="text"
+                placeholder=""
+                id="queryCode"
+                name="queryCode"
+                ref={register({ required: true })}
+              />
+              <Label htmlFor="queryCode">In path</Label>
+              <Input
+                className="input-field"
+                type="text"
+                placeholder=""
+                id="queryPath"
+                name="queryPath"
+                ref={register({ required: true })}
+              />
+              <Label htmlFor="language">Language</Label>
               <Suspense
                 fallback={
                   <ControlledSelect
@@ -220,7 +262,8 @@ export default observer(() => {
                   file={{
                     ...file,
                     repo: { owner: parsedRepo[0], name: parsedRepo[1] },
-                    query: debouncedQuery
+                    queryFilename: debouncedQueryFilename,
+                    queryCode: debouncedQueryCode
                   }}
                   key={file.path}
                 />

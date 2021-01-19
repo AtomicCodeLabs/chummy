@@ -18,7 +18,29 @@ export const formQueryGetRepositorySpecificBranchRootNodes = (
   }
 `;
 
-export const formSearchQuery = (owner, repo, query, language) =>
-  `${query}+repo:${owner}/${repo}${language && `+language:${language}`}`;
+export const formSearchQuery = (
+  owner,
+  repo,
+  queryFilename,
+  queryCode,
+  queryPath,
+  language
+) => {
+  let baseQuery = `repo:${owner}/${repo}`;
+  if (queryFilename) {
+    baseQuery += `+filename:${queryFilename}`;
+  }
+  if (queryCode) {
+    baseQuery += `+in:file+${queryCode}`;
+  }
+  if (queryPath) {
+    baseQuery += `+path:${queryPath}`;
+  }
+  if (language) {
+    baseQuery += `+language:${language}`;
+  }
+  console.log('BASE QUERY', baseQuery);
+  return baseQuery;
+};
 
 export const placeholder = 'placeholder';

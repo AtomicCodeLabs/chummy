@@ -7,6 +7,7 @@ import { redirectToUrl } from '../utils/browser';
 
 const Container = styled.div`
   cursor: pointer;
+  display: flex;
 `;
 
 const ExternalLink = ({ to, children, ...props }) => {

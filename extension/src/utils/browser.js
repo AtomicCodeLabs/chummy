@@ -11,7 +11,6 @@ export const redirectToUrl = (url) => {
 };
 
 export const updateSidebarSide = (prevSide, nextSide) => {
-  if (prevSide === nextSide) return; // shouldn't happen but jic
   const request = {
     action: 'sidebar-side-updated',
     payload: { prevSide, nextSide }
