@@ -8,10 +8,9 @@ import { useFileStore, useUserStore } from '../../hooks/store';
 import { backgroundColor, textColor } from '../../constants/theme';
 import {
   getOpenRepositories,
-  onUpdateOpenRepositories,
-  repoMapToArray
+  onUpdateOpenRepositories
 } from '../../utils/repository';
-import useFirebaseDAO from '../../hooks/firebase';
+import useDAO from '../../hooks/dao';
 
 const Container = styled.div`
   position: fixed;
@@ -30,13 +29,13 @@ const Container = styled.div`
 const ExtensionRootContainer = observer(({ children }) => {
   const { openRepos, setOpenRepos } = useFileStore();
   const { isLoggedIn } = useUserStore();
-  const firebase = useFirebaseDAO();
+  const dao = useDAO();
 
   // App wide listeners are initialized here.
   // On Open repositories update setOpenRepos
   useEffect(() => {
-    const removeListener = onUpdateOpenRepositories((repoMap) => {
-      setOpenRepos(repoMapToArray(repoMap));
+    const removeListener = onUpdateOpenRepositories((repoList) => {
+      setOpenRepos(repoList);
     });
     return removeListener;
   }, []);
@@ -44,18 +43,18 @@ const ExtensionRootContainer = observer(({ children }) => {
   // Get all open repositories on startup
   useEffect(() => {
     if (openRepos.size === 0) {
-      getOpenRepositories((repoMap) => {
-        setOpenRepos(repoMapToArray(repoMap));
+      getOpenRepositories((repoList) => {
+        setOpenRepos(repoList);
       });
     }
   }, [openRepos]);
 
   // Get all bookmarks on startup
   useEffect(() => {
-    if (firebase && isLoggedIn) {
-      firebase.getAllBookmarks();
+    if (dao && isLoggedIn) {
+      dao.getAllBookmarks();
     }
-  }, [firebase, isLoggedIn]);
+  }, [dao, isLoggedIn]);
 
   return <Container>{children}</Container>;
 });

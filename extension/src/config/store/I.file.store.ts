@@ -3,7 +3,7 @@ import IUserStore from './I.user.store';
 
 export enum NodeType {
   Blob = 'blob',
-  Tree = 'tree',
+  Tree = 'tree'
 }
 
 export enum SubpageType {
@@ -37,8 +37,9 @@ export interface Bookmark extends Node {
 export interface Tab {
   name: string;
   tabId: number;
-  tabTitle?: string;
+  nodeName?: string;
   repo?: Repo;
+  subpage?: string;
 }
 
 export interface Repo {
@@ -48,8 +49,18 @@ export interface Repo {
   bookmarks?: { [key: string]: Bookmark };
   type: NodeType;
   isOpen?: boolean;
+  defaultBranch?: string;
 }
 
+// Interfaces for repo tab objects we get from background
+export interface BgRepo {
+  owner: string;
+  repo: string;
+  tab: Tab;
+  type: NodeType;
+  url: string;
+  defaultBranch: string;
+}
 
 export interface Session {
   id: string;

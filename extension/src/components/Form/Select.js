@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import ReactSelect, { createFilter } from 'react-select';
 import { Controller } from 'react-hook-form';
 
+import { Flag } from '../Text';
 import { INPUT } from '../../constants/sizes';
 import {
   backgroundColor,
@@ -71,6 +72,7 @@ const Option = (props) => {
     className = '',
     cx,
     getStyles,
+    getValue,
     isDisabled,
     isFocused,
     isSelected,
@@ -79,6 +81,23 @@ const Option = (props) => {
   } = props;
   delete props.innerProps.onMouseMove;
   delete props.innerProps.onMouseOver;
+
+  const option = getValue()[0];
+
+  const renderDisabledReason = () => {
+    if (!isDisabled) {
+      return;
+    }
+
+    // Could be disabled bc not proper tier level
+    if (!option.tiers.includes(option.currentTier)) {
+      return option.tiers[0]; // return first eligible tier
+    }
+    // Or because setting is not compatible w browser. This case is
+    // handled in the parent panel
+  };
+
+  const flagText = renderDisabledReason();
 
   return (
     <StyledOptionContainer
@@ -97,7 +116,7 @@ const Option = (props) => {
       )}
       {...innerProps}
     >
-      {children}
+      {children} {flagText && <Flag>{flagText}</Flag>}
     </StyledOptionContainer>
   );
 };
@@ -127,7 +146,9 @@ export const Select = (props) => {
         ...base,
         minHeight: 'auto',
         color: lightTextColor(STPayload),
-        fontSize: fontSize(STPayload)
+        fontSize: fontSize(STPayload),
+        marginTop: 0,
+        marginBottom: 0
       }),
       dropdownIndicator: (base) => ({
         ...base,

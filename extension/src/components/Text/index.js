@@ -9,6 +9,7 @@ import {
   fontSize,
   lineHeight,
   textColor,
+  flagIconColor,
   titleFontSize,
   titleMarginSize,
   subTitleFontSize,
@@ -84,4 +85,13 @@ export const H3 = styled.h3`
 
 export const A = styled.a`
   color: ${textColor};
+`;
+
+export const Flag = styled.span`
+  padding: 0.05rem 0.2rem;
+  font-style: italic;
+  font-size: ${fontSize};
+  border-radius: 2px;
+  background-color: ${flagIconColor};
+  text-decoration: none;
 `;

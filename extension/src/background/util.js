@@ -4,15 +4,8 @@
 import browser from 'webextension-polyfill';
 import log from '../config/log';
 import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
-import {
-  SUBPAGES,
-  GITHUB_REGEX,
-  REPO_TITLE_REGEX,
-  generate_ISSUE_TITLE_REGEX,
-  generate_PULL_TITLE_REGEX,
-  NO_WINDOW_EXTENSION_ID,
-  MIN_MAIN_WINDOW_WIDTH
-} from './constants.ts';
+import { GITHUB_REGEX, NO_WINDOW_EXTENSION_ID } from './constants.ts';
+import { SIDEBAR_SIDE } from '../global/constants.ts';
 
 export const isExtensionOpen = async () => {
   try {
@@ -59,12 +52,9 @@ export const getSidebarWidth = (isSidebarMinimized, sidebarWidth) => {
 };
 
 /**
- * Behavior: Open extension to the side of the main window that opened it.
- * The boundaries of the extension and the main window will not exceed the
- * boundaries of the original main window. This means that the main window
- * will be resized to compensate for the extension. The one exception is when
- * the final main window width would be < MIN_WINDOW_WIDTH, which in that case,
- * the main window is not shrunken.
+ * Calculates the new dimensions of the extension and main window on initial extension open
+ *
+ * Just append extension to specified sidebar side
  */
 export const getInitialDimensions = (
   isSidebarMinimized,
@@ -74,43 +64,126 @@ export const getInitialDimensions = (
 ) => {
   const extensionWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
 
-  const mainWindowWidth_f = mainWindowInitial.width - extensionWidth;
-  const cannotShrink = mainWindowWidth_f < MIN_MAIN_WINDOW_WIDTH;
-  const isLeft = sidebarSide === 'left';
-
-  if (cannotShrink) {
-    return {
-      nextMainWin: mainWindowInitial,
-      nextExtensionWin: {
-        top: mainWindowInitial.top,
-        left: isLeft
-          ? mainWindowInitial.left - extensionWidth
-          : mainWindowInitial.left + mainWindowInitial.width,
-        width: extensionWidth,
-        height: mainWindowInitial.height
-      }
-    };
+  const isLeft = !sidebarSide || sidebarSide === SIDEBAR_SIDE.Left;
+  // if sidebar side is undefined (can happen on initial startup or after cache is cleared),
+  // set the sidebar side to left by default
+  if (!sidebarSide) {
+    browser.storage.sync.set({ sidebarSide: SIDEBAR_SIDE.Left });
   }
 
-  // If main window can be shrunk to make room for the extension...
+  // Right
   return {
-    nextMainWin: {
-      top: mainWindowInitial.top,
-      left: isLeft
-        ? mainWindowInitial.left + extensionWidth
-        : mainWindowInitial.left,
-      width: mainWindowWidth_f,
-      height: mainWindowInitial.height
-    },
+    nextMainWin: mainWindowInitial,
     nextExtensionWin: {
       top: mainWindowInitial.top,
       left: isLeft
-        ? mainWindowInitial.left
-        : mainWindowInitial.left + mainWindowInitial.width - extensionWidth,
+        ? mainWindowInitial.left - extensionWidth
+        : mainWindowInitial.left + mainWindowInitial.width,
       width: extensionWidth,
       height: mainWindowInitial.height
     }
   };
+};
+
+/**
+ * Calculates the new dimensions of the extension and main window on initial extension open
+ *
+ * Just append extension to specified sidebar side
+ */
+export const getSidebarSideUpdateDimensions = async (
+  prevSide,
+  nextSide,
+  extensionId,
+  mainWindowInitial,
+  extensionWidth
+) => {
+  // const extensionWidth = getSidebarWidth(isSidebarMinimized, sidebarWidth);
+
+  const appendLeft = {
+    nextMainWin: mainWindowInitial,
+    nextExtensionWin: {
+      top: mainWindowInitial.top,
+      left: mainWindowInitial.left - extensionWidth,
+      width: extensionWidth,
+      height: mainWindowInitial.height
+    }
+  };
+
+  const appendRight = {
+    nextMainWin: mainWindowInitial,
+    nextExtensionWin: {
+      top: mainWindowInitial.top,
+      left: mainWindowInitial.left + mainWindowInitial.width,
+      width: extensionWidth,
+      height: mainWindowInitial.height
+    }
+  };
+
+  // L->L
+  // Make sure the extension is flush to the left of the main window
+  if (prevSide === SIDEBAR_SIDE.Left && nextSide === SIDEBAR_SIDE.Left) {
+    return appendLeft;
+  }
+
+  // R->R
+  // Vice versa as above.
+  if (prevSide === SIDEBAR_SIDE.Right && nextSide === SIDEBAR_SIDE.Right) {
+    return appendRight;
+  }
+
+  const extensionWin = await browser.windows.get(extensionId);
+
+  // L->R
+  // If extension isn't flush (+-10pixels) to the left of the main window
+  // just append extension to the right without updating the main window.
+  // Else make room for the extension.
+  if (prevSide === SIDEBAR_SIDE.Left && nextSide === SIDEBAR_SIDE.Right) {
+    const isFlush =
+      Math.abs(mainWindowInitial.left - extensionWin.left - extensionWidth) <=
+      10;
+    if (isFlush) {
+      return {
+        nextMainWin: {
+          ...mainWindowInitial,
+          left: mainWindowInitial.left - extensionWidth
+        },
+        nextExtensionWin: {
+          top: mainWindowInitial.top,
+          left:
+            mainWindowInitial.left - extensionWidth + mainWindowInitial.width,
+          width: extensionWidth,
+          height: mainWindowInitial.height
+        }
+      };
+    }
+    return appendRight;
+  }
+
+  // R->L
+  // Vice versa as above.
+  if (prevSide === SIDEBAR_SIDE.Right && nextSide === SIDEBAR_SIDE.Left) {
+    const isFlush =
+      Math.abs(
+        mainWindowInitial.left + mainWindowInitial.width - extensionWin.left
+      ) <= 10;
+    if (isFlush) {
+      return {
+        nextMainWin: {
+          ...mainWindowInitial,
+          left: mainWindowInitial.left + extensionWidth
+        },
+        nextExtensionWin: {
+          top: mainWindowInitial.top,
+          left: mainWindowInitial.left,
+          width: extensionWidth,
+          height: mainWindowInitial.height
+        }
+      };
+    }
+    return appendLeft;
+  }
+
+  return appendLeft;
 };
 
 export const isGithubRepoUrl = (url) => {
@@ -125,222 +198,6 @@ export const isNumeric = (str) => {
     !isNaN(parseFloat(str))
   ); // ...and ensure strings of whitespace fail
 };
-
-export class UrlParser {
-  constructor(url, title, tabId = null) {
-    this.url = url;
-    this.title = title;
-    this.tabId = tabId;
-    this.isGithubRepoUrl = isGithubRepoUrl(url);
-    this.urlObject = null;
-    this.parsedRepoInfo = null;
-    this.subpage = null;
-    this.owner = null;
-    this.repo = null;
-    if (this.isGithubRepoUrl) {
-      this.urlObject = new URL(url);
-      this.parsedRepoInfo = this.urlObject.pathname.slice(1).split('/');
-      this.subpage = this.#getSubpage(this.parsedRepoInfo);
-      this.owner = this.parsedRepoInfo[0];
-      this.repo = this.parsedRepoInfo[1];
-    }
-    // Payload
-    this.payloadRepoInfo = {
-      url: this.url,
-      owner: this.owner,
-      repo: this.repo,
-      tab: {
-        name: 'master',
-        nodeName: null,
-        tabId: this.tabId,
-        subpage: this.subpage
-      }
-    };
-  }
-
-  parse() {
-    if (!this.isGithubRepoUrl) return {};
-
-    if (this.subpage === SUBPAGES.REPOSITORY) {
-      return this.#handleRepositorySubpage();
-    }
-    if (this.subpage === SUBPAGES.ISSUES) {
-      return this.#handleIssuesSubpage();
-    }
-    if (this.subpage === SUBPAGES.PULLS) {
-      return this.#handlePullsSubpage();
-    }
-    if (this.subpage === SUBPAGES.ACTIONS) {
-      return this.#handleActionsSubpage();
-    }
-    if (this.subpage === SUBPAGES.PROJECTS) {
-      return this.#handleProjectsSubpage();
-    }
-    if (this.subpage === SUBPAGES.WIKI) {
-      return this.#handleWikiSubpage();
-    }
-    if (this.subpage === SUBPAGES.SECURITY) {
-      return this.#handleSecuritySubpage();
-    }
-    if (this.subpage === SUBPAGES.PULSE) {
-      return this.#handlePulseSubpage();
-    }
-    if (this.subpage === SUBPAGES.SETTINGS) {
-      return this.#handleSettingsSubpage();
-    }
-
-    return this.payloadRepoInfo;
-  }
-
-  #getSubpage = () => {
-    // Handle repository subpage
-    if (
-      this.parsedRepoInfo.length === 2 ||
-      (this.parsedRepoInfo.length >= 3 &&
-        ['tree', 'blob'].includes(this.parsedRepoInfo[2]))
-    ) {
-      return SUBPAGES.REPOSITORY;
-    }
-    // Handle other possible subpages
-    if (
-      this.parsedRepoInfo.length >= 3 &&
-      Object.values(SUBPAGES).includes(this.parsedRepoInfo[2])
-    ) {
-      return this.parsedRepoInfo[2];
-    }
-    // For some reason, github doesn't pluralize `pull` when on a specific
-    // pull request page, like it does with `issues`. Catch this exception
-    // ungracefully here.
-    if (this.parsedRepoInfo[2] === 'pull') {
-      return SUBPAGES.PULLS;
-    }
-    return 'other';
-  };
-
-  // [owner, repo, tree?/blob?, filePath?[*?/*]]
-  #handleRepositorySubpage = () => {
-    const isRootMaster =
-      this.parsedRepoInfo.length === 2 ||
-      (this.parsedRepoInfo.length === 4 && this.parsedRepoInfo[3] === 'master');
-    if (isRootMaster) {
-      return {
-        ...this.payloadRepoInfo,
-        tab: {
-          name: 'master', // field reserved for branchName
-          tabId: this.tabId,
-          subpage: this.subpage,
-          nodeName: null
-        },
-        type: 'tree'
-      };
-    }
-    // If not root master
-    // tabTitle looks like "G-Desktop-Suite/gsuite.rb at revert-68-code-quality-66-prettify · alexkim205/G-Desktop-Suite"
-    // Get branch information from tab title, because it's impossible to discern from
-    // just the url if the branch name has /'s
-    const regexedTitle = this.title.match(REPO_TITLE_REGEX);
-    // Get everything in between " at " and " . "; fallback to getting url from url
-    const branchName = regexedTitle ? regexedTitle[1] : this.parsedRepoInfo[3];
-    const parsedWithoutBranch = this.urlObject.pathname
-      .slice(1)
-      .replace(`/${branchName}`, '') // remove branch from url to get
-      .split('/'); // [alexkim205, tomaso, tree?/blob?, filePath?[*?/*]]
-    const parsedFilePath = parsedWithoutBranch.slice(3).join('/');
-    return {
-      ...this.payloadRepoInfo,
-      tab: {
-        name: branchName,
-        tabId: this.tabId,
-        subpage: this.subpage,
-        nodeName: parsedFilePath
-      },
-      type: parsedWithoutBranch[2]
-    };
-  };
-
-  // [owner, repo, issues, issueNumber?]
-  // [owner, repo, issues, "new", "choose"]
-  #handleIssuesSubpage = () => {
-    const isRoot = this.parsedRepoInfo.length === 3;
-    if (isRoot) {
-      return {
-        ...this.payloadRepoInfo,
-        tab: {
-          name: 'master',
-          nodeName: '/',
-          tabId: this.tabId,
-          subpage: this.subpage,
-          id: null
-        }
-      };
-    }
-    if (isNumeric(this.parsedRepoInfo[3])) {
-      const issueId = parseInt(this.parsedRepoInfo[3], 10);
-      const regexedTitle = this.title.match(
-        generate_ISSUE_TITLE_REGEX(issueId)
-      );
-      const issueName = regexedTitle ? regexedTitle[1] : 'Issue';
-      return {
-        ...this.payloadRepoInfo,
-        tab: {
-          name: 'master',
-          nodeName: issueName,
-          tabId: this.tabId,
-          subpage: this.subpage,
-          id: issueId
-        }
-      };
-    }
-    // If it's a subpage that's not handled, just return this.parsedRepoInfo
-    return this.payloadRepoInfo;
-  };
-
-  #handlePullsSubpage = () => {
-    const isRoot = this.parsedRepoInfo.length === 3;
-    if (isRoot) {
-      return {
-        ...this.payloadRepoInfo,
-        tab: {
-          name: 'master',
-          nodeName: '/',
-          tabId: this.tabId,
-          subpage: this.subpage,
-          id: null
-        }
-      };
-    }
-    if (isNumeric(this.parsedRepoInfo[3])) {
-      const pullId = parseInt(this.parsedRepoInfo[3], 10);
-      const regexedTitle = this.title.match(generate_PULL_TITLE_REGEX(pullId));
-      const pullName = regexedTitle ? regexedTitle[1] : 'Pull Request';
-      return {
-        ...this.payloadRepoInfo,
-        tab: {
-          name: 'master',
-          nodeName: pullName,
-          tabId: this.tabId,
-          subpage: this.subpage,
-          id: pullId
-        }
-      };
-    }
-    // If it's a subpage that's not handled, just return this.parsedRepoInfo
-    return this.payloadRepoInfo;
-  };
-
-  // If it's a subpage that's not handled, just return this.parsedRepoInfo
-  #handleActionsSubpage = () => this.payloadRepoInfo;
-
-  #handleProjectsSubpage = () => this.payloadRepoInfo;
-
-  #handleWikiSubpage = () => this.payloadRepoInfo;
-
-  #handleSecuritySubpage = () => this.payloadRepoInfo;
-
-  #handlePulseSubpage = () => this.payloadRepoInfo;
-
-  #handleSettingsSubpage = () => this.payloadRepoInfo;
-}
 
 const decodePayload = (jwtToken) => {
   const payload = jwtToken.split('.')[1];
@@ -405,4 +262,18 @@ export const resolveInjectJSFilenames = (basename) => {
   }
   // gamma and prod files are versioned
   return `${basename}_${process.env.VERSION}.js`;
+};
+
+export const clone = (obj) => {
+  // Handle errors separately
+  const { error } = obj;
+  // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+  const parsedError = error
+    ? JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+    : null;
+
+  return {
+    ...JSON.parse(JSON.stringify(obj)),
+    ...(parsedError && { error: parsedError })
+  };
 };

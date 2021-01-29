@@ -21,7 +21,7 @@
     "highlightTextColor": "#000000",
     "highlightBackgroundColor": "#fff200",
     "folderIconColor": "#79b8ff",
-    "flagIconColor": "#FFC300",
+    "flagIconColor": "#9b870c",
     "bookmarkIconColor": "#79b8ff",
     "nodeIconColor": "#e3ded7",
     "nodeIconDarkColor": "#f2eee9",
@@ -31,6 +31,10 @@
     "fieldFocusOutlineColor": "#4078c0",
     "optionDisabledBackgroundColor": "#383838",
     "optionDisabledTextColor": "#8a8a8a",
-    "borderColor": "#2e2e2e"
+    "borderColor": "#2e2e2e",
+    "successColor": "#27d0b2",
+    "errorColor": "#c52965",
+    "infoColor": "#004eff",
+    "warningColor": "#d0761d"
   }
 }

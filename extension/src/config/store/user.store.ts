@@ -1,10 +1,11 @@
 import { observable, computed, action } from 'mobx';
 
 import IRootStore from './I.root.store';
-import IUserStore, { AccountType, User } from './I.user.store';
+import IUserStore, { User } from './I.user.store';
 import IUiStore, { SectionName } from './I.ui.store';
 import IFileStore, { Bookmark, Repo, Session } from './I.file.store';
 import { objectMap } from '../../utils';
+import { ACCOUNT_TYPE } from '../../global/constants';
 
 export default class UserStore implements IUserStore {
   uiStore: IUiStore;
@@ -30,7 +31,7 @@ export default class UserStore implements IUserStore {
     this.fileStore = rootStore.fileStore; // Store to access file stores
   }
 
-  /** Firebase Auth - sync firebase with user in store * */
+  /** DAO Auth - sync dao with user in store * */
 
   @action.bound setUser({ user }: { user: User }): void {
     if (!user) {
@@ -52,7 +53,7 @@ export default class UserStore implements IUserStore {
       email,
       apiKey: apiKey || this.user?.apiKey,
       accountType:
-        accountType || this.user?.accountType || AccountType.Community
+        accountType || this.user?.accountType || ACCOUNT_TYPE.Community
     };
   }
 

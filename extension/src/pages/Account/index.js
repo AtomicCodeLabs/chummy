@@ -6,14 +6,14 @@ import {
   LinkExternalIcon,
   ShareIcon
 } from '@primer/octicons-react';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import CircleImage from '../../components/Image/CircleImage';
 import { H2 } from '../../components/Text';
-import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
+import Scrollbars from '../../components/Scrollbars';
 import TextButton from '../../components/Buttons/TextButton';
+import useDAO, { checkCurrentUser } from '../../hooks/dao';
 import { useUserStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
 import { capitalize } from '../../utils';
@@ -24,20 +24,13 @@ import { GITHUB_URLS } from '../../constants/urls';
 export default observer(() => {
   checkCurrentUser();
   const history = useHistory();
-  const firebase = useFirebaseDAO();
+  const dao = useDAO();
   const { user } = useUserStore();
   const { spacing } = useTheme();
   const STPayload = { theme: { spacing } };
 
   return (
-    <Scrollbars
-      style={{
-        width: '100%',
-        height: '100%'
-      }}
-      autoHideTimeout={500}
-      autoHide
-    >
+    <Scrollbars>
       <PanelsContainer>
         <Panel evenPadding center>
           <CircleImage
@@ -77,7 +70,7 @@ export default observer(() => {
         <Panel highlightOnHover={false} center>
           <TextButton
             onClick={() => {
-              firebase.signOut();
+              dao.signOut();
               history.push('/account-sign-in');
             }}
           >

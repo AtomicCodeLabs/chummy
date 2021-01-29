@@ -97,6 +97,7 @@ class OctoDAO {
         }
       );
       // Sort files before storing
+      const defaultBranch = response?.repository?.defaultBranchRef?.name;
       const entries = response?.repository?.object?.entries;
       if (!entries) {
         return null;
@@ -113,7 +114,8 @@ class OctoDAO {
         repo: {
           owner,
           name: repo,
-          type: 'tree'
+          type: 'tree',
+          defaultBranch
         },
         branch
       };
@@ -132,7 +134,14 @@ class OctoDAO {
   };
 
   // Search API
-  searchCode = async (owner, repo, query, language = null) => {
+  searchCode = async (
+    owner,
+    repo,
+    queryFilename,
+    queryCode,
+    queryPath,
+    language = null
+  ) => {
     if (!this.isAuthenticated()) {
       log.warn('Octokit is not authenticated.');
       return null;
@@ -140,7 +149,14 @@ class OctoDAO {
 
     // TODO some caching
     try {
-      const q = formSearchQuery(owner, repo, query, language);
+      const q = formSearchQuery(
+        owner,
+        repo,
+        queryFilename,
+        queryCode,
+        queryPath,
+        language
+      );
       // https://docs.github.com/en/free-pro-team@latest/rest/reference/search#search-code
       const response = await this.restAuth.request('GET /search/code', {
         headers: {
@@ -150,7 +166,16 @@ class OctoDAO {
       });
       return response?.data?.items;
     } catch (error) {
-      log.error('Error searching code.', owner, repo, query, language, error);
+      log.error(
+        'Error searching code.',
+        owner,
+        repo,
+        queryFilename,
+        queryCode,
+        queryPath,
+        language,
+        error
+      );
       return null;
     }
   };

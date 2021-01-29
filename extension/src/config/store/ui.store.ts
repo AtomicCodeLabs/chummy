@@ -8,9 +8,11 @@ import IUiStore, {
   UiStorePropsArray,
   UiStoreKeys,
   SectionName,
-  Spacing,
-  SidebarSide
+  Notification,
+  NotificationType,
+  ErrorTypes
 } from './I.ui.store';
+import { SPACING, SIDEBAR_SIDE } from '../../global/constants';
 import { EXTENSION_WIDTH } from '../../constants/sizes';
 import { getFromChromeStorage, setInChromeStorage } from './util';
 import IUserStore from './I.user.store';
@@ -21,14 +23,16 @@ export default class UiStore implements IUiStore {
 
   @observable language = Language.English;
   @observable theme = 'vanilla-light'; // hardcode in so it doesn't have to wait for themes to load
-  @observable spacing = Spacing.Cozy;
+  @observable spacing = SPACING.Cozy;
   @observable pendingRequestCount = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
   );
   @observable isStickyWindow = false;
+  @observable pendingNotifications: Map<string, Notification> = new Map(); // frontend pops from queue until map is empty
+  @observable notifications: Map<string, Notification> = new Map(); // notificationsToShow end up here once processed
   @observable sidebarView = SidebarView.Project;
-  @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
-  @observable sidebarSide = SidebarSide.Left;
+  @observable sidebarWidth = EXTENSION_WIDTH.INITIAL; // Last seen sidebar width, not 0 when sidebar is minimized
+  @observable sidebarSide = SIDEBAR_SIDE.Left;
   @observable isSidebarMinimized = false;
   @observable isTreeSectionMinimized = {
     [TreeSection.Sessions]: { isMinimized: true, lastHeight: 200 },
@@ -36,7 +40,9 @@ export default class UiStore implements IUiStore {
     [TreeSection.Files]: { isMinimized: false, lastHeight: 200 }
   };
   @observable isSearchSectionMinimized = true;
-  @observable selectedQuery: string = null;
+  @observable selectedQueryFilename: string = null;
+  @observable selectedQueryCode: string = null;
+  @observable selectedQueryPath: string = null;
   @observable selectedOpenRepo: string = null;
   @observable selectedLanguage: string = null;
   // @observable openSearchResultFiles: Set<string> = new Set();
@@ -44,6 +50,13 @@ export default class UiStore implements IUiStore {
   @observable selectedBookmarkQuery: string = null;
   @observable selectedBookmarkRepo: string = null;
   @observable openBookmarkRepos: Set<string> = new Set();
+
+  static BLOCKLISTED_KEYS = [
+    'pendingRequestCount',
+    'userStore',
+    'pendingNotifications',
+    'notifications'
+  ];
 
   constructor(rootStore: IRootStore) {
     this.userStore = rootStore.userStore;
@@ -57,7 +70,7 @@ export default class UiStore implements IUiStore {
 
     // Keep some keys out of chrome storage
     const filteredKeys = keys
-      .filter((k) => !['pendingRequestCount', 'userStore'].includes(k))
+      .filter((k) => !UiStore.BLOCKLISTED_KEYS.includes(k))
       .sort();
 
     // Get and set previous sessions' settings
@@ -95,7 +108,7 @@ export default class UiStore implements IUiStore {
     this.theme = theme;
   };
 
-  @action.bound setSpacing = (spacing: Spacing): void => {
+  @action.bound setSpacing = (spacing: SPACING): void => {
     setInChromeStorage({ spacing });
     this.spacing = spacing;
   };
@@ -105,8 +118,45 @@ export default class UiStore implements IUiStore {
     this.isStickyWindow = isStickyWindow;
   };
 
-  @action.bound setSidebarSide = (sidebarSide: SidebarSide): void => {
-    setInChromeStorage({ sidebarSide });    
+  @action.bound addErrorPendingNotification = (error: {
+    name: keyof typeof ErrorTypes;
+    message: string;
+    stack: any;
+  }) => {
+    const id = `${NotificationType.Error}-${this.notifications.size}`;
+    this.pendingNotifications.set(id, {
+      id,
+      type: NotificationType.Error,
+      title: ErrorTypes[error.name],
+      message: error.message
+    });
+  };
+
+  /**
+   * Left pops oldest notification in map (Map preserves order of insertion)
+   * and enqueues into `notifications` to persist it in cache
+   */
+  @action.bound popPendingNotifications = () => {
+    if (!this.pendingNotifications.size) return;
+    const oldestKey = this.pendingNotifications.keys().next().value;
+    const notification = this.pendingNotifications.get(oldestKey);
+    this.pendingNotifications.delete(oldestKey);
+    this.notifications.set(oldestKey, notification);
+    return notification;
+  };
+
+  @action.bound removeNotification = (notification: Notification) => {
+    if (this.notifications.has(notification.id)) {
+      this.notifications.delete(notification.id);
+    }
+  };
+
+  @action.bound clearNotifications = () => {
+    this.notifications.clear();
+  };
+
+  @action.bound setSidebarSide = (sidebarSide: SIDEBAR_SIDE): void => {
+    setInChromeStorage({ sidebarSide });
     this.sidebarSide = sidebarSide;
   };
 
@@ -167,8 +217,16 @@ export default class UiStore implements IUiStore {
     });
   };
 
-  @action.bound setSelectedQuery = (selectedQuery: string) => {
-    this.selectedQuery = selectedQuery;
+  @action.bound setSelectedQueryFilename = (selectedQuery: string) => {
+    this.selectedQueryFilename = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryCode = (selectedQuery: string) => {
+    this.selectedQueryCode = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryPath = (selectedQuery: string) => {
+    this.selectedQueryPath = selectedQuery;
   };
 
   @action.bound setSelectedOpenRepo = (selectedOpenRepo: string) => {

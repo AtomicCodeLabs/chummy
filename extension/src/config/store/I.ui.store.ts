@@ -1,14 +1,8 @@
-import { THEME_NAMES } from '../../config/theme/selector';
 import IUserStore from './I.user.store';
+import { SIDEBAR_SIDE, SPACING } from '../../global/constants';
 
 export enum Language {
   English = 'en_US'
-}
-
-export enum Spacing {
-  Compact = 'compact',
-  Cozy = 'cozy',
-  Comfortable = 'comfortable'
 }
 
 export enum SidebarView {
@@ -16,11 +10,6 @@ export enum SidebarView {
   Branches,
   'Changed Files',
   'Open Files'
-}
-
-export enum SidebarSide {
-  Left = 'left',
-  Right = 'right'
 }
 
 export enum TreeSection {
@@ -44,22 +33,45 @@ export enum SectionName {
   None = 'None'
 }
 
+export enum NotificationType {
+  Success = 'Success',
+  Error = 'Error',
+  Warning = 'Warning',
+  Info = 'Info'
+}
+
+export enum ErrorTypes {
+  ThrottlingError = 'Throttling Error',
+  UserError = 'Authentication Error',
+  WindowError = 'Window Error',
+  Error = 'Error'
+}
+
+export interface Notification {
+  id?: string;
+  title?: string;
+  message: string;
+  type?: NotificationType;
+}
+
 // UiStore
 class CUiStore {
   userStore: IUserStore = null;
 
   language: Language = Language.English;
   theme: string = 'vanilla-light';
-  spacing: Spacing = Spacing.Cozy;
+  spacing: SPACING = SPACING.Cozy;
   pendingRequestCount: Map<SectionName, number> = new Map(
     Object.values(SectionName).map((sectionName) => [sectionName, 0])
   );
   isStickyWindow: boolean = false;
+  pendingNotifications: Map<string, Notification> = new Map();
+  notifications: Map<string, Notification> = new Map();
 
   // Sidebar
   sidebarView: SidebarView = null;
-  sidebarWidth: number = null; // Last seen sidebar width, not 0 when sidebar is minimized
-  sidebarSide: SidebarSide = null;
+  sidebarWidth: number = null;
+  sidebarSide: SIDEBAR_SIDE = null;
   isSidebarMinimized: boolean = false;
 
   // Tree Page
@@ -75,7 +87,9 @@ class CUiStore {
 
   // Search Page
   isSearchSectionMinimized: boolean = true;
-  selectedQuery: string = null;
+  selectedQueryFilename: string = null;
+  selectedQueryCode: string = null;
+  selectedQueryPath: string = null;
   selectedOpenRepo: string = null;
   selectedLanguage: string = null;
   // openSearchResultFiles: Set<string>;

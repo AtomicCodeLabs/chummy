@@ -6,7 +6,8 @@ import {
   SearchIcon,
   BookmarkIcon,
   GearIcon,
-  PersonIcon
+  PersonIcon,
+  BellIcon
 } from '@primer/octicons-react';
 
 import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
@@ -62,6 +63,11 @@ export const sidebarRoutes = [
   // },
   {
     flex: true
+  },
+  {
+    pathname: '/notifications',
+    icon: <BellIcon size={22} />,
+    title: 'Notifications'
   },
   {
     pathname: '/account',

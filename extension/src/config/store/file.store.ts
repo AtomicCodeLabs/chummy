@@ -1,10 +1,18 @@
-import { observable, action } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 import IRootStore from './I.root.store';
 import IUiStore from './I.ui.store';
 import IUserStore from './I.user.store';
-import IFileStore, { Node, Branch, Repo, WindowTab, Tab } from './I.file.store';
+import IFileStore, {
+  Node,
+  Branch,
+  Repo,
+  WindowTab,
+  Tab,
+  BgRepo
+} from './I.file.store';
 import { objectMap } from '../../utils';
+import { convertBgRepoToRepo } from './util';
 
 export default class FileStore implements IFileStore {
   uiStore: IUiStore;
@@ -97,10 +105,9 @@ export default class FileStore implements IFileStore {
     };
   };
 
-  @action.bound setOpenRepos = (repos: Repo[]) => {
-    // this.openRepos.clear();
+  @action.bound setOpenRepos = (repos: BgRepo[]) => {
     this.cleanupOpenRepos(repos);
-    repos.forEach((repo) => this.addOpenRepo(repo));
+    repos.forEach((repo) => this.addOpenRepo(convertBgRepoToRepo(repo)));
   };
 
   @action.bound getOpenRepo = (owner: string, name: string) => {
@@ -128,12 +135,9 @@ export default class FileStore implements IFileStore {
     }
   };
 
-  @action.bound cleanupOpenRepos = (reposToSet: Repo[]) => {
+  @action.bound cleanupOpenRepos = (reposToSet: BgRepo[]) => {
     // Loop through all the open repos and remove the tabs that aren't open
-    const openTabIds = new Set();
-    reposToSet.forEach((r: Repo) =>
-      Object.values(r.tabs).forEach((t: Branch) => openTabIds.add(t.tabId))
-    );
+    const openTabIds = new Set(reposToSet.map(({ tab: { tabId } }) => tabId));
 
     this.openRepos.forEach((r: Repo) =>
       Object.values(r.tabs).forEach((t: Tab) => {

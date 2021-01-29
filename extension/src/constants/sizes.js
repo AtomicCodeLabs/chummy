@@ -58,22 +58,17 @@ export const ICON = {
 };
 
 export const INPUT = {
-  HEIGHT: theme('spacing', {
-    compact: 30,
-    cozy: 35,
-    comfortable: 40
-  }),
   SELECT: {
     HEIGHT: theme('spacing', {
-      compact: 30,
-      cozy: 35,
-      comfortable: 40
+      compact: 28,
+      cozy: 32,
+      comfortable: 35
     }),
     OPTION: {
       HEIGHT: theme('spacing', {
-        compact: 20,
-        cozy: 23,
-        comfortable: 27
+        compact: 18,
+        cozy: 21,
+        comfortable: 24
       })
     }
   }

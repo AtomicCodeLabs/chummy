@@ -114,7 +114,7 @@ export const processBookmarkInformation = (bookmark) => {
   return {
     primaryText: decodeURI(fileName),
     secondaryText: parentPath,
-    subpageText: bookmark?.branch?.name || 'master' // repo branch name
+    subpageText: bookmark?.branch?.name
   };
 };
 
@@ -239,8 +239,25 @@ export const getBookmarkUrl = (bookmark) => {
     'https://github.com/',
     pathUtil.join(
       `/${repo.owner}/${repo.name}`,
-      `/blob/${branch?.name || 'master'}/${path}`
+      `/blob/${branch?.name}/${path}`
     )
+  );
+};
+
+export const renderName = (n, query) => {
+  // Try to find matching fragments
+  const { start, end } = getNameFragmentIndices(query, n);
+
+  if (start === -1 || end === -1) {
+    return n;
+  }
+
+  return (
+    <span>
+      {n.slice(0, start)}
+      <span className="highlight">{n.slice(start, end)}</span>
+      {n.slice(end)}
+    </span>
   );
 };
 

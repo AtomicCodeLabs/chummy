@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   FileIcon,
@@ -13,7 +13,7 @@ import {
   createBookmark,
   clickedEl,
   redirectToUrl,
-  getNameFragmentIndices
+  renderName
 } from './util';
 import SearchResultMatchNode from './SearchResultMatchNode';
 import useBookmarkState from '../../hooks/useBookmarkState';
@@ -28,10 +28,17 @@ const SearchResultFileNode = ({ file }) => {
     path,
     html_url: htmlUrl,
     repo,
-    query
+    queryFilename,
+    queryCode
   } = file;
-  const bookmark = createBookmark(repo.owner, repo.name, 'master', file);
+  const bookmark = createBookmark(
+    repo.owner,
+    repo.name,
+    repo.defaultBranch,
+    file
+  );
   const bookmarkEl = useRef(null);
+  const chevronEl = useRef(null);
   const [open, setOpen] = useState(false);
   const parentPath = path.replace(name, '');
   const [localBookmarked, setLocalBookmarked] = useBookmarkState(
@@ -40,6 +47,15 @@ const SearchResultFileNode = ({ file }) => {
   );
   const { spacing } = useTheme();
   const hasMatches = textMatches.length !== 0;
+
+  const isFileMatch = useMemo(
+    () => textMatches.some((match) => match.property === 'path'),
+    [textMatches]
+  );
+  const hasContentMatches = useMemo(
+    () => textMatches.some((match) => match.property === 'content'),
+    [textMatches]
+  );
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -51,39 +67,18 @@ const SearchResultFileNode = ({ file }) => {
       return;
     }
 
-    // If file doesn't have any matches, clicking it should open the file
-    if (!hasMatches) {
-      redirectToUrl(htmlUrl);
+    // Toggle Open State
+    if (clickedEl(chevronEl, e)) {
+      if (open) {
+        setOpen(false);
+      } else {
+        setOpen(true);
+      }
       return;
     }
 
-    // Or toggle open state
-    if (open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
-  };
-
-  const renderName = (n) => {
-    if (hasMatches) {
-      return n;
-    }
-
-    // Try to find matching fragments
-    const { start, end } = getNameFragmentIndices(query, n);
-
-    if (start === -1 || end === -1) {
-      return n;
-    }
-
-    return (
-      <span className="mono">
-        {n.slice(0, start)}
-        <span className="highlight">{n.slice(start, end)}</span>
-        {n.slice(end)}
-      </span>
-    );
+    // Clicking anywhere else should open the file
+    redirectToUrl(htmlUrl);
   };
 
   const renderMatches = () =>
@@ -91,7 +86,8 @@ const SearchResultFileNode = ({ file }) => {
     hasMatches &&
     textMatches
       .map(
-        ({ fragment, matches }, fileIndex) =>
+        ({ property, fragment, matches }, fileIndex) =>
+          property !== 'path' && // Don't include path matches
           matches &&
           matches.map(({ indices }, textMatchIndex) => {
             const { matchFragment, start, end } = getMatchFragment(
@@ -112,19 +108,21 @@ const SearchResultFileNode = ({ file }) => {
       )
       .flat();
 
-  console.log('filename', file);
-
   return (
     <>
       <StyledNode.Container className="node" onClickCapture={handleClick}>
-        <StyledNode.LeftSpacer level={0} extraIconFiller={!hasMatches} />
-        {hasMatches && <OpenCloseChevron open={open} />}
+        <StyledNode.LeftSpacer level={0} extraIconFiller={!hasContentMatches} />
+        {hasContentMatches && <OpenCloseChevron open={open} ref={chevronEl} />}
         <StyledNode.Icon>
           <FileIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
-        <StyledNode.Name>{renderName(name)}</StyledNode.Name>
+        <StyledNode.Name>
+          {isFileMatch
+            ? renderName(name, `${queryFilename} ${queryCode}`)
+            : name}
+        </StyledNode.Name>
         <StyledNode.SubName variant="smallFont">
-          {renderName(parentPath)}
+          {parentPath}
         </StyledNode.SubName>
         <StyledNode.MiddleSpacer />
         <StyledNode.RightIconContainer>
@@ -170,9 +168,11 @@ SearchResultFileNode.propTypes = {
     html_url: PropTypes.string,
     repo: PropTypes.shape({
       owner: PropTypes.string,
-      name: PropTypes.string
+      name: PropTypes.string,
+      defaultBranch: PropTypes.string
     }),
-    query: PropTypes.string
+    queryFilename: PropTypes.string,
+    queryCode: PropTypes.string
   }).isRequired
 };
 
