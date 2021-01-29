@@ -1,3 +1,6 @@
+import { toJS } from 'mobx';
+import { ThrottlingError, UserError, WindowError } from '../global/errors';
+
 /* eslint-disable no-unused-vars */
 export const sortFiles = (a, b) => {
   // Sort by file type
@@ -41,4 +44,34 @@ export const areArraysEqual = (a, b) =>
 
 export const isProduction = () => {
   return process.env.NODE_ENV === 'production';
+};
+
+export const handleResponse = (response) => {
+  if (response.error) {
+    // Figure out what error it is
+    const e = response.error;
+    if (e.name === 'ThrottlingError') {
+      throw ThrottlingError.from(e);
+    }
+    if (e.name === 'UserError') {
+      throw UserError.from(e);
+    }
+    if (e.name === 'WindowError') {
+      throw WindowError.from(e);
+    }
+    // If not defined, throw as generic Error
+    const genericE = new Error(e.message);
+    genericE.stack = e.stack;
+    throw genericE;
+  }
+  // return response
+  return response;
+};
+
+export const unproxifyBookmark = (bookmark) => {
+  return {
+    ...bookmark,
+    branch: toJS(bookmark.branch),
+    repo: toJS(bookmark.repo)
+  };
 };

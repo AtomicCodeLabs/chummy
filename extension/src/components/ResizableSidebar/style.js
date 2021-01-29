@@ -14,7 +14,7 @@ import {
   backgroundAlternatingDarkColor
 } from '../../constants/theme';
 import { SIDE_TAB, HEADER } from '../../constants/sizes';
-import { SidebarSide } from '../../config/store/I.ui.store.ts';
+import { SIDEBAR_SIDE } from '../../global/constants.ts';
 
 export const Container = styled.div`
   background-color: ${backgroundColor};
@@ -24,7 +24,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: ${({ sidebarSide }) =>
-    sidebarSide === SidebarSide.Left ? 'row' : 'row-reverse'};
+    sidebarSide === SIDEBAR_SIDE.Left ? 'row' : 'row-reverse'};
   overflow: hidden;
 `;
 
@@ -83,7 +83,7 @@ export const ExpandingContainer = styled.div`
   position: absolute;
   z-index: 9998;
   left: ${({ sidebarSide }) =>
-    sidebarSide === SidebarSide.Left ? SIDE_TAB.WIDTH : 0}px;
+    sidebarSide === SIDEBAR_SIDE.Left ? SIDE_TAB.WIDTH : 0}px;
   top: 0;
 
   background-color: ${backgroundColor};
@@ -120,6 +120,7 @@ export const ExpandingContainerHeaderIcon = styled.div`
 export const ExpandingContainerContent = styled.div`
   display: flex;
   flex-direction: column;
+  height: calc(100% - ${HEADER.HEIGHT}px);
   flex: 1;
 `;
 

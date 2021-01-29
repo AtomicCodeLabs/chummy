@@ -31,7 +31,12 @@ const SearchResultFileNode = ({ file }) => {
     queryFilename,
     queryCode
   } = file;
-  const bookmark = createBookmark(repo.owner, repo.name, 'master', file);
+  const bookmark = createBookmark(
+    repo.owner,
+    repo.name,
+    repo.defaultBranch,
+    file
+  );
   const bookmarkEl = useRef(null);
   const chevronEl = useRef(null);
   const [open, setOpen] = useState(false);
@@ -163,7 +168,8 @@ SearchResultFileNode.propTypes = {
     html_url: PropTypes.string,
     repo: PropTypes.shape({
       owner: PropTypes.string,
-      name: PropTypes.string
+      name: PropTypes.string,
+      defaultBranch: PropTypes.string
     }),
     queryFilename: PropTypes.string,
     queryCode: PropTypes.string

@@ -181,3 +181,7 @@ export const optionDisabledBackgroundColor = themeCreator(
 );
 export const optionDisabledTextColor = themeCreator('optionDisabledTextColor');
 export const borderColor = themeCreator('borderColor');
+export const successColor = themeCreator('successColor');
+export const errorColor = themeCreator('errorColor');
+export const infoColor = themeCreator('infoColor');
+export const warningColor = themeCreator('warningColor');

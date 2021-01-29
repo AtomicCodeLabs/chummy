@@ -4,6 +4,9 @@ export const formQueryGetRepositorySpecificBranchRootNodes = (
 ) => `
   query GetRepositorySpecificBranchRootNodes($owner: String!, $repo: String!) {
     repository(owner: $owner, name: $repo) {
+      defaultBranchRef {
+        name
+      }
       object(expression: "${branch}:${pathToFolder}") {
         ... on Tree {
           entries {
@@ -39,7 +42,6 @@ export const formSearchQuery = (
   if (language) {
     baseQuery += `+language:${language}`;
   }
-  console.log('BASE QUERY', baseQuery);
   return baseQuery;
 };
 

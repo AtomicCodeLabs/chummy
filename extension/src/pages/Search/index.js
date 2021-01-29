@@ -6,7 +6,6 @@ import React, {
   useCallback
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
 import { KebabHorizontalIcon } from '@primer/octicons-react';
 import loadable from '@loadable/component';
@@ -23,7 +22,8 @@ import {
 } from '../../components/Form';
 import Input from '../../components/Form/Input';
 import { ControlledSelect } from '../../components/Form/Select';
-import { checkCurrentUser } from '../../hooks/firebase';
+import Scrollbars from '../../components/Scrollbars';
+import { checkCurrentUser } from '../../hooks/dao';
 import useOctoDAO from '../../hooks/octokit';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
@@ -58,7 +58,7 @@ export default observer(() => {
   const repoOptions = useMemo(
     () =>
       Array.from(openRepos).map(([repoId, repo]) => ({
-        value: repoId, // Separated with :
+        value: `${repoId}:${repo.defaultBranch}`, // Separated with :
         label: `${repo.owner}/${repo.name}`
       })),
     [openRepos.size]
@@ -238,10 +238,6 @@ export default observer(() => {
         </FormResultsDescriptionContainer>
       </HeaderContainer>
       <Scrollbars
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
         onScrollFrame={({ top }) => {
           if (top === 0) {
             // At top of page
@@ -250,8 +246,6 @@ export default observer(() => {
             setAtScrollTop(false);
           }
         }}
-        autoHideTimeout={500}
-        autoHide
       >
         <SectionContent>
           {results &&
@@ -261,7 +255,11 @@ export default observer(() => {
                 <SearchResultFileNode
                   file={{
                     ...file,
-                    repo: { owner: parsedRepo[0], name: parsedRepo[1] },
+                    repo: {
+                      owner: parsedRepo[0],
+                      name: parsedRepo[1],
+                      defaultBranch: parsedRepo[2]
+                    },
                     queryFilename: debouncedQueryFilename,
                     queryCode: debouncedQueryCode
                   }}

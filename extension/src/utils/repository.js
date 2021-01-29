@@ -9,7 +9,6 @@ export const getOpenRepositories = async (callback = () => {}) => {
     };
     log.toBg('Get open repositories request -> bg', request);
     const response = await browser.runtime.sendMessage(request);
-    log.debug('Response', response);
 
     if (response) {
       callback(response.payload);
@@ -18,21 +17,6 @@ export const getOpenRepositories = async (callback = () => {}) => {
     log.error('Error getting open repositories', error);
   }
 };
-
-export const transformOpenRepo = (p) => {
-  const { owner, repo: name, tab } = p;
-  return {
-    owner,
-    name,
-    type: 'tree',
-    tabs: { [tab.nodeName || tab.subpage]: tab }
-  };
-};
-
-export const repoMapToArray = (repoMap) =>
-  Object.values(repoMap)
-    .flat()
-    .map((r) => transformOpenRepo(r));
 
 export const onUpdateOpenRepositories = (callback = () => {}) => {
   const toCall = (request) => {

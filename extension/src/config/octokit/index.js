@@ -97,6 +97,7 @@ class OctoDAO {
         }
       );
       // Sort files before storing
+      const defaultBranch = response?.repository?.defaultBranchRef?.name;
       const entries = response?.repository?.object?.entries;
       if (!entries) {
         return null;
@@ -113,7 +114,8 @@ class OctoDAO {
         repo: {
           owner,
           name: repo,
-          type: 'tree'
+          type: 'tree',
+          defaultBranch
         },
         branch
       };

@@ -1,9 +1,5 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
-
 import { ICON, NODE } from '../../constants/sizes';
-import useTheme from '../../hooks/useTheme';
 
 import {
   backgroundAlternatingDarkColor,
@@ -68,24 +64,3 @@ export const SectionContent = styled.div`
     background-color: ${backgroundAlternatingDarkColor};
   }
 `;
-
-// Wrapper for Scrollbars
-// eslint-disable-next-line react/prop-types
-export const ScrollContainer = ({ children, ...props }) => {
-  const { spacing } = useTheme();
-
-  return (
-    <Scrollbars
-      style={{
-        width: '100%',
-        height: `calc(100% - ${NODE.HEIGHT({ theme: { spacing } })}px)`
-      }}
-      autoHideTimeout={500}
-      autoHide
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-    >
-      {children}
-    </Scrollbars>
-  );
-};

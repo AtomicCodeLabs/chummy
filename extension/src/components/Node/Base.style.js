@@ -17,12 +17,12 @@ import {
 } from '../../constants/theme';
 
 // fontsize + nodeTopPadding + nodeBottomPadding
-const nodeHeight = theme('spacing', {
+export const nodeHeight = theme('spacing', {
   compact: `calc(0.75rem + (2 * 0.5rem))`,
   cozy: `calc(0.8rem + (2 * 0.7rem))`,
   comfortable: `calc(0.83rem + (2 * 0.9rem))`
 });
-const nodePadding = theme('spacing', {
+export const nodePadding = theme('spacing', {
   compact: css`
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -53,7 +53,7 @@ const Container = styled.div`
   box-sizing: border-box;
   ${nodePadding}
 
-  cursor: pointer;
+  cursor: ${({ noPointer }) => !noPointer && 'pointer'};
 
   &:hover {
     background-color: ${backgroundHighlightColor} !important;
@@ -101,12 +101,14 @@ const LeftSpacer = styled.div`
     '0'};
 `;
 
-const Icon = styled.div`
+export const Icon = styled.div`
   display: flex;
   /* margin-left: ${({ marginLeft, ...props }) =>
     marginLeft || `${ICON.SIDE_MARGIN(props)}px`}; */
   margin-right: ${({ marginRight, ...props }) =>
     marginRight || `${ICON.SIDE_MARGIN(props)}px`};
+
+  cursor: pointer;
 
   svg {
     fill: ${({ iconFill, ...props }) =>
@@ -114,7 +116,7 @@ const Icon = styled.div`
   }
 `;
 
-const RightIconContainer = styled.div`
+export const RightIconContainer = styled.div`
   position: sticky;
   right: -1px;
   padding-right: calc(${ICON.SIDE_MARGIN}px + 1px);
@@ -148,6 +150,7 @@ const Name = styled.div`
     /* Github's monospace stack */
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
       monospace;
+    user-select: text;
     font-size: ${monoFontSize};
   }
 `;
@@ -172,7 +175,7 @@ const SubName = styled.div`
   }
 `;
 
-const MiddleSpacer = styled.div`
+export const MiddleSpacer = styled.div`
   flex: 1;
 `;
 

@@ -1,6 +1,11 @@
 import { THEME_NAMES } from '../../config/theme/selector';
-import { ALL as ALL_TIERS, NOT_COMMUNITY } from '../../constants/tiers';
-import { ALL as ALL_BROWSERS, CHROMIUM } from '../../constants/browsers';
+import { SIDEBAR_SIDE } from '../../global/constants.ts';
+import {
+  ALL_TIERS,
+  NOT_COMMUNITY,
+  ALL_BROWSERS,
+  CHROMIUM
+} from '../../global/limits/constants.ts';
 import { kebabify } from '../../utils';
 
 const COMMUNITY_THEMES = ['vanilla-light'];
@@ -50,9 +55,9 @@ export const isStickyWindowConfig = {
 export const sidebarSideConfig = {
   browsers: ALL_BROWSERS,
   options: [
-    { value: 'left', label: 'Left', tiers: ALL_TIERS },
+    { value: SIDEBAR_SIDE.Left, label: 'Left', tiers: ALL_TIERS },
     {
-      value: 'right',
+      value: SIDEBAR_SIDE.Right,
       label: 'Right',
       tiers: NOT_COMMUNITY
     }

@@ -114,7 +114,7 @@ export const processBookmarkInformation = (bookmark) => {
   return {
     primaryText: decodeURI(fileName),
     secondaryText: parentPath,
-    subpageText: bookmark?.branch?.name || 'master' // repo branch name
+    subpageText: bookmark?.branch?.name
   };
 };
 
@@ -239,7 +239,7 @@ export const getBookmarkUrl = (bookmark) => {
     'https://github.com/',
     pathUtil.join(
       `/${repo.owner}/${repo.name}`,
-      `/blob/${branch?.name || 'master'}/${path}`
+      `/blob/${branch?.name}/${path}`
     )
   );
 };

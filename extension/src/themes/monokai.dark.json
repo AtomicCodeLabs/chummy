@@ -31,6 +31,10 @@
     "fieldFocusOutlineColor": "#cb2d62",
     "optionDisabledBackgroundColor": "#242424",
     "optionDisabledTextColor": "#7a7a7a",
-    "borderColor": "#404040"
+    "borderColor": "#404040",
+    "successColor": "#27d0b2",
+    "errorColor": "#c52965",
+    "infoColor": "#004eff",
+    "warningColor": "#d0761d"
   }
 }

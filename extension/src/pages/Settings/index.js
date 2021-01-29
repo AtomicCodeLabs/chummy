@@ -1,15 +1,15 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Scrollbars } from 'react-custom-scrollbars';
 import browser from 'webextension-polyfill';
 
-import { checkCurrentUser } from '../../hooks/firebase';
+import { checkCurrentUser } from '../../hooks/dao';
 import { useUiStore, useUserStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
 import TextButton from '../../components/Buttons/TextButton';
 import { Flag } from '../../components/Text';
+import Scrollbars from '../../components/Scrollbars';
 import {
   isStickyWindowConfig,
   sidebarSideConfig,
@@ -41,14 +41,7 @@ export default observer(() => {
   });
 
   return (
-    <Scrollbars
-      style={{
-        width: '100%',
-        height: '100%'
-      }}
-      autoHideTimeout={500}
-      autoHide
-    >
+    <Scrollbars>
       <PanelsContainer>
         <Panel
           title="Color Theme"
@@ -160,7 +153,7 @@ export default observer(() => {
             }}
           >
             Reset to defaults
-          </TextButton>{' '}
+          </TextButton>
         </Panel>
       </PanelsContainer>
     </Scrollbars>

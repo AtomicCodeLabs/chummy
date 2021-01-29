@@ -89,7 +89,6 @@ const Option = (props) => {
       return;
     }
 
-    console.log('try find reason', !option.tiers.includes(option.currentTier));
     // Could be disabled bc not proper tier level
     if (!option.tiers.includes(option.currentTier)) {
       return option.tiers[0]; // return first eligible tier
@@ -97,8 +96,6 @@ const Option = (props) => {
     // Or because setting is not compatible w browser. This case is
     // handled in the parent panel
   };
-
-  console.log('Select option', option, isDisabled, renderDisabledReason());
 
   const flagText = renderDisabledReason();
 

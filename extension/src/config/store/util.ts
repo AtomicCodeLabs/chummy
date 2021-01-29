@@ -1,5 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
-import log from "../log";
+import log from '../log';
+import { BgRepo, Repo } from './I.file.store';
 
 const clone = (obj: { [key: string]: any }) => {
   return JSON.parse(JSON.stringify(obj));
@@ -27,4 +28,21 @@ export const getFromChromeStorage = async (
   } catch (error) {
     log.error('Error getting store', keys, error);
   }
+};
+
+export const convertBgRepoToRepo = (bgRepo: BgRepo): Repo => {
+  return {
+    owner: bgRepo.owner,
+    name: bgRepo.repo,
+    tabs: {
+      [bgRepo.tab.nodeName || bgRepo.tab.subpage]: {
+        name: bgRepo.tab.name,
+        tabId: bgRepo.tab.tabId,
+        nodeName: bgRepo.tab.nodeName,
+        subpage: bgRepo.tab.subpage
+      }
+    },
+    type: bgRepo.type,
+    defaultBranch: bgRepo.defaultBranch
+  };
 };

@@ -3,14 +3,16 @@ import Bowser from 'bowser';
 
 import log from '../config/log';
 import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
+import { SIDEBAR_SIDE } from '../global/constants.ts';
 import {
   getSidebarWidth,
   isCurrentWindow,
-  UrlParser,
   isExtensionOpen,
   getInitialDimensions,
   getSidebarSideUpdateDimensions
 } from './util';
+import { sendActiveTabChanged } from './url-parser.util';
+import WindowError from '../global/errors/window.error';
 
 const isMoz =
   Bowser.getParser(window.navigator.userAgent).getBrowser().name === 'Firefox';
@@ -132,7 +134,7 @@ const updatePopupBounds = async (mainWin) => {
     await browser.windows.update(currentWindowId, {
       top: mainWin.top,
       left:
-        sidebarSide === 'left'
+        sidebarSide === SIDEBAR_SIDE.Left
           ? mainWin.left - nextExtensionWidth
           : mainWin.left + mainWin.width,
       height: mainWin.height
@@ -175,23 +177,12 @@ if (browser.windows.onBoundsChanged) {
   });
 }
 
-const sendContentChangedMessage = (windowId, tabId, tabTitle, tabUrl) => {
-  const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-  const response = {
-    action: 'active-tab-changed',
-    payload: {
-      ...parsed,
-      isGithubRepoUrl: Object.keys(parsed).length !== 0,
-      windowId,
-      tabId
-    }
-  };
-  browser.runtime.sendMessage(response).catch((e) => {
-    log.warn(
-      'Cannot send message because extension is not open',
-      e?.message,
-      response
-    );
+const sendContentChangedMessage = async (windowId, tabId, tabTitle, tabUrl) => {
+  await sendActiveTabChanged({
+    url: tabUrl,
+    title: tabTitle,
+    id: tabId,
+    windowId
   });
 };
 
@@ -258,7 +249,7 @@ const updatePopupSide = async (request) => {
         ...(!isMoz && { windowTypes: ['normal'] })
       });
     } else {
-      throw new Error(
+      throw new WindowError(
         'Get last focused window operation is unsupported on this browser.'
       );
     }

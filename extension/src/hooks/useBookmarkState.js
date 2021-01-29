@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import useFirebaseDAO from './firebase';
+import useDAO from './dao';
 import { useUiStore, useUserStore } from './store';
 import useDebounce from './useDebounce';
 
 const DELAY = 1000; // in ms
 
 const useBookmarkState = (bookmark, pendingSection = 'None') => {
-  const firebase = useFirebaseDAO();
+  const dao = useDAO();
   const { addPendingRequest, removePendingRequest } = useUiStore();
   const { getUserBookmark } = useUserStore();
 
@@ -49,12 +49,18 @@ const useBookmarkState = (bookmark, pendingSection = 'None') => {
       ) {
         // Make request to add or remove bookmark
         const shouldChangeBookmarkState = debouncedBookmarked;
+        let response;
         if (shouldChangeBookmarkState) {
           // add bookmark
-          firebase.addBookmark(bookmark);
+          response = await dao.addBookmark(bookmark);
         } else {
           // remove bookmark
-          firebase.removeBookmark(bookmark);
+          response = await dao.removeBookmark(bookmark);
+        }
+
+        // If response has error, revert bookmark state
+        if (response.status === 'error') {
+          setLocalBookmarked(cachedBookmark);
         }
       }
       removePendingRequest(pendingSection);

@@ -4,7 +4,7 @@ import { MarkGithubIcon, PersonIcon } from '@primer/octicons-react';
 import loadable from '@loadable/component';
 
 import { Container, Spacer, SignInContainer } from './Signin.style';
-import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
+import useDAO, { checkCurrentUser } from '../../hooks/dao';
 import { useUserStore } from '../../hooks/store';
 import IconAndTextButton from '../../components/Buttons/IconAndTextButton';
 import { H3, Title, Subtitle } from '../../components/Text';
@@ -22,7 +22,7 @@ const SplashSpinner = loadable(
 );
 
 export default observer(() => {
-  const firebase = useFirebaseDAO();
+  const dao = useDAO();
   const { theme: mode, spacing } = useTheme();
   const STPayload = { theme: { mode, spacing } };
 
@@ -47,7 +47,7 @@ export default observer(() => {
   // set listener for sign in complete messages from bg
   useEffect(() => {
     const removeListener = onSignInComplete((payload) => {
-      firebase.signInComplete(payload);
+      dao.signInComplete(payload);
     });
     return removeListener;
   }, []);
@@ -61,7 +61,7 @@ export default observer(() => {
 
     // If there was an error signing in
     if (error) {
-      return 'Error';
+      return error.message;
     }
 
     return (
@@ -83,7 +83,7 @@ export default observer(() => {
             iconOnLeft
             onClick={() => {
               // open new tab and initiate sign in flow
-              firebase.signIn();
+              dao.signIn();
             }}
           >
             <H3>Sign in with Github</H3>

@@ -18,6 +18,7 @@ import {
   ExpandingContainerHeaderSpacer,
   ExpandingContainerHeaderIcon
 } from './style';
+import ToastContainer from '../Toast/Container';
 import IconButton from '../Buttons/IconButton';
 import Spinner from '../Loading/Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
@@ -103,7 +104,7 @@ const ResizableSidebar = observer(({ children }) => {
           </ExpandingContainerHeaderContainer>
         )}
         <ExpandingContainerContent>{children}</ExpandingContainerContent>
-        {/* <ExpandingContainerDivider /> */}
+        <ToastContainer />
       </ExpandingContainer>
     </Container>
   );

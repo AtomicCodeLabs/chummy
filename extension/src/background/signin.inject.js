@@ -1,7 +1,5 @@
 import browser from 'webextension-polyfill';
 
-console.log('INJECTING');
-
 /*
 Listen for messages from the page.
 If the message was from the page script, show an alert.
@@ -27,6 +25,5 @@ authListener();
 // Send message after page has loaded
 window.addEventListener('load', () => {
   // Send message to emit auth to content script
-  console.log('sending message');
   window.postMessage({ action: 'trigger-send-to-cs' }, '*');
 });

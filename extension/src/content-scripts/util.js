@@ -1,3 +1,5 @@
+import { DEFAULT_BRANCH } from '../global/constants.ts';
+
 const GITHUB_REGEX = new RegExp(/^(http|https):\/\/github\.com(\/[^/]+){2,}$/);
 
 export const isGithubRepoUrl = (url) => {
@@ -22,7 +24,7 @@ export const parseUrl = (url, title) => {
       url,
       owner: parsedRepoInfo[0],
       repo: parsedRepoInfo[1],
-      branch: 'master',
+      branch: DEFAULT_BRANCH,
       type: 'tree',
       file: null
     };

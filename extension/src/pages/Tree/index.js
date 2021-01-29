@@ -5,17 +5,19 @@ import {
   SectionContainer,
   SectionNameContainer,
   SectionName,
-  SectionContent,
-  ScrollContainer
+  SectionContent
 } from '../../components/Section';
 import SplitSections from '../../components/Section/SplitSections';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
+import Scrollbars from '../../components/Scrollbars';
 import OpenTabsSection from './OpenTabs';
 import FilesSection from './Files';
-import { checkCurrentUser } from '../../hooks/firebase';
+import { checkCurrentUser } from '../../hooks/dao';
 import { useUiStore, useFileStore } from '../../hooks/store';
+import useTheme from '../../hooks/useTheme';
 import { onActiveTabChange } from '../../utils/tabs';
 import { areArraysEqual } from '../../utils';
+import { NODE } from '../../constants/sizes';
 
 export default observer(() => {
   checkCurrentUser();
@@ -26,6 +28,7 @@ export default observer(() => {
     setTreeSectionHeight
   } = useUiStore();
   const { setCurrentBranch, setCurrentWindowTab } = useFileStore();
+  const { spacing } = useTheme();
   const sections = [openTabs, files]; // const sections = [sessions, openTabs, files];
   const [heights, setHeights] = useState(sections.map((s) => s.lastHeight));
   const [minimized, setMinimized] = useState(
@@ -84,11 +87,13 @@ export default observer(() => {
             <OpenCloseChevron open={!openTabs.isMinimized} />
             <SectionName>Open Tabs</SectionName>
           </SectionNameContainer>
-          <ScrollContainer>
+          <Scrollbars
+            height={`calc(100% - ${NODE.HEIGHT({ theme: { spacing } })}px)`}
+          >
             <SectionContent>
               <OpenTabsSection />
             </SectionContent>
-          </ScrollContainer>
+          </Scrollbars>
         </SectionContainer>
       </div>
       <div onResizeStop={(height) => setTreeSectionHeight('files', height)}>
@@ -104,11 +109,13 @@ export default observer(() => {
             <OpenCloseChevron open={!files.isMinimized} />
             <SectionName>Files</SectionName>
           </SectionNameContainer>
-          <ScrollContainer>
+          <Scrollbars
+            height={`calc(100% - ${NODE.HEIGHT({ theme: { spacing } })}px)`}
+          >
             <SectionContent>
               <FilesSection />
             </SectionContent>
-          </ScrollContainer>
+          </Scrollbars>
         </SectionContainer>
       </div>
     </SplitSections>
