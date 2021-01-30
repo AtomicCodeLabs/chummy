@@ -1,9 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
+import { sidebarInactiveIconColor } from '../../constants/theme';
 
 const Container = styled.div`
-  position: relative;
+  position: absolute;
 `;
 
 const SubContainer = styled.div`
@@ -14,29 +15,28 @@ const SubContainer = styled.div`
   bottom: -${({ bottom }) => bottom}px;
   right: -${({ right }) => right}px;
 
-  ${({ color, active }) =>
-    color &&
+  ${({ color, active, ...props }) =>
     css`
       svg {
-        fill: ${color} !important;
+        fill: ${color(props)} !important;
         opacity: ${active ? 1 : 0.5};
+        position: absolute;
       }
     `}
 `;
 
-const IconWithSubIcon = ({ Icon, SubIcon, subtext, offsetY, offsetX }) => {
-  const { color, active = false } = SubIcon.props;
+const IconWithSubIcon = ({ Icon, SubIcon, offsetY, offsetX }) => {
+  const { color = sidebarInactiveIconColor, active = false } = SubIcon.props;
   return (
     <Container>
       {Icon}
       <SubContainer
         bottom={offsetY}
         right={offsetX}
-        color={color}
         active={active}
+        color={color}
       >
         {SubIcon}
-        {subtext}
       </SubContainer>
     </Container>
   );
@@ -45,15 +45,13 @@ const IconWithSubIcon = ({ Icon, SubIcon, subtext, offsetY, offsetX }) => {
 IconWithSubIcon.propTypes = {
   Icon: PropTypes.node.isRequired,
   SubIcon: PropTypes.node.isRequired,
-  subtext: PropTypes.string,
   offsetY: PropTypes.number,
   offsetX: PropTypes.number
 };
 
 IconWithSubIcon.defaultProps = {
-  subtext: '',
-  offsetY: 10,
-  offsetX: 5
+  offsetY: 0,
+  offsetX: 0
 };
 
 export default IconWithSubIcon;

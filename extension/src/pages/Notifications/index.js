@@ -5,26 +5,39 @@ import { toJS } from 'mobx';
 import { checkCurrentUser } from '../../hooks/dao';
 import { useUiStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
-import { PanelDivider2, PanelsContainer } from '../../components/Panel/style';
-import { FormResultsDescriptionContainer } from '../../components/Form/index';
-import Scrollbars from '../../components/Scrollbars';
 import {
-  contrastTextColor,
-  notificationTypeToColor
-} from '../../constants/theme';
+  PanelDivider2,
+  PanelsContainer,
+  PanelDescriptionContainer
+} from '../../components/Panel/style';
+import { A } from '../../components/Text';
+import Scrollbars from '../../components/Scrollbars';
+import { notificationTypeToColor } from '../../constants/theme';
 
 export default observer(() => {
   checkCurrentUser();
-  const { notifications, removeNotification } = useUiStore();
+  const {
+    notifications,
+    removeNotification,
+    clearNotifications
+  } = useUiStore();
   const hasNotifications = !!(!notifications || notifications.size);
 
   console.log('notifications', toJS(notifications));
 
   return (
     <Scrollbars>
-      <FormResultsDescriptionContainer>
-        {hasNotifications ? notifications.size : 0} notifications
-      </FormResultsDescriptionContainer>
+      <PanelDescriptionContainer>
+        <div>{hasNotifications ? notifications.size : 0} notifications</div>
+        {hasNotifications && (
+          <>
+            <div className="spacer" />
+            <div>
+              <A onClick={clearNotifications}>Clear all</A>
+            </div>
+          </>
+        )}
+      </PanelDescriptionContainer>
       {hasNotifications && (
         <PanelsContainer>
           {Array.from(notifications).map(([, notification]) => (
@@ -32,10 +45,7 @@ export default observer(() => {
               <Panel
                 title={notification.title}
                 description={notification.message}
-                backgroundColor={notificationTypeToColor[notification.type]}
-                titlefontColor={contrastTextColor}
-                descriptionFontColor={contrastTextColor}
-                borderRadius="3px"
+                borderLeftColor={notificationTypeToColor[notification.type]}
                 onClick={() => {
                   removeNotification(notification);
                 }}

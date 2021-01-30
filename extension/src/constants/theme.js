@@ -19,6 +19,12 @@ export const indentPadding = theme('spacing', {
   comfortable: '1.8rem'
 });
 
+export const smallestFontSize = theme('spacing', {
+  compact: '0.4rem',
+  cozy: '0.4rem',
+  comfortable: '0.4rem'
+});
+
 export const smallFontSize = theme('spacing', {
   compact: '0.68rem',
   cozy: '0.7rem',

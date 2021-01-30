@@ -1,5 +1,5 @@
 /* global chrome */
-import { observable, action, toJS } from 'mobx';
+import { observable, action, toJS, computed } from 'mobx';
 
 import IUiStore, {
   Language,
@@ -190,6 +190,10 @@ export default class UiStore implements IUiStore {
   @action.bound clearNotifications = () => {
     this.notifications.clear();
   };
+
+  @computed get numOfNotifications() {
+    return this.notifications.size;
+  }
 
   @action.bound setSidebarSide = (sidebarSide: SIDEBAR_SIDE): void => {
     setInChromeStorage({ sidebarSide });

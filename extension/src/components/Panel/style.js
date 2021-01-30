@@ -7,7 +7,9 @@ import {
   lineHeight,
   h3FontSize,
   themeType,
-  backgroundColor
+  backgroundColor,
+  lighterTextColor,
+  smallFontSize
 } from '../../constants/theme';
 import { highlightColor } from '../../config/theme/utils';
 
@@ -28,6 +30,17 @@ export const PanelDivider = styled.div`
     highlightColor(bgColor(props), themeType(props))};
 `;
 
+export const PanelDescriptionContainer = styled.div`
+  display: flex;
+  color: ${lighterTextColor};
+  font-size: ${smallFontSize};
+  padding: 0 calc(${indentPadding} - ${innerPadding}) 0.25rem ${indentPadding};
+
+  .spacer {
+    flex: 1;
+  }
+`;
+
 export const PanelDivider2 = styled.div`
   height: ${innerPadding};
 `;
@@ -35,10 +48,16 @@ export const PanelDivider2 = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  background-color: ${({ bgColor, ...props }) =>
-    bgColor === backgroundColor ? 'transparent' : bgColor(props)};
+  background-color: 'transparent';
   border-radius: ${({ borderRadius }) => borderRadius};
+
   color: ${({ fontColor }) => fontColor};
+
+  ${({ borderLeftColor, ...props }) =>
+    borderLeftColor &&
+    css`
+      border-left: 5px solid ${borderLeftColor(props)};
+    `}
 
   padding: ${({ evenPadding, ...props }) =>
     evenPadding
