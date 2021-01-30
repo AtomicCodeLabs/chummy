@@ -1,15 +1,12 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { XIcon } from '@primer/octicons-react';
 
-import { NotificationType } from '../../config/store/I.ui.store.ts';
 import {
-  errorColor,
+  contrastTextColor,
   fontSize,
-  infoColor,
-  successColor,
-  warningColor
+  notificationTypeToColor
 } from '../../constants/theme';
 import {
   nodePadding,
@@ -20,7 +17,6 @@ import {
 } from '../Node/Base.style';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
-import { WHITE } from '../../constants/colors';
 
 const Container = styled.div`
   display: flex;
@@ -29,41 +25,22 @@ const Container = styled.div`
   ${nodePadding};
   height: ${nodeHeight};
 
-  ${({ type, ...props }) => {
-    switch (type) {
-      case NotificationType.Success:
-        return css`
-          background-color: ${successColor(props)};
-        `;
-      case NotificationType.Error:
-        return css`
-          background-color: ${errorColor(props)};
-        `;
-      case NotificationType.Warning:
-        return css`
-          background-color: ${warningColor(props)};
-        `;
-      case NotificationType.Info:
-      default:
-        return css`
-          background-color: ${infoColor(props)};
-        `;
-    }
-  }}
+  background-color: ${({ type, ...props }) =>
+    notificationTypeToColor[type](props)};
 
   .title {
   }
 
   .message {
     font-size: ${fontSize};
-    color: ${WHITE};
+    color: ${contrastTextColor};
+    overflow-x: hidden;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
   svg {
-    fill: ${WHITE};
+    fill: ${contrastTextColor};
   }
 `;
 

@@ -14,7 +14,7 @@ import {
   backgroundAlternatingDarkColor
 } from '../../constants/theme';
 import { SIDE_TAB, HEADER } from '../../constants/sizes';
-import { SIDEBAR_SIDE } from '../../global/constants.ts';
+import { SIDEBAR_SIDE } from '../../global/constants';
 
 export const Container = styled.div`
   background-color: ${backgroundColor};
@@ -52,10 +52,20 @@ export const SideTab = styled.div`
 export const SideTabButton = styled.div`
   height: ${SIDE_TAB.BUTTON.HEIGHT}px;
 
-  border-left: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px solid
-    ${({ active, ...props }) =>
-      active ? sidebarActiveIconColor(props) : 'transparent'};
-  padding-right: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px;
+  ${({ sidebarSide }) =>
+    sidebarSide === SIDEBAR_SIDE.Left
+      ? css`
+          border-left: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px solid
+            ${({ active, ...props }) =>
+              active ? sidebarActiveIconColor(props) : 'transparent'};
+          padding-right: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px;
+        `
+      : css`
+          border-right: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px solid
+            ${({ active, ...props }) =>
+              active ? sidebarActiveIconColor(props) : 'transparent'};
+          padding-left: ${SIDE_TAB.BUTTON.HIGHLIGHT_WIDTH}px;
+        `}
 
   svg {
     fill: ${({ active, ...props }) =>

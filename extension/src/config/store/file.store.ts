@@ -1,42 +1,94 @@
-import { observable, action, toJS } from 'mobx';
+import { observable, action } from 'mobx';
 
 import IRootStore from './I.root.store';
 import IUiStore from './I.ui.store';
 import IUserStore from './I.user.store';
 import IFileStore, {
+  FileStoreKeys,
+  FileStorePropsArray,
   Node,
   Branch,
   Repo,
   WindowTab,
   Tab,
-  BgRepo
+  BgRepo,
+  Session
 } from './I.file.store';
 import { objectMap } from '../../utils';
-import { convertBgRepoToRepo } from './util';
+import {
+  getFromChromeStorage,
+  setInChromeStorage,
+  convertBgRepoToRepo,
+  convertBgRepoToTabs
+} from './util';
+import { STORE_DEFAULTS } from './constants';
 
 export default class FileStore implements IFileStore {
   uiStore: IUiStore;
-
   userStore: IUserStore;
 
-  @observable isPending: boolean = true;
-
-  /* Window/Tab Section */
+  @observable isPending: boolean;
   @observable currentWindowTab: WindowTab;
-
-  /* Tree Section */
-  cachedNodes: Map<string, Node> = new Map();
-
-  @observable openRepos: Map<string, Repo> = new Map();
-
+  cachedNodes: Map<string, Node>;
+  @observable openRepos: Map<string, Repo>;
   @observable currentBranch: Branch;
-
-  /* VCS Section */
+  @observable currentSession: Session;
   @observable currentRepo: Repo;
+
+  static ALLOWLISTED_KEYS = ['currentSession'];
 
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
     this.userStore = rootStore.userStore; // Store that can resolve users
+    this.init();
+  }
+
+  // Initialize
+  @action.bound init = () => {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.FILE).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
+
+    // Get keys of IUiStore
+    const keys: FileStorePropsArray = FileStoreKeys;
+
+    // Keep some keys out of chrome storage
+    const filteredKeys = keys
+      .filter((k) => !FileStore.ALLOWLISTED_KEYS.includes(k))
+      .sort();
+
+    // Get and set previous sessions' settings
+    getFromChromeStorage(filteredKeys, (items: { [key: string]: any }) => {
+      // Set each key
+      filteredKeys.forEach((key) => {
+        if (items[key]) {
+          // @ts-ignore: Hard to type
+          this[key] = items[key];
+        }
+      });
+
+      // Set defaults but don't overwrite previous
+      setInChromeStorage(
+        filteredKeys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
+      );
+    });
+  };
+
+  @action.bound clear() {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.FILE).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
+    // Set defaults in store
+    setInChromeStorage(
+      Object.keys(STORE_DEFAULTS.FILE).reduce(
+        (o, key) => ({ ...o, [key]: STORE_DEFAULTS.FILE[key] || null }),
+        {}
+      )
+    );
   }
 
   @action.bound setNode(node: Node) {
@@ -108,6 +160,13 @@ export default class FileStore implements IFileStore {
   @action.bound setOpenRepos = (repos: BgRepo[]) => {
     this.cleanupOpenRepos(repos);
     repos.forEach((repo) => this.addOpenRepo(convertBgRepoToRepo(repo)));
+
+    // Set current session every time openrepos is called. Since current sessions
+    // should also hold the last session the user had open, don't call this if repos
+    // is empty
+    if (repos.length !== 0) {
+      this.setCurrentSession(repos);
+    }
   };
 
   @action.bound getOpenRepo = (owner: string, name: string) => {
@@ -193,7 +252,14 @@ export default class FileStore implements IFileStore {
     this.currentBranch = branch;
   };
 
-  openFileTab(id: string): void {}
+  @action.bound setCurrentSession = (repos: BgRepo[]) => {
+    this.currentSession = {
+      id: `session-${repos.length}`,
+      name: 'session', // make this editable in the future by the user
+      tabs: convertBgRepoToTabs(repos)
+    };
 
-  closeFileTab(id: string): void {}
+    // Set in storage
+    setInChromeStorage({ currentSession: this.currentSession });
+  };
 }

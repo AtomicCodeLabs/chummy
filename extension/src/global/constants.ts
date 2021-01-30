@@ -50,9 +50,19 @@ export enum BROWSER_TYPE {
 export const APP_URLS = {
   WEBSITE: {
     BASE: process.env.WEBSITE_BASE_URL,
-    SIGNIN: process.env.WEBSITE_SIGNIN,
-    REDIRECT: process.env.WEBSITE_REDIRECT
+    SIGNIN: 'signin/',
+    REDIRECT: 'account/',
+    TUTORIAL: 'tutorial/'
   }
 };
 
 export const DEFAULT_BRANCH = 'DEFAULT_BRANCH';
+
+export const GITHUB_URLS = {
+  SEARCH_QUERY:
+    'https://docs.github.com/en/free-pro-team@latest/github/searching-for-information-on-github/searching-code',
+  REPO_INDEXING:
+    'https://github.blog/changelog/2020-12-17-changes-to-code-search-indexing/',
+  FEEDBACK: 'https://github.com/alexkim205/chummy/issues/new/choose',
+  MAIN_REPO: 'https://github.com/alexkim205/chummy'
+};

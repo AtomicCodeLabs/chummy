@@ -19,7 +19,7 @@ import useTheme from '../../hooks/useTheme';
 import { capitalize } from '../../utils';
 import { redirectToUrl } from '../../utils/browser';
 import { ICON } from '../../constants/sizes';
-import { GITHUB_URLS } from '../../constants/urls';
+import { GITHUB_URLS } from '../../global/constants';
 
 export default observer(() => {
   checkCurrentUser();

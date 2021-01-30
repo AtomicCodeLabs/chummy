@@ -22,7 +22,7 @@ import {
   ACCOUNT_TYPE,
   THROTTLING_OPERATION,
   APP_URLS
-} from '../global/constants.ts';
+} from '../global/constants';
 import ThrottlingError from '../global/errors/throttling.error';
 import UserError from '../global/errors/user.error';
 
@@ -468,7 +468,9 @@ class DAO {
         THROTTLING_OPERATION.CreateBookmark
       )
     ) {
-      throw new ThrottlingError('Cannot create bookmark. Exceeds tier limit.');
+      throw new ThrottlingError(
+        'Cannot create bookmark because the maximum number of bookmarks for your tier has been reached.'
+      );
     }
     // Make create request
     await this.api.graphql(

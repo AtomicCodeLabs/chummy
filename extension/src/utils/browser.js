@@ -10,6 +10,15 @@ export const redirectToUrl = (url) => {
   browser.runtime.sendMessage(request);
 };
 
+export const openSession = (session) => {
+  const request = {
+    action: 'redirect-to-session',
+    payload: { session }
+  };
+  log.toBg('Redirect to url request -> bg', request);
+  browser.runtime.sendMessage(request);
+};
+
 export const updateSidebarSide = (prevSide, nextSide) => {
   const request = {
     action: 'sidebar-side-updated',

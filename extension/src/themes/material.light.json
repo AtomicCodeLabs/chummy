@@ -32,9 +32,9 @@
     "optionDisabledBackgroundColor": "#ebebeb",
     "optionDisabledTextColor": "#b0b0b0",
     "borderColor": "#e0e0e0",
-    "successColor": "#27d0b2",
-    "errorColor": "#c52965",
-    "infoColor": "#004eff",
-    "warningColor": "#d0761d"
+    "successColor": "#4CAF50",
+    "errorColor": "#FF4081",
+    "infoColor": "#3F51B5",
+    "warningColor": "#FFA000"
   }
 }

@@ -1,11 +1,22 @@
 import { createGlobalStyle } from 'styled-components';
 
+import Inter300 from '../../../public/font/inter-v2-latin-300.woff';
+import Inter300Two from '../../../public/font/inter-v2-latin-300.woff2';
 import Inter400 from '../../../public/font/inter-v2-latin-regular.woff';
 import Inter400Two from '../../../public/font/inter-v2-latin-regular.woff2';
 import Inter600 from '../../../public/font/inter-v2-latin-600.woff';
 import Inter600Two from '../../../public/font/inter-v2-latin-600.woff2';
 
 export default createGlobalStyle`
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    src:
+      url('${Inter300Two}') format('woff2'),
+      url('${Inter300}') format('woff');
+  }
+
   @font-face {
     font-family: 'Inter';
     font-style: normal;

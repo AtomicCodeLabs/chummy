@@ -12,9 +12,9 @@ import {
   getMatchFragment,
   createBookmark,
   clickedEl,
-  redirectToUrl,
   renderName
 } from './util';
+import { redirectToUrl } from '../../utils/browser';
 import SearchResultMatchNode from './SearchResultMatchNode';
 import useBookmarkState from '../../hooks/useBookmarkState';
 import useTheme from '../../hooks/useTheme';

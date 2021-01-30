@@ -7,8 +7,8 @@ import {
   REPO_TITLE_REGEX,
   generate_ISSUE_TITLE_REGEX,
   generate_PULL_TITLE_REGEX
-} from './constants.ts';
-import { SUBPAGES, DEFAULT_BRANCH } from '../global/constants.ts';
+} from './constants';
+import { SUBPAGES, DEFAULT_BRANCH } from '../global/constants';
 import { UserError } from '../global/errors';
 import log from '../config/log';
 import { isGithubRepoUrl, isNumeric } from './util';
@@ -196,8 +196,10 @@ export default class UrlParser {
     // Get branch information from tab title, because it's impossible to discern from
     // just the url if the branch name has /'s
     const regexedTitle = this.title.match(REPO_TITLE_REGEX);
-    // Get everything in between " at " and " . "; fallback to getting url from url
-    const branchName = regexedTitle ? regexedTitle[1] : this.parsedRepoInfo[3];
+    // Get everything in between " at " and " . "; if empty, rest of url is branch name (/'s and all)
+    const branchName = regexedTitle
+      ? regexedTitle[1]
+      : this.parsedRepoInfo.slice(3).join('/');
     const parsedWithoutBranch = this.urlObject.pathname
       .slice(1)
       .replace(`/${branchName}`, '') // remove branch from url to get
@@ -330,6 +332,10 @@ export const getParsedOpenRepositories = async () => {
         ]);
       }, Promise.resolve([[false, globallyCachedDefaultBranches]]))
   ).filter((parsedTuple) => !!parsedTuple[0]);
+
+  if (openTabsWithCache.length === 0) {
+    return [];
+  }
 
   // Grab just list of parsed urls
   const openTabs = openTabsWithCache.map((parsedTuple) => parsedTuple[0]);

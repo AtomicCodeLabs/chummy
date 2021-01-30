@@ -6,29 +6,40 @@ import IUiStore, { SectionName } from './I.ui.store';
 import IFileStore, { Bookmark, Repo, Session } from './I.file.store';
 import { objectMap } from '../../utils';
 import { ACCOUNT_TYPE } from '../../global/constants';
+import { STORE_DEFAULTS } from './constants';
 
 export default class UserStore implements IUserStore {
   uiStore: IUiStore;
-
   fileStore: IFileStore;
 
-  @observable user: User = null;
-
-  @observable userBookmarks: Map<string, Repo> = new Map(); // key is owner:branchName
-
-  @observable numOfBookmarks: number = 0;
-
-  @observable userSessions: Map<string, Session> = new Map(); // key is session id
-
-  @observable numOfSessions: number = 0;
-
-  @observable isPending: boolean; // keep boolean bc user pending requests are binary
-
-  @observable error: Error = null; // sign in error, null if none
+  @observable user: User;
+  @observable userBookmarks: Map<string, Repo>;
+  @observable numOfBookmarks: number;
+  @observable userSessions: Map<string, Session>;
+  @observable numOfSessions: number;
+  @observable isPending: boolean; // keep boolean bc user pending state is binary
+  @observable error: Error;
 
   constructor(rootStore: IRootStore) {
     this.uiStore = rootStore.uiStore; // Store to update ui state
     this.fileStore = rootStore.fileStore; // Store to access file stores
+    this.init();
+  }
+
+  @action.bound init() {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.USER).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
+  }
+
+  @action.bound clear() {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.USER).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
   }
 
   /** DAO Auth - sync dao with user in store * */

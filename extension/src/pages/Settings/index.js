@@ -1,9 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import browser from 'webextension-polyfill';
 
 import { checkCurrentUser } from '../../hooks/dao';
-import { useUiStore, useUserStore } from '../../hooks/store';
+import { useFileStore, useUiStore, useUserStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
@@ -18,6 +17,7 @@ import {
 } from './options';
 import { updateSidebarSide } from '../../utils/browser';
 import { browserName } from '../../config/browser';
+import { NotificationType } from '../../config/store/I.ui.store';
 
 const ChromiumOnly = () => <Flag>Chromium Only</Flag>;
 
@@ -31,9 +31,12 @@ export default observer(() => {
     isStickyWindow,
     setIsStickyWindow,
     sidebarSide,
-    setSidebarSide
+    setSidebarSide,
+    addGenericPendingNotification,
+    clear: uiClear
   } = useUiStore();
   const { user } = useUserStore();
+  const { clear: fileClear } = useFileStore();
 
   const injectInfoIntoOption = (option) => ({
     ...option,
@@ -116,6 +119,7 @@ export default observer(() => {
             }
           />
         </Panel>
+        <PanelDivider />
         <Panel
           title="Sidebar Side"
           description="Choose which side of the main window the extension should appear on. Works best with sticky window on."
@@ -143,13 +147,21 @@ export default observer(() => {
             }
           />
         </Panel>
+        <PanelDivider />
         <Panel
           title="Reset"
-          description="Clear cache and reset all settings to defaults."
+          description="Clear cache and reset all settings to defaults. Warning, your last session will be lost!"
         >
           <TextButton
             onClick={() => {
-              browser.storage.sync.clear();
+              // Reset file and ui stores to default
+              uiClear();
+              fileClear();
+              addGenericPendingNotification(
+                'Application Reset',
+                'Cache and settings were successfully reset to defaults.',
+                NotificationType.Success
+              );
             }}
           >
             Reset to defaults

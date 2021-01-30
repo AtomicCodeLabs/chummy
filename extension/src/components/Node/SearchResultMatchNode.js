@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { LinkExternalIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { clickedEl, redirectToUrl } from './util';
+import { clickedEl } from './util';
+import { redirectToUrl } from '../../utils/browser';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
 

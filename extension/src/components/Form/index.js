@@ -3,11 +3,11 @@ import styled, { css } from 'styled-components';
 import {
   backgroundHighlightColor,
   lighterTextColor,
-  fontSize,
   smallFontSize,
   shadowColor,
   fieldMargin,
-  labelMargin
+  labelMargin,
+  indentPadding
 } from '../../constants/theme';
 
 export const HeaderContainer = styled.div`
@@ -30,8 +30,8 @@ export const FormContainer = styled.div`
 
 export const FormResultsDescriptionContainer = styled.div`
   color: ${lighterTextColor};
-  font-size: ${fontSize};
-  padding: 0 0.5rem 0.5rem calc(14px + 0.5rem + 0.15rem); // to line up with search inputs
+  font-size: ${smallFontSize};
+  padding: 0 0.25rem 0.25rem ${indentPadding};
 `;
 
 export const Form = styled.form`

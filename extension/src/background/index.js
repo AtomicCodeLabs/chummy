@@ -2,8 +2,8 @@ import browser from 'webextension-polyfill';
 import Bowser from 'bowser';
 
 import log from '../config/log';
-import { NO_WINDOW_EXTENSION_ID } from './constants.ts';
-import { SIDEBAR_SIDE } from '../global/constants.ts';
+import { NO_WINDOW_EXTENSION_ID } from './constants';
+import { SIDEBAR_SIDE } from '../global/constants';
 import {
   getSidebarWidth,
   isCurrentWindow,
@@ -26,12 +26,10 @@ const onBrowserActionClickedListener = async () => {
     const {
       isSidebarMinimized,
       sidebarWidth,
-      // lastOpenedUrl,
       sidebarSide
     } = await browser.storage.sync.get([
       'isSidebarMinimized',
       'sidebarWidth',
-      'lastOpenedUrl',
       'sidebarSide'
     ]);
     if (await isExtensionOpen()) {

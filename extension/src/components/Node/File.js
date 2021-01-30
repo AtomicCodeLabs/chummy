@@ -47,8 +47,11 @@ const File = observer(({ owner, repo, branch, data, level }) => {
     // If openInNewTab is true -> Redirect to file by creating new tab
     // If openInNewTab is false -> Node was clicked, so redirect in same tab
     redirectTo(
-      `/${owner}/${repo}`,
-      `/blob/${branch.name}/${data.path}`,
+      owner,
+      repo,
+      'blob',
+      branch.name,
+      data.path,
       currentWindowTab,
       openInNewTab
     );

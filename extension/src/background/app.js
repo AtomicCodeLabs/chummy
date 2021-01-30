@@ -1,10 +1,7 @@
 /* eslint-disable consistent-return */
-import url from 'url';
-import path from 'path';
-
 import browser from 'webextension-polyfill';
 import log from '../config/log';
-import { resolveInjectJSFilenames } from './util';
+import { resolveInjectJSFilenames, createGithubUrl } from './util';
 import {
   getParsedOpenRepositories,
   sendActiveTabChanged
@@ -15,41 +12,17 @@ const redirectTab = async (request) => {
   // Redirect tab page (when file node is clicked)
   if (request.action === 'redirect') {
     const {
-      payload: { window, base, filepath, openInNewTab }
+      payload: { window, owner, repo, type, branch, nodePath, openInNewTab }
     } = request;
     // Open a new tab
     if (openInNewTab) {
       try {
         const newTab = {
           windowId: window.windowId,
-          url: url.resolve('https://github.com/', path.join(base, filepath)),
-          active: false
+          url: createGithubUrl(owner, repo, type, branch, nodePath),
+          active: true
         };
         await browser.tabs.create(newTab);
-        // // focus on window that tab was created in
-        // browser.windows.update(createdTab.windowId, { focused: true });
-        // // Send active-tab-changed action to set current branch
-        // const parsed = new UrlParser(
-        //   createdTab.url,
-        //   createdTab.title,
-        //   createdTab.id
-        // ).parse();
-        // const response = {
-        //   action: 'active-tab-changed',
-        //   payload: {
-        //     ...parsed,
-        //     isGithubRepoUrl: Object.keys(parsed).length !== 0,
-        //     windowId: createdTab.windowId,
-        //     tabId: createdTab.id
-        //   }
-        // };
-        // await browser.runtime.sendMessage(response).catch((e) => {
-        //   log.warn(
-        //     'Cannot send message because extension is not open',
-        //     e?.message,
-        //     response
-        //   );
-        // });
       } catch (error) {
         log.error('Error creating tab', error);
       }
@@ -98,6 +71,40 @@ const redirectTab = async (request) => {
         active: true
       };
       await browser.tabs.create(newTab);
+    } catch (error) {
+      log.warn('Error redirecting to url', error);
+    }
+    return null;
+  }
+
+  // Redirect to session (open up all tabs in session)
+  if (request.action === 'redirect-to-session') {
+    const {
+      payload: { session }
+    } = request;
+    try {
+      if (session.tabs.length === 0) {
+        log.warn('Session is empty');
+        return;
+      }
+
+      // Create a new window to put this session into
+      browser.windows.create({
+        focused: true,
+        url: session.tabs.map(
+          ({ url, repo, name: branchName, nodeName }) =>
+            url ||
+            createGithubUrl(
+              repo.owner,
+              repo.name,
+              repo.type,
+              branchName,
+              nodeName
+            )
+        )
+      });
+
+      log.debug('REDIRECT TO SESSION', session);
     } catch (error) {
       log.warn('Error redirecting to url', error);
     }
@@ -163,6 +170,7 @@ browser.runtime.onMessage.addListener((request) => {
     [
       'redirect',
       'redirect-to-url',
+      'redirect-to-session',
       'change-active-tab',
       'get-open-repositories',
       'close-tab'
