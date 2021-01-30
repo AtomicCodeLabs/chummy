@@ -83,8 +83,13 @@ export const H3 = styled.h3`
     `}
 `;
 
-export const A = styled.a`
-  color: ${textColor};
+export const A = styled.span`
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: ${textColor};
+  }
 `;
 
 export const Flag = styled.span`

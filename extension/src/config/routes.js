@@ -33,6 +33,9 @@ const Vcs = loadable(() => import('../pages/Vcs'), {
 const Bookmarks = loadable(() => import('../pages/Bookmarks'), {
   fallback: <LoadingPage />
 });
+const Notifications = loadable(() => import('../pages/Notifications'), {
+  fallback: <LoadingPage />
+});
 const Account = loadable(() => import('../pages/Account'), {
   fallback: <LoadingPage />
 });
@@ -97,6 +100,10 @@ export const routes = [
   {
     pathname: '/bookmarks',
     component: <Bookmarks />
+  },
+  {
+    pathname: '/notifications',
+    component: <Notifications />
   },
   {
     pathname: '/account',

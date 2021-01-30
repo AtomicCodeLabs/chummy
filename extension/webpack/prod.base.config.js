@@ -96,9 +96,7 @@ module.exports = {
         SC_DISABLE_SPEEDY: true,
         EXTENSION_ID: JSON.stringify(packageInfo.extensionId),
         ASSETS_PUBLIC_PATH: JSON.stringify(process.env.ASSETS_PUBLIC_PATH),
-        WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL),
-        WEBSITE_SIGNIN: JSON.stringify(process.env.WEBSITE_SIGNIN),
-        WEBSITE_REDIRECT: JSON.stringify(process.env.WEBSITE_REDIRECT)
+        WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL)
       }
     }),
     new webpack.LoaderOptionsPlugin({

@@ -1,6 +1,10 @@
 import { css } from 'styled-components';
 import theme from 'styled-theming';
+
 import selector from '../config/theme/selector';
+import { isThemeDark } from '../config/theme/utils';
+import { BLACK, WHITE } from './colors';
+import { NotificationType } from '../config/store/I.ui.store';
 
 // Sizing
 export const fieldMargin = theme('spacing', {
@@ -185,3 +189,15 @@ export const successColor = themeCreator('successColor');
 export const errorColor = themeCreator('errorColor');
 export const infoColor = themeCreator('infoColor');
 export const warningColor = themeCreator('warningColor');
+
+// Constants that don't change with theme but only with theme type
+export const contrastTextColor = (props) => {
+  return isThemeDark(themeType(props)) ? BLACK : WHITE;
+};
+
+export const notificationTypeToColor = {
+  [NotificationType.Success]: successColor,
+  [NotificationType.Error]: errorColor,
+  [NotificationType.Warning]: warningColor,
+  [NotificationType.Info]: infoColor
+};

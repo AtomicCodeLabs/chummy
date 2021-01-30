@@ -30,6 +30,12 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "lines-between-class-members": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

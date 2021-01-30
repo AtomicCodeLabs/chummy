@@ -75,6 +75,7 @@ const ResizableSidebar = observer(({ children }) => {
               <SideTabButton
                 active={pathname === route.pathname}
                 key={route.pathname}
+                sidebarSide={sidebarSide}
               >
                 <IconButton
                   Icon={route.icon}

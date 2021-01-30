@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from '@octokit/graphql';
 import { Octokit } from '@octokit/rest';
-import { throttling } from '@octokit/plugin-throttling';
 
 import {
   formQueryGetRepositorySpecificBranchRootNodes,
@@ -20,7 +19,6 @@ class OctoDAO {
     this.fileStore = store.fileStore;
 
     this.rest = Octokit;
-    this.rest.plugin(throttling);
     this.restAuth = null;
     this.graphql = graphql;
     this.graphqlAuth = null;

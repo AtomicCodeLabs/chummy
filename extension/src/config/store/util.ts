@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
+import { BgRepo, Repo, Tab } from './I.file.store';
 import log from '../log';
-import { BgRepo, Repo } from './I.file.store';
 
 const clone = (obj: { [key: string]: any }) => {
   return JSON.parse(JSON.stringify(obj));
@@ -30,19 +30,34 @@ export const getFromChromeStorage = async (
   }
 };
 
-export const convertBgRepoToRepo = (bgRepo: BgRepo): Repo => {
+export const convertBgRepoToRepo = (
+  bgRepo: BgRepo,
+  populate: boolean = true
+): Repo => {
   return {
     owner: bgRepo.owner,
     name: bgRepo.repo,
-    tabs: {
-      [bgRepo.tab.nodeName || bgRepo.tab.subpage]: {
-        name: bgRepo.tab.name,
-        tabId: bgRepo.tab.tabId,
-        nodeName: bgRepo.tab.nodeName,
-        subpage: bgRepo.tab.subpage
-      }
-    },
     type: bgRepo.type,
-    defaultBranch: bgRepo.defaultBranch
+    defaultBranch: bgRepo.defaultBranch,
+    ...(populate && {
+      tabs: {
+        [bgRepo.tab.nodeName || bgRepo.tab.subpage]: {
+          name: bgRepo.tab.name,
+          tabId: bgRepo.tab.tabId,
+          nodeName: bgRepo.tab.nodeName,
+          subpage: bgRepo.tab.subpage
+        }
+      }
+    })
   };
+};
+
+export const convertBgRepoToTabs = (bgRepos: BgRepo[]): Tab[] => {
+  return bgRepos.map((bgRepo: BgRepo) => ({
+    name: bgRepo.tab.name,
+    tabId: bgRepo.tab.tabId,
+    nodeName: bgRepo.tab.nodeName,
+    subpage: bgRepo.tab.subpage,
+    repo: convertBgRepoToRepo(bgRepo, false)
+  }));
 };

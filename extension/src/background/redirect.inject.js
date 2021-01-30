@@ -8,22 +8,25 @@ const redirectPageListeners = () => {
       browser.runtime.onMessage.removeListener(redirectListener);
 
       const {
-        payload: { base, filepath }
+        payload: { owner, repo, type, branch, nodePath }
       } = request;
 
       // Hack: simulate a click on the repository <a> tag by replacing the href
       // with the file to redirect to. This gives us a reliable reference element
       // to "click" any time any file is chosen.
       const repoLink = document.querySelector(
-        `[data-pjax='#js-repo-pjax-container'][href='${base}']`
+        `[data-pjax='#js-repo-pjax-container'][href='/${owner}/${repo}']`
       );
       // If navigated to page that doesn't have clickable repo link (like 404)
       // fallback to normal redirect.
       if (!repoLink) {
-        window.location.href = `https://github.com${base}${filepath}`;
+        window.location.href = `https://github.com/${owner}/${repo}/${type}/${branch}/${nodePath}`;
       } else {
         // Sometimes ajax redirect will be treated as a normal redirect by Github
-        repoLink.setAttribute('href', base + filepath);
+        repoLink.setAttribute(
+          'href',
+          `/${owner}/${repo}/${type}/${branch}/${nodePath}`
+        );
         repoLink.click();
       }
     }

@@ -56,48 +56,42 @@ export interface Notification {
 
 // UiStore
 class CUiStore {
-  userStore: IUserStore = null;
+  userStore: IUserStore;
 
-  language: Language = Language.English;
-  theme: string = 'vanilla-light';
-  spacing: SPACING = SPACING.Cozy;
-  pendingRequestCount: Map<SectionName, number> = new Map(
-    Object.values(SectionName).map((sectionName) => [sectionName, 0])
-  );
-  isStickyWindow: boolean = false;
-  pendingNotifications: Map<string, Notification> = new Map();
-  notifications: Map<string, Notification> = new Map();
+  language: Language;
+  theme: string;
+  spacing: SPACING;
+  pendingRequestCount: Map<SectionName, number>;
+  isStickyWindow: boolean;
+  pendingNotifications: Map<string, Notification>;
+  notifications: Map<string, Notification>;
 
   // Sidebar
-  sidebarView: SidebarView = null;
-  sidebarWidth: number = null;
-  sidebarSide: SIDEBAR_SIDE = null;
-  isSidebarMinimized: boolean = false;
+  sidebarView: SidebarView;
+  sidebarWidth: number;
+  sidebarSide: SIDEBAR_SIDE;
+  isSidebarMinimized: boolean;
 
   // Tree Page
   isTreeSectionMinimized: {
     [TreeSection.Sessions]: TreeState;
     [TreeSection.OpenTabs]: TreeState;
     [TreeSection.Files]: TreeState;
-  } = {
-    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 0 },
-    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
-    [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };
 
   // Search Page
-  isSearchSectionMinimized: boolean = true;
-  selectedQueryFilename: string = null;
-  selectedQueryCode: string = null;
-  selectedQueryPath: string = null;
-  selectedOpenRepo: string = null;
-  selectedLanguage: string = null;
+  isSearchSectionMinimized: boolean;
+  selectedQueryFilename: string;
+  selectedQueryCode: string;
+  selectedQueryPath: string;
+  selectedOpenRepo: string;
+  selectedLanguage: string;
   // openSearchResultFiles: Set<string>;
 
   // Bookmarks Page
-  isBookmarksSectionMinimized: boolean = true;
-  selectedBookmarkQuery: string = null;
-  selectedBookmarkRepo: string = null;
+  isBookmarksSectionMinimized: boolean;
+  selectedBookmarkQuery: string;
+  selectedBookmarkRepo: string;
   openBookmarkRepos: Set<string>;
 }
 

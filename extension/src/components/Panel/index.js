@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import StyledPanel from './style';
+import {
+  backgroundColor,
+  lightTextColor,
+  textColor
+} from '../../constants/theme';
 
 const Panel = ({
   title,
@@ -11,23 +16,35 @@ const Panel = ({
   center,
   onClick,
   rightPanel,
-  flag
+  flag,
+  backgroundColor: bgColor,
+  closable,
+  borderRadius,
+  titlefontColor,
+  descriptionFontColor
 }) => {
   return (
     <StyledPanel.Container
-      highlightOnHover={highlightOnHover}
-      evenPadding={evenPadding}
       onClick={onClick}
+      highlightOnHover={highlightOnHover}
+      bgColor={bgColor}
+      borderRadius={borderRadius}
+      fontColor={titlefontColor}
+      evenPadding={evenPadding}
     >
       <StyledPanel.LeftPanel>
         {title && (
-          <StyledPanel.Title>
+          <StyledPanel.Title fontColor={titlefontColor}>
             <span className={flag ? 'strikethrough' : undefined}>{title}</span>
             <span>{flag}</span>
           </StyledPanel.Title>
         )}
+        {closable && 'closable'}
         {description && (
-          <StyledPanel.Description isLast={!children}>
+          <StyledPanel.Description
+            isLast={!children}
+            fontColor={descriptionFontColor}
+          >
             {description}
           </StyledPanel.Description>
         )}
@@ -49,7 +66,12 @@ Panel.propTypes = {
   center: PropTypes.bool,
   onClick: PropTypes.func,
   rightPanel: PropTypes.node,
-  flag: PropTypes.node
+  flag: PropTypes.node,
+  backgroundColor: PropTypes.func,
+  closable: PropTypes.bool,
+  borderRadius: PropTypes.string,
+  titlefontColor: PropTypes.func,
+  descriptionFontColor: PropTypes.func
 };
 
 Panel.defaultProps = {
@@ -61,7 +83,12 @@ Panel.defaultProps = {
   center: false,
   onClick: null,
   rightPanel: null, // Contents of right panel if a vertical split is wanted
-  flag: null // Flag next to title
+  flag: null, // Flag next to title,
+  backgroundColor,
+  closable: false, // Has x icon on top right
+  borderRadius: '0',
+  titlefontColor: textColor,
+  descriptionFontColor: lightTextColor
 };
 
 export default Panel;

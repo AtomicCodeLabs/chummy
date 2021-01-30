@@ -28,7 +28,10 @@ import useOctoDAO from '../../hooks/octokit';
 import { useUiStore, useFileStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
 import { isBlank } from '../../utils';
+import { redirectToUrl } from '../../utils/browser';
 import SearchResultFileNode from '../../components/Node/SearchResultFileNode';
+import { A } from '../../components/Text';
+import { GITHUB_URLS } from '../../global/constants';
 
 const LanguagesSelect = loadable(() => import('./LanguagesSelect'));
 
@@ -223,18 +226,25 @@ export default observer(() => {
         <FormResultsDescriptionContainer>
           {isWellFormed &&
             Array.isArray(results) && // so that 0 results doesn't show up while pending
-            (results.length
-              ? `${results.reduce(
-                  (numResults, file) =>
-                    numResults +
-                    file.text_matches.reduce(
-                      (numTextMatches, textMatch) =>
-                        numTextMatches + textMatch.matches.length,
-                      0
-                    ),
-                  0
-                )} results in ${results.length} files`
-              : '0 results')}
+            (results.length ? (
+              `${results.reduce(
+                (numResults, file) =>
+                  numResults +
+                  file.text_matches.reduce(
+                    (numTextMatches, textMatch) =>
+                      numTextMatches + textMatch.matches.length,
+                    0
+                  ),
+                0
+              )} results in ${results.length} files`
+            ) : (
+              <>
+                0 results.{' '}
+                <A onClick={() => redirectToUrl(GITHUB_URLS.REPO_INDEXING)}>
+                  Repository may not be indexed.
+                </A>
+              </>
+            ))}
         </FormResultsDescriptionContainer>
       </HeaderContainer>
       <Scrollbars

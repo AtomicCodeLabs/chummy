@@ -5,6 +5,7 @@ import IUiStore, {
   Language,
   SidebarView,
   TreeSection,
+  TreeState,
   UiStorePropsArray,
   UiStoreKeys,
   SectionName,
@@ -13,7 +14,7 @@ import IUiStore, {
   ErrorTypes
 } from './I.ui.store';
 import { SPACING, SIDEBAR_SIDE } from '../../global/constants';
-import { EXTENSION_WIDTH } from '../../constants/sizes';
+import { STORE_DEFAULTS } from './constants';
 import { getFromChromeStorage, setInChromeStorage } from './util';
 import IUserStore from './I.user.store';
 import IRootStore from './I.root.store';
@@ -21,35 +22,32 @@ import IRootStore from './I.root.store';
 export default class UiStore implements IUiStore {
   userStore: IUserStore;
 
-  @observable language = Language.English;
-  @observable theme = 'vanilla-light'; // hardcode in so it doesn't have to wait for themes to load
-  @observable spacing = SPACING.Cozy;
-  @observable pendingRequestCount = new Map(
-    Object.values(SectionName).map((sectionName) => [sectionName, 0])
-  );
-  @observable isStickyWindow = false;
-  @observable pendingNotifications: Map<string, Notification> = new Map(); // frontend pops from queue until map is empty
-  @observable notifications: Map<string, Notification> = new Map(); // notificationsToShow end up here once processed
-  @observable sidebarView = SidebarView.Project;
-  @observable sidebarWidth = EXTENSION_WIDTH.INITIAL; // Last seen sidebar width, not 0 when sidebar is minimized
-  @observable sidebarSide = SIDEBAR_SIDE.Left;
-  @observable isSidebarMinimized = false;
-  @observable isTreeSectionMinimized = {
-    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 200 },
-    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 200 },
-    [TreeSection.Files]: { isMinimized: false, lastHeight: 200 }
+  @observable language: Language;
+  @observable theme: string;
+  @observable spacing: SPACING;
+  @observable pendingRequestCount: Map<SectionName, number>;
+  @observable isStickyWindow: boolean;
+  @observable pendingNotifications: Map<string, Notification>;
+  @observable notifications: Map<string, Notification>;
+  @observable sidebarView: SidebarView;
+  @observable sidebarWidth: number;
+  @observable sidebarSide: SIDEBAR_SIDE;
+  @observable isSidebarMinimized: boolean;
+  @observable isTreeSectionMinimized: {
+    [TreeSection.Sessions]: TreeState;
+    [TreeSection.OpenTabs]: TreeState;
+    [TreeSection.Files]: TreeState;
   };
-  @observable isSearchSectionMinimized = true;
-  @observable selectedQueryFilename: string = null;
-  @observable selectedQueryCode: string = null;
-  @observable selectedQueryPath: string = null;
-  @observable selectedOpenRepo: string = null;
-  @observable selectedLanguage: string = null;
-  // @observable openSearchResultFiles: Set<string> = new Set();
-  @observable isBookmarksSectionMinimized = true;
-  @observable selectedBookmarkQuery: string = null;
-  @observable selectedBookmarkRepo: string = null;
-  @observable openBookmarkRepos: Set<string> = new Set();
+  @observable isSearchSectionMinimized: boolean;
+  @observable selectedQueryFilename: string;
+  @observable selectedQueryCode: string;
+  @observable selectedQueryPath: string;
+  @observable selectedOpenRepo: string;
+  @observable selectedLanguage: string;
+  @observable isBookmarksSectionMinimized: boolean;
+  @observable selectedBookmarkQuery: string;
+  @observable selectedBookmarkRepo: string;
+  @observable openBookmarkRepos: Set<string>;
 
   static BLOCKLISTED_KEYS = [
     'pendingRequestCount',
@@ -65,6 +63,12 @@ export default class UiStore implements IUiStore {
 
   // Initialize
   @action.bound init = () => {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.UI).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
+
     // Get keys of IUiStore
     const keys: UiStorePropsArray = UiStoreKeys;
 
@@ -78,16 +82,34 @@ export default class UiStore implements IUiStore {
       // Set each key
       filteredKeys.forEach((key) => {
         if (items[key]) {
-          (this[key] as any) = items[key];
+          // @ts-ignore: Hard to type
+          this[key] = items[key];
         }
       });
 
       // Set defaults but don't overwrite previous
       setInChromeStorage(
-        keys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
+        filteredKeys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
       );
     });
   };
+
+  @action.bound clear() {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.UI).forEach(([key, value]) => {
+      if (!UiStore.BLOCKLISTED_KEYS.includes(key)) {
+        // @ts-ignore: Hard to type
+        this[key] = value;
+      }
+    });
+    // Set defaults in store
+    setInChromeStorage(
+      Object.keys(STORE_DEFAULTS.UI).reduce(
+        (o, key) => ({ ...o, [key]: STORE_DEFAULTS.UI[key] || null }),
+        {}
+      )
+    );
+  }
 
   @action.bound addPendingRequest = (pendingState: SectionName): void => {
     const pastCount = this.pendingRequestCount.get(pendingState);
@@ -123,12 +145,26 @@ export default class UiStore implements IUiStore {
     message: string;
     stack: any;
   }) => {
-    const id = `${NotificationType.Error}-${this.notifications.size}`;
+    const id = `${NotificationType.Error}-${Date.now()}`;
     this.pendingNotifications.set(id, {
       id,
       type: NotificationType.Error,
       title: ErrorTypes[error.name],
       message: error.message
+    });
+  };
+
+  @action.bound addGenericPendingNotification = (
+    title: string,
+    message: string,
+    type: NotificationType
+  ) => {
+    const id = `${type}-${Date.now()}`;
+    this.pendingNotifications.set(id, {
+      id,
+      type,
+      title,
+      message
     });
   };
 

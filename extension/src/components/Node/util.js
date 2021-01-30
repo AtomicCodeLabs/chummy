@@ -8,26 +8,27 @@ import cloneDeep from 'lodash.clonedeep';
 import log from '../../config/log';
 
 export const redirectTo = (
-  base,
-  filepath,
+  owner,
+  repo,
+  type,
+  branch,
+  nodePath,
   currentWindowTab,
   openInNewTab = false
 ) => {
   const request = cloneDeep({
     action: 'redirect',
-    payload: { window: currentWindowTab, base, filepath, openInNewTab }
+    payload: {
+      window: currentWindowTab,
+      owner,
+      repo,
+      type,
+      branch,
+      nodePath,
+      openInNewTab
+    }
   });
   log.toBg('Redirect request -> bg', request);
-  browser.runtime.sendMessage(request);
-};
-
-export const redirectToUrl = (url) => {
-  const request = {
-    action: 'redirect-to-url',
-    payload: { url }
-  };
-  log.toBg('Redirect to url request -> bg', request);
-
   browser.runtime.sendMessage(request);
 };
 

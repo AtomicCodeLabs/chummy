@@ -2,10 +2,13 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-globals */
 import browser from 'webextension-polyfill';
+import url from 'url';
+import path from 'path';
+
 import log from '../config/log';
 import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
-import { GITHUB_REGEX, NO_WINDOW_EXTENSION_ID } from './constants.ts';
-import { SIDEBAR_SIDE } from '../global/constants.ts';
+import { GITHUB_REGEX, NO_WINDOW_EXTENSION_ID } from './constants';
+import { SIDEBAR_SIDE } from '../global/constants';
 
 export const isExtensionOpen = async () => {
   try {
@@ -186,8 +189,8 @@ export const getSidebarSideUpdateDimensions = async (
   return appendLeft;
 };
 
-export const isGithubRepoUrl = (url) => {
-  return url && !!GITHUB_REGEX.exec(url);
+export const isGithubRepoUrl = (tabUrl) => {
+  return url && !!GITHUB_REGEX.exec(tabUrl);
 };
 
 // https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
@@ -276,4 +279,11 @@ export const clone = (obj) => {
     ...JSON.parse(JSON.stringify(obj)),
     ...(parsedError && { error: parsedError })
   };
+};
+
+export const createGithubUrl = (owner, repo, type, branch, nodePath) => {
+  return url.resolve(
+    'https://github.com/',
+    path.join(owner, repo, type, branch, nodePath || '')
+  );
 };
