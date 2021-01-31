@@ -12,6 +12,8 @@ import {
 
 import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
 import CenterContainer from '../components/Containers/Center';
+import IconWithBadge from '../components/Icon/IconWithBadge';
+import { infoColor, sidebarActiveIconColor } from '../constants/theme';
 
 const LoadingPage = ({ error }) => {
   if (error) {
@@ -69,7 +71,14 @@ export const sidebarRoutes = [
   },
   {
     pathname: '/notifications',
-    icon: <BellIcon size={22} />,
+    icon: (
+      <IconWithBadge
+        Icon={<BellIcon size={22} />}
+        subtextContext="numOfNotifications"
+        badgeColor={infoColor}
+        fontColor={sidebarActiveIconColor}
+      />
+    ),
     title: 'Notifications'
   },
   {

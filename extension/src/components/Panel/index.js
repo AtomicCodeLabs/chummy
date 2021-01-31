@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import StyledPanel from './style';
 import {
-  backgroundColor,
   lightTextColor,
-  textColor
+  textColor,
+  backgroundColor
 } from '../../constants/theme';
 
 const Panel = ({
@@ -17,6 +17,7 @@ const Panel = ({
   onClick,
   rightPanel,
   flag,
+  borderLeftColor,
   backgroundColor: bgColor,
   closable,
   borderRadius,
@@ -27,10 +28,11 @@ const Panel = ({
     <StyledPanel.Container
       onClick={onClick}
       highlightOnHover={highlightOnHover}
-      bgColor={bgColor}
+      borderLeftColor={borderLeftColor}
       borderRadius={borderRadius}
       fontColor={titlefontColor}
       evenPadding={evenPadding}
+      bgColor={bgColor}
     >
       <StyledPanel.LeftPanel>
         {title && (
@@ -67,6 +69,7 @@ Panel.propTypes = {
   onClick: PropTypes.func,
   rightPanel: PropTypes.node,
   flag: PropTypes.node,
+  borderLeftColor: PropTypes.func,
   backgroundColor: PropTypes.func,
   closable: PropTypes.bool,
   borderRadius: PropTypes.string,
@@ -84,6 +87,7 @@ Panel.defaultProps = {
   onClick: null,
   rightPanel: null, // Contents of right panel if a vertical split is wanted
   flag: null, // Flag next to title,
+  borderLeftColor: null,
   backgroundColor,
   closable: false, // Has x icon on top right
   borderRadius: '0',
