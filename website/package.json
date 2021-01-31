@@ -48,10 +48,12 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
+    "stripe": "^8.131.1",
     "styled-components": "^5.2.1",
     "styled-theming": "^2.2.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.2.4",
     "commitizen": "^4.2.2",
     "commitlint": "^11.0.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -59,10 +61,13 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
+    "gatsby-plugin-postcss": "^3.6.0",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
+    "postcss": "^8.2.4",
     "prettier": "2.2.1",
-    "standard-version": "^9.0.0"
+    "standard-version": "^9.0.0",
+    "tailwindcss": "^2.0.2"
   },
   "keywords": [
     "gatsby"
