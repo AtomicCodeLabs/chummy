@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { toJS } from 'mobx';
 import { checkCurrentUser } from '../../hooks/dao';
 import { useUiStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
@@ -23,8 +22,6 @@ export default observer(() => {
   } = useUiStore();
   const hasNotifications = !!(!notifications || notifications.size);
 
-  console.log('notifications', toJS(notifications));
-
   return (
     <Scrollbars>
       <PanelDescriptionContainer>
@@ -40,19 +37,21 @@ export default observer(() => {
       </PanelDescriptionContainer>
       {hasNotifications && (
         <PanelsContainer>
-          {Array.from(notifications).map(([, notification]) => (
-            <React.Fragment key={notification.id}>
-              <Panel
-                title={notification.title}
-                description={notification.message}
-                borderLeftColor={notificationTypeToColor[notification.type]}
-                onClick={() => {
-                  removeNotification(notification);
-                }}
-              />
-              <PanelDivider2 />
-            </React.Fragment>
-          ))}
+          {Array.from(notifications)
+            .reverse()
+            .map(([, notification]) => (
+              <React.Fragment key={notification.id}>
+                <Panel
+                  title={notification.title}
+                  description={notification.message}
+                  borderLeftColor={notificationTypeToColor[notification.type]}
+                  onClick={() => {
+                    removeNotification(notification);
+                  }}
+                />
+                <PanelDivider2 />
+              </React.Fragment>
+            ))}
         </PanelsContainer>
       )}
     </Scrollbars>

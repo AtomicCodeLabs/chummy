@@ -22,6 +22,37 @@ export const nodeHeight = theme('spacing', {
   cozy: `calc(0.8rem + (2 * 0.7rem))`,
   comfortable: `calc(0.83rem + (2 * 0.9rem))`
 });
+
+export const nodePaddingY = theme('spacing', {
+  compact: css`
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  `,
+  cozy: css`
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  `,
+  comfortable: css`
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  `
+});
+
+export const nodePaddingX = theme('spacing', {
+  compact: css`
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  `,
+  cozy: css`
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  `,
+  comfortable: css`
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  `
+});
+
 export const nodePadding = theme('spacing', {
   compact: css`
     padding-top: 0.5rem;
@@ -125,6 +156,8 @@ export const RightIconContainer = styled.div`
 
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
   svg {
     fill: ${({ iconFill, ...props }) =>

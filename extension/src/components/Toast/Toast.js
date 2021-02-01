@@ -9,8 +9,8 @@ import {
   notificationTypeToColor
 } from '../../constants/theme';
 import {
-  nodePadding,
-  nodeHeight,
+  nodePaddingY,
+  nodePaddingX,
   RightIconContainer,
   Icon,
   MiddleSpacer
@@ -22,8 +22,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  ${nodePadding};
-  height: ${nodeHeight};
+  ${nodePaddingX};
+  padding-top: 0;
+  padding-bottom: 0;
+  z-index: 10;
 
   background-color: ${({ type, ...props }) =>
     notificationTypeToColor[type](props)};
@@ -34,6 +36,7 @@ const Container = styled.div`
   .message {
     font-size: ${fontSize};
     color: ${contrastTextColor};
+    ${nodePaddingY};
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

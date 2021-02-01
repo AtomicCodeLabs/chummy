@@ -112,7 +112,7 @@ export default class UiStore implements IUiStore {
   }
 
   @action.bound addPendingRequest = (pendingState: SectionName): void => {
-    const pastCount = this.pendingRequestCount.get(pendingState);
+    const pastCount = this.pendingRequestCount.get(pendingState) || 0;
     this.pendingRequestCount.set(pendingState, pastCount + 1);
   };
 
