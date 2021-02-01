@@ -6,8 +6,8 @@ import { render } from 'react-dom';
 
 import App from '../pages/App';
 import ThemeProvider from '../config/theme/context';
-import RootStoreContext from '../config/store/context.ts';
-import rootStore from '../config/store/root.store.ts';
+import RootStoreContext from '../config/store/context';
+import rootStore from '../config/store/root.store';
 import DAOProvider from '../config/dao';
 import OctoProvider from '../config/octokit';
 

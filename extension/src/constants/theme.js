@@ -85,9 +85,9 @@ export const titleMarginSize = theme('spacing', {
 });
 
 export const subTitleFontSize = theme('spacing', {
-  compact: '1.0rem',
-  cozy: '1.2rem',
-  comfortable: '1.3rem'
+  compact: '0.9rem',
+  cozy: '1.1rem',
+  comfortable: '1.2rem'
 });
 
 export const subTitleMarginSize = theme('spacing', {

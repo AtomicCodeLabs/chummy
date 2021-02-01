@@ -28,7 +28,6 @@ export const P = styled.p`
 `;
 
 export const Title = styled.p`
-  font-family: 'Inter';
   font-size: ${titleFontSize};
   font-weight: 600;
   margin: ${titleMarginSize};
