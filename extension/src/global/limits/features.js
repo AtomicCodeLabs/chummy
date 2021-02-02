@@ -1,4 +1,4 @@
-import { SETTING_TYPE, ACCOUNT_TYPE, SPACING } from '../constants.ts';
+import { SETTING_TYPE, ACCOUNT_TYPE, SPACING } from '../constants';
 
 const FeatureLimits = {
   [SETTING_TYPE.Theme]: {

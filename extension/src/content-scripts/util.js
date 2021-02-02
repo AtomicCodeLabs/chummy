@@ -1,4 +1,4 @@
-import { DEFAULT_BRANCH } from '../global/constants.ts';
+import { DEFAULT_BRANCH } from '../global/constants';
 
 const GITHUB_REGEX = new RegExp(/^(http|https):\/\/github\.com(\/[^/]+){2,}$/);
 
