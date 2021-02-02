@@ -1,11 +1,11 @@
 import { THEME_NAMES } from '../../config/theme/selector';
-import { SIDEBAR_SIDE } from '../../global/constants.ts';
+import { SIDEBAR_SIDE } from '../../global/constants';
 import {
   ALL_TIERS,
   NOT_COMMUNITY,
   ALL_BROWSERS,
   CHROMIUM
-} from '../../global/limits/constants.ts';
+} from '../../global/limits/constants';
 import { kebabify } from '../../utils';
 
 const COMMUNITY_THEMES = ['vanilla-light'];

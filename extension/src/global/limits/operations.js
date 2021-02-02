@@ -1,4 +1,4 @@
-import { THROTTLING_OPERATION, ACCOUNT_TYPE } from '../constants.ts';
+import { THROTTLING_OPERATION, ACCOUNT_TYPE } from '../constants';
 
 const OperationLimits = {
   [THROTTLING_OPERATION.CreateBookmark]: {

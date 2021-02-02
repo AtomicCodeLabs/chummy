@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { THROTTLING_OPERATION, ACCOUNT_TYPE } from '../global/constants.ts';
+import { THROTTLING_OPERATION, ACCOUNT_TYPE } from '../global/constants';
 import OperationLimits from '../global/limits/operations';
 
 export const isAllowed = (user, operation) => {
