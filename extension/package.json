@@ -12,7 +12,6 @@
     "dev:web": "cross-env NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.web.config.js",
     "dev:moz": "cross-env NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.moz.config.js",
     "gamma:web": "yarn checkout:dev && amplify env checkout gamma && cross-env NODE_ENV=gamma webpack --mode=production --config ./webpack/gamma.web.config.js && yarn checkout:dev",
-    "gamma:web:cloud": "yarn checkout:dev && amplify env checkout gamma && cross-env NODE_ENV=gamma webpack --mode=production --config ./webpack/gamma.web.cloud.config.js && yarn checkout:dev && ./scripts/localpublish.sh",
     "gamma:moz": "yarn checkout:dev && amplify env checkout gamma && cross-env NODE_ENV=gamma webpack --mode=production --config ./webpack/gamma.moz.config.js && yarn checkout:dev",
     "build:web": "cross-env NODE_ENV=production webpack --mode=production --config ./webpack/prod.web.config.js",
     "build:moz": "cross-env NODE_ENV=production webpack --mode=production --config ./webpack/prod.moz.config.js",
@@ -38,7 +37,6 @@
     "promote:to-gamma": "./scripts/promote.gamma.sh",
     "promote:to-prod": "./scripts/promote.prod.sh",
     "promote:all": "yarn promote:to-dev && yarn promote:to-gamma && yarn promote:to-prod",
-    "ci:prepublish": "./scripts/prepublish.sh $STAGE",
     "ci:publish": "./scripts/publish.sh $STAGE",
     "docker:build": "docker build -f ../Dockerfile.chummy-builder -t alexkim205/ci:chummy-builder .",
     "docker:push": "yarn docker:build && docker push alexkim205/ci:chummy-builder"
