@@ -31,7 +31,6 @@ phases:
       - yarn build:web
   post_build:
     commands:
-      - yarn ci:prepublish
       - yarn cy:run:moz
       - yarn cy:run:web
       - yarn ci:publish
