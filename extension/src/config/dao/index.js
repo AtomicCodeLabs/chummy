@@ -109,7 +109,6 @@ class DAO {
       };
       log.toBg('Get current user -> bg', request);
       const response = await browser.runtime.sendMessage(request);
-      log.debug('Response', response);
       this.handleUserResponse(response);
     } catch (error) {
       log.error('Error getting current user', error);

@@ -56,20 +56,20 @@ export default observer(() => {
   useEffect(() => {
     const removeListener = onActiveTabChange(
       ({ owner, repo, tab, isGithubRepoUrl, windowId }) => {
-        if (isGithubRepoUrl) {
-          setCurrentWindowTab(windowId, tab.tabId);
-          // Only set current branch if tab update is repo subpage
-          const newCurrentBranch = {
-            repo: { owner, name: repo, type: 'tree' },
-            name: tab.name,
-            type: 'tree',
-            tabId: tab.tabId,
-            nodeName: tab.nodeName
-          };
-          setCurrentBranch(newCurrentBranch);
-        } else {
-          setCurrentBranch(null);
+        // Ignore if not github repo url
+        if (!isGithubRepoUrl) {
+          return;
         }
+        setCurrentWindowTab(windowId, tab.tabId);
+        // Only set current branch if tab update is repo subpage
+        const newCurrentBranch = {
+          repo: { owner, name: repo, type: 'tree' },
+          name: tab.name,
+          type: 'tree',
+          tabId: tab.tabId,
+          nodeName: tab.nodeName
+        };
+        setCurrentBranch(newCurrentBranch);
       }
     );
     return removeListener;

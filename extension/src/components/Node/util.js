@@ -57,7 +57,6 @@ export const closeTab = async (tabId) => {
     };
     log.toBg('Close tab request -> bg', request);
     const response = await browser.runtime.sendMessage(request);
-    log.debug('Response', response);
 
     if (response?.complete) {
       return true;

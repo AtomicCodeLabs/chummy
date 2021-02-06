@@ -1,7 +1,11 @@
 /* eslint-disable consistent-return */
 import browser from 'webextension-polyfill';
 import log from '../config/log';
-import { resolveInjectJSFilenames, createGithubUrl } from './util';
+import {
+  resolveInjectJSFilenames,
+  createGithubUrl,
+  onTabFinishPending
+} from './util';
 import {
   getParsedOpenRepositories,
   sendActiveTabChanged
@@ -22,7 +26,14 @@ const redirectTab = async (request) => {
           url: createGithubUrl(owner, repo, type, branch, nodePath),
           active: true
         };
-        await browser.tabs.create(newTab);
+
+        const tab = await browser.tabs.create(newTab);
+
+        // Create a listener for when tab finishes pending;
+        onTabFinishPending(tab.id, (finishedTab) => {
+          // send change active tab event
+          sendActiveTabChanged(finishedTab);
+        });
       } catch (error) {
         log.error('Error creating tab', error);
       }
@@ -51,6 +62,16 @@ const redirectTab = async (request) => {
             response
           );
         });
+        // send change active tab event
+        const tab = await browser.tabs.get(window.tabId);
+
+        // Create a listener for when tab finishes pending;
+        onTabFinishPending(tab.id, (finishedTab) => {
+          // send change active tab event
+          sendActiveTabChanged(finishedTab);
+        });
+
+        sendActiveTabChanged(tab);
       } catch (error) {
         log.error('Error redirecting active tab', error);
       }
@@ -70,7 +91,13 @@ const redirectTab = async (request) => {
         url: redirectUrl,
         active: true
       };
-      await browser.tabs.create(newTab);
+      const tab = await browser.tabs.create(newTab);
+
+      // Create a listener for when tab finishes pending;
+      onTabFinishPending(tab.id, (finishedTab) => {
+        // send change active tab event
+        sendActiveTabChanged(finishedTab);
+      });
     } catch (error) {
       log.warn('Error redirecting to url', error);
     }
@@ -103,8 +130,6 @@ const redirectTab = async (request) => {
             )
         )
       });
-
-      log.debug('REDIRECT TO SESSION', session);
     } catch (error) {
       log.warn('Error redirecting to url', error);
     }

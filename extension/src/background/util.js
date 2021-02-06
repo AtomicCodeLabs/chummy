@@ -9,6 +9,7 @@ import log from '../config/log';
 import { EXTENSION_WIDTH, SIDE_TAB } from '../constants/sizes';
 import { GITHUB_REGEX, NO_WINDOW_EXTENSION_ID } from './constants';
 import { SIDEBAR_SIDE } from '../global/constants';
+import { isChromium } from '../config/browser';
 
 export const isExtensionOpen = async () => {
   try {
@@ -202,6 +203,17 @@ export const isNumeric = (str) => {
   ); // ...and ensure strings of whitespace fail
 };
 
+export const isBlank = (o) => {
+  if (!o) return true;
+  if (o.constructor === Object) {
+    return Object.entries(o).length === 0;
+  }
+  if (o.constructor === String) {
+    return !o || o.trim().length === 0;
+  }
+  return false;
+};
+
 const decodePayload = (jwtToken) => {
   const payload = jwtToken.split('.')[1];
   try {
@@ -286,4 +298,26 @@ export const createGithubUrl = (owner, repo, type, branch, nodePath) => {
     'https://github.com/',
     path.join(owner, repo, type, branch, nodePath || '')
   );
+};
+
+export const onTabFinishPending = (tabId, callback) => {
+  function listener(_tabId, _changeInfo, _tab) {
+    if (_tabId === tabId && _tab.status === 'complete') {
+      callback(_tab);
+      browser.tabs.onUpdated.removeListener(listener);
+    }
+  }
+
+  // Initialize listener
+  // chromium doesn't support filters https://developer.chrome.com/docs/extensions/reference/tabs/#event-onUpdated
+  if (isChromium) {
+    browser.tabs.onUpdated.addListener(listener);
+  } else {
+    browser.tabs.onUpdated.addListener(listener, { tabId });
+  }
+
+  // Cleanup listener if not resolved in 1 minute
+  setTimeout(() => {
+    browser.tabs.onUpdated.removeListener(listener);
+  }, 60_000);
 };

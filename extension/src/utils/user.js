@@ -27,7 +27,6 @@ export const addBookmark = async (bookmark) => {
   };
   log.toBg('Create bookmark request -> bg', request);
   const response = await browser.runtime.sendMessage(request);
-  log.debug('RESPONSE', response);
   return handleResponse(response);
 };
 

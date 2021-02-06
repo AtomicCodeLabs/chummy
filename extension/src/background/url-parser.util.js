@@ -8,10 +8,10 @@ import {
   generate_ISSUE_TITLE_REGEX,
   generate_PULL_TITLE_REGEX
 } from './constants';
-import { SUBPAGES, DEFAULT_BRANCH } from '../global/constants';
+import { SUBPAGES, GLOBAL_SUBPAGES, DEFAULT_BRANCH } from '../global/constants';
 import { UserError } from '../global/errors';
 import log from '../config/log';
-import { isGithubRepoUrl, isNumeric } from './util';
+import { isGithubRepoUrl, isNumeric, isBlank } from './util';
 
 export default class UrlParser {
   static async build(
@@ -40,17 +40,19 @@ export default class UrlParser {
       newUrl.owner = newUrl.parsedRepoInfo[0];
       newUrl.repo = newUrl.parsedRepoInfo[1];
 
-      // Get default branch name
-      const {
-        defaultBranch,
-        cachedRepoToDefaultBranch: newCache
-      } = await UrlParser.getDefaultBranch(
-        newUrl.owner,
-        newUrl.repo,
-        cachedRepoToDefaultBranch
-      );
-      newUrl.defaultBranch = defaultBranch;
-      newUrl.cachedRepoToDefaultBranch = newCache;
+      if (newUrl.subpage === SUBPAGES.Repository) {
+        // Get default branch name
+        const {
+          defaultBranch,
+          cachedRepoToDefaultBranch: newCache
+        } = await UrlParser.getDefaultBranch(
+          newUrl.owner,
+          newUrl.repo,
+          cachedRepoToDefaultBranch
+        );
+        newUrl.defaultBranch = defaultBranch;
+        newUrl.cachedRepoToDefaultBranch = newCache;
+      }
     }
 
     // Payload
@@ -148,6 +150,14 @@ export default class UrlParser {
   };
 
   #getSubpage = () => {
+    // Handle repository specific subpages first
+    if (Object.values(SUBPAGES).includes(this.parsedRepoInfo[2])) {
+      return this.parsedRepoInfo[2];
+    }
+    // Handle github global subpages first (like user settings)
+    if (Object.values(GLOBAL_SUBPAGES).includes(this.parsedRepoInfo[0])) {
+      return this.parsedRepoInfo[0];
+    }
     // Handle repository subpage
     if (
       this.parsedRepoInfo.length === 2 ||
@@ -155,13 +165,6 @@ export default class UrlParser {
         ['tree', 'blob'].includes(this.parsedRepoInfo[2]))
     ) {
       return SUBPAGES.Repository;
-    }
-    // Handle other possible subpages
-    if (
-      this.parsedRepoInfo.length >= 3 &&
-      Object.values(SUBPAGES).includes(this.parsedRepoInfo[2])
-    ) {
-      return this.parsedRepoInfo[2];
     }
     // For some reason, github doesn't pluralize `pull` when on a specific
     // pull request page, like it does with `issues`. Catch this exception
@@ -367,12 +370,19 @@ export const sendActiveTabChanged = async (tab) => {
 
   const parsed = (
     await UrlParser.build(
-      tab.url,
+      isBlank(tab.url) ? tab.pendingUrl : tab.url, // if tab is currently pending
       tab.title,
       tab.id,
       globallyCachedDefaultBranches
     )
   ).parse();
+
+  // If it's not a github repo, don't send active tab changed event
+  if (Object.keys(parsed).length === 0) {
+    log.debug('Not a github url');
+    return;
+  }
+
   const response = {
     action: 'active-tab-changed',
     payload: {
