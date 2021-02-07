@@ -9,9 +9,10 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useStaticQuery, graphql } from 'gatsby';
 
-import initializeAmplify from '../config/amplify';
-import Header from './header';
-import './layout.css';
+import initializeAmplify from '../../config/amplify';
+import Navbar from './navbar';
+import SplashSection from '../sections/SplashSection';
+import ConstrainedContainer from '../sections/ConstrainedContainer';
 
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -31,14 +32,12 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`
-        }}
-      >
+      <SplashSection>
+        <ConstrainedContainer>
+          <Navbar siteTitle={data.site.siteMetadata?.title || `Title`} />
+        </ConstrainedContainer>
+      </SplashSection>
+      <ConstrainedContainer>
         <main>{children}</main>
         <footer
           style={{
@@ -49,7 +48,7 @@ const Layout = ({ children }) => {
           {` `}
           <a href="https://www.gatsbyjs.com">Gatsby</a>
         </footer>
-      </div>
+      </ConstrainedContainer>
     </>
   );
 };
