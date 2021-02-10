@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Link } from 'gatsby';
 import { Auth } from 'aws-amplify';
 
-import Layout from '../components/layout';
-import SEO from '../components/seo';
+import Link from '../../components/Link';
+import Layout from '../../components/layout';
+import SEO from '../../components/seo';
 
 /*
  * This page is what we're redirected to after a successful signup.
@@ -49,12 +49,6 @@ const Account = () => {
       window.removeEventListener('message', emitToContentScript);
     };
   }, []);
-
-  // const getUser = () => {
-  //   return Auth.currentAuthenticatedUser()
-  //     .then((userData) => userData)
-  //     .catch(() => console.log('Not signed in'));
-  // };
 
   return (
     <Layout>

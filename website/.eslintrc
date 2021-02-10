@@ -12,7 +12,9 @@
   },
   "parser": "babel-eslint",
   "rules": {
+    "react/jsx-props-no-spreading": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "react/prop-types": 0,
     "consistent-return": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-console": "off",
