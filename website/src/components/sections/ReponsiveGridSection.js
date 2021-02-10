@@ -17,7 +17,7 @@ const ResponsiveGridSection = ({
   const renderBody = () => (
     <div
       className={clsx(
-        'grid grid-cols-3 md:grid-cols-2 xs:grid-cols-1',
+        'grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1',
         className
       )}
     >

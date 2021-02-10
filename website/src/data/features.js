@@ -7,8 +7,9 @@ import {
   CgDarkMode,
   CgUndo,
   CgStack,
-  CgNotes,
-  CgGitBranch
+  // CgNotes,
+  // CgGitBranch,
+  CgTimer
 } from 'react-icons/cg';
 
 export const features = [
@@ -85,15 +86,21 @@ export const extraFeatures = [
       "Don't get lost in your windows! Always keep the extension visible and attached to your main window, wherever you click."
   },
   {
-    Icon: <CgNotes />,
-    title: 'Scratchpad',
+    Icon: <CgTimer />,
+    title: 'Optimized Speed',
     description:
-      'Need to stay organized? Take notes anywhere with the integrated scratchpad tool and save them for later.'
-  },
-  {
-    Icon: <CgGitBranch />,
-    title: 'Code Review',
-    description:
-      'Manage pull requests, track file changes, comments, approvals, and everything code review related from one place!'
+      'Browse quickly. Files are lazy loaded and cached at the folder level so that browsing even the largest repositories is a breeze!'
   }
+  // {
+  //   Icon: <CgNotes />,
+  //   title: 'Scratchpad',
+  //   description:
+  //     'Need to stay organized? Take notes anywhere with the integrated scratchpad tool and save them for later.'
+  // },
+  // {
+  //   Icon: <CgGitBranch />,
+  //   title: 'Code Review',
+  //   description:
+  //     'Manage pull requests, track file changes, comments, approvals, and everything code review related from one place!'
+  // }
 ];

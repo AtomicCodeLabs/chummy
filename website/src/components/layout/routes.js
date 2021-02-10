@@ -4,11 +4,15 @@ export default [
     pathname: '/features'
   },
   {
+    name: 'Community',
+    pathname: 'https://github.com/alexkim205/chummy'
+  },
+  {
     name: 'Pricing',
     pathname: '/pricing'
   },
   {
-    name: 'Contributing',
-    pathname: '/contributing'
+    name: 'Changelog',
+    pathname: '/changelog'
   }
 ];

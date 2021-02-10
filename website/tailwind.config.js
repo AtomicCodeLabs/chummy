@@ -8,16 +8,17 @@ module.exports = {
       '2xl': { max: '1535px' },
       xl: { max: '1279px' },
       lg: { max: '1023px' },
-      md: { max: '767px' },
+      'md-lg': { max: '888px' },
+      md: { max: '777px' },
       sm: { max: '640px' },
       xs: { max: '550px' }
     },
     fontSize: {
       ...defaultTheme.fontSize,
-      xxs: '.75rem',
-      xs: '.8rem',
-      sm: '.9rem',
-      base: '1rem'
+      xxs: ['.75rem', '1rem'],
+      xs: ['.8rem', '1rem'],
+      sm: ['.9rem', '1.25rem'],
+      base: ['1rem', '1.5rem']
     },
     fontFamily: {
       sans: ['Inter', ...defaultTheme.fontFamily.sans],
@@ -39,11 +40,20 @@ module.exports = {
       }),
       margin: {
         full: '100%'
+      },
+      inset: {
+        '-0.25': '-0.0625rem'
       }
     }
   },
   variants: {
-    extend: {}
+    extend: {
+      inset: ['hover'],
+      borderWidth: ['hover'],
+      translate: ['hover'],
+      ringWidth: ['hover'],
+      ringColor: ['hover']
+    }
   },
   plugins: []
 };

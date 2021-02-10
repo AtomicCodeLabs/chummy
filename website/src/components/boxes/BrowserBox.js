@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { useStaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 
@@ -10,7 +11,7 @@ const browsers = [
   { name: 'safari' }
 ];
 
-const BrowserBox = () => {
+const BrowserBox = ({ className }) => {
   const data = useStaticQuery(graphql`
     query {
       chrome: file(relativePath: { eq: "browsers/chrome.png" }) {
@@ -32,13 +33,13 @@ const BrowserBox = () => {
   `);
 
   return (
-    <div className="inline-flex">
+    <div className={clsx('inline-flex', className)}>
       {browsers.map(({ name }) => (
         <Img
           key={name}
           fluid={data[name].childImageSharp.fluid}
           alt={name}
-          className="w-8 h-8 mr-3"
+          className="w-8 h-8 mx-1.5"
         />
       ))}
     </div>

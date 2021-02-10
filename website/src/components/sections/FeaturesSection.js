@@ -42,11 +42,14 @@ const FeaturesSection = () => {
     <>
       <ColumnSection
         title={
-          <>
-            Github can be difficult to navigate. <br />
-            Chummy comes packed with features that make it easy.
-          </>
+          <h2>
+            Github can be <span className="italic text-red-500">difficult</span>{' '}
+            to navigate. <br />
+            Chummy comes packed with features that make it{' '}
+            <span className="italic text-green-500">easy</span>.
+          </h2>
         }
+        className="sm:mt-12"
       >
         {features.map(({ image, image2, features: _features }) => (
           <FeatureBox
@@ -62,8 +65,6 @@ const FeaturesSection = () => {
                 <Img
                   fluid={data[image2]?.childImageSharp?.fluid}
                   alt={_features[0].title}
-                  style={{ height: '100%', width: '100%' }}
-                  imgStyle={{ objectFit: 'contain', objectPosition: 'left' }}
                 />
               )
             }
@@ -76,7 +77,7 @@ const FeaturesSection = () => {
                   Icon={Icon}
                   title={title}
                   description={description}
-                  className="-ml-7 sm:-ml-6 -mr-7 sm:-mr-6"
+                  className="-ml-7 md:-ml-6 -mr-7 md:-mr-6"
                 />
               ))}
           </FeatureBox>
@@ -91,6 +92,7 @@ const FeaturesSection = () => {
               Icon={Icon}
               title={title}
               description={description}
+              className="sm:mx-auto"
             />
           ))}
         </ResponsiveGridSection>

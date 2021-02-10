@@ -16,11 +16,15 @@
     @apply mt-5 mb-4 text-4xl md:text-3xl sm:text-2xl;
   }
   h3 {
-    @apply mt-3 mb-2 text-xl md:text-xl sm:text-lg;
+    @apply mt-3 mb-2 text-2xl md:text-xl sm:text-lg;
+  }
+  h4 {
+    @apply mt-3 mb-2 text-xl md:text-lg sm:text-lg;
   }
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     @apply font-bold;
   }
   a {
@@ -32,5 +36,5 @@
 @tailwind utilities;
 
 #gatsby-focus-wrapper {
-  overflow: hidden;
+  @apply text-gray-900;
 }
