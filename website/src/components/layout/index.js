@@ -1,20 +1,18 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.com/docs/use-static-query/
- */
-
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useStaticQuery, graphql } from 'gatsby';
 
 import initializeAmplify from '../../config/amplify';
-import Navbar from './navbar';
-import SplashSection from '../sections/SplashSection';
+import Navbar from './Navbar';
+import Footer from './Footer';
 import ConstrainedContainer from '../sections/ConstrainedContainer';
 
-const Layout = ({ children }) => {
+const Layout = ({
+  children,
+  SplashSection = <></>,
+  splashSectionClassName = ''
+}) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -32,23 +30,19 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <SplashSection>
-        <ConstrainedContainer>
-          <Navbar siteTitle={data.site.siteMetadata?.title || `Title`} />
-        </ConstrainedContainer>
-      </SplashSection>
-      <ConstrainedContainer>
+      <Navbar siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <div
+        className={clsx(
+          'flex flex-col bg-gradient-to-b from-green-200 to-green-50',
+          splashSectionClassName
+        )}
+      >
+        {SplashSection}
+      </div>
+      <ConstrainedContainer className="p-14 md:p-12 sm:p-6">
         <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`
-          }}
-        >
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
       </ConstrainedContainer>
+      <Footer />
     </>
   );
 };

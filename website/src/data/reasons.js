@@ -19,7 +19,7 @@ const reasons = [
     Icon: <CgArrowsExchange />,
     title: 'Cross Browser Compatible',
     description:
-      'Available on Chrome and Firefox. Stay tuned for support on Safari, Opera, and Edge!'
+      'Available on Chrome, Firefox, Opera, Edge and all Chromium-based browsers. Support Safari coming to you soon!'
   },
   {
     Icon: <CgExtension />,
@@ -31,7 +31,7 @@ const reasons = [
     Icon: <CgBandAid />,
     title: 'Zero Hassle Cancellation',
     description:
-      'Unsatisfied with your premium or enterprise account? We’ll cancel your subscription, no questions asked. '
+      "Unsatisfied with your premium account? We’ll cancel your subscription, no questions asked. We're here to make your life easier, not harder."
   },
   {
     Icon: <CgCheckO />,
