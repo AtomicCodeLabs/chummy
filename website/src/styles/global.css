@@ -1,3 +1,40 @@
+/* Mono */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Sans */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+
 @tailwind base;
+
+@layer base {
+  p {
+    @apply text-base md:text-sm;
+  }
+  h1 {
+    @apply mt-6 mb-5 text-5xl md:text-4xl sm:text-3xl;
+  }
+  h2 {
+    @apply mt-5 mb-4 text-4xl md:text-3xl sm:text-2xl;
+  }
+  h3 {
+    @apply mt-3 mb-2 text-2xl md:text-xl sm:text-lg;
+  }
+  h4 {
+    @apply mt-3 mb-2 text-xl md:text-lg sm:text-lg;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold;
+  }
+  a {
+    @apply text-blue-600;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
+
+#gatsby-focus-wrapper {
+  @apply text-gray-900;
+}
