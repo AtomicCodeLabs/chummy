@@ -12,7 +12,7 @@ export default ({
     role="button"
     tabIndex={0}
     className={clsx(
-      'relative flex flex-row max-w-sm mx-auto text-center text-gray-500 bg-gray-300 rounded-full cursor-pointer select-none',
+      'relative flex flex-row max-w-sm mx-auto text-center text-gray-500 bg-gray-300 rounded-full cursor-pointer select-none focus:outline-none',
       className
     )}
     onClick={toggle}
