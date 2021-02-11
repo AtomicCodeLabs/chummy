@@ -1,12 +1,12 @@
 import React from 'react';
 import { CgDice1, CgDice2, CgDice3 } from 'react-icons/cg';
 
-export default [
-  {
+export default {
+  Community: {
     title: 'Community',
+    nicknameId: { monthly: 'Community Free', yearly: 'Community Free' },
     description: 'All the core features to get you started',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
+    unit: '',
     Icon: <CgDice1 />,
     features: [
       'Core features:',
@@ -17,14 +17,18 @@ export default [
       'Cozy spacing',
       'Private repositories',
       'Bookmarks search',
-      'Bookmark up to 15 files'
+      'Bookmark up to 15 files',
+      'Account portal'
     ]
   },
-  {
+  Professional: {
     title: 'Professional',
+    nicknameId: {
+      monthly: 'Professional Monthly',
+      yearly: 'Professional Yearly'
+    },
     description: 'Unlimited everything + more features',
-    monthlyPrice: 12,
-    yearlyPrice: 9,
+    unit: '/mo',
     Icon: <CgDice2 />,
     features: [
       'Everything in Community, plus:',
@@ -36,17 +40,24 @@ export default [
       'Priority Support'
     ]
   },
-  {
+  Enterprise: {
     title: 'Enterprise',
-    description: 'Professional for professionals',
-    monthlyPrice: 12,
-    yearlyPrice: 9,
+    nicknameId: {
+      monthly: 'Enterprise Monthly',
+      yearly: 'Enterprise Yearly'
+    },
+    metadataId: {
+      monthly: 'monthly_unit_amount',
+      yearly: 'yearly_unit_amount'
+    },
+    description: 'Professional licenses for teams of 5+',
+    unit: '/mo/seat',
     Icon: <CgDice3 />,
     features: [
       'Everything in Professional, plus:',
-      'License management',
+      'License management portal for teams',
       'Github Enterprise integration',
       'Priority Support'
     ]
   }
-];
+};
