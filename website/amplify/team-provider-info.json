@@ -32,6 +32,9 @@
     "categories": {
       "auth": {
         "chummy9948bcd5": {}
+      },
+      "function": {
+        "chummyPostAuthTrigger": {}
       }
     }
   },
