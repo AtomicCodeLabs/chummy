@@ -6,6 +6,10 @@ const packageInfo = JSON.parse(
   )
 );
 
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`
+});
+
 module.exports = {
   siteMetadata: {
     title: packageInfo.name,
@@ -35,6 +39,14 @@ module.exports = {
         icon: `src/images/chummy256.png` // This path is relative to the root of the site.
       }
     },
-    { resolve: 'gatsby-plugin-postcss' }
+    { resolve: 'gatsby-plugin-postcss' },
+    {
+      resolve: `gatsby-source-stripe`,
+      options: {
+        objects: ['Price'],
+        secretKey: process.env.STRIPE_SECRET_KEY,
+        downloadFiles: false
+      }
+    }
   ]
 };
