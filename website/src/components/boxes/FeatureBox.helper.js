@@ -29,7 +29,7 @@ export const ImageOneAndTwo = ({ ImageOne, ImageTwo }) => {
         >
           <div
             className="relative h-full overflow-hidden shadow-xl-center rounded-l-xl"
-            style={{ width: maskWidth }}
+            style={{ width: maskWidth || 500 }}
           >
             {cloneElement(ImageTwo, {
               className: 'absolute inset-y-0 l-0 w-screen',
