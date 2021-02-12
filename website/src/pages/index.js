@@ -55,11 +55,7 @@ const IndexPage = () => {
               </p>
               <div className="inline-flex flex-col justify-center md:flex-col">
                 <div className="flex h-20 mx-auto">
-                  <ActionButton
-                    to="signin/"
-                    state={{ fromWebsite: true }}
-                    className="my-auto"
-                  >
+                  <ActionButton to="/signin" className="my-auto">
                     Get Started for Free
                   </ActionButton>
                 </div>
