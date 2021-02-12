@@ -1,13 +1,20 @@
-type User {
+type User @aws_api_key @aws_cognito_user_pools {
   id: ID!
   accountType: String!
-  bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection
+  metadata: UserMetadata
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   owner: String
+  bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools
 }
 
-type Bookmark {
+type UserMetadata @aws_api_key @aws_cognito_user_pools {
+  cognitoUsername: String
+  cognitoUserPoolId: String
+  stripeId: String
+}
+
+type Bookmark @aws_api_key @aws_cognito_user_pools {
   id: ID!
   userId: ID!
   name: String!
@@ -20,12 +27,18 @@ type Bookmark {
   owner: String
 }
 
+input UserMetadataInput {
+  cognitoUsername: String
+  cognitoUserPoolId: String
+  stripeId: String
+}
+
 enum ModelSortDirection {
   ASC
   DESC
 }
 
-type ModelUserConnection {
+type ModelUserConnection @aws_api_key @aws_cognito_user_pools {
   items: [User]
   nextToken: String
 }
@@ -125,20 +138,22 @@ enum ModelAttributeTypes {
 }
 
 type Query {
-  getUser(id: ID!): User
-  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
-  getBookmark(id: ID!): Bookmark
-  listBookmarks(filter: ModelBookmarkFilterInput, limit: Int, nextToken: String): ModelBookmarkConnection
+  getUser(id: ID!): User @aws_api_key @aws_cognito_user_pools
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection @aws_api_key @aws_cognito_user_pools
+  getBookmark(id: ID!): Bookmark @aws_api_key @aws_cognito_user_pools
+  listBookmarks(filter: ModelBookmarkFilterInput, limit: Int, nextToken: String): ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools
 }
 
 input CreateUserInput {
   id: ID
   accountType: String!
+  metadata: UserMetadataInput
 }
 
 input UpdateUserInput {
   id: ID!
   accountType: String
+  metadata: UserMetadataInput
 }
 
 input DeleteUserInput {
@@ -146,12 +161,12 @@ input DeleteUserInput {
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
-  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
-  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
-  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
-  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
-  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
+  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
+  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
 }
 
 input ModelUserConditionInput {
@@ -162,15 +177,15 @@ input ModelUserConditionInput {
 }
 
 type Subscription {
-  onCreateUser(owner: String!): User @aws_subscribe(mutations: ["createUser"])
-  onUpdateUser(owner: String!): User @aws_subscribe(mutations: ["updateUser"])
-  onDeleteUser(owner: String!): User @aws_subscribe(mutations: ["deleteUser"])
-  onCreateBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["createBookmark"])
-  onUpdateBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["updateBookmark"])
-  onDeleteBookmark(owner: String!): Bookmark @aws_subscribe(mutations: ["deleteBookmark"])
+  onCreateUser(owner: String): User @aws_subscribe(mutations: ["createUser"]) @aws_api_key @aws_cognito_user_pools
+  onUpdateUser(owner: String): User @aws_subscribe(mutations: ["updateUser"]) @aws_api_key @aws_cognito_user_pools
+  onDeleteUser(owner: String): User @aws_subscribe(mutations: ["deleteUser"]) @aws_api_key @aws_cognito_user_pools
+  onCreateBookmark(owner: String): Bookmark @aws_subscribe(mutations: ["createBookmark"]) @aws_api_key @aws_cognito_user_pools
+  onUpdateBookmark(owner: String): Bookmark @aws_subscribe(mutations: ["updateBookmark"]) @aws_api_key @aws_cognito_user_pools
+  onDeleteBookmark(owner: String): Bookmark @aws_subscribe(mutations: ["deleteBookmark"]) @aws_api_key @aws_cognito_user_pools
 }
 
-type ModelBookmarkConnection {
+type ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools {
   items: [Bookmark]
   nextToken: String
 }
