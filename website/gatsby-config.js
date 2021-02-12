@@ -36,14 +36,14 @@ module.exports = {
         background_color: `#663399`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/chummy256.png` // This path is relative to the root of the site.
+        icon: `${__dirname}/src/images/chummy256.png` // This path is relative to the root of the site.
       }
     },
     { resolve: 'gatsby-plugin-postcss' },
     {
       resolve: `gatsby-source-stripe`,
       options: {
-        objects: ['Price'],
+        objects: ['Price', 'Product'],
         secretKey: process.env.STRIPE_SECRET_KEY,
         downloadFiles: false
       }

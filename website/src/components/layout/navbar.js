@@ -57,11 +57,7 @@ const Navbar = () => {
                   {name}
                 </NavItem>
               ))}
-              <ActionButton
-                to="signin/"
-                state={{ fromWebsite: true }}
-                className="ml-4"
-              >
+              <ActionButton to="/signin" className="ml-4">
                 Sign in with Github
               </ActionButton>
             </div>
@@ -98,11 +94,7 @@ const Navbar = () => {
             ))}
             {/* <div className="h-px bg-gray-300"></div> */}
             <div className="flex py-4 -mt-2">
-              <ActionButton
-                to="signin/"
-                state={{ fromWebsite: true }}
-                className="ml-4"
-              >
+              <ActionButton to="/signin" className="ml-4">
                 Sign in with Github
               </ActionButton>
             </div>
