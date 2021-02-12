@@ -21,6 +21,12 @@
     "apichummyGraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apichummyGraphQLAPIKeyOutput"
+    },
+    "deploymentBucketName": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
     }
   },
   "Conditions": {
