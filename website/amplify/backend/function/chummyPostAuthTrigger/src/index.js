@@ -1,35 +1,77 @@
 /* Amplify Params - DO NOT EDIT
+	API_CHUMMY_BOOKMARKTABLE_ARN
+	API_CHUMMY_BOOKMARKTABLE_NAME
+	API_CHUMMY_GRAPHQLAPIENDPOINTOUTPUT
+	API_CHUMMY_GRAPHQLAPIIDOUTPUT
+	API_CHUMMY_GRAPHQLAPIKEYOUTPUT
+	API_CHUMMY_USERTABLE_ARN
+	API_CHUMMY_USERTABLE_NAME
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const stripe = require('stripe')(
-  'sk_test_51I4JdfBYrFSX6VWjmLWxUdVf6L54asmR3WwWpzy1o7dceB6nUBgECbzOQdUdu6L3Ca4tMOR9AD0AOgRusMaHjI3n00vrwdnshf'
-);
+const Stripe = require('stripe');
+const SSM = new (require('aws-sdk/clients/ssm'))();
 
-exports.handler = async (event) => {
-  console.log('event', event);
+const { createOrGetUserCollection, updateUserCollection } = require('./util');
+
+exports.handler = async (event, context, callback) => {
+  // Create and get user collection
+  const { user, isNewSignup } = await createOrGetUserCollection(
+    event?.request?.userAttributes?.sub
+  );
+  const cognitoId = user?.id;
+
+  // If it's not a new signup, the following steps have already been done. Just return
+  if (!isNewSignup) {
+    console.log('User has already been created');
+    callback(null, {
+      ...event,
+      response: { ...event.response, userFromLambda: user }
+    });
+    return;
+  }
+
+  // Grab stripe keys from SSM
+  const stripeSecretKeyName =
+    process.env.ENV === 'prod'
+      ? `STRIPE_LIVE_SECRET_KEY`
+      : `STRIPE_TEST_SECRET_KEY`;
+
+  const stripeSecretKey = (
+    await SSM.getParameter({
+      Name: stripeSecretKeyName,
+      WithDecryption: true
+    }).promise()
+  )?.Parameter?.Value;
+
+  // Initialize Stripe
+  const stripe = Stripe(stripeSecretKey);
 
   // Create new customer on Stripe
   const customer = await stripe.customers.create({
-    email: 'jenny.rosen@example.com',
-    description: 'My First Test Customer (created for API docs)',
+    email: event?.request?.userAttributes?.email,
+    name: event?.request?.userAttributes?.name,
+    description: event?.request?.userAttributes?.profile,
     metadata: {
-      cognito_id: 'cognito_id_1'
+      cognitoUsername: event?.userName,
+      cognitoUserPoolId: event?.userPoolId,
+      cognitoSub: cognitoId,
+      githubProfile: event?.request?.userAttributes?.profile
     }
   });
 
-  console.log('Created customer', customer);
+  // Update ddb user with metadata (cognito and stripe id's)
+  const finalUser = await updateUserCollection(cognitoId, {
+    metadata: {
+      cognitoUsername: event?.userName,
+      cognitoUserPoolId: event?.userPoolId,
+      stripeId: customer?.id
+    }
+  });
 
-  // TODO implement
-  const response = {
-    statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  },
-    body: JSON.stringify('Hello from Lambda!')
-  };
-  return response;
+  callback(null, {
+    ...event,
+    response: { ...event.response, userFromLambda: finalUser }
+  });
 };

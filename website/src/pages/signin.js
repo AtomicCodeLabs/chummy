@@ -18,6 +18,7 @@ import SEO from '../components/seo';
  */
 const SignIn = ({ location }) => {
   useEffect(() => {
+    // If `fromWebsite` doesn't exist in location state, automatically signin
     if (!location.state?.fromWebsite) {
       Auth.federatedSignIn({ provider: 'Github' });
     }

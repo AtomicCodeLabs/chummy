@@ -111,7 +111,12 @@
                         "Ref": "AWS::Region"
                     },
                     "DefaultAction": "ALLOW"
-                }
+                },
+                "AdditionalAuthenticationProviders": [
+                    {
+                        "AuthenticationType": "API_KEY"
+                    }
+                ]
             }
         },
         "GraphQLAPIKey": {
@@ -123,13 +128,14 @@
                         "ApiId"
                     ]
                 },
+                "Description": "Data Access API",
                 "Expires": {
                     "Fn::If": [
                         "APIKeyExpirationEpochIsPositive",
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1609876346
+                        1644698123
                     ]
                 }
             },
