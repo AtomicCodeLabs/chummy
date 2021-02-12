@@ -10,7 +10,7 @@ const Link = ({ children, to, activeClassName, partiallyActive, ...other }) => {
   // This example assumes that any internal link (intended for Gatsby)
   // will start with exactly one slash, and that anything else is external.
   const internal = /^\/(?!\/)/.test(to);
-  console.log('LINK', to, internal);
+
   // Use Gatsby Link for internal links, and <a> for others
   if (internal) {
     return (
@@ -18,6 +18,7 @@ const Link = ({ children, to, activeClassName, partiallyActive, ...other }) => {
         to={to}
         activeClassName={activeClassName}
         partiallyActive={partiallyActive}
+        state={to === '/signin' ? { fromWebsite: true } : {}} // If route is signin, attach location state that indicates it's coming from the website
         {...other}
       >
         {children}
