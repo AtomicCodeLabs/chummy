@@ -9,7 +9,7 @@ import ActionButton from '../buttons/ActionButton';
 import routes from './routes';
 import Logo from '../Logo';
 
-const Navbar = () => {
+const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
   const { pathname } = useLocation();
   const [isScrollAtTop, setIsScrollAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,12 +27,14 @@ const Navbar = () => {
     <div
       className={clsx(
         'box-border flex flex-col mx-auto w-full flex-nowrap',
-        'pt-14 pb-4 md:py-2.5 z-20',
+        'pb-4 md:py-2.5 z-20',
         'transition-colors duration-300  bg-transparent md:bg-white md:border-b-2 md:border-gray-300',
         'sticky -top-10 md:top-0',
         {
-          'bg-white shadow-sm border-b-2': !isScrollAtTop,
-          'bg-green-200': isScrollAtTop
+          'pt-14': !isSimpleNavbar,
+          'pt-4': isSimpleNavbar,
+          'bg-white shadow-sm border-b-2': !isScrollAtTop || isSimpleNavbar,
+          [bgColor]: isScrollAtTop && !isSimpleNavbar
         }
       )}
     >
@@ -44,41 +46,45 @@ const Navbar = () => {
           </div>
           {/* End Left */}
 
-          {/* Right */}
-          <div className="inline-flex items-start">
-            <div className="block md:hidden">
-              {routes.map(({ name, pathname: rPathname }) => (
-                <NavItem
-                  key={rPathname}
-                  to={rPathname}
-                  isActive={rPathname === pathname}
-                  className="px-4 py-2"
-                >
-                  {name}
-                </NavItem>
-              ))}
-              <ActionButton to="/signin" className="ml-4">
-                Sign in with Github
-              </ActionButton>
-            </div>
-            <div className="hidden md:block">
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={toggleMenu}
-                onKeyDown={toggleMenu}
-                className="cursor-pointer"
-              >
-                {cloneElement(isMenuOpen ? <CgClose /> : <CgMenu />, {
-                  className: 'text-sm h-full w-7 md:w-5'
-                })}
+          {!isSimpleNavbar && (
+            <>
+              {/* Right */}
+              <div className="inline-flex items-start">
+                <div className="block md:hidden">
+                  {routes.map(({ name, pathname: rPathname }) => (
+                    <NavItem
+                      key={rPathname}
+                      to={rPathname}
+                      isActive={rPathname === pathname}
+                      className="px-4 py-2"
+                    >
+                      {name}
+                    </NavItem>
+                  ))}
+                  <ActionButton to="/signin" className="ml-4">
+                    Sign in with Github
+                  </ActionButton>
+                </div>
+                <div className="hidden md:block">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={toggleMenu}
+                    onKeyDown={toggleMenu}
+                    className="cursor-pointer"
+                  >
+                    {cloneElement(isMenuOpen ? <CgClose /> : <CgMenu />, {
+                      className: 'text-sm h-full w-7 md:w-5'
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          {/* End Right */}
+              {/* End Right */}
+            </>
+          )}
         </div>
         {/* Mobile Menu */}
-        {isMenuOpen && (
+        {!isSimpleNavbar && isMenuOpen && (
           <div className="absolute z-20 hidden my-2.5 -mx-6 bg-white w-full border-b-2 border-gray-300 md:flex md:flex-col">
             <div className="h-px bg-gray-300" />
             {routes.map(({ name, pathname: rPathname }) => (
