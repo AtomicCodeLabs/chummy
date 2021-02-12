@@ -1,5 +1,5 @@
 {
-    "CreateAPIKey": 0,
+    "CreateAPIKey": 1,
     "AppSyncApiName": "chummy",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": false,

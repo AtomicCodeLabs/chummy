@@ -1,12 +1,21 @@
-type User @model @auth(rules: [{ allow: owner }]) {
+type User
+  @model
+  @auth(rules: [{ allow: owner }, { allow: public, provider: apiKey }]) {
   id: ID!
   accountType: String!
   bookmarks: [Bookmark] @connection(keyName: "byUser", fields: ["id"])
+  metadata: UserMetadata
+}
+
+type UserMetadata {
+  cognitoUsername: String
+  cognitoUserPoolId: String
+  stripeId: String
 }
 
 type Bookmark
   @model
-  @auth(rules: [{ allow: owner }])
+  @auth(rules: [{ allow: owner }, { allow: public, provider: apiKey }])
   @key(name: "byUser", fields: ["userId", "name"]) {
   id: ID!
   userId: ID!
