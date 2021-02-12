@@ -128,14 +128,14 @@
                         "ApiId"
                     ]
                 },
-                "Description": "Data Access API",
+                "Description": "Access Data API Key",
                 "Expires": {
                     "Fn::If": [
                         "APIKeyExpirationEpochIsPositive",
                         {
                             "Ref": "APIKeyExpirationEpoch"
                         },
-                        1644698123
+                        1644700751
                     ]
                 }
             },
