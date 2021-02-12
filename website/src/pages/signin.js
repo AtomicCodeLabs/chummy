@@ -25,7 +25,11 @@ const SignIn = ({ location }) => {
   }, []);
 
   return (
-    <Layout>
+    <Layout
+      hideFooter
+      isSimpleNavbar
+      mainClassName="h-full bg-gray-200 absolute inset-0"
+    >
       <SEO title="Sign In" />
       <h1>Sign In</h1>
       {/* <button
