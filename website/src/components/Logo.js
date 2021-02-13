@@ -8,7 +8,8 @@ import Link from './Link';
 export default ({
   isResponsive = false,
   isDarkBg = false,
-  hideIcon = false
+  hideIcon = false,
+  noText = false
 }) => {
   const data = useStaticQuery(graphql`
     query {
@@ -42,33 +43,35 @@ export default ({
         alt="Feature Image"
         imgStyle={{ objectFit: 'contain' }}
       />
-      <div
-        className={clsx('flex flex-col md:flex', {
-          'items-center md:flex-row md-lg:hidden': isResponsive,
-          'items-start': !isResponsive
-        })}
-      >
+      {!noText && (
         <div
-          className={clsx('text-2xl font-bold md:text-xl', {
-            'text-gray-100': isDarkBg
+          className={clsx('flex flex-col md:flex', {
+            'items-center md:flex-row md-lg:hidden': isResponsive,
+            'items-start': !isResponsive
           })}
         >
-          Chummy
+          <div
+            className={clsx('text-2xl font-bold md:text-xl', {
+              'text-gray-100': isDarkBg
+            })}
+          >
+            Chummy
+          </div>
+          <div
+            className={clsx(
+              'font-mono text-xs md:text-xxs',
+              'overflow-hidden whitespace-nowrap overflow-ellipsis',
+              {
+                'text-gray-600': !isDarkBg,
+                'text-gray-400': isDarkBg,
+                'md:ml-1.5': isResponsive
+              }
+            )}
+          >
+            by Atomic Code
+          </div>
         </div>
-        <div
-          className={clsx(
-            'font-mono text-xs md:text-xxs',
-            'overflow-hidden whitespace-nowrap overflow-ellipsis',
-            {
-              'text-gray-600': !isDarkBg,
-              'text-gray-400': isDarkBg,
-              'md:ml-1.5': isResponsive
-            }
-          )}
-        >
-          by Atomic Code
-        </div>
-      </div>
+      )}
     </Link>
   );
 };

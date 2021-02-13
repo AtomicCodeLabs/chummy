@@ -12,23 +12,24 @@ Amplify Params - DO NOT EDIT */
 
 const Stripe = require('stripe');
 const SSM = new (require('aws-sdk/clients/ssm'))();
+const AWS = require('aws-sdk');
+const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 const { createOrGetUserCollection, updateUserCollection } = require('./util');
 
 exports.handler = async (event, context, callback) => {
   // Create and get user collection
   const { user, isNewSignup } = await createOrGetUserCollection(
-    event?.request?.userAttributes?.sub
+    event?.request?.userAttributes['custom:ddb_id']
   );
   const cognitoId = user?.id;
 
-  // If it's not a new signup, the following steps have already been done. Just return
+  // If it's not a new signup, the following steps have already been done.
+  // Theoretically should never happen because lambda trigger is post confirmation trigger,
+  // and user is only confirmed once.
   if (!isNewSignup) {
     console.log('User has already been created');
-    callback(null, {
-      ...event,
-      response: { ...event.response, userFromLambda: user }
-    });
+    callback(null, event);
     return;
   }
 
@@ -70,8 +71,26 @@ exports.handler = async (event, context, callback) => {
     }
   });
 
-  callback(null, {
-    ...event,
-    response: { ...event.response, userFromLambda: finalUser }
-  });
+  // Update cognito user with custom attributes
+  cognitoidentityserviceprovider.adminUpdateUserAttributes(
+    {
+      UserAttributes: [
+        {
+          Name: 'custom:stripe_id',
+          Value: customer?.id
+        },
+        {
+          Name: 'custom:ddb_id',
+          Value: finalUser?.id
+        }
+      ],
+      UserPoolId: event?.userPoolId,
+      Username: event?.userName
+    },
+    function (err, data) {
+      console.error('Error updating Cognito attributes', err, data);
+    }
+  );
+
+  callback(null, event);
 };

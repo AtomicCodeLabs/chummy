@@ -4,6 +4,8 @@ import { Auth } from 'aws-amplify';
 import Link from '../components/Link';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
+import AuthBox from '../components/boxes/AuthBox';
+import Logo from '../components/Logo';
 
 /*
  * Two states of this page exists:
@@ -31,14 +33,11 @@ const SignIn = ({ location }) => {
       mainClassName="h-full bg-gray-200 absolute inset-0"
     >
       <SEO title="Sign In" />
-      <h1>Sign In</h1>
-      {/* <button
-        type="submit"
-        onClick={() => Auth.federatedSignIn({ provider: 'Github' })}
-      >
-        Sign in with Github
-      </button> */}
-
+      <div className="flex items-center justify-center">
+        <AuthBox Icon={<Logo />} title="Login">
+          Hello
+        </AuthBox>
+      </div>
       <Link to="/">Go back to the homepage</Link>
     </Layout>
   );
