@@ -241,6 +241,13 @@
                 "ssm:GetParameters"
               ],
               "Resource": "arn:aws:ssm:*:202575095365:parameter/*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminUpdateUserAttributes"
+              ],
+              "Resource": "arn:aws:cognito-idp:*:202575095365:userpool/*"
             }
           ]
         }
