@@ -35,6 +35,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply h-screen;
+}
+
 #gatsby-focus-wrapper {
   @apply text-gray-900;
 }

@@ -21,12 +21,6 @@
     "apichummyGraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apichummyGraphQLAPIKeyOutput"
-    },
-    "deploymentBucketName": {
-      "Type": "String"
-    },
-    "s3Key": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -147,12 +141,8 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+          "S3Bucket": "amplify-chummy-gamma-214559-deployment",
+          "S3Key": "amplify-builds/chummyPostAuthTrigger-4f6c4b48724868614849-build.zip"
         }
       }
     },
@@ -241,6 +231,13 @@
                 "ssm:GetParameters"
               ],
               "Resource": "arn:aws:ssm:*:202575095365:parameter/*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminUpdateUserAttributes"
+              ],
+              "Resource": "arn:aws:cognito-idp:*:202575095365:userpool/*"
             }
           ]
         }
