@@ -6,10 +6,16 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 
 import NavItem from './NavItem';
 import ActionButton from '../buttons/ActionButton';
-import routes from './routes';
+import { defaultRoutes } from './routes';
 import Logo from '../Logo';
+import { matchRoutes } from '../../utils';
 
-const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
+const Navbar = ({
+  bgColor,
+  secondaryBgColor,
+  isSimpleNavbar = false,
+  isSticky = true
+}) => {
   const { pathname } = useLocation();
   const [isScrollAtTop, setIsScrollAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +23,7 @@ const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
 
   useScrollPosition(
     ({ currPos }) => {
-      const isTop = currPos.y >= -40; // tailwind 10 === 2.5rem === 40px
+      const isTop = currPos.y >= (isSimpleNavbar ? 0 : -40); // tailwind 10 === 2.5rem === 40px
       if (isTop !== isScrollAtTop) setIsScrollAtTop(isTop);
     },
     [isScrollAtTop]
@@ -28,21 +34,32 @@ const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
       className={clsx(
         'box-border flex flex-col mx-auto w-full flex-nowrap',
         'pb-4 md:py-2.5 z-20',
-        'transition-colors duration-300  bg-transparent md:bg-white md:border-b-2 md:border-gray-300',
-        'sticky -top-10 md:top-0',
+        `transition-colors duration-300  bg-transparent md:${secondaryBgColor} md:border-b-2 md:border-gray-300`,
+        { 'sticky md:top-0': isSticky },
         {
-          'pt-14': !isSimpleNavbar,
-          'pt-4': isSimpleNavbar,
-          'bg-white shadow-sm border-b-2': !isScrollAtTop || isSimpleNavbar,
+          '-top-10 pt-14': !isSimpleNavbar,
+          'top-0 pt-4': isSimpleNavbar,
+          [`${secondaryBgColor} shadow-sm border-b-2`]:
+            !isScrollAtTop || isSimpleNavbar,
           [bgColor]: isScrollAtTop && !isSimpleNavbar
         }
       )}
     >
-      <nav className="w-full max-w-6xl mx-auto bg-transparent px-14 md:px-6">
+      <nav
+        className={clsx('w-full mx-auto bg-transparent', {
+          'px-14 md:px-6 max-w-6xl': !isSimpleNavbar,
+          'px-4 md:px-2.5': isSimpleNavbar
+        })}
+      >
         <div className="flex items-center justify-between flex-nowrap">
           {/* Left */}
           <div className="inline-flex flex-row items-center flex-1">
-            <Logo isResponsive />
+            <Logo
+              isResponsive
+              isSimpleNavbar
+              className="h-12"
+              logoClassName="mr-1.5 w-7 md:w-5"
+            />
           </div>
           {/* End Left */}
 
@@ -51,11 +68,11 @@ const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
               {/* Right */}
               <div className="inline-flex items-start">
                 <div className="block md:hidden">
-                  {routes.map(({ name, pathname: rPathname }) => (
+                  {defaultRoutes.map(({ name, pathname: rPathname }) => (
                     <NavItem
                       key={rPathname}
                       to={rPathname}
-                      isActive={rPathname === pathname}
+                      isActive={matchRoutes(rPathname, pathname)}
                       className="px-4 py-2"
                     >
                       {name}
@@ -87,7 +104,7 @@ const Navbar = ({ bgColor = 'bg-green-200', isSimpleNavbar = false }) => {
         {!isSimpleNavbar && isMenuOpen && (
           <div className="absolute z-20 hidden my-2.5 -mx-6 bg-white w-full border-b-2 border-gray-300 md:flex md:flex-col">
             <div className="h-px bg-gray-300" />
-            {routes.map(({ name, pathname: rPathname }) => (
+            {defaultRoutes.map(({ name, pathname: rPathname }) => (
               <NavItem
                 key={rPathname}
                 to={rPathname}

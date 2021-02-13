@@ -15,6 +15,7 @@ module.exports = {
     },
     fontSize: {
       ...defaultTheme.fontSize,
+      '3xs': ['.7rem', '0.95rem'],
       xxs: ['.75rem', '1rem'],
       xs: ['.8rem', '1rem'],
       sm: ['.9rem', '1.25rem'],
@@ -40,9 +41,6 @@ module.exports = {
       }),
       margin: {
         full: '100%'
-      },
-      inset: {
-        '-0.25': '-0.0625rem'
       }
     }
   },
