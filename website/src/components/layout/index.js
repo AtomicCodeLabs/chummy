@@ -5,7 +5,6 @@ import { useStaticQuery, graphql } from 'gatsby';
 import initializeAmplify from '../../config/amplify';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import ConstrainedContainer from '../sections/ConstrainedContainer';
 
 const Layout = ({
   children,
@@ -14,7 +13,13 @@ const Layout = ({
   isSimpleNavbar = false, // navbar is minimized and menu items are hidden
   hideNavbar = false,
   hideFooter = false,
-  mainClassName = 'bg-white'
+  fitFooter = false,
+  isSticky = true,
+  mainClassName = 'bg-white',
+  innerMainClassName = '',
+  footerClassName = '',
+  navbarBgColor = 'bg-green-200',
+  navbarSecondaryBgColor = 'bg-white'
 }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -35,7 +40,10 @@ const Layout = ({
     <>
       {!hideNavbar && (
         <Navbar
+          bgColor={navbarBgColor}
+          secondaryBgColor={navbarSecondaryBgColor}
           isSimpleNavbar={isSimpleNavbar}
+          isSticky={isSticky}
           siteTitle={data.site.siteMetadata?.title || `Title`}
         />
       )}
@@ -49,12 +57,23 @@ const Layout = ({
           {SplashSection}
         </div>
       )}
-      <ConstrainedContainer
-        className={clsx('p-14 md:p-12 sm:p-6', mainClassName)}
-      >
-        <main>{children}</main>
-      </ConstrainedContainer>
-      {!hideFooter && <Footer />}
+      <main className={mainClassName}>
+        <div
+          className={clsx(
+            'box-border flex flex-col mx-auto w-full h-full flex-nowrap',
+            {
+              'p-14 md:p-12 sm:p-6 max-w-6xl': !isSimpleNavbar,
+              'p-4 md:p-2.5': isSimpleNavbar
+            },
+            innerMainClassName
+          )}
+        >
+          {children}
+        </div>
+      </main>
+      {!hideFooter && (
+        <Footer className={footerClassName} fitFooter={fitFooter} />
+      )}
     </>
   );
 };
