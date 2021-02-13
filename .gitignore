@@ -44,6 +44,7 @@ website/amplify/mock-data
 website/amplify/backend/amplify-meta.json
 website/amplify/backend/awscloudformation
 website/amplify/backend/.temp
+website/amplify/backend/**/*.zip
 website/src/aws-exports.js
 **/awsconfiguration.json
 **/amplifyconfiguration.json

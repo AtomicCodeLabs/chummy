@@ -25,6 +25,7 @@
     "format": "prettier '**/*.{js,jsx}' --write",
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
+    "status": "git status && amplify status",
     "checkout:dev": "git checkout website/dev && git pull && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout website/gamma && git pull && amplify env checkout gamma && amplify pull --yes",
     "checkout:prod": "git checkout website/prod && git pull && amplify env checkout prod && amplify pull --yes",
