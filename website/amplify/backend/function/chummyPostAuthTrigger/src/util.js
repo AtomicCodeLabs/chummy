@@ -46,16 +46,18 @@ const createOrGetUserCollection = async (userId) => {
 
   try {
     // Try fetching first
-    console.log('[READ] User collection + all user bookmarks read');
-    const data = await makeRequest(operations.getUser, 'getUser', {
-      id: userId
-    });
-    if (data?.errors) {
-      throw new Error(JSON.stringify(data?.errors));
-    }
-    userDoc = data?.getUser;
-    if (userDoc) {
-      isNewSignup = false;
+    if (userId) {
+      console.log('[READ] User collection + all user bookmarks read');
+      const data = await makeRequest(operations.getUser, 'getUser', {
+        id: userId
+      });
+      if (data?.errors) {
+        throw new Error(JSON.stringify(data?.errors));
+      }
+      userDoc = data?.getUser;
+      if (userDoc) {
+        isNewSignup = false;
+      }
     }
   } catch (e) {
     error = e;

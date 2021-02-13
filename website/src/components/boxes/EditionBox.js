@@ -71,11 +71,7 @@ const EditionBox = ({
           )}
         </div>
         <div className="flex h-20 mx-auto my-3">
-          <ActionButton
-            to="/signin"
-            state={{ fromWebsite: true }}
-            className="my-auto"
-          >
+          <ActionButton to="/signin" className="my-auto">
             {title === 'Community'
               ? 'Download free'
               : 'Start 14-day free trial'}
