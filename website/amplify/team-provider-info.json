@@ -35,6 +35,9 @@
     "categories": {
       "auth": {
         "chummy9948bcd5": {}
+      },
+      "function": {
+        "chummyPostAuthTrigger": {}
       }
     }
   },
@@ -53,6 +56,9 @@
     "categories": {
       "auth": {
         "chummy9948bcd5": {}
+      },
+      "function": {
+        "chummyPostAuthTrigger": {}
       }
     }
   }
