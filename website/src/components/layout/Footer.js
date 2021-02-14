@@ -81,45 +81,53 @@ const footerRoutes = {
   ]
 };
 
-const Footer = ({ className }) => (
-    <div className={clsx('flex flex-col mt-80', className)}>
-      <div className="bg-gray-700">
-        <div className="box-border flex flex-row flex-wrap justify-between w-full max-w-6xl pt-24 pb-12 mx-auto md:pt-12 md:pb-12 px-14 md:px-6 ">
-          <div className="flex flex-col w-32 mb-8 md:w-full">
-            <Logo isDarkBg hideIcon />
-          </div>
-          <div className="flex flex-col md:w-1/2 sm:w-full">
-            <FooterColumn title="Product" items={footerRoutes.Product} />
-          </div>
-          <div className="flex flex-col md:w-1/2 sm:w-full">
-            <FooterColumn
-              title="Integrations"
-              items={footerRoutes.Integrations}
-            />
-          </div>
-          <div className="flex flex-col md:flex-row md:w-full sm:flex-col">
-            <FooterColumn
-              className="md:w-1/2"
-              title="Company"
-              items={footerRoutes.Company}
-            />
-            <FooterColumn
-              className="md:w-1/2"
-              title="Contact Us"
-              items={footerRoutes['Contact Us']}
-            />
-          </div>
+const Footer = ({ className, fitFooter }) => (
+  <div
+    className={clsx('flex flex-col', className)}
+    style={{ top: fitFooter ? '100vh' : 'auto' }}
+  >
+    <div className="bg-gray-700">
+      <div className="box-border flex flex-row flex-wrap justify-between w-full max-w-6xl pt-24 pb-12 mx-auto md:pt-12 md:pb-12 px-14 md:px-6 ">
+        <div className="flex flex-col w-32 mb-8 md:w-full">
+          <Logo
+            isDarkBg
+            hideIcon
+            className="h-12"
+            logoClassName="mr-1.5 w-7 md:w-5"
+          />
+        </div>
+        <div className="flex flex-col md:w-1/2 sm:w-full">
+          <FooterColumn title="Product" items={footerRoutes.Product} />
+        </div>
+        <div className="flex flex-col md:w-1/2 sm:w-full">
+          <FooterColumn
+            title="Integrations"
+            items={footerRoutes.Integrations}
+          />
+        </div>
+        <div className="flex flex-col md:flex-row md:w-full sm:flex-col">
+          <FooterColumn
+            className="md:w-1/2"
+            title="Company"
+            items={footerRoutes.Company}
+          />
+          <FooterColumn
+            className="md:w-1/2"
+            title="Contact Us"
+            items={footerRoutes['Contact Us']}
+          />
         </div>
       </div>
-      <div
-        className={clsx(
-          'flex justify-end py-10 mx-auto px-14 md:px-6 w-full',
-          'bg-gray-900 text-gray-400 text-xxs'
-        )}
-      >
-        Made with ❤️️ by AtomicCode ©
-      </div>
     </div>
-  );
+    <div
+      className={clsx(
+        'flex justify-end py-10 mx-auto px-14 md:px-6 w-full',
+        'bg-gray-900 text-gray-400 text-xxs'
+      )}
+    >
+      Made with ❤️️ by AtomicCode ©
+    </div>
+  </div>
+);
 
 export default Footer;
