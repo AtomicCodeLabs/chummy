@@ -6,3 +6,4 @@ gatsby-*.js
 postcss.config.js
 amplify/*
 src/aws-exports.js
+src/models

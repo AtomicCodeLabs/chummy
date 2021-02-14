@@ -35,6 +35,7 @@ const IndexPage = () => {
 
   return (
     <Layout
+      footerClassName="mt-60"
       SplashSection={
         <>
           <ConstrainedContainer className="pt-8 mt-10 md:mt-0 px-14 pb-14 md:px-12 md:pb-12 md:pt-6 sm:px-6 sm:pb-6 sm:pt-6">

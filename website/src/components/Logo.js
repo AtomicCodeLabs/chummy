@@ -9,7 +9,11 @@ export default ({
   isResponsive = false,
   isDarkBg = false,
   hideIcon = false,
-  noText = false
+  noText = false,
+  isSimpleNavbar = false,
+  to = '/',
+  className,
+  logoClassName
 }) => {
   const data = useStaticQuery(graphql`
     query {
@@ -32,11 +36,11 @@ export default ({
 
   return (
     <Link
-      className={clsx('text-current	flex md:h-auto items-center h-12')}
-      to="/"
+      className={clsx('text-current	flex md:h-auto items-center', className)}
+      to={to}
     >
       <Img
-        className={clsx('mr-1.5 w-7 md:w-5', { hidden: hideIcon })}
+        className={clsx(logoClassName, { hidden: hideIcon })}
         fluid={
           data[isDarkBg ? 'darkIcon' : 'lightIcon']?.childImageSharp?.fluid
         }
@@ -46,7 +50,8 @@ export default ({
       {!noText && (
         <div
           className={clsx('flex flex-col md:flex', {
-            'items-center md:flex-row md-lg:hidden': isResponsive,
+            'items-center md:flex-row': isResponsive,
+            'mg-lg:hidden': isResponsive && !isSimpleNavbar, // don't hide text if simple navbar
             'items-start': !isResponsive
           })}
         >

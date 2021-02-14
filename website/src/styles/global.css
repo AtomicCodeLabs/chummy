@@ -21,10 +21,14 @@
   h4 {
     @apply mt-3 mb-2 text-xl md:text-lg sm:text-lg;
   }
+  h5 {
+    @apply mt-2 mb-2 text-lg md:text-base;
+  }
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  h5 {
     @apply font-bold;
   }
   a {
