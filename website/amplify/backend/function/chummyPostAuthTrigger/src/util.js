@@ -38,7 +38,7 @@ const makeRequest = async (query, operationName, variables) => {
 };
 
 // Gets user doc, creates one if it doesn't exist
-const createOrGetUserCollection = async (userId) => {
+const createOrGetUserCollection = async (userId, event) => {
   // Check if user exists in DDB
   let userDoc;
   let isNewSignup = true;
@@ -70,7 +70,8 @@ const createOrGetUserCollection = async (userId) => {
       console.log('[WRITE] User collection created');
       const newUser = {
         id: userId,
-        accountType: 'Community'
+        accountType: 'community',
+        owner: event.userName
       };
       const data = await makeRequest(operations.createUser, 'createUser', {
         input: newUser

@@ -11,9 +11,9 @@ export const onCreateUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
       createdAt
       updatedAt
-      owner
       bookmarks {
         nextToken
       }
@@ -30,9 +30,9 @@ export const onUpdateUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
       createdAt
       updatedAt
-      owner
       bookmarks {
         nextToken
       }
@@ -49,9 +49,9 @@ export const onDeleteUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
       createdAt
       updatedAt
-      owner
       bookmarks {
         nextToken
       }
@@ -68,9 +68,9 @@ export const onCreateBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -84,9 +84,9 @@ export const onUpdateBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -100,9 +100,9 @@ export const onDeleteBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
