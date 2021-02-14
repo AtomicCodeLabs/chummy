@@ -21,12 +21,6 @@
     "apichummyGraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apichummyGraphQLAPIKeyOutput"
-    },
-    "deploymentBucketName": {
-      "Type": "String"
-    },
-    "s3Key": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -148,7 +142,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-chummy-prod-220137-deployment",
-          "S3Key": "amplify-builds/chummyPostAuthTrigger-4f6c4b48724868614849-build.zip"
+          "S3Key": "amplify-builds/chummyPostAuthTrigger-4c48356d377a466c6d4d-build.zip"
         }
       }
     },
