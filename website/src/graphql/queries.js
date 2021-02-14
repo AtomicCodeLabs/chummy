@@ -11,9 +11,9 @@ export const getUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
       createdAt
       updatedAt
-      owner
       bookmarks {
         nextToken
       }
@@ -30,9 +30,9 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         accountType
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -48,9 +48,9 @@ export const getBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -69,9 +69,9 @@ export const listBookmarks = /* GraphQL */ `
         pinned
         branch
         repo
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }

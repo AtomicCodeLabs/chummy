@@ -2,30 +2,51 @@ import React from 'react';
 
 import SEO from '../../components/seo';
 import AccountLayout from '../../components/layout/AccountLayout';
+import { BulletsSection } from '../../components/sections/AccountSection';
+// import useUser from '../../hooks/useUser';
 
-const Privacy = () => (
-    <AccountLayout title={<h1 className="mb-10">Privacy</h1>}>
+const Privacy = () => {
+  // const user = useUser();
+  console.log('placeholder');
+
+  return (
+    <AccountLayout title={<h2 className="mb-10">Privacy</h2>}>
       <SEO title="Privacy" />
-      <div className="h-px bg-gray-300" />
-      <div className="flex flex-row items-center justify-between py-6">
-        <div className="flex flex-col">
-          <h4 className="font-medium mt-0 mb-2.5 text-gray-700">Edition</h4>
-          <div className="text-sm text-gray-700 sm:text-xs">Professional</div>
-        </div>
-        <div className="text-sm text-green-600 sm:text-xs">Change</div>
+      <div className="pb-6 text-base font-light text-gray-700 sm:text-sm">
+        We collect the bare essential data points like your email address,
+        account type, and other non-sensitive information, to learn about how
+        you use Chummy best.
       </div>
-      <div className="h-px bg-gray-300" />
-      <div className="flex flex-row items-center justify-between py-6">
-        <div className="flex flex-col">
-          <h4 className="font-medium mt-0 mb-2.5 text-gray-700">
-            Github Email
-          </h4>
-          <div className="text-sm text-gray-700 sm:text-xs">
-            alexgkim205@gmail.com
-          </div>
-        </div>
-      </div>
-      <div className="h-px bg-gray-300" />
+      <BulletsSection
+        title="Manage your personal data"
+        options={[
+          {
+            label: 'Download a copy of all personal data in your account.',
+            value: 'download'
+          },
+          {
+            label: 'Delete your account and personal data.',
+            value: 'delete'
+          }
+        ]}
+        buttonText="Request"
+        hasTopBorder
+        hasBottomBorder
+      />
+      <BulletsSection
+        type="checkbox"
+        title="Manage your communications"
+        options={[
+          {
+            label:
+              'Keep me updated with the latest releases via email. We’ll send an email only when major versions are released.',
+            value: 'download'
+          }
+        ]}
+        hasBottomBorder
+        buttonText="Save"
+      />
     </AccountLayout>
   );
+};
 export default Privacy;

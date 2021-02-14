@@ -23,7 +23,7 @@ export const privateRoutes = [
     pathname: '/account'
   },
   {
-    name: 'Billing',
+    name: 'Billing History',
     pathname: '/account/billing'
   },
   {
@@ -33,9 +33,5 @@ export const privateRoutes = [
   {
     name: 'Feedback',
     pathname: '/account/feedback'
-  },
-  {
-    name: 'Logout',
-    pathname: '/'
   }
 ];

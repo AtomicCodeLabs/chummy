@@ -26,7 +26,7 @@ const Link = ({ children, to, activeClassName, partiallyActive, ...other }) => {
     );
   }
   return (
-    <a href={to} {...other}>
+    <a href={to} target="_blank" rel="noopener noreferrer" {...other}>
       {children}
     </a>
   );
