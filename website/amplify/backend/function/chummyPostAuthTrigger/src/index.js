@@ -20,7 +20,8 @@ const { createOrGetUserCollection, updateUserCollection } = require('./util');
 exports.handler = async (event, context, callback) => {
   // Create and get user collection
   const { user, isNewSignup } = await createOrGetUserCollection(
-    event?.request?.userAttributes['custom:ddb_id']
+    event?.request?.userAttributes['custom:ddb_id'],
+    event
   );
   const cognitoId = user?.id;
 
