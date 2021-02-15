@@ -10,5 +10,5 @@
         ]
     },
     "S3DeploymentBucket": "amplify-chummy-prod-220137-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/188345de668e63e8db21ebf96c173f4944aee0a6"
+    "S3DeploymentRootKey": "amplify-appsync-files/b6d008ebb1d1a96de831380eb3493f6cb17b7082"
 }
