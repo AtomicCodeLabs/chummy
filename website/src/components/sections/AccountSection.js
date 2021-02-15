@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable no-sequences */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import ActionButton from '../buttons/ActionButton';
 
@@ -81,15 +84,50 @@ export const TableRowSection = ({
 
 export const BulletsSection = ({
   title,
-  options = [{ label: 1, value: 1 }],
+  options = [{ label: 1, value: [1, false] }],
   hasTopBorder = false,
   hasBottomBorder = false,
   buttonText = 'Submit',
+  disabledButtonText = null,
+  buttonClassName = '',
+  isButtonDisabled = () => false,
   onSubmit = () => {},
   type = 'radio', // or checkbox
   className
 }) => {
-  const [selectedValue, setSelectedValue] = useState();
+  const getDefaults = () =>
+    options.reduce(
+      (obj, { value: [value, defaultValue] }) =>
+        Object.assign(obj, { [value]: defaultValue }),
+      {}
+    );
+  const [valuesToChecked, setValuesToChecked] = useState(getDefaults());
+  useEffect(() => {
+    setValuesToChecked(getDefaults());
+  }, [options]);
+
+  // Find one true value if any
+  const findRadio = () =>
+    Object.entries(valuesToChecked).find(([, checked]) => checked === true);
+  const findChecklist = () => Object.entries(valuesToChecked)?.[0];
+  const findSelectedValue = () => {
+    if (type === 'radio') {
+      return findRadio();
+    }
+    if (type === 'checkbox') {
+      return findChecklist();
+    }
+  };
+
+  console.log('Values', options, valuesToChecked);
+
+  const isDisabled = (() => {
+    const found = findSelectedValue();
+    if (found) {
+      return isButtonDisabled(found);
+    }
+    return false;
+  })();
 
   return (
     <>
@@ -106,32 +144,51 @@ export const BulletsSection = ({
           </h5>
           <form className="flex flex-col w-full text-base font-light text-gray-700 sm:text-sm">
             {options &&
-              options.map(({ label, value }) => (
+              options.map(({ label, value: [value] }) => (
                 // eslint-disable-next-line jsx-a11y/label-has-associated-control
-                <label className="flex flex-row items-center py-2">
+                <label className="inline-flex items-center py-2">
                   <input
                     type={type}
                     value={value}
-                    className="w-3 h-3 form-radio"
-                    checked={value === selectedValue}
+                    className={clsx(
+                      'w-4 h-4 text-green-600 border border-gray-500',
+                      {}
+                    )}
+                    checked={valuesToChecked[value]}
                     onChange={(e) => {
                       if (type === 'radio') {
-                        setSelectedValue(e.target.value);
+                        // Set all others to false
+                        setValuesToChecked(
+                          Object.entries(valuesToChecked).reduce(
+                            (obj, [v]) => (
+                              (obj[v] = v === e.target.value), obj
+                            ),
+                            {}
+                          )
+                        );
                       }
+                      // Toggle just this value
                       if (type === 'checkbox') {
-                        setSelectedValue(!selectedValue);
+                        setValuesToChecked({
+                          ...valuesToChecked,
+                          [e.target.value]: !valuesToChecked[e.target.value]
+                        });
                       }
                     }}
                   />
-                  <span className="flex-1 ml-2">{label}</span>
+                  <span className="flex-1 ml-3 select-none">{label}</span>
                 </label>
               ))}
             <div className="flex items-center pt-4 h-14">
               <ActionButton
-                onClick={onSubmit}
-                className="w-32 text-center xs:w-full"
+                onClick={() => {
+                  const found = findSelectedValue();
+                  if (found) onSubmit(found);
+                }}
+                className={clsx('text-center', buttonClassName)}
+                disabled={isDisabled}
               >
-                {buttonText}
+                {isDisabled ? disabledButtonText || buttonText : buttonText}
               </ActionButton>
             </div>
           </form>

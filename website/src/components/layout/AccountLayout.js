@@ -19,10 +19,10 @@ const AccountLayout = ({ className, title, children }) => {
     <Layout
       isSimpleNavbar
       // isSticky={false}
-      mainClassName="h-full bg-white"
-      innerMainClassName="justify-center items-center"
+      mainClassName="h-screen bg-white"
+      innerMainClassName="justify-start items-center"
       navbarSecondaryBgColor="bg-gray-200"
-      footerClassName="absolute w-full inset-x-0"
+      footerClassName="mt-32 w-full inset-x-0"
       fitFooter
     >
       <div

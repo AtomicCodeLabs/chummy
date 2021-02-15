@@ -15,6 +15,7 @@ type User
   bookmarks: [Bookmark] @connection(keyName: "byUser", fields: ["id"])
   metadata: UserMetadata
   owner: String
+  onMailingList: String
 }
 
 type UserMetadata {
