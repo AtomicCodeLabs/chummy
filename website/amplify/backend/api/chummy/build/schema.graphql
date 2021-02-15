@@ -3,6 +3,7 @@ type User @aws_api_key @aws_cognito_user_pools {
   accountType: String!
   metadata: UserMetadata
   owner: String
+  onMailingList: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools
@@ -120,6 +121,7 @@ input ModelUserFilterInput {
   id: ModelIDInput
   accountType: ModelStringInput
   owner: ModelStringInput
+  onMailingList: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
@@ -150,6 +152,7 @@ input CreateUserInput {
   accountType: String!
   metadata: UserMetadataInput
   owner: String
+  onMailingList: String
 }
 
 input UpdateUserInput {
@@ -157,6 +160,7 @@ input UpdateUserInput {
   accountType: String
   metadata: UserMetadataInput
   owner: String
+  onMailingList: String
 }
 
 input DeleteUserInput {
@@ -174,6 +178,7 @@ type Mutation {
 
 input ModelUserConditionInput {
   accountType: ModelStringInput
+  onMailingList: ModelStringInput
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput

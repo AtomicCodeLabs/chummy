@@ -71,7 +71,8 @@ const createOrGetUserCollection = async (userId, event) => {
       const newUser = {
         id: userId,
         accountType: 'community',
-        owner: event.userName
+        owner: event.userName,
+        onMailingList: 'true'
       };
       const data = await makeRequest(operations.createUser, 'createUser', {
         input: newUser
