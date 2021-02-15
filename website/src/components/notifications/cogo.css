@@ -1,0 +1,24 @@
+.ct-row > .ct-group:nth-child(1) {
+  display: none;
+}
+.ct-row > .ct-group:nth-child(2) {
+  display: none;
+}
+.ct-row > .ct-group:nth-child(3) {
+  width: 100%;
+  padding: 0 1.5rem;
+}
+.ct-group .ct-toast {
+  width: 66%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.ct-group .ct-toast .ct-text-group {
+  width: 100%;
+}
+
+@media only screen and (max-width: 777px) {
+  .ct-group .ct-toast {
+    width: 100%;
+  }
+}

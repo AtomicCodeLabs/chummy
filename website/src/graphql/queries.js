@@ -12,6 +12,7 @@ export const getUser = /* GraphQL */ `
         stripeId
       }
       owner
+      onMailingList
       createdAt
       updatedAt
       bookmarks {
@@ -31,6 +32,7 @@ export const listUsers = /* GraphQL */ `
         id
         accountType
         owner
+        onMailingList
         createdAt
         updatedAt
       }
