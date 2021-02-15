@@ -34,6 +34,7 @@
     "promote:to-prod": "./scripts/promote.prod.sh"
   },
   "dependencies": {
+    "@aws-amplify/core": "^3.8.13",
     "@aws-amplify/ui-react": "^0.2.33",
     "@loadable/component": "^5.14.1",
     "@n8tb1t/use-scroll-position": "^2.0.3",
@@ -45,7 +46,9 @@
     "axios": "^0.21.1",
     "axios-retry": "^3.1.9",
     "clsx": "^1.1.1",
+    "cogo-toast": "^4.2.3",
     "date-fns": "^2.17.0",
+    "emailjs-com": "^2.6.4",
     "gatsby": "^2.26.1",
     "gatsby-image": "^2.5.0",
     "gatsby-plugin-manifest": "^2.6.1",

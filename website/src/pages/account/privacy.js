@@ -1,13 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { API } from 'aws-amplify';
+import cogoToast from 'cogo-toast';
 
 import SEO from '../../components/seo';
 import AccountLayout from '../../components/layout/AccountLayout';
 import { BulletsSection } from '../../components/sections/AccountSection';
-// import useUser from '../../hooks/useUser';
+import useUser from '../../hooks/useUser';
+import sendEmail from '../../config/email';
+import { updateUser } from '../../graphql/mutations';
+import '../../components/notifications/cogo.css';
 
 const Privacy = () => {
-  // const user = useUser();
-  console.log('placeholder');
+  const user = useUser();
+  const [emailButtonDisabled, setEmailDisabled] = useState({
+    download: false,
+    delete: false
+  });
+  console.log('Privacy', user);
+
+  const sendRequest = async (params) => {
+    const response = await sendEmail(params);
+    if (response.status === 200) {
+      return params;
+    }
+    return null;
+  };
+
+  const sendNotification = (type, title, message) => {
+    const cogoDo = type === 'success' ? cogoToast.success : cogoToast.error;
+    const { hide } = cogoDo(
+      <>
+        <h5 className="mt-0 mb-1 font-medium text-gray-700">{title}</h5>
+        <span className="text-sm font-light text-gray-700 sm:text-xs">
+          {message}
+        </span>
+      </>,
+      {
+        position: 'bottom-right',
+        onClick: () => {
+          hide();
+        }
+      }
+    );
+  };
 
   return (
     <AccountLayout title={<h2 className="mb-10">Privacy</h2>}>
@@ -22,16 +57,74 @@ const Privacy = () => {
         options={[
           {
             label: 'Download a copy of all personal data in your account.',
-            value: 'download'
+            value: ['download', false]
           },
           {
             label: 'Delete your account and personal data.',
-            value: 'delete'
+            value: ['delete', false]
           }
         ]}
-        buttonText="Request"
+        buttonText="Make a request"
+        disabledButtonText="Already requested"
+        onSubmit={async ([selectedOption]) => {
+          // For now use emailjs service
+          if (selectedOption === 'download') {
+            const sent = await sendRequest({
+              action: 'download-privacy-data',
+              user: JSON.stringify(user)
+            });
+            if (sent) {
+              sendNotification(
+                'success',
+                'Information request submitted',
+                "You'll receive an email in 3-5 business days."
+              );
+              // Can't send same request again
+              setEmailDisabled({
+                ...emailButtonDisabled,
+                [selectedOption]: true
+              });
+            } else {
+              sendNotification(
+                'error',
+                'Information request error',
+                'There was an error with your information request. Please try again.'
+              );
+            }
+            // lambdaApi(`chummyCustomRequest-${process.env.STAGE}`, {
+            //   data: { request: 'download-privacy-data', user }
+            // });
+          }
+          if (selectedOption === 'delete') {
+            const sent = await sendRequest({
+              action: 'delete-user',
+              user: JSON.stringify(user)
+            });
+            if (sent) {
+              sendNotification(
+                'success',
+                'Delete request submitted',
+                'Your request will be processed in 3-5 business days.'
+              );
+              // Can't send same request again
+              setEmailDisabled({
+                ...emailButtonDisabled,
+                [selectedOption]: true
+              });
+            } else {
+              sendNotification(
+                'error',
+                'Delete request error',
+                'There was an error with your delete request. Please try again.'
+              );
+            }
+          }
+        }}
         hasTopBorder
         hasBottomBorder
+        isButtonDisabled={([selectedOption]) =>
+          emailButtonDisabled[selectedOption]
+        }
       />
       <BulletsSection
         type="checkbox"
@@ -40,11 +133,46 @@ const Privacy = () => {
           {
             label:
               'Keep me updated with the latest releases via email. We’ll send an email only when major versions are released.',
-            value: 'download'
+            value: ['email', user?.onMailingList === 'true']
           }
         ]}
+        onSubmit={async ([selectedOption, selectedValue]) => {
+          if (
+            selectedOption === 'email' &&
+            (user?.onMailingList === 'true') !== selectedValue // Make sure they're different
+          ) {
+            try {
+              await API.graphql({
+                query: updateUser,
+                authMode: 'AMAZON_COGNITO_USER_POOLS',
+                variables: {
+                  input: {
+                    id: user?.['custom:ddb_id'],
+                    onMailingList: selectedValue
+                  }
+                }
+              });
+              sendNotification(
+                'success',
+                `Opt-${selectedValue ? 'in' : 'out'} success`,
+                'Your preferences have been saved.'
+              );
+            } catch (error) {
+              console.error("Couldn't update user mailing opt in");
+              sendNotification(
+                'error',
+                `Opt-${selectedValue ? 'in' : 'out'} error`,
+                'There was an error updating your preferences. Please try again.'
+              );
+            }
+          }
+        }}
         hasBottomBorder
         buttonText="Save"
+        isButtonDisabled={
+          ([, selectedValue]) =>
+            (user?.onMailingList === 'true') === selectedValue // Make sure they're different
+        }
       />
     </AccountLayout>
   );
