@@ -15,6 +15,7 @@ export const createUser = /* GraphQL */ `
         stripeId
       }
       owner
+      onMailingList
       createdAt
       updatedAt
       bookmarks {
@@ -37,6 +38,7 @@ export const updateUser = /* GraphQL */ `
         stripeId
       }
       owner
+      onMailingList
       createdAt
       updatedAt
       bookmarks {
@@ -59,6 +61,7 @@ export const deleteUser = /* GraphQL */ `
         stripeId
       }
       owner
+      onMailingList
       createdAt
       updatedAt
       bookmarks {
