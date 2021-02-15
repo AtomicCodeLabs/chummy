@@ -81,10 +81,10 @@ const footerRoutes = {
   ]
 };
 
-const Footer = ({ className, fitFooter }) => (
+const Footer = ({ className }) => (
   <div
     className={clsx('flex flex-col', className)}
-    style={{ top: fitFooter ? '100vh' : 'auto' }}
+    // style={{ top: fitFooter ? '100vh' : 'auto' }}
   >
     <div className="bg-gray-700">
       <div className="box-border flex flex-row flex-wrap justify-between w-full max-w-6xl pt-24 pb-12 mx-auto md:pt-12 md:pb-12 px-14 md:px-6 ">
