@@ -21,6 +21,10 @@
     "apichummyGraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apichummyGraphQLAPIKeyOutput"
+    },
+    "functionchummyLambdaLayerArn": {
+      "Type": "String",
+      "Default": "functionchummyLambdaLayerArn"
     }
   },
   "Conditions": {
@@ -138,11 +142,15 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "Layers": [],
+        "Layers": [
+          {
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:chummyLambdaLayer-dev:1"
+          }
+        ],
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-chummy-dev-213651-deployment",
-          "S3Key": "amplify-builds/chummyPostAuthTrigger-3449376b63473745395a-build.zip"
+          "S3Key": "amplify-builds/chummyPostAuthTrigger-716b4753515273486730-build.zip"
         }
       }
     },
