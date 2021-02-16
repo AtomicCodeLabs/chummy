@@ -2,15 +2,15 @@
 // this is an auto generated file. This will be overwritten
 
 export const cancelSubscription = /* GraphQL */ `
-  mutation CancelSubscription($stripeId: String!) {
-    cancelSubscription(stripeId: $stripeId) {
+  mutation CancelSubscription($ddbId: String!) {
+    cancelSubscription(ddbId: $ddbId) {
       id
     }
   }
 `;
 export const syncUser = /* GraphQL */ `
-  mutation SyncUser($stripeId: String!, $ddbId: String!) {
-    syncUser(stripeId: $stripeId, ddbId: $ddbId) {
+  mutation SyncUser($ddbId: String!) {
+    syncUser(ddbId: $ddbId) {
       id
     }
   }
