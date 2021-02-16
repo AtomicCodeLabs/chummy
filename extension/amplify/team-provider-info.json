@@ -32,6 +32,28 @@
     "categories": {
       "auth": {
         "chummy9948bcd5": {}
+      },
+      "function": {
+        "chummyLambdaLayer": {
+          "deploymentBucketName": "amplify-chummy-gamma-214559-deployment",
+          "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
+        }
+      }
+    },
+    "nonCFNdata": {
+      "function": {
+        "chummyLambdaLayer": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "Q8cyTM5T02+yD+8z9l5tA/869mKNo4bHiVxVk/gPOak="
+            }
+          }
+        }
       }
     }
   },
