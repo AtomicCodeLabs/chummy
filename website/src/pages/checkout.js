@@ -55,7 +55,7 @@ const CheckoutPage = () => {
       >
         Redirect to checkout
       </button>
-      <EditionsSection />
+      <EditionsSection showTrials={false} />
       <Link to="/">Go home</Link>
     </Layout>
   );
