@@ -16,7 +16,33 @@
         "chummy9948bcd5": {}
       },
       "function": {
-        "chummyPostAuthTrigger": {}
+        "chummyPostAuthTrigger": {},
+        "chummyLambdaLayer": {
+          "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
+          "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
+        }
+      }
+    },
+    "nonCFNdata": {
+      "function": {
+        "chummyLambdaLayer": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "awsAccounts",
+                  "accounts": [
+                    "202575095365"
+                  ]
+                },
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "B9o8K2UIqIx3h0t86chSzM1p+aBV1LQJjpOlFCr3ygM="
+            }
+          }
+        }
       }
     }
   },

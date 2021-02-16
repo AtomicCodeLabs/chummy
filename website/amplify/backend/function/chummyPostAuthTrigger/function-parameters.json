@@ -23,5 +23,11 @@
       ]
     }
   },
-  "lambdaLayers": []
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "chummyLambdaLayer",
+      "version": 1
+    }
+  ]
 }
