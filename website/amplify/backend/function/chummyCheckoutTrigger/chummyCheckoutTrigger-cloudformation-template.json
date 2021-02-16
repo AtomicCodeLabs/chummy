@@ -95,7 +95,11 @@
             "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:chummyLambdaLayer-gamma:1"
           }
         ],
-        "Timeout": "25"
+        "Timeout": "25",
+        "Code": {
+          "S3Bucket": "amplify-chummy-gamma-214559-deployment",
+          "S3Key": "amplify-builds/chummyCheckoutTrigger-7a696c69714e34304541-build.zip"
+        }
       }
     },
     "LambdaExecutionRole": {
