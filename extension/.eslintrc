@@ -20,6 +20,22 @@
     "no-console": "off",
     "no-eval": "error",
     "import/first": "error",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "lines-between-class-members": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

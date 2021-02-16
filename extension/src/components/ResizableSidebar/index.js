@@ -18,6 +18,7 @@ import {
   ExpandingContainerHeaderSpacer,
   ExpandingContainerHeaderIcon
 } from './style';
+import ToastContainer from '../Toast/Container';
 import IconButton from '../Buttons/IconButton';
 import Spinner from '../Loading/Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
@@ -27,7 +28,8 @@ const ResizableSidebar = observer(({ children }) => {
     pendingRequestCount,
     isSidebarMinimized,
     openSidebar,
-    closeSidebar
+    closeSidebar,
+    sidebarSide
   } = useUiStore();
   const { isLoggedIn } = useUserStore();
   const { pathname } = useLocation();
@@ -63,7 +65,7 @@ const ResizableSidebar = observer(({ children }) => {
   ]);
 
   return (
-    <Container>
+    <Container sidebarSide={sidebarSide}>
       <SideTab isSidebarMinimized={isSidebarMinimized}>
         {sidebarRoutes &&
           sidebarRoutes.map((route) =>
@@ -73,6 +75,7 @@ const ResizableSidebar = observer(({ children }) => {
               <SideTabButton
                 active={pathname === route.pathname}
                 key={route.pathname}
+                sidebarSide={sidebarSide}
               >
                 <IconButton
                   Icon={route.icon}
@@ -86,7 +89,10 @@ const ResizableSidebar = observer(({ children }) => {
             )
           )}
       </SideTab>
-      <ExpandingContainer isSidebarMinimized={isSidebarMinimized}>
+      <ExpandingContainer
+        isSidebarMinimized={isSidebarMinimized}
+        sidebarSide={sidebarSide}
+      >
         {isPageWithHeader(pathname) && (
           <ExpandingContainerHeaderContainer data-testid="page-title">
             {sidebarHeaderTitle}
@@ -99,7 +105,7 @@ const ResizableSidebar = observer(({ children }) => {
           </ExpandingContainerHeaderContainer>
         )}
         <ExpandingContainerContent>{children}</ExpandingContainerContent>
-        {/* <ExpandingContainerDivider /> */}
+        <ToastContainer />
       </ExpandingContainer>
     </Container>
   );

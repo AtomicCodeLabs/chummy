@@ -4,6 +4,9 @@ export const formQueryGetRepositorySpecificBranchRootNodes = (
 ) => `
   query GetRepositorySpecificBranchRootNodes($owner: String!, $repo: String!) {
     repository(owner: $owner, name: $repo) {
+      defaultBranchRef {
+        name
+      }
       object(expression: "${branch}:${pathToFolder}") {
         ... on Tree {
           entries {
@@ -18,7 +21,28 @@ export const formQueryGetRepositorySpecificBranchRootNodes = (
   }
 `;
 
-export const formSearchQuery = (owner, repo, query, language) =>
-  `${query}+repo:${owner}/${repo}${language && `+language:${language}`}`;
+export const formSearchQuery = (
+  owner,
+  repo,
+  queryFilename,
+  queryCode,
+  queryPath,
+  language
+) => {
+  let baseQuery = `repo:${owner}/${repo}`;
+  if (queryFilename) {
+    baseQuery += `+filename:${queryFilename}`;
+  }
+  if (queryCode) {
+    baseQuery += `+in:file+${queryCode}`;
+  }
+  if (queryPath) {
+    baseQuery += `+path:${queryPath}`;
+  }
+  if (language) {
+    baseQuery += `+language:${language}`;
+  }
+  return baseQuery;
+};
 
 export const placeholder = 'placeholder';

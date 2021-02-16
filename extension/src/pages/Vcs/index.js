@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 import { FlagIcon } from '../../components/Icon/Icons';
 import { H2, P } from '../../components/Text';
-import { checkCurrentUser } from '../../hooks/firebase';
+import { checkCurrentUser } from '../../hooks/dao';
 import useTheme from '../../hooks/useTheme';
 import { flagIconColor } from '../../constants/theme';
 import { ICON } from '../../constants/sizes';

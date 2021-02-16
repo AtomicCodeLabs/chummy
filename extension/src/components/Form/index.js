@@ -3,9 +3,11 @@ import styled, { css } from 'styled-components';
 import {
   backgroundHighlightColor,
   lighterTextColor,
-  fontSize,
+  smallFontSize,
   shadowColor,
-  fieldMargin
+  fieldMargin,
+  labelMargin,
+  indentPadding
 } from '../../constants/theme';
 
 export const HeaderContainer = styled.div`
@@ -28,8 +30,8 @@ export const FormContainer = styled.div`
 
 export const FormResultsDescriptionContainer = styled.div`
   color: ${lighterTextColor};
-  font-size: ${fontSize};
-  padding: 0 0.5rem 0.5rem calc(14px + 0.5rem + 0.15rem); // to line up with search inputs
+  font-size: ${smallFontSize};
+  padding: 0 0.25rem 0.25rem ${indentPadding};
 `;
 
 export const Form = styled.form`
@@ -54,11 +56,17 @@ export const Form = styled.form`
 `;
 
 export const Label = styled.label`
-  font-size: ${fontSize};
+  font-size: ${smallFontSize};
+  color: ${lighterTextColor};
+  ${labelMargin}
 `;
 
 export const HideContainer = styled.div`
   display: ${({ isHidden }) => (isHidden ? 'none' : 'flex')};
   flex-direction: column;
+  flex: 1;
+`;
+
+export const ContentContainer = styled.div`
   flex: 1;
 `;

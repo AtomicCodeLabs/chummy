@@ -1,14 +1,8 @@
-import { THEME_NAMES } from '../../config/theme/selector';
 import IUserStore from './I.user.store';
+import { SIDEBAR_SIDE, SPACING } from '../../global/constants';
 
 export enum Language {
   English = 'en_US'
-}
-
-export enum Spacing {
-  Compact = 'compact',
-  Cozy = 'cozy',
-  Comfortable = 'comfortable'
 }
 
 export enum SidebarView {
@@ -39,45 +33,65 @@ export enum SectionName {
   None = 'None'
 }
 
+export enum NotificationType {
+  Success = 'Success',
+  Error = 'Error',
+  Warning = 'Warning',
+  Info = 'Info'
+}
+
+export enum ErrorTypes {
+  ThrottlingError = 'Throttling Error',
+  UserError = 'Authentication Error',
+  WindowError = 'Window Error',
+  Error = 'Error'
+}
+
+export interface Notification {
+  id?: string;
+  title?: string;
+  message: string;
+  type?: NotificationType;
+}
+
 // UiStore
 class CUiStore {
-  userStore: IUserStore = null;
+  userStore: IUserStore;
 
-  language: Language = Language.English;
-  theme: string = 'vanilla-light';
-  spacing: Spacing = Spacing.Cozy;
-  pendingRequestCount: Map<SectionName, number> = new Map(
-    Object.values(SectionName).map((sectionName) => [sectionName, 0])
-  );
-  isStickyWindow: boolean = false;
+  language: Language;
+  theme: string;
+  spacing: SPACING;
+  pendingRequestCount: Map<SectionName, number>;
+  isStickyWindow: boolean;
+  pendingNotifications: Map<string, Notification>;
+  notifications: Map<string, Notification>;
 
   // Sidebar
-  sidebarView: SidebarView = null;
-  sidebarWidth: number = null; // Last seen sidebar width, not 0 when sidebar is minimized
-  isSidebarMinimized: boolean = false;
+  sidebarView: SidebarView;
+  sidebarWidth: number;
+  sidebarSide: SIDEBAR_SIDE;
+  isSidebarMinimized: boolean;
 
   // Tree Page
   isTreeSectionMinimized: {
     [TreeSection.Sessions]: TreeState;
     [TreeSection.OpenTabs]: TreeState;
     [TreeSection.Files]: TreeState;
-  } = {
-    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 0 },
-    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 50 },
-    [TreeSection.Files]: { isMinimized: false, lastHeight: 50 }
   };
 
   // Search Page
-  isSearchSectionMinimized: boolean = true;
-  selectedQuery: string = null;
-  selectedOpenRepo: string = null;
-  selectedLanguage: string = null;
+  isSearchSectionMinimized: boolean;
+  selectedQueryFilename: string;
+  selectedQueryCode: string;
+  selectedQueryPath: string;
+  selectedOpenRepo: string;
+  selectedLanguage: string;
   // openSearchResultFiles: Set<string>;
 
   // Bookmarks Page
-  isBookmarksSectionMinimized: boolean = true;
-  selectedBookmarkQuery: string = null;
-  selectedBookmarkRepo: string = null;
+  isBookmarksSectionMinimized: boolean;
+  selectedBookmarkQuery: string;
+  selectedBookmarkRepo: string;
   openBookmarkRepos: Set<string>;
 }
 

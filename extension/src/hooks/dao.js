@@ -1,17 +1,17 @@
 import { useContext, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useUserStore } from './store';
-import { FirebaseContext } from '../config/dao';
+import { DAOContext } from '../config/dao';
 import useOctoDAO from './octokit';
 
-const useFirebaseDAO = () => {
-  return useContext(FirebaseContext);
+const useDAO = () => {
+  return useContext(DAOContext);
 };
 
 // Hook that just triggers current user fetch and returns a pending status that
 // frontend can act on conditionally
 export const checkCurrentUser = () => {
-  const firebase = useFirebaseDAO();
+  const firebase = useDAO();
   const octoDAO = useOctoDAO();
   const history = useHistory();
   const location = useLocation();
@@ -51,4 +51,4 @@ export const checkCurrentUser = () => {
   return { isPending, user };
 };
 
-export default useFirebaseDAO;
+export default useDAO;

@@ -1,18 +1,13 @@
 import IUiStore from './I.ui.store';
 import IFileStore, { Repo, Session } from './I.file.store';
-
-export enum AccountType {
-  Community = 'community',
-  Professional = 'professional',
-  Enterprise = 'enterprise'
-}
+import { ACCOUNT_TYPE } from '../../global/constants';
 
 export interface User {
   uid: string;
   displayName: string;
   photoURL: string;
   apiKey: string;
-  accountType: AccountType;
+  accountType: ACCOUNT_TYPE;
   email: string;
 }
 

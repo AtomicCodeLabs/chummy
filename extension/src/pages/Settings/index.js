@@ -1,13 +1,25 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Scrollbars } from 'react-custom-scrollbars';
 
-import { checkCurrentUser } from '../../hooks/firebase';
-import { useUiStore, useUserStore } from '../../hooks/store';
+import { checkCurrentUser } from '../../hooks/dao';
+import { useFileStore, useUiStore, useUserStore } from '../../hooks/store';
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import { Select } from '../../components/Form/Select';
-import { isStickyWindowOptions, spacingOptions, themeOptions } from './options';
+import TextButton from '../../components/Buttons/TextButton';
+import { Flag } from '../../components/Text';
+import Scrollbars from '../../components/Scrollbars';
+import {
+  isStickyWindowConfig,
+  sidebarSideConfig,
+  spacingConfig,
+  themeConfig
+} from './options';
+import { updateSidebarSide } from '../../utils/browser';
+import { browserName } from '../../config/browser';
+import { NotificationType } from '../../config/store/I.ui.store';
+
+const ChromiumOnly = () => <Flag>Chromium Only</Flag>;
 
 export default observer(() => {
   checkCurrentUser();
@@ -17,33 +29,40 @@ export default observer(() => {
     spacing,
     setSpacing,
     isStickyWindow,
-    setIsStickyWindow
+    setIsStickyWindow,
+    sidebarSide,
+    setSidebarSide,
+    addGenericPendingNotification,
+    clear: uiClear
   } = useUiStore();
   const { user } = useUserStore();
+  const { clear: fileClear } = useFileStore();
+
+  const injectInfoIntoOption = (option) => ({
+    ...option,
+    currentTier: user.accountType
+  });
 
   return (
-    <Scrollbars
-      style={{
-        width: '100%',
-        height: '100%'
-      }}
-      autoHideTimeout={500}
-      autoHide
-    >
+    <Scrollbars>
       <PanelsContainer>
         <Panel
           title="Color Theme"
           description="Specify which color theme to use in the extension popup and Github window."
+          flag={!themeConfig.browsers.includes(browserName) && <ChromiumOnly />}
         >
           <Select
             name="themeSetting"
-            value={themeOptions.find((o) => o.value === theme)}
+            value={injectInfoIntoOption(
+              themeConfig.options.find((o) => o.value === theme)
+            )}
             placeholder="Theme"
-            options={themeOptions}
+            options={themeConfig.options}
             onChange={(option) => {
               setTheme(option.value);
             }}
             isOptionDisabled={(option) =>
+              !themeConfig.browsers.includes(browserName) ||
               !option.tiers.includes(user.accountType)
             }
           />
@@ -52,16 +71,22 @@ export default observer(() => {
         <Panel
           title="Density"
           description="Controls the spacing and sizes of elements."
+          flag={
+            !spacingConfig.browsers.includes(browserName) && <ChromiumOnly />
+          }
         >
           <Select
             name="spacingSetting"
-            value={spacingOptions.find((o) => o.value === spacing)}
+            value={injectInfoIntoOption(
+              spacingConfig.options.find((o) => o.value === spacing)
+            )}
             placeholder="Spacing"
-            options={spacingOptions}
+            options={spacingConfig.options}
             onChange={(option) => {
               setSpacing(option.value);
             }}
             isOptionDisabled={(option) =>
+              !spacingConfig.browsers.includes(browserName) ||
               !option.tiers.includes(user.accountType)
             }
           />
@@ -69,22 +94,78 @@ export default observer(() => {
         <PanelDivider />
         <Panel
           title="Sticky Window"
-          description="Controls whether extension popup window will stick to the currently active window when focus is changed or window is dragged around."
+          description="Controls whether extension sidebar window will stick to the currently active window when focus is changed or window is dragged around."
+          flag={
+            !isStickyWindowConfig.browsers.includes(browserName) && (
+              <ChromiumOnly />
+            )
+          }
         >
           <Select
             name="isStickyWindowSetting"
-            value={isStickyWindowOptions.find(
-              (o) => o.value === isStickyWindow
+            value={injectInfoIntoOption(
+              isStickyWindowConfig.options.find(
+                (o) => o.value === isStickyWindow
+              )
             )}
             placeholder="Sticky Window"
-            options={isStickyWindowOptions}
+            options={isStickyWindowConfig.options}
             onChange={(option) => {
               setIsStickyWindow(option.value);
             }}
             isOptionDisabled={(option) =>
+              !isStickyWindowConfig.browsers.includes(browserName) ||
               !option.tiers.includes(user.accountType)
             }
           />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Sidebar Side"
+          description="Choose which side of the main window the extension should appear on. Works best with sticky window on."
+          flag={
+            !sidebarSideConfig.browsers.includes(browserName) && (
+              <ChromiumOnly />
+            )
+          }
+        >
+          <Select
+            name="sidebarSideSetting"
+            value={injectInfoIntoOption(
+              sidebarSideConfig.options.find((o) => o.value === sidebarSide)
+            )}
+            placeholder="Sidebar Side"
+            options={sidebarSideConfig.options}
+            onChange={(option) => {
+              // Send message to bg to send extension to the correct side
+              updateSidebarSide(sidebarSide, option.value);
+              setSidebarSide(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !sidebarSideConfig.browsers.includes(browserName) ||
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Reset"
+          description="Clear cache and reset all settings to defaults. Warning, your last session will be lost!"
+        >
+          <TextButton
+            onClick={() => {
+              // Reset file and ui stores to default
+              uiClear();
+              fileClear();
+              addGenericPendingNotification(
+                'Application Reset',
+                'Cache and settings were successfully reset to defaults.',
+                NotificationType.Success
+              );
+            }}
+          >
+            Reset to defaults
+          </TextButton>
         </Panel>
       </PanelsContainer>
     </Scrollbars>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   FileIcon,
@@ -8,7 +8,13 @@ import {
 
 import StyledNode from './Base.style';
 import OpenCloseChevron from '../OpenCloseChevron';
-import { getMatchFragment, createBookmark, clickedEl } from './util';
+import {
+  getMatchFragment,
+  createBookmark,
+  clickedEl,
+  renderName
+} from './util';
+import { redirectToUrl } from '../../utils/browser';
 import SearchResultMatchNode from './SearchResultMatchNode';
 import useBookmarkState from '../../hooks/useBookmarkState';
 import useTheme from '../../hooks/useTheme';
@@ -21,10 +27,18 @@ const SearchResultFileNode = ({ file }) => {
     name,
     path,
     html_url: htmlUrl,
-    repo
+    repo,
+    queryFilename,
+    queryCode
   } = file;
-  const bookmark = createBookmark(repo.owner, repo.name, 'master', file);
+  const bookmark = createBookmark(
+    repo.owner,
+    repo.name,
+    repo.defaultBranch,
+    file
+  );
   const bookmarkEl = useRef(null);
+  const chevronEl = useRef(null);
   const [open, setOpen] = useState(false);
   const parentPath = path.replace(name, '');
   const [localBookmarked, setLocalBookmarked] = useBookmarkState(
@@ -32,6 +46,16 @@ const SearchResultFileNode = ({ file }) => {
     'Search'
   );
   const { spacing } = useTheme();
+  const hasMatches = textMatches.length !== 0;
+
+  const isFileMatch = useMemo(
+    () => textMatches.some((match) => match.property === 'path'),
+    [textMatches]
+  );
+  const hasContentMatches = useMemo(
+    () => textMatches.some((match) => match.property === 'content'),
+    [textMatches]
+  );
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -43,20 +67,27 @@ const SearchResultFileNode = ({ file }) => {
       return;
     }
 
-    // Or toggle open state
-    if (open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
+    // Toggle Open State
+    if (clickedEl(chevronEl, e)) {
+      if (open) {
+        setOpen(false);
+      } else {
+        setOpen(true);
+      }
+      return;
     }
+
+    // Clicking anywhere else should open the file
+    redirectToUrl(htmlUrl);
   };
 
   const renderMatches = () =>
     open &&
-    textMatches &&
+    hasMatches &&
     textMatches
       .map(
-        ({ fragment, matches }, fileIndex) =>
+        ({ property, fragment, matches }, fileIndex) =>
+          property !== 'path' && // Don't include path matches
           matches &&
           matches.map(({ indices }, textMatchIndex) => {
             const { matchFragment, start, end } = getMatchFragment(
@@ -80,12 +111,16 @@ const SearchResultFileNode = ({ file }) => {
   return (
     <>
       <StyledNode.Container className="node" onClickCapture={handleClick}>
-        <StyledNode.LeftSpacer level={0} />
-        <OpenCloseChevron open={open} />
+        <StyledNode.LeftSpacer level={0} extraIconFiller={!hasContentMatches} />
+        {hasContentMatches && <OpenCloseChevron open={open} ref={chevronEl} />}
         <StyledNode.Icon>
           <FileIcon size={14} verticalAlign="middle" />
         </StyledNode.Icon>
-        <StyledNode.Name>{name}</StyledNode.Name>
+        <StyledNode.Name>
+          {isFileMatch
+            ? renderName(name, `${queryFilename} ${queryCode}`)
+            : name}
+        </StyledNode.Name>
         <StyledNode.SubName variant="smallFont">
           {parentPath}
         </StyledNode.SubName>
@@ -133,8 +168,11 @@ SearchResultFileNode.propTypes = {
     html_url: PropTypes.string,
     repo: PropTypes.shape({
       owner: PropTypes.string,
-      name: PropTypes.string
-    })
+      name: PropTypes.string,
+      defaultBranch: PropTypes.string
+    }),
+    queryFilename: PropTypes.string,
+    queryCode: PropTypes.string
   }).isRequired
 };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { useForm } from 'react-hook-form';
+import { KebabHorizontalIcon } from '@primer/octicons-react';
 
 import { SectionContent } from '../../components/Section';
 import OpenCloseChevron from '../../components/OpenCloseChevron';
@@ -10,12 +10,14 @@ import {
   FormContainer,
   FormResultsDescriptionContainer,
   Form,
-  HideContainer
+  HideContainer,
+  Label
 } from '../../components/Form';
 import Input from '../../components/Form/Input';
 import { ControlledSelect } from '../../components/Form/Select';
 import BookmarkRepoNode from '../../components/Node/BookmarkRepoNode';
-import { checkCurrentUser } from '../../hooks/firebase';
+import Scrollbars from '../../components/Scrollbars';
+import { checkCurrentUser } from '../../hooks/dao';
 import { useUiStore, useUserStore } from '../../hooks/store';
 import useDebounce from '../../hooks/useDebounce';
 import { getBookmarkResultsDescription, useSearchableBookmarks } from './util';
@@ -94,14 +96,18 @@ export default observer(() => {
             open={!isBookmarksSectionMinimized}
             onClick={toggleBookmarksSection}
             highlightOnHover
+            Icon={<KebabHorizontalIcon />}
+            startDeg={90}
+            noRotate
           />
           <Form>
+            <Label htmlFor="query">Search</Label>
             <Input
               className={`input-field ${
                 isBookmarksSectionMinimized && 'is-technically-last'
               }`}
               type="text"
-              placeholder="Search"
+              placeholder=""
               id="query"
               name="query"
               ref={register({ required: true })}
@@ -112,6 +118,7 @@ export default observer(() => {
               // }
             />
             <HideContainer isHidden={isBookmarksSectionMinimized}>
+              <Label htmlFor="repository">Repository</Label>
               <ControlledSelect
                 className="input-field"
                 name="repository"
@@ -131,10 +138,6 @@ export default observer(() => {
         </FormResultsDescriptionContainer>
       </HeaderContainer>
       <Scrollbars
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
         onScrollFrame={({ top }) => {
           if (top === 0) {
             // At top of page
@@ -143,8 +146,6 @@ export default observer(() => {
             setAtScrollTop(false);
           }
         }}
-        autoHideTimeout={500}
-        autoHide
       >
         <SectionContent>
           {bookmarkRepoResults &&

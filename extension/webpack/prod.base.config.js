@@ -32,7 +32,8 @@ module.exports = {
     popup: '../src/popup/index.js'
   },
   output: {
-    filename: `[name]_${packageInfo.version}.js`
+    filename: `[name]_${packageInfo.version}.js`,
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.css'],
@@ -68,6 +69,10 @@ module.exports = {
         options: {
           outputPath: 'images'
         }
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        loader: 'url-loader'
       }
     ]
   },
@@ -91,9 +96,7 @@ module.exports = {
         SC_DISABLE_SPEEDY: true,
         EXTENSION_ID: JSON.stringify(packageInfo.extensionId),
         ASSETS_PUBLIC_PATH: JSON.stringify(process.env.ASSETS_PUBLIC_PATH),
-        WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL),
-        WEBSITE_SIGNIN: JSON.stringify(process.env.WEBSITE_SIGNIN),
-        WEBSITE_REDIRECT: JSON.stringify(process.env.WEBSITE_REDIRECT)
+        WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL)
       }
     }),
     new webpack.LoaderOptionsPlugin({

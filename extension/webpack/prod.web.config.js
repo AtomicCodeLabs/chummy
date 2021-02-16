@@ -1,10 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const base = require('./prod.base.config');
-const { formBaseManifest, generateReports, packageInfo } = require('./util');
+const { formBaseManifest, generateReports } = require('./util');
 
 module.exports = {
   ...base,
@@ -37,21 +36,20 @@ module.exports = {
       title: 'Chummy',
       template: '../src/popup/index.html',
       chunks: ['popup'],
-      publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
       filename: 'popup.html',
       cache: false
     }),
     new HtmlWebpackPlugin({
       title: 'Chummy Background',
       template: '../src/background/index.html',
-      chunks: ['background', 'background.app', 'background.storage'],
+      chunks: [
+        'background',
+        'background.app',
+        'background.dao',
+        'background.storage'
+      ],
       filename: 'background.html',
       cache: false
-    }),
-    new HtmlWebpackTagsPlugin({
-      scripts: [`background.dao_${packageInfo.version}.js`],
-      publicPath: `${process.env.ASSETS_PUBLIC_PATH}/${packageInfo.version}`,
-      append: true
     }),
     ...generateReports('prod', 'web')
   ]

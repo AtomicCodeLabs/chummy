@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import ReactSelect, { createFilter } from 'react-select';
 import { Controller } from 'react-hook-form';
 
+import { Flag } from '../Text';
 import { INPUT } from '../../constants/sizes';
 import {
   backgroundColor,
@@ -18,7 +19,9 @@ import {
   fontSize,
   fieldBackgroundColor,
   lighterTextColor,
-  fieldFocusOutlineColor
+  fieldFocusOutlineColor,
+  optionDisabledTextColor,
+  optionDisabledBackgroundColor
 } from '../../constants/theme';
 import useTheme from '../../hooks/useTheme';
 
@@ -28,22 +31,33 @@ const StyledOptionContainer = styled.div`
   height: ${INPUT.SELECT.OPTION.HEIGHT}px;
   padding: 0.2rem calc(0.6rem + 4px);
   font-size: ${fontSize};
-  cursor: pointer;
+  cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'pointer')};
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
 
-  background-color: ${({ isSelected, ...props }) =>
-    isSelected
+  background-color: ${({ isSelected, isDisabled, ...props }) => {
+    if (isDisabled) {
+      return `${optionDisabledBackgroundColor(props)}`;
+    }
+    return isSelected
       ? `${backgroundHighlightDarkColor(props)}`
-      : `${backgroundColor(props)}`};
-  color: ${({ isSelected, ...props }) =>
-    isSelected
-      ? `${backgroundHighlightDarkTextColor(props)}`
-      : `${lightTextColor(props)}`};
+      : `${backgroundColor(props)}`;
+  }};
 
-  ${({ isSelected, ...props }) =>
+  color: ${({ isSelected, isDisabled, ...props }) => {
+    if (isDisabled) {
+      return `${optionDisabledTextColor(props)}`;
+    }
+    return isSelected
+      ? `${backgroundHighlightDarkTextColor(props)}`
+      : `${lightTextColor(props)}`;
+  }};
+
+  ${({ isSelected, isDisabled, ...props }) =>
     !isSelected &&
+    !isDisabled &&
     css`
       &:hover {
         background-color: ${backgroundHighlightColor(props)} !important;
@@ -58,6 +72,7 @@ const Option = (props) => {
     className = '',
     cx,
     getStyles,
+    getValue,
     isDisabled,
     isFocused,
     isSelected,
@@ -67,11 +82,29 @@ const Option = (props) => {
   delete props.innerProps.onMouseMove;
   delete props.innerProps.onMouseOver;
 
+  const option = getValue()[0];
+
+  const renderDisabledReason = () => {
+    if (!isDisabled) {
+      return;
+    }
+
+    // Could be disabled bc not proper tier level
+    if (!option.tiers.includes(option.currentTier)) {
+      return option.tiers[0]; // return first eligible tier
+    }
+    // Or because setting is not compatible w browser. This case is
+    // handled in the parent panel
+  };
+
+  const flagText = renderDisabledReason();
+
   return (
     <StyledOptionContainer
       ref={innerRef}
       css={getStyles('option', props)}
       isSelected={isSelected}
+      isDisabled={isDisabled}
       className={cx(
         {
           option: true,
@@ -83,7 +116,7 @@ const Option = (props) => {
       )}
       {...innerProps}
     >
-      {children}
+      {children} {flagText && <Flag>{flagText}</Flag>}
     </StyledOptionContainer>
   );
 };
@@ -113,7 +146,9 @@ export const Select = (props) => {
         ...base,
         minHeight: 'auto',
         color: lightTextColor(STPayload),
-        fontSize: fontSize(STPayload)
+        fontSize: fontSize(STPayload),
+        marginTop: 0,
+        marginBottom: 0
       }),
       dropdownIndicator: (base) => ({
         ...base,

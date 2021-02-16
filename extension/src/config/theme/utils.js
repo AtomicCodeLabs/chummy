@@ -1,7 +1,6 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable prefer-const */
 /* eslint-disable no-param-reassign */
-/* eslint-disable import/prefer-default-export */
 
 export const isThemeDark = (themeType) => themeType === 'dark';
 
@@ -23,4 +22,12 @@ export const lightenDarkenColor = (col, amt) => {
   if (g > 255) g = 255;
   else if (g < 0) g = 0;
   return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+};
+
+// Lightens or darkens a color depending on whether theme is light or dark
+export const highlightColor = (col, themeType) => {
+  if (isThemeDark(themeType)) {
+    return lightenDarkenColor(col, 20); // lighten
+  }
+  return lightenDarkenColor(col, -20); // darken
 };

@@ -3,15 +3,17 @@ import theme from 'styled-theming';
 import {
   fontSize,
   indentPadding,
-  lightTextColor,
-  textColor,
   textSpacing,
   lineHeight,
-  fieldBackgroundColor,
-  h3FontSize
+  h3FontSize,
+  themeType,
+  backgroundColor,
+  lighterTextColor,
+  smallFontSize
 } from '../../constants/theme';
+import { highlightColor } from '../../config/theme/utils';
 
-const innerPadding = theme('spacing', {
+export const innerPadding = theme('spacing', {
   compact: '0.6rem',
   cozy: '0.8rem',
   comfortable: '1.2rem'
@@ -24,23 +26,49 @@ export const PanelsContainer = styled.div`
 export const PanelDivider = styled.div`
   margin: -1px calc(${indentPadding} - ${innerPadding});
   height: 1px;
-  background-color: ${fieldBackgroundColor};
+  background-color: ${({ bgColor = backgroundColor, ...props }) =>
+    highlightColor(bgColor(props), themeType(props))};
+`;
+
+export const PanelDescriptionContainer = styled.div`
+  display: flex;
+  color: ${lighterTextColor};
+  font-size: ${smallFontSize};
+  padding: 0 calc(${indentPadding} - ${innerPadding}) 0.25rem ${indentPadding};
+
+  .spacer {
+    flex: 1;
+  }
+`;
+
+export const PanelDivider2 = styled.div`
+  height: ${innerPadding};
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  background-color: 'transparent';
+  border-radius: ${({ borderRadius }) => borderRadius};
+
+  color: ${({ fontColor }) => fontColor};
+
+  ${({ borderLeftColor, ...props }) =>
+    borderLeftColor &&
+    css`
+      border-left: 5px solid ${borderLeftColor(props)};
+    `}
 
   padding: ${({ evenPadding, ...props }) =>
     evenPadding
       ? innerPadding(props)
       : `calc(${innerPadding(props)} * 1.5) ${innerPadding(props)}}`};
 
-  ${({ highlightOnHover, ...props }) =>
+  ${({ highlightOnHover, bgColor, ...props }) =>
     highlightOnHover &&
     css`
       &:hover {
-        background-color: ${fieldBackgroundColor(props)};
+        background-color: ${highlightColor(bgColor(props), themeType(props))};
       }
     `};
 
@@ -68,13 +96,21 @@ const RightPanel = styled.div`
 const Title = styled.div`
   font-size: ${h3FontSize};
   font-weight: 600;
-  color: ${textColor};
+  color: ${({ fontColor, ...props }) => fontColor(props)};
   margin-bottom: ${textSpacing};
+
+  span.strikethrough {
+    text-decoration: line-through;
+  }
+
+  span {
+    margin-right: 0.2rem;
+  }
 `;
 
 const Description = styled.div`
   font-size: ${fontSize};
-  color: ${lightTextColor};
+  color: ${({ fontColor, ...props }) => fontColor(props)};
   margin-bottom: ${({ isLast, ...props }) =>
     isLast ? '0' : `${textSpacing(props)}`};
   line-height: ${lineHeight};

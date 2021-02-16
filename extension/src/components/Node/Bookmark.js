@@ -9,12 +9,12 @@ import {
 
 import StyledNode from './Base.style';
 import {
-  redirectToUrl,
   processBookmarkInformation,
   getBookmarkUrl,
   clickedEl,
   highlightTextPart
 } from './util';
+import { redirectToUrl } from '../../utils/browser';
 import useTheme from '../../hooks/useTheme';
 import useBookmarkState from '../../hooks/useBookmarkState';
 import { ICON } from '../../constants/sizes';

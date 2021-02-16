@@ -1,88 +1,111 @@
 // https://codepen.io/ivillamil/pen/dokmG/
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Container = styled.div`
-  .loader {
-    animation: rotate 1s infinite;
-    height: 50px;
+import { ICON } from '../../constants/sizes';
+import { nodeIconColor, spacerSpacing } from '../../constants/theme';
+import { P } from '../Text';
+
+const Spacer = styled.div`
+  height: ${spacerSpacing};
+`;
+
+const Loader = styled.div`
+  & {
+    /* animation: loader 5s linear infinite; */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  @keyframes loader {
+    0% {
+      left: -100px;
+    }
+    100% {
+      left: 110%;
+    }
+  }
+  #box {
     width: 50px;
+    height: 50px;
+    background: ${({ iconColor, ...props }) =>
+      iconColor || nodeIconColor(props)};
+    animation: animate 0.5s linear infinite;
+    border-radius: 3px;
   }
-
-  .loader:before,
-  .loader:after {
+  @keyframes animate {
+    17% {
+      border-bottom-right-radius: 3px;
+    }
+    25% {
+      transform: translateY(9px) rotate(22.5deg);
+    }
+    50% {
+      transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+      border-bottom-right-radius: 40px;
+    }
+    75% {
+      transform: translateY(9px) rotate(67.5deg);
+    }
+    100% {
+      transform: translateY(0) rotate(90deg);
+    }
+  }
+  #shadow {
+    margin-top: 9px;
+    width: 50px;
+    height: 5px;
+    background: #000;
+    opacity: 0.1;
     border-radius: 50%;
-    content: '';
-    display: block;
-    height: 20px;
-    width: 20px;
+    animation: shadow 0.5s linear infinite;
   }
-  .loader:before {
-    animation: ball1 1s infinite;
-    background-color: #cb2025;
-    box-shadow: 30px 0 0 #f8b334;
-    margin-bottom: 10px;
-  }
-  .loader:after {
-    animation: ball2 1s infinite;
-    background-color: #00a096;
-    box-shadow: 30px 0 0 #97bf0d;
-  }
-
-  @keyframes rotate {
-    0% {
-      -webkit-transform: rotate(0deg) scale(0.8);
-      -moz-transform: rotate(0deg) scale(0.8);
-    }
+  @keyframes shadow {
     50% {
-      -webkit-transform: rotate(360deg) scale(1.2);
-      -moz-transform: rotate(360deg) scale(1.2);
-    }
-    100% {
-      -webkit-transform: rotate(720deg) scale(0.8);
-      -moz-transform: rotate(720deg) scale(0.8);
-    }
-  }
-
-  @keyframes ball1 {
-    0% {
-      box-shadow: 30px 0 0 #f8b334;
-    }
-    50% {
-      box-shadow: 0 0 0 #f8b334;
-      margin-bottom: 0;
-      -webkit-transform: translate(15px, 15px);
-      -moz-transform: translate(15px, 15px);
-    }
-    100% {
-      box-shadow: 30px 0 0 #f8b334;
-      margin-bottom: 10px;
-    }
-  }
-
-  @keyframes ball2 {
-    0% {
-      box-shadow: 30px 0 0 #97bf0d;
-    }
-    50% {
-      box-shadow: 0 0 0 #97bf0d;
-      margin-top: -20px;
-      -webkit-transform: translate(15px, 15px);
-      -moz-transform: translate(15px, 15px);
-    }
-    100% {
-      box-shadow: 30px 0 0 #97bf0d;
-      margin-top: 0;
+      transform: scale(1.2, 1);
     }
   }
 `;
 
-const SplashSpinner = () => {
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  margin-top: calc(10vh * -1);
+  max-width: calc(2 * ${ICON.SPLASH.SIZE}px);
+  min-width: calc(1.5 * ${ICON.SPLASH.SIZE}px);
+  text-align: center;
+`;
+
+const SplashSpinner = ({ text, iconColor }) => {
   return (
     <Container>
-      <div className="loader" />
+      <Loader iconColor={iconColor}>
+        <div id="box" />
+        <div id="shadow" />
+      </Loader>
+      {text && (
+        <>
+          <Spacer />
+          <P>{text}</P>
+        </>
+      )}
     </Container>
   );
+};
+
+SplashSpinner.propTypes = {
+  text: PropTypes.string,
+  iconColor: PropTypes.string
+};
+
+SplashSpinner.defaultProps = {
+  text: null,
+  iconColor: null
 };
 
 export default SplashSpinner;

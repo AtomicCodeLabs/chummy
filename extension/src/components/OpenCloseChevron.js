@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cloneElement, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { ChevronRightIcon } from '@primer/octicons-react';
@@ -16,7 +16,14 @@ const Container = styled.div`
   svg {
     fill: ${nodeIconColor};
     transition: transform 100ms;
-    transform: rotate(${({ open }) => (open ? 90 : 0)}deg);
+    transform: rotate(${({ startDeg }) => startDeg}deg);
+    ${({ noRotate }) =>
+      !noRotate &&
+      css`
+        transform: rotate(
+          ${({ startDeg, open }) => (open ? 90 + startDeg : startDeg)}deg
+        );
+      `}
   }
 
   ${({ highlightOnHover }) =>
@@ -28,32 +35,43 @@ const Container = styled.div`
     `}
 `;
 
-const OpenCloseChevron = ({ open, onClick, highlightOnHover }) => {
-  const { spacing } = useTheme();
-  return (
-    <Container
-      open={open}
-      onClick={onClick}
-      highlightOnHover={highlightOnHover}
-    >
-      <ChevronRightIcon
-        size={ICON.SIZE({ theme: { spacing } })}
-        verticalAlign="middle"
-      />
-    </Container>
-  );
-};
+const OpenCloseChevron = forwardRef(
+  ({ open, onClick, highlightOnHover, Icon, noRotate, startDeg }, ref) => {
+    const { spacing } = useTheme();
+    return (
+      <Container
+        open={open}
+        onClick={onClick}
+        highlightOnHover={highlightOnHover}
+        noRotate={noRotate}
+        startDeg={startDeg}
+        ref={ref}
+      >
+        {cloneElement(Icon, {
+          size: ICON.SIZE({ theme: { spacing } }),
+          verticalAlign: 'middle'
+        })}
+      </Container>
+    );
+  }
+);
 
 OpenCloseChevron.propTypes = {
   open: PropTypes.bool,
   onClick: PropTypes.func,
-  highlightOnHover: PropTypes.bool
+  highlightOnHover: PropTypes.bool,
+  Icon: PropTypes.node,
+  startDeg: PropTypes.number,
+  noRotate: PropTypes.bool
 };
 
 OpenCloseChevron.defaultProps = {
   open: false,
   onClick: () => {},
-  highlightOnHover: false
+  highlightOnHover: false,
+  Icon: <ChevronRightIcon />,
+  startDeg: 0,
+  noRotate: false
 };
 
 export default OpenCloseChevron;

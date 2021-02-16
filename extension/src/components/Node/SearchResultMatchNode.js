@@ -1,32 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import { LinkExternalIcon } from '@primer/octicons-react';
 
 import StyledNode from './Base.style';
-import { redirectToUrl } from './util';
+import { clickedEl } from './util';
+import { redirectToUrl } from '../../utils/browser';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
 
 const SearchResultMatchNode = observer(
   ({ fragment, indices: { start, end }, url }) => {
     const { spacing } = useTheme();
+    const linkEl = useRef(null);
     const [showNewTab, setShowNewTab] = useState(false);
 
     const handleClick = (e) => {
       e.stopPropagation();
       e.preventDefault();
 
-      // Always open search match file in new tab
-      redirectToUrl(url);
+      // Open search match file in new tab
+      if (clickedEl(linkEl, e)) {
+        redirectToUrl(url);
+      }
     };
 
     return (
       <StyledNode.Container
         className="node"
-        onClick={handleClick}
+        onClickCapture={handleClick}
         onMouseEnter={() => setShowNewTab(true)}
         onMouseLeave={() => setShowNewTab(false)}
+        noPointer
       >
         <StyledNode.LeftSpacer level={1} />
         <StyledNode.Name>
@@ -39,7 +44,7 @@ const SearchResultMatchNode = observer(
         <StyledNode.MiddleSpacer />
         <StyledNode.RightIconContainer>
           {showNewTab && (
-            <StyledNode.Icon>
+            <StyledNode.Icon ref={linkEl}>
               <LinkExternalIcon
                 size={ICON.SIZE({ theme: { spacing } })}
                 verticalAlign="middle"

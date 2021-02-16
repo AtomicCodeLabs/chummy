@@ -8,26 +8,27 @@ import cloneDeep from 'lodash.clonedeep';
 import log from '../../config/log';
 
 export const redirectTo = (
-  base,
-  filepath,
+  owner,
+  repo,
+  type,
+  branch,
+  nodePath,
   currentWindowTab,
   openInNewTab = false
 ) => {
   const request = cloneDeep({
     action: 'redirect',
-    payload: { window: currentWindowTab, base, filepath, openInNewTab }
+    payload: {
+      window: currentWindowTab,
+      owner,
+      repo,
+      type,
+      branch,
+      nodePath,
+      openInNewTab
+    }
   });
   log.toBg('Redirect request -> bg', request);
-  browser.runtime.sendMessage(request);
-};
-
-export const redirectToUrl = (url) => {
-  const request = {
-    action: 'redirect-to-url',
-    payload: { url }
-  };
-  log.toBg('Redirect to url request -> bg', request);
-
   browser.runtime.sendMessage(request);
 };
 
@@ -56,7 +57,6 @@ export const closeTab = async (tabId) => {
     };
     log.toBg('Close tab request -> bg', request);
     const response = await browser.runtime.sendMessage(request);
-    log.debug('Response', response);
 
     if (response?.complete) {
       return true;
@@ -114,7 +114,7 @@ export const processBookmarkInformation = (bookmark) => {
   return {
     primaryText: decodeURI(fileName),
     secondaryText: parentPath,
-    subpageText: bookmark?.branch?.name || 'master' // repo branch name
+    subpageText: bookmark?.branch?.name
   };
 };
 
@@ -167,6 +167,69 @@ export const getMatchFragment = (fragment, matchStart, matchEnd) => {
   };
 };
 
+// https://www.tutorialspoint.com/finding-the-longest-common-consecutive-substring-between-two-strings-in-javascript
+export const findCommonSubstring = (str1 = '', str2 = '') => {
+  const s1 = [...str1];
+  const s2 = [...str2];
+  const arr = Array(s2.length + 1)
+    .fill(null)
+    .map(() => {
+      return Array(s1.length + 1).fill(null);
+    });
+  for (let j = 0; j <= s1.length; j += 1) {
+    arr[0][j] = 0;
+  }
+  for (let i = 0; i <= s2.length; i += 1) {
+    arr[i][0] = 0;
+  }
+  let len = 0;
+  let col = 0;
+  let row = 0;
+  for (let i = 1; i <= s2.length; i += 1) {
+    for (let j = 1; j <= s1.length; j += 1) {
+      if (s1[j - 1] === s2[i - 1]) {
+        arr[i][j] = arr[i - 1][j - 1] + 1;
+      } else {
+        arr[i][j] = 0;
+      }
+      if (arr[i][j] > len) {
+        len = arr[i][j];
+        col = j;
+        row = i;
+      }
+    }
+  }
+  if (len === 0) {
+    return '';
+  }
+  let res = '';
+  while (arr[row][col] > 0) {
+    res = s1[col - 1] + res;
+    row -= 1;
+    col -= 1;
+  }
+  return res;
+};
+
+export const getNameFragmentIndices = (query, name) => {
+  // Ignore words containing : qualifier symbol in query
+  const parsedQuery = query
+    .split(' ')
+    .filter((word) => !word.includes(':'))
+    .join(' ')
+    .toLowerCase();
+
+  const parsedName = name.toLowerCase();
+
+  const commonSubstring = findCommonSubstring(parsedQuery, parsedName);
+  if (!commonSubstring) {
+    return { start: -1, end: -1 };
+  }
+  const start = parsedName.indexOf(commonSubstring);
+  const end = start + commonSubstring.length;
+  return { start, end };
+};
+
 export const getBookmarkUrl = (bookmark) => {
   if (!bookmark?.repo || !bookmark?.path) {
     return null;
@@ -176,8 +239,25 @@ export const getBookmarkUrl = (bookmark) => {
     'https://github.com/',
     pathUtil.join(
       `/${repo.owner}/${repo.name}`,
-      `/blob/${branch?.name || 'master'}/${path}`
+      `/blob/${branch?.name}/${path}`
     )
+  );
+};
+
+export const renderName = (n, query) => {
+  // Try to find matching fragments
+  const { start, end } = getNameFragmentIndices(query, n);
+
+  if (start === -1 || end === -1) {
+    return n;
+  }
+
+  return (
+    <span>
+      {n.slice(0, start)}
+      <span className="highlight">{n.slice(start, end)}</span>
+      {n.slice(end)}
+    </span>
   );
 };
 

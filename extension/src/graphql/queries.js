@@ -6,6 +6,14 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -21,9 +29,6 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
@@ -37,12 +42,17 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         accountType
-        bookmarks {
-          nextToken
+        metadata {
+          cognitoUsername
+          cognitoUserPoolId
+          stripeId
         }
         createdAt
         updatedAt
         owner
+        bookmarks {
+          nextToken
+        }
       }
       nextToken
     }

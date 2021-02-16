@@ -2,15 +2,14 @@
 /* eslint-disable import/no-named-as-default */
 import React from 'react';
 import { MemoryRouter as Router } from 'react-router-dom';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { render } from 'react-dom';
 
 import App from '../pages/App';
 import ThemeProvider from '../config/theme/context';
-import RootStoreContext from '../config/store/context.ts';
-import rootStore from '../config/store/root.store.ts';
-import FirebaseProvider from '../config/dao';
+import RootStoreContext from '../config/store/context';
+import rootStore from '../config/store/root.store';
+import DAOProvider from '../config/dao';
 import OctoProvider from '../config/octokit';
-import './index.css';
 
 let app;
 
@@ -27,14 +26,14 @@ function renderDevPanel() {
       {/* MobX store for general data */}
       <OctoProvider store={rootStore}>
         {/* Github DAO for making requests */}
-        <FirebaseProvider store={rootStore}>
+        <DAOProvider store={rootStore}>
           {/* Firebase store for auth */}
           <Router>
             <ThemeProvider>
               <App />
             </ThemeProvider>
           </Router>
-        </FirebaseProvider>
+        </DAOProvider>
       </OctoProvider>
     </RootStoreContext.Provider>,
     app

@@ -3,7 +3,7 @@ import IUserStore from './I.user.store';
 
 export enum NodeType {
   Blob = 'blob',
-  Tree = 'tree',
+  Tree = 'tree'
 }
 
 export enum SubpageType {
@@ -36,9 +36,11 @@ export interface Bookmark extends Node {
 
 export interface Tab {
   name: string;
-  tabId: number;
-  tabTitle?: string;
+  tabId?: number;
+  nodeName?: string;
   repo?: Repo;
+  subpage?: string;
+  url?: string;
 }
 
 export interface Repo {
@@ -48,12 +50,23 @@ export interface Repo {
   bookmarks?: { [key: string]: Bookmark };
   type: NodeType;
   isOpen?: boolean;
+  defaultBranch?: string;
 }
 
+// Interfaces for repo tab objects we get from background
+export interface BgRepo {
+  owner: string;
+  repo: string;
+  tab: Tab;
+  type: NodeType;
+  url: string;
+  defaultBranch: string;
+}
 
 export interface Session {
+  name: string;
   id: string;
-  tabs?: { [key: string]: Tab };
+  tabs?: Tab[];
 }
 
 export interface Branch extends Tab {
@@ -78,7 +91,7 @@ export interface WindowTab {
   tabId: number;
 }
 
-export default interface IFileStore {
+class CFileStore {
   uiStore: IUiStore;
   userStore: IUserStore;
   isPending: boolean;
@@ -98,7 +111,16 @@ export default interface IFileStore {
   cachedNodes: Map<string, Node>;
   openRepos: Map<string, Repo>;
   currentBranch: Branch; // Branch to show in files section (active tab)
+  currentSession: Session;
 
   /* VCS Section */
   currentRepo: Repo;
 }
+
+export default interface IFileStore extends CFileStore {}
+
+export type FileStorePropsArray = Array<keyof IFileStore>;
+
+export const FileStoreKeys = Object.keys(
+  new CFileStore()
+) as FileStorePropsArray;

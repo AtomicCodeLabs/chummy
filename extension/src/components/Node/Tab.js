@@ -75,15 +75,18 @@ const Tab = observer(({ tab, currentBranch }) => {
 
 Tab.propTypes = {
   tab: PropTypes.shape({
+    name: PropTypes.string,
     tabId: PropTypes.number,
-    name: PropTypes.string
+    nodeName: PropTypes.string,
+    subpage: PropTypes.string
   }).isRequired,
   currentBranch: PropTypes.shape({
     name: PropTypes.string,
     repo: PropTypes.shape({
       owner: PropTypes.string,
       name: PropTypes.string,
-      type: PropTypes.oneOf(['blob', 'tree'])
+      type: PropTypes.oneOf(['blob', 'tree']),
+      defaultBranch: PropTypes.string
     })
   })
 };

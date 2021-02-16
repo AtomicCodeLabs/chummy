@@ -6,37 +6,31 @@ import {
   LinkExternalIcon,
   ShareIcon
 } from '@primer/octicons-react';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import Panel from '../../components/Panel';
 import { PanelsContainer, PanelDivider } from '../../components/Panel/style';
 import CircleImage from '../../components/Image/CircleImage';
 import { H2 } from '../../components/Text';
-import useFirebaseDAO, { checkCurrentUser } from '../../hooks/firebase';
+import Scrollbars from '../../components/Scrollbars';
 import TextButton from '../../components/Buttons/TextButton';
+import useDAO, { checkCurrentUser } from '../../hooks/dao';
 import { useUserStore } from '../../hooks/store';
 import useTheme from '../../hooks/useTheme';
-import { capitalize, redirectToUrl } from '../../utils';
+import { capitalize } from '../../utils';
+import { redirectToUrl } from '../../utils/browser';
 import { ICON } from '../../constants/sizes';
-import { GITHUB_URLS } from '../../constants/urls';
+import { GITHUB_URLS } from '../../global/constants';
 
 export default observer(() => {
   checkCurrentUser();
   const history = useHistory();
-  const firebase = useFirebaseDAO();
+  const dao = useDAO();
   const { user } = useUserStore();
   const { spacing } = useTheme();
   const STPayload = { theme: { spacing } };
 
   return (
-    <Scrollbars
-      style={{
-        width: '100%',
-        height: '100%'
-      }}
-      autoHideTimeout={500}
-      autoHide
-    >
+    <Scrollbars>
       <PanelsContainer>
         <Panel evenPadding center>
           <CircleImage
@@ -44,6 +38,7 @@ export default observer(() => {
             size={ICON.PROFILE_IMAGE.SIZE(STPayload)}
             alt="profile-picture"
             PlaceholderIcon={<PersonIcon />}
+            borderSize={1}
           />
           <H2>{user.displayName}</H2>
         </Panel>
@@ -54,8 +49,8 @@ export default observer(() => {
         <Panel title="Tier" description={capitalize(user.accountType)} />
         <PanelDivider />
         <Panel
-          title="Leave Feedback"
-          description="Found a bug? Need a feature?"
+          title="Feedback + Suggestions"
+          description="Enjoying the app? Found a bug? Need a feature?"
           center
           onClick={() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);
@@ -64,8 +59,8 @@ export default observer(() => {
         />
         <PanelDivider />
         <Panel
-          title="Enjoying the app?"
-          description="Spread the word to the other Github enthusiasts in your life!"
+          title="Share the love!"
+          description="Like what you see? Share Chummy with your Github chummies!"
           center
           onClick={() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);
@@ -75,7 +70,7 @@ export default observer(() => {
         <Panel highlightOnHover={false} center>
           <TextButton
             onClick={() => {
-              firebase.signOut();
+              dao.signOut();
               history.push('/account-sign-in');
             }}
           >

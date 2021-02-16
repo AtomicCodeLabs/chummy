@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import Amplify, { StorageHelper } from '@aws-amplify/core';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Auth from '@aws-amplify/auth';
@@ -13,10 +14,22 @@ import {
   isCurrentWindow,
   isExtensionOpen,
   storeTokens,
-  resolveInjectJSFilenames
+  resolveInjectJSFilenames,
+  clone
 } from './util';
-import { AccountType, APP_URLS } from './constants.ts';
+import { isAllowed } from './throttling.util';
+import { THROTTLING_OPERATION, APP_URLS } from '../global/constants';
+import ThrottlingError from '../global/errors/throttling.error';
+import UserError from '../global/errors/user.error';
 
+const signInUrl = new URL(
+  APP_URLS.WEBSITE.SIGNIN,
+  APP_URLS.WEBSITE.BASE
+).toString();
+const redirectUrl = new URL(
+  APP_URLS.WEBSITE.REDIRECT,
+  APP_URLS.WEBSITE.BASE
+).toString();
 class DAO {
   constructor() {
     // Initialize DAO in background script
@@ -91,10 +104,10 @@ class DAO {
           } catch (e) {
             error = e;
           }
-          return {
+          return clone({
             action: request.action,
             ...(success ? { payload } : { error })
-          };
+          });
         }
         // Sign Out
         if (request.action === 'sign-out') {
@@ -119,17 +132,17 @@ class DAO {
             ...data,
             action: 'sign-in-complete'
           });
-          return {
+          return clone({
             ...data,
             action: request.action
-          };
+          });
         }
         // Get current user
         if (request.action === 'get-current-user') {
-          return {
+          return clone({
             action: request.action,
             payload: this.getCurrentUserPayload()
-          };
+          });
         }
         return null;
       })(request);
@@ -156,40 +169,55 @@ class DAO {
             payload = await this.getAllBookmarks();
             success = true;
           } catch (e) {
-            error = e;
             log.error(`Error handling ${request.action} action`, e);
+            error = e;
           }
-          return {
+          return clone({
             action: request.action,
             ...(success ? { payload } : { error })
-          };
+          });
         }
         // Update a bookmark
         if (request.action === 'update-bookmark') {
+          let error;
           try {
             await this.updateBookmark(request.payload);
           } catch (e) {
             log.error(`Error handling ${request.action} action`, e);
+            error = e;
           }
-          return null;
+          return clone({
+            action: request.action,
+            ...(error && { error })
+          });
         }
         // Create a bookmark
         if (request.action === 'create-bookmark') {
+          let error;
           try {
             await this.createBookmark(request.payload);
           } catch (e) {
             log.error(`Error handling ${request.action} action`, e);
+            error = e;
           }
-          return null;
+          return clone({
+            action: request.action,
+            ...(error && { error })
+          });
         }
         // Remove a bookmark
         if (request.action === 'remove-bookmark') {
+          let error;
           try {
             await this.removeBookmark(request.payload);
           } catch (e) {
             log.error(`Error handling ${request.action} action`, e);
+            error = e;
           }
-          return null;
+          return clone({
+            action: request.action,
+            ...(error && { error })
+          });
         }
         return null;
       })(request);
@@ -252,6 +280,9 @@ class DAO {
   };
 
   getCurrentUserPayload = () => {
+    if (!this.user) {
+      throw new UserError('User is not logged in.');
+    }
     return { user: this.user };
   };
 
@@ -271,15 +302,6 @@ class DAO {
    * 6. Bg script sets the user and sends a sign-in-complete to extension popup window.
    */
   signInWithGithub = async () => {
-    const signInUrl = new URL(
-      APP_URLS.WEBSITE.SIGNIN,
-      APP_URLS.WEBSITE.BASE
-    ).toString();
-    const redirectUrl = new URL(
-      APP_URLS.WEBSITE.REDIRECT,
-      APP_URLS.WEBSITE.BASE
-    ).toString();
-
     try {
       // Create new tab
       const newTab = {
@@ -315,7 +337,7 @@ class DAO {
       });
     } catch (error) {
       log.error('Error signing in with Github', error);
-      throw error;
+      throw UserError.from(error);
     }
   };
 
@@ -327,7 +349,7 @@ class DAO {
       // Query store for user's account type, it will create one
       // if it doesn't exist
       if (!response) {
-        throw new Error('Sign in response is empty');
+        throw new UserError('Sign in response is empty');
       }
 
       storeTokens(
@@ -337,7 +359,7 @@ class DAO {
       );
 
       // Get user's collection or create if it doesn't exist
-      const user = await this.createOrGetUserCollection(response.sub);
+      const user = await this.getUserCollection(response.sub);
 
       // Now that a user doc has been fetched/created, set the user's properties in memory
       this.setUser({
@@ -351,7 +373,7 @@ class DAO {
       });
     } catch (error) {
       log.error('Error setting user after sign in', error);
-      throw error;
+      throw UserError.from(error);
     }
   };
 
@@ -372,9 +394,9 @@ class DAO {
   };
 
   // *** Data API ***
-  createOrGetUserCollection = async (userUuid) => {
+  getUserCollection = async (userUuid) => {
     let userDoc;
-    let isNewSignup = true;
+    // let isNewSignup = true;
     let error;
 
     try {
@@ -386,65 +408,45 @@ class DAO {
           graphqlOperation(queries.getUser, { id: userUuid })
         )
       )?.data?.getUser;
-      if (userDoc) {
-        isNewSignup = false;
-      }
+      // if (userDoc) {
+      //   isNewSignup = false;
+      // }
     } catch (e) {
       error = e;
     }
 
-    // If user doesn't exist, try creating one.
-    if (isNewSignup) {
-      try {
-        // User doesn't exist, so create one
-        log.apiWrite('[WRITE] User collection created');
+    // // If user doesn't exist, try creating one.
+    // if (isNewSignup) {
+    //   try {
+    //     // User doesn't exist, so create one
+    //     log.apiWrite('[WRITE] User collection created');
 
-        const newUser = {
-          id: userUuid,
-          accountType: AccountType.Community
-        };
-        userDoc = (
-          await this.api.graphql(
-            graphqlOperation(mutations.createUser, { input: newUser })
-          )
-        )?.data?.createUser;
-      } catch (e) {
-        error = e;
-      }
-    }
+    //     const newUser = {
+    //       id: userUuid,
+    //       accountType: ACCOUNT_TYPE.Community
+    //     };
+    //     userDoc = (
+    //       await this.api.graphql(
+    //         graphqlOperation(mutations.createUser, { input: newUser })
+    //       )
+    //     )?.data?.createUser;
+    //   } catch (e) {
+    //     error = e;
+    //   }
+    // }
 
-    if (error) {
-      throw error;
+    if (!userDoc || error) {
+      throw UserError.from(error);
     }
 
     return userDoc;
   };
 
-  /* Structure of bookmark referenced from `I.user.store.ts`
-      export interface Node {
-        oid: string;
-        name: string;
-        type: NodeType;
-        path: string;
-        children?: Node[];
-        repo: Repo;
-        branch: Branch;
-        isOpen?: boolean;
-      }
-
-      export interface Bookmark extends Node {
-        bookmarkId: string;
-        pinned?: boolean;
-      }
-    */
   createBookmark = async (bookmark) => {
+    // Make sure user is logged in
     const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
-    if (!currentUserUuid) {
-      log.error('Error adding bookmark because user is not logged in.');
-      return;
-    }
+
     // Add bookmark in cloud db
-    log.error('[WRITE] New bookmark created');
     const newBookmark = {
       id: bookmark.bookmarkId,
       userId: currentUserUuid,
@@ -455,21 +457,30 @@ class DAO {
       repo: JSON.stringify(bookmark.repo)
     };
 
+    // Check if user is allowed to make this request
+    if (
+      !isAllowed(
+        this.getCurrentUserPayload()?.user,
+        THROTTLING_OPERATION.CreateBookmark
+      )
+    ) {
+      throw new ThrottlingError(
+        'Cannot create bookmark because the maximum number of bookmarks for your tier has been reached.'
+      );
+    }
     // Make create request
     await this.api.graphql(
       graphqlOperation(mutations.createBookmark, { input: newBookmark })
     );
+    log.apiWrite('[WRITE] New bookmark created');
 
     // Add to local cache of bookmarks
     this.setBookmarks([...this.user.bookmarks, bookmark]);
   };
 
   removeBookmark = async (bookmark) => {
-    const currentUserUuid = this.user?.uid;
-    if (!currentUserUuid) {
-      log.error('Error removing bookmark because user is not logged in.');
-      return;
-    }
+    // Make sure user is logged in
+    this.getCurrentUserPayload()?.user?.uid;
 
     // Make delete request
     await this.api.graphql(
@@ -490,11 +501,8 @@ class DAO {
       log.error('Error updating bookmark because bookmark id is not specified');
       return;
     }
-    const currentUserUuid = this.user?.uid;
-    if (!currentUserUuid) {
-      log.error('Error updating bookmark because user is not logged in.');
-      return;
-    }
+    // Make sure user is logged in
+    const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
 
     // Update in cloud db
     log.apiWrite('[WRITE] Bookmark updated');
@@ -524,11 +532,8 @@ class DAO {
   };
 
   getAllBookmarks = async () => {
-    const currentUserUuid = this.user?.uid;
-    if (!currentUserUuid) {
-      log.warn('Cannot get bookmarks because user is not logged in.');
-      return [];
-    }
+    // Make sure user is logged in
+    const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
 
     // If locally cached in background
     if (this.user.bookmarks?.length !== 0) {
@@ -566,6 +571,9 @@ const daoStore = new DAO();
 const onBrowserActionClickedListener = async () => {
   try {
     if (await isExtensionOpen()) {
+      log.error(
+        'Error initializing DAO listeners because extension is already open'
+      );
       return;
     }
     log.log('Initialize DAO listeners');

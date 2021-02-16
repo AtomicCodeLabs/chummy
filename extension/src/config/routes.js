@@ -6,22 +6,20 @@ import {
   SearchIcon,
   BookmarkIcon,
   GearIcon,
-  PersonIcon
+  PersonIcon,
+  BellIcon
 } from '@primer/octicons-react';
 
-import SplashSpinner from '../components/Loading/SplashSpinner';
 import AccountSignIn from '../pages/Account/SignIn'; // Don't lazy load this, because it's used as default error page
 import CenterContainer from '../components/Containers/Center';
+import IconWithBadge from '../components/Icon/IconWithBadge';
+import { sidebarActiveIconColor } from '../constants/theme';
 
 const LoadingPage = ({ error }) => {
   if (error) {
     return <AccountSignIn />;
   }
-  return (
-    <CenterContainer>
-      <SplashSpinner />
-    </CenterContainer>
-  );
+  return <CenterContainer />;
 };
 
 // Lazy load route pages
@@ -35,6 +33,9 @@ const Vcs = loadable(() => import('../pages/Vcs'), {
   fallback: <LoadingPage />
 });
 const Bookmarks = loadable(() => import('../pages/Bookmarks'), {
+  fallback: <LoadingPage />
+});
+const Notifications = loadable(() => import('../pages/Notifications'), {
   fallback: <LoadingPage />
 });
 const Account = loadable(() => import('../pages/Account'), {
@@ -69,6 +70,17 @@ export const sidebarRoutes = [
     flex: true
   },
   {
+    pathname: '/notifications',
+    icon: (
+      <IconWithBadge
+        Icon={<BellIcon size={22} />}
+        badgeColor={sidebarActiveIconColor}
+        hasBadgeContext="numOfNotifications"
+      />
+    ),
+    title: 'Notifications'
+  },
+  {
     pathname: '/account',
     icon: <PersonIcon size={22} />,
     title: 'Account'
@@ -96,6 +108,10 @@ export const routes = [
   {
     pathname: '/bookmarks',
     component: <Bookmarks />
+  },
+  {
+    pathname: '/notifications',
+    component: <Notifications />
   },
   {
     pathname: '/account',

@@ -1,16 +1,20 @@
 /* global chrome */
-import { observable, action } from 'mobx';
+import { observable, action, toJS, computed } from 'mobx';
 
 import IUiStore, {
   Language,
   SidebarView,
   TreeSection,
+  TreeState,
   UiStorePropsArray,
   UiStoreKeys,
   SectionName,
-  Spacing
+  Notification,
+  NotificationType,
+  ErrorTypes
 } from './I.ui.store';
-import { EXTENSION_WIDTH } from '../../constants/sizes';
+import { SPACING, SIDEBAR_SIDE } from '../../global/constants';
+import { STORE_DEFAULTS } from './constants';
 import { getFromChromeStorage, setInChromeStorage } from './util';
 import IUserStore from './I.user.store';
 import IRootStore from './I.root.store';
@@ -18,30 +22,39 @@ import IRootStore from './I.root.store';
 export default class UiStore implements IUiStore {
   userStore: IUserStore;
 
-  @observable language = Language.English;
-  @observable theme = 'vanilla-light'; // hardcode in so it doesn't have to wait for themes to load
-  @observable spacing = Spacing.Cozy;
-  @observable pendingRequestCount = new Map(
-    Object.values(SectionName).map((sectionName) => [sectionName, 0])
-  );
-  @observable isStickyWindow = false;
-  @observable sidebarView = SidebarView.Project;
-  @observable sidebarWidth = EXTENSION_WIDTH.INITIAL;
-  @observable isSidebarMinimized = false;
-  @observable isTreeSectionMinimized = {
-    [TreeSection.Sessions]: { isMinimized: true, lastHeight: 200 },
-    [TreeSection.OpenTabs]: { isMinimized: false, lastHeight: 200 },
-    [TreeSection.Files]: { isMinimized: false, lastHeight: 200 }
+  @observable language: Language;
+  @observable theme: string;
+  @observable spacing: SPACING;
+  @observable pendingRequestCount: Map<SectionName, number>;
+  @observable isStickyWindow: boolean;
+  @observable pendingNotifications: Map<string, Notification>;
+  @observable notifications: Map<string, Notification>;
+  @observable sidebarView: SidebarView;
+  @observable sidebarWidth: number;
+  @observable sidebarSide: SIDEBAR_SIDE;
+  @observable isSidebarMinimized: boolean;
+  @observable isTreeSectionMinimized: {
+    [TreeSection.Sessions]: TreeState;
+    [TreeSection.OpenTabs]: TreeState;
+    [TreeSection.Files]: TreeState;
   };
-  @observable isSearchSectionMinimized = true;
-  @observable selectedQuery: string = null;
-  @observable selectedOpenRepo: string = null;
-  @observable selectedLanguage: string = null;
-  // @observable openSearchResultFiles: Set<string> = new Set();
-  @observable isBookmarksSectionMinimized = true;
-  @observable selectedBookmarkQuery: string = null;
-  @observable selectedBookmarkRepo: string = null;
-  @observable openBookmarkRepos: Set<string> = new Set();
+  @observable isSearchSectionMinimized: boolean;
+  @observable selectedQueryFilename: string;
+  @observable selectedQueryCode: string;
+  @observable selectedQueryPath: string;
+  @observable selectedOpenRepo: string;
+  @observable selectedLanguage: string;
+  @observable isBookmarksSectionMinimized: boolean;
+  @observable selectedBookmarkQuery: string;
+  @observable selectedBookmarkRepo: string;
+  @observable openBookmarkRepos: Set<string>;
+
+  static BLOCKLISTED_KEYS = [
+    'pendingRequestCount',
+    'userStore',
+    'pendingNotifications',
+    'notifications'
+  ];
 
   constructor(rootStore: IRootStore) {
     this.userStore = rootStore.userStore;
@@ -50,12 +63,18 @@ export default class UiStore implements IUiStore {
 
   // Initialize
   @action.bound init = () => {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.UI).forEach(([key, value]) => {
+      // @ts-ignore: Hard to type
+      this[key] = value;
+    });
+
     // Get keys of IUiStore
     const keys: UiStorePropsArray = UiStoreKeys;
 
     // Keep some keys out of chrome storage
     const filteredKeys = keys
-      .filter((k) => !['pendingRequestCount', 'userStore'].includes(k))
+      .filter((k) => !UiStore.BLOCKLISTED_KEYS.includes(k))
       .sort();
 
     // Get and set previous sessions' settings
@@ -63,19 +82,37 @@ export default class UiStore implements IUiStore {
       // Set each key
       filteredKeys.forEach((key) => {
         if (items[key]) {
-          (this[key] as any) = items[key];
+          // @ts-ignore: Hard to type
+          this[key] = items[key];
         }
       });
 
       // Set defaults but don't overwrite previous
       setInChromeStorage(
-        keys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
+        filteredKeys.reduce((o, key) => ({ ...o, [key]: this[key] }), {})
       );
     });
   };
 
+  @action.bound clear() {
+    // Set defaults
+    Object.entries(STORE_DEFAULTS.UI).forEach(([key, value]) => {
+      if (!UiStore.BLOCKLISTED_KEYS.includes(key)) {
+        // @ts-ignore: Hard to type
+        this[key] = value;
+      }
+    });
+    // Set defaults in store
+    setInChromeStorage(
+      Object.keys(STORE_DEFAULTS.UI).reduce(
+        (o, key) => ({ ...o, [key]: STORE_DEFAULTS.UI[key] || null }),
+        {}
+      )
+    );
+  }
+
   @action.bound addPendingRequest = (pendingState: SectionName): void => {
-    const pastCount = this.pendingRequestCount.get(pendingState);
+    const pastCount = this.pendingRequestCount.get(pendingState) || 0;
     this.pendingRequestCount.set(pendingState, pastCount + 1);
   };
 
@@ -93,7 +130,7 @@ export default class UiStore implements IUiStore {
     this.theme = theme;
   };
 
-  @action.bound setSpacing = (spacing: Spacing): void => {
+  @action.bound setSpacing = (spacing: SPACING): void => {
     setInChromeStorage({ spacing });
     this.spacing = spacing;
   };
@@ -101,6 +138,66 @@ export default class UiStore implements IUiStore {
   @action.bound setIsStickyWindow = (isStickyWindow: boolean): void => {
     setInChromeStorage({ isStickyWindow });
     this.isStickyWindow = isStickyWindow;
+  };
+
+  @action.bound addErrorPendingNotification = (error: {
+    name: keyof typeof ErrorTypes;
+    message: string;
+    stack: any;
+  }) => {
+    const id = `${NotificationType.Error}-${Date.now()}`;
+    this.pendingNotifications.set(id, {
+      id,
+      type: NotificationType.Error,
+      title: ErrorTypes[error.name],
+      message: error.message
+    });
+  };
+
+  @action.bound addGenericPendingNotification = (
+    title: string,
+    message: string,
+    type: NotificationType
+  ) => {
+    const id = `${type}-${Date.now()}`;
+    this.pendingNotifications.set(id, {
+      id,
+      type,
+      title,
+      message
+    });
+  };
+
+  /**
+   * Left pops oldest notification in map (Map preserves order of insertion)
+   * and enqueues into `notifications` to persist it in cache
+   */
+  @action.bound popPendingNotifications = () => {
+    if (!this.pendingNotifications.size) return;
+    const oldestKey = this.pendingNotifications.keys().next().value;
+    const notification = this.pendingNotifications.get(oldestKey);
+    this.pendingNotifications.delete(oldestKey);
+    this.notifications.set(oldestKey, notification);
+    return notification;
+  };
+
+  @action.bound removeNotification = (notification: Notification) => {
+    if (this.notifications.has(notification.id)) {
+      this.notifications.delete(notification.id);
+    }
+  };
+
+  @action.bound clearNotifications = () => {
+    this.notifications.clear();
+  };
+
+  @computed get numOfNotifications() {
+    return this.notifications.size;
+  }
+
+  @action.bound setSidebarSide = (sidebarSide: SIDEBAR_SIDE): void => {
+    setInChromeStorage({ sidebarSide });
+    this.sidebarSide = sidebarSide;
   };
 
   @action.bound setSidebarWidth = (
@@ -160,8 +257,16 @@ export default class UiStore implements IUiStore {
     });
   };
 
-  @action.bound setSelectedQuery = (selectedQuery: string) => {
-    this.selectedQuery = selectedQuery;
+  @action.bound setSelectedQueryFilename = (selectedQuery: string) => {
+    this.selectedQueryFilename = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryCode = (selectedQuery: string) => {
+    this.selectedQueryCode = selectedQuery;
+  };
+
+  @action.bound setSelectedQueryPath = (selectedQuery: string) => {
+    this.selectedQueryPath = selectedQuery;
   };
 
   @action.bound setSelectedOpenRepo = (selectedOpenRepo: string) => {

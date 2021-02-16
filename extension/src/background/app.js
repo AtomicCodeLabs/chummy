@@ -1,27 +1,39 @@
 /* eslint-disable consistent-return */
-import url from 'url';
-import path from 'path';
-
 import browser from 'webextension-polyfill';
 import log from '../config/log';
-import { UrlParser, resolveInjectJSFilenames } from './util';
+import {
+  resolveInjectJSFilenames,
+  createGithubUrl,
+  onTabFinishPending
+} from './util';
+import {
+  getParsedOpenRepositories,
+  sendActiveTabChanged
+} from './url-parser.util';
 
 // Respond to requests to redirect a tab
 const redirectTab = async (request) => {
   // Redirect tab page (when file node is clicked)
   if (request.action === 'redirect') {
     const {
-      payload: { window, base, filepath, openInNewTab }
+      payload: { window, owner, repo, type, branch, nodePath, openInNewTab }
     } = request;
     // Open a new tab
     if (openInNewTab) {
       try {
         const newTab = {
           windowId: window.windowId,
-          url: url.resolve('https://github.com/', path.join(base, filepath)),
-          active: false
+          url: createGithubUrl(owner, repo, type, branch, nodePath),
+          active: true
         };
-        await browser.tabs.create(newTab);
+
+        const tab = await browser.tabs.create(newTab);
+
+        // Create a listener for when tab finishes pending;
+        onTabFinishPending(tab.id, (finishedTab) => {
+          // send change active tab event
+          sendActiveTabChanged(finishedTab);
+        });
       } catch (error) {
         log.error('Error creating tab', error);
       }
@@ -50,6 +62,16 @@ const redirectTab = async (request) => {
             response
           );
         });
+        // send change active tab event
+        const tab = await browser.tabs.get(window.tabId);
+
+        // Create a listener for when tab finishes pending;
+        onTabFinishPending(tab.id, (finishedTab) => {
+          // send change active tab event
+          sendActiveTabChanged(finishedTab);
+        });
+
+        sendActiveTabChanged(tab);
       } catch (error) {
         log.error('Error redirecting active tab', error);
       }
@@ -69,7 +91,45 @@ const redirectTab = async (request) => {
         url: redirectUrl,
         active: true
       };
-      await browser.tabs.create(newTab);
+      const tab = await browser.tabs.create(newTab);
+
+      // Create a listener for when tab finishes pending;
+      onTabFinishPending(tab.id, (finishedTab) => {
+        // send change active tab event
+        sendActiveTabChanged(finishedTab);
+      });
+    } catch (error) {
+      log.warn('Error redirecting to url', error);
+    }
+    return null;
+  }
+
+  // Redirect to session (open up all tabs in session)
+  if (request.action === 'redirect-to-session') {
+    const {
+      payload: { session }
+    } = request;
+    try {
+      if (session.tabs.length === 0) {
+        log.warn('Session is empty');
+        return;
+      }
+
+      // Create a new window to put this session into
+      browser.windows.create({
+        focused: true,
+        url: session.tabs.map(
+          ({ url, repo, name: branchName, nodeName }) =>
+            url ||
+            createGithubUrl(
+              repo.owner,
+              repo.name,
+              repo.type,
+              branchName,
+              nodeName
+            )
+        )
+      });
     } catch (error) {
       log.warn('Error redirecting to url', error);
     }
@@ -91,23 +151,8 @@ const redirectTab = async (request) => {
       browser.windows.update(currentWindowId, { focused: true });
 
       // Send active-tab-changed action to set current branch
-      const parsed = new UrlParser(tab.url, tab.title, tab.id).parse();
-      const response = {
-        action: 'active-tab-changed',
-        payload: {
-          ...parsed,
-          isGithubRepoUrl: Object.keys(parsed).length !== 0,
-          windowId: tab.windowId,
-          tabId: tab.id
-        }
-      };
-      await browser.runtime.sendMessage(response).catch((e) => {
-        log.warn(
-          'Cannot send message because extension is not open',
-          e?.message,
-          response
-        );
-      });
+      await sendActiveTabChanged(tab);
+
       // To let frontend know when tab updates have been made.
       return { action: 'change-active-tab', complete: true };
     } catch (error) {
@@ -120,26 +165,7 @@ const redirectTab = async (request) => {
   // Expensive so don't call this often
   if (request.action === 'get-open-repositories') {
     try {
-      const windows = await browser.windows.getAll({
-        windowTypes: ['normal'],
-        populate: true
-      });
-
-      // eslint-disable-next-line prefer-const
-      let openRepositories = {}; // <key: repo, value: [<files>]>
-      windows.forEach(({ tabs }) => {
-        tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
-          const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-          if (Object.keys(parsed).length !== 0) {
-            const { owner, repo } = parsed;
-            const currentRepoData = openRepositories[`${owner}/${repo}`];
-            openRepositories[`${owner}/${repo}`] = [
-              ...(currentRepoData || []),
-              parsed
-            ];
-          }
-        });
-      });
+      const openRepositories = await getParsedOpenRepositories();
 
       return {
         action: 'get-open-repositories',
@@ -169,6 +195,7 @@ browser.runtime.onMessage.addListener((request) => {
     [
       'redirect',
       'redirect-to-url',
+      'redirect-to-session',
       'change-active-tab',
       'get-open-repositories',
       'close-tab'
@@ -203,26 +230,7 @@ initializeOpenTabs();
 
 const sendOpenRepositoryUpdatesMessage = async () => {
   try {
-    const windows = await browser.windows.getAll({
-      windowTypes: ['normal'],
-      populate: true
-    });
-    // eslint-disable-next-line prefer-const
-    let openRepositories = {}; // <key: repo, value: [<files>]>
-
-    windows.forEach(({ tabs }) => {
-      tabs.forEach(({ id: tabId, url: tabUrl, title: tabTitle }) => {
-        const parsed = new UrlParser(tabUrl, tabTitle, tabId).parse();
-        if (Object.keys(parsed).length !== 0) {
-          const { owner, repo } = parsed;
-          const currentRepoData = openRepositories[`${owner}/${repo}`];
-          openRepositories[`${owner}/${repo}`] = [
-            ...(currentRepoData || []),
-            parsed
-          ];
-        }
-      });
-    });
+    const openRepositories = await getParsedOpenRepositories();
     const response = {
       action: 'tab-updated',
       payload: openRepositories
@@ -252,23 +260,7 @@ const initializeTabListeners = () => {
     // can be updated on frontend
     const isTabTitleUrl = changeInfo.url === tab.title; // Tab changed event not ready to be sent
     if (tab.active && changeInfo.url && !isTabTitleUrl) {
-      const parsed = new UrlParser(tab.url, tab.title, tabId).parse();
-      const response = {
-        action: 'active-tab-changed',
-        payload: {
-          ...parsed,
-          isGithubRepoUrl: Object.keys(parsed).length !== 0,
-          windowId: tab.windowId,
-          tabId
-        }
-      };
-      browser.runtime.sendMessage(response).catch((e) => {
-        log.warn(
-          'Cannot send message because extension is not open',
-          e?.message,
-          response
-        );
-      });
+      sendActiveTabChanged(tab);
     }
   });
 };

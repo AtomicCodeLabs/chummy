@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 import log from '../config/log';
+import { handleResponse, unproxifyBookmark } from '.';
 
 export const onSignInComplete = (callback = () => {}) => {
   const toCall = (request) => {
@@ -11,48 +12,42 @@ export const onSignInComplete = (callback = () => {}) => {
 };
 
 export const getAllBookmarks = async () => {
-  try {
-    const request = {
-      action: 'get-bookmarks'
-    };
-    log.toBg('Get bookmarks request -> bg', request);
-    const response = await browser.runtime.sendMessage(request);
-    log.debug('Response', response);
-
-    if (response) {
-      return response;
-    }
-  } catch (error) {
-    log.error('Error getting all bookmarks', error);
-  }
-  return null;
+  const request = {
+    action: 'get-bookmarks'
+  };
+  log.toBg('Get bookmarks request -> bg', request);
+  const response = await browser.runtime.sendMessage(request);
+  return handleResponse(response);
 };
 
 export const addBookmark = async (bookmark) => {
   const request = {
     action: 'create-bookmark',
-    payload: bookmark
+    payload: unproxifyBookmark(bookmark)
   };
   log.toBg('Create bookmark request -> bg', request);
-  await browser.runtime.sendMessage(request);
+  const response = await browser.runtime.sendMessage(request);
+  return handleResponse(response);
 };
 
 export const updateBookmark = async (bookmark) => {
   const request = {
     action: 'update-bookmark',
-    payload: bookmark
+    payload: unproxifyBookmark(bookmark)
   };
   log.toBg('Update bookmark request -> bg', request);
-  await browser.runtime.sendMessage(request);
+  const response = await browser.runtime.sendMessage(request);
+  return handleResponse(response);
 };
 
 export const removeBookmark = async (bookmark) => {
   const request = {
     action: 'remove-bookmark',
-    payload: bookmark
+    payload: unproxifyBookmark(bookmark)
   };
   log.toBg('Remove bookmark request -> bg', request);
-  await browser.runtime.sendMessage(request);
+  const response = await browser.runtime.sendMessage(request);
+  return handleResponse(response);
 };
 
 export default {

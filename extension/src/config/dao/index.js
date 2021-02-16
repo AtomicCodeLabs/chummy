@@ -11,14 +11,16 @@ import {
   transformBookmarks,
   bookmarkRepoMapToArray
 } from '../../utils/bookmark';
+import UserError from '../../global/errors/user.error';
 
 let isInitialized = false;
 
 // Channel to talk to bg script
-class FirebaseDAO {
+class DAO {
   constructor(store) {
     isInitialized = true;
     this.userStore = store.userStore; // mobx
+    this.uiStore = store.uiStore;
 
     // Add listener for auth changes and store
     browser.runtime.onMessage.addListener((response) => {
@@ -37,6 +39,11 @@ class FirebaseDAO {
   signIn = async () => {
     this.userStore.setPending(true);
 
+    // If login doesn't happen in 2 min, set pending to false
+    setTimeout(() => {
+      this.userStore.setPending(false);
+    }, 2 * 60 * 1000);
+
     try {
       // Sign in
       const request = {
@@ -47,7 +54,7 @@ class FirebaseDAO {
 
       // The extension receives a sign in triggered action
       if (response.error) {
-        throw new Error(response.error);
+        throw UserError.from(response.error);
       }
     } catch (error) {
       log.error('Error signing in', error);
@@ -102,7 +109,6 @@ class FirebaseDAO {
       };
       log.toBg('Get current user -> bg', request);
       const response = await browser.runtime.sendMessage(request);
-      log.debug('Response', response);
       this.handleUserResponse(response);
     } catch (error) {
       log.error('Error getting current user', error);
@@ -150,10 +156,13 @@ class FirebaseDAO {
         );
       }
     } catch (error) {
+      this.uiStore.addErrorPendingNotification(error);
       log.error('Error getting all bookmarks', error);
+      return { status: 'error', error };
     } finally {
       this.userStore.setPending(false);
     }
+    return { status: 'complete' };
   };
 
   addBookmark = async (bookmark) => {
@@ -172,10 +181,13 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.addBookmark(bookmarkRepo);
     } catch (error) {
+      this.uiStore.addErrorPendingNotification(error);
       log.error('Error creating bookmark', error);
+      return { status: 'error', error };
     } finally {
       this.userStore.setPending(false);
     }
+    return { status: 'complete' };
   };
 
   updateBookmark = async (bookmark) => {
@@ -185,10 +197,13 @@ class FirebaseDAO {
       // Only after request resolves, update local cache
       this.userStore.updateBookmark(bookmark);
     } catch (error) {
+      this.uiStore.addErrorPendingNotification(error);
       log.error('Error updating bookmark', error);
+      return { status: 'error', error };
     } finally {
       this.userStore.setPending(false);
     }
+    return { status: 'complete' };
   };
 
   removeBookmark = async (bookmark) => {
@@ -206,42 +221,41 @@ class FirebaseDAO {
       };
       this.userStore.removeBookmark(bookmarkRepo);
     } catch (error) {
+      this.uiStore.addErrorPendingNotification(error);
       log.error('Error remove bookmark', error);
+      return { status: 'error', error };
     } finally {
       this.userStore.setPending(false);
     }
+    return { status: 'complete' };
   };
 }
 
 // Provider
-const FirebaseContext = createContext(null);
-const FirebaseProvider = ({ children, store }) => {
-  const [firebaseDAO, setFirebaseDAO] = useState();
+const DAOContext = createContext(null);
+const DAOProvider = ({ children, store }) => {
+  const [dao, setDAO] = useState();
   const octoDAO = useOctoDAO();
 
   useEffect(() => {
     if (!isInitialized) {
-      setFirebaseDAO(new FirebaseDAO(store));
+      setDAO(new DAO(store));
     }
   }, []);
 
   useEffect(() => {
-    if (firebaseDAO && octoDAO) {
-      firebaseDAO.setOctoDAO(octoDAO);
+    if (dao && octoDAO) {
+      dao.setOctoDAO(octoDAO);
     }
-  }, [octoDAO, firebaseDAO]);
+  }, [octoDAO, dao]);
 
-  return (
-    <FirebaseContext.Provider value={firebaseDAO}>
-      {children}
-    </FirebaseContext.Provider>
-  );
+  return <DAOContext.Provider value={dao}>{children}</DAOContext.Provider>;
 };
-FirebaseProvider.propTypes = {
+DAOProvider.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   store: PropTypes.object.isRequired
 };
 
-export { FirebaseContext };
-export default FirebaseProvider;
+export { DAOContext };
+export default DAOProvider;

@@ -1,5 +1,10 @@
+import { css } from 'styled-components';
 import theme from 'styled-theming';
+
 import selector from '../config/theme/selector';
+import { isThemeDark } from '../config/theme/utils';
+import { BLACK, WHITE } from './colors';
+import { NotificationType } from '../config/store/I.ui.store';
 
 // Sizing
 export const fieldMargin = theme('spacing', {
@@ -12,6 +17,18 @@ export const indentPadding = theme('spacing', {
   compact: '1.3rem',
   cozy: '1.6rem',
   comfortable: '1.8rem'
+});
+
+export const smallestFontSize = theme('spacing', {
+  compact: '0.4rem',
+  cozy: '0.4rem',
+  comfortable: '0.4rem'
+});
+
+export const smallFontSize = theme('spacing', {
+  compact: '0.68rem',
+  cozy: '0.7rem',
+  comfortable: '0.75rem'
 });
 
 export const fontSize = theme('spacing', {
@@ -50,9 +67,33 @@ export const h1FontSize = theme('spacing', {
 });
 
 export const h1MarginSize = theme('spacing', {
-  compact: '0.6rem',
-  cozy: '0.75rem',
-  comfortable: '0.85rem'
+  compact: '0.8rem',
+  cozy: '1rem',
+  comfortable: '1.3rem'
+});
+
+export const titleFontSize = theme('spacing', {
+  compact: '1.6rem',
+  cozy: '1.8rem',
+  comfortable: '1.9rem'
+});
+
+export const titleMarginSize = theme('spacing', {
+  compact: '0.8rem auto 0.4rem auto',
+  cozy: '1rem auto 0.5rem auto',
+  comfortable: '1.3rem auto 0.65rem auto'
+});
+
+export const subTitleFontSize = theme('spacing', {
+  compact: '0.9rem',
+  cozy: '1.1rem',
+  comfortable: '1.2rem'
+});
+
+export const subTitleMarginSize = theme('spacing', {
+  compact: '0.35rem',
+  cozy: '0.4rem',
+  comfortable: '0.4rem'
 });
 
 export const monoFontSize = theme('spacing', {
@@ -71,6 +112,27 @@ export const lineHeight = theme('spacing', {
   compact: '1.1rem',
   cozy: '1.2rem',
   comfortable: '1.3rem'
+});
+
+export const spacerSpacing = theme('spacing', {
+  compact: '0.8rem',
+  cozy: '0.9rem',
+  comfortable: '0.9rem'
+});
+
+export const labelMargin = theme('spacing', {
+  compact: css`
+    margin-top: 0.18rem;
+    margin-bottom: 0.1rem;
+  `,
+  cozy: css`
+    margin-top: 0.2rem;
+    margin-bottom: 0.12rem;
+  `,
+  comfortable: css`
+    margin-top: 0.4rem;
+    margin-bottom: 0.2rem;
+  `
 });
 
 // Colors
@@ -124,4 +186,24 @@ export const fieldBackgroundLightColor = themeCreator(
   'fieldBackgroundLightColor'
 );
 export const fieldFocusOutlineColor = themeCreator('fieldFocusOutlineColor');
+export const optionDisabledBackgroundColor = themeCreator(
+  'optionDisabledBackgroundColor'
+);
+export const optionDisabledTextColor = themeCreator('optionDisabledTextColor');
 export const borderColor = themeCreator('borderColor');
+export const successColor = themeCreator('successColor');
+export const errorColor = themeCreator('errorColor');
+export const infoColor = themeCreator('infoColor');
+export const warningColor = themeCreator('warningColor');
+
+// Constants that don't change with theme but only with theme type
+export const contrastTextColor = (props) => {
+  return isThemeDark(themeType(props)) ? BLACK : WHITE;
+};
+
+export const notificationTypeToColor = {
+  [NotificationType.Success]: successColor,
+  [NotificationType.Error]: errorColor,
+  [NotificationType.Warning]: warningColor,
+  [NotificationType.Info]: infoColor
+};
