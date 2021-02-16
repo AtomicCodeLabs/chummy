@@ -16,7 +16,7 @@
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
                 "apiKeyExpirationDays": 365,
-                "description": "Access Data API Key"
+                "description": "Data Access API"
               }
             }
           ]

@@ -28,6 +28,25 @@ type Bookmark @aws_api_key @aws_cognito_user_pools {
   updatedAt: AWSDateTime!
 }
 
+type Mutation {
+  cancelSubscription(ddbId: String!): CancelSubscriptionResponse
+  syncUser(ddbId: String!): SyncUserResponse
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
+  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
+  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
+  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
+}
+
+type CancelSubscriptionResponse {
+  id: String!
+}
+
+type SyncUserResponse {
+  id: String!
+}
+
 input UserMetadataInput {
   cognitoUsername: String
   cognitoUserPoolId: String
@@ -165,15 +184,6 @@ input UpdateUserInput {
 
 input DeleteUserInput {
   id: ID
-}
-
-type Mutation {
-  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
-  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
-  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
-  createBookmark(input: CreateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
-  updateBookmark(input: UpdateBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
-  deleteBookmark(input: DeleteBookmarkInput!, condition: ModelBookmarkConditionInput): Bookmark @aws_api_key @aws_cognito_user_pools
 }
 
 input ModelUserConditionInput {

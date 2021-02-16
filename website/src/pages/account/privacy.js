@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { API } from 'aws-amplify';
-import cogoToast from 'cogo-toast';
 
 import SEO from '../../components/seo';
 import AccountLayout from '../../components/layout/AccountLayout';
 import { BulletsSection } from '../../components/sections/AccountSection';
 import useUser from '../../hooks/useUser';
+import useToaster from '../../hooks/useToaster';
 import sendEmail from '../../config/email';
 import { updateUser } from '../../graphql/mutations';
-import '../../components/notifications/cogo.css';
 
 const Privacy = () => {
   const user = useUser();
+  const { createToast } = useToaster();
   const [emailButtonDisabled, setEmailDisabled] = useState({
     download: false,
     delete: false
   });
-  console.log('Privacy', user);
 
   const sendRequest = async (params) => {
     const response = await sendEmail(params);
@@ -24,24 +23,6 @@ const Privacy = () => {
       return params;
     }
     return null;
-  };
-
-  const sendNotification = (type, title, message) => {
-    const cogoDo = type === 'success' ? cogoToast.success : cogoToast.error;
-    const { hide } = cogoDo(
-      <>
-        <h5 className="mt-0 mb-1 font-medium text-gray-700">{title}</h5>
-        <span className="text-sm font-light text-gray-700 sm:text-xs">
-          {message}
-        </span>
-      </>,
-      {
-        position: 'bottom-right',
-        onClick: () => {
-          hide();
-        }
-      }
-    );
   };
 
   return (
@@ -74,7 +55,7 @@ const Privacy = () => {
               user: JSON.stringify(user)
             });
             if (sent) {
-              sendNotification(
+              createToast(
                 'success',
                 'Information request submitted',
                 "You'll receive an email in 3-5 business days."
@@ -85,7 +66,7 @@ const Privacy = () => {
                 [selectedOption]: true
               });
             } else {
-              sendNotification(
+              createToast(
                 'error',
                 'Information request error',
                 'There was an error with your information request. Please try again.'
@@ -101,7 +82,7 @@ const Privacy = () => {
               user: JSON.stringify(user)
             });
             if (sent) {
-              sendNotification(
+              createToast(
                 'success',
                 'Delete request submitted',
                 'Your request will be processed in 3-5 business days.'
@@ -112,7 +93,7 @@ const Privacy = () => {
                 [selectedOption]: true
               });
             } else {
-              sendNotification(
+              createToast(
                 'error',
                 'Delete request error',
                 'There was an error with your delete request. Please try again.'
@@ -152,14 +133,14 @@ const Privacy = () => {
                   }
                 }
               });
-              sendNotification(
+              createToast(
                 'success',
                 `Opt-${selectedValue ? 'in' : 'out'} success`,
                 'Your preferences have been saved.'
               );
             } catch (error) {
               console.error("Couldn't update user mailing opt in");
-              sendNotification(
+              createToast(
                 'error',
                 `Opt-${selectedValue ? 'in' : 'out'} error`,
                 'There was an error updating your preferences. Please try again.'
