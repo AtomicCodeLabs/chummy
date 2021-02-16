@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "api": {
+      "chummy": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "chummyLambdaLayer",
+      "version": 1
+    }
+  ]
+}
