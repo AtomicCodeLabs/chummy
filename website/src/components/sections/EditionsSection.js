@@ -4,10 +4,9 @@ import EditionBox from '../boxes/EditionBox';
 import ToggleSwitch from '../ToggleSwitch';
 import usePrices from '../../hooks/usePrices';
 
-const EditionsSection = () => {
+const EditionsSection = ({ showTrials = true }) => {
   const [isMonthly, setIsMonthly] = useState(true); // alternative is yearly
   const prices = usePrices();
-  console.log('PRICES', prices);
 
   return (
     <div className="sm:text-center">
@@ -48,6 +47,7 @@ const EditionsSection = () => {
                 Icon={Icon}
                 unit={unit}
                 className="md:w-full md:mx-auto"
+                showTrials={showTrials}
               />
             )
           )}

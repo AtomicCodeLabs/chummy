@@ -12,7 +12,8 @@ const EditionBox = ({
   Icon,
   unit,
   className,
-  isFeatured = false
+  isFeatured = false,
+  showTrials = true
 }) => {
   const isCommunity = title === 'Community';
 
@@ -72,9 +73,14 @@ const EditionBox = ({
         </div>
         <div className="flex h-20 mx-auto my-3">
           <ActionButton to="/signin" className="my-auto">
-            {title === 'Community'
-              ? 'Download free'
-              : 'Start 14-day free trial'}
+            {
+              // eslint-disable-next-line no-nested-ternary
+              title === 'Community'
+                ? 'Download free'
+                : showTrials
+                ? 'Start 14-day free trial'
+                : 'Get started'
+            }
           </ActionButton>
         </div>
       </div>
