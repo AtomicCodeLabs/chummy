@@ -1,6 +1,20 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const cancelSubscription = /* GraphQL */ `
+  mutation CancelSubscription($stripeId: String!) {
+    cancelSubscription(stripeId: $stripeId) {
+      id
+    }
+  }
+`;
+export const syncUser = /* GraphQL */ `
+  mutation SyncUser($stripeId: String!, $ddbId: String!) {
+    syncUser(stripeId: $stripeId, ddbId: $ddbId) {
+      id
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
