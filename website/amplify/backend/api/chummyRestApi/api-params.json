@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/stripe-webhook",
+            "lambdaFunction": "chummyCheckoutTrigger",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/stripe-webhook"
+        }
+    ],
+    "resourceName": "chummyRestApi",
+    "apiName": "chummyRestApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "chummyCheckoutTrigger"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-chummy-prod-220137-authRole",
+        "unAuthRoleName": "amplify-chummy-prod-220137-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "chummyCheckoutTrigger",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
