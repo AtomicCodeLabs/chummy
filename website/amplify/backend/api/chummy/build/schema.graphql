@@ -29,8 +29,8 @@ type Bookmark @aws_api_key @aws_cognito_user_pools {
 }
 
 type Mutation {
-  cancelSubscription(ddbId: String!): CancelSubscriptionResponse
-  syncUser(ddbId: String!): SyncUserResponse
+  cancelSubscription: CancelSubscriptionResponse
+  syncUser: SyncUserResponse
   createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
   updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
   deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
