@@ -27,6 +27,10 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "functionchummyLambdaLayerArn": {
+      "Type": "String",
+      "Default": "functionchummyLambdaLayerArn"
     }
   },
   "Conditions": {
@@ -144,7 +148,11 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "Layers": [],
+        "Layers": [
+          {
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:chummyLambdaLayer-prod:1"
+          }
+        ],
         "Timeout": "25",
         "Code": {
           "S3Bucket": {

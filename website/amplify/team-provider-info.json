@@ -60,6 +60,27 @@
       "function": {
         "chummyPostAuthTrigger": {}
       }
+    },
+    "nonCFNdata": {
+      "function": {
+        "chummyLambdaLayer": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "awsAccounts",
+                  "accounts": [
+                    "202575095365"
+                  ]
+                },
+                {
+                  "type": "private"
+                }
+              ]
+            }
+          }
+        }
+      }
     }
   }
 }
