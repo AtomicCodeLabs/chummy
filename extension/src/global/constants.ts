@@ -38,6 +38,15 @@ export enum SUBPAGES {
   Settings = 'settings'
 }
 
+export enum GLOBAL_SUBPAGES {
+  GlobalSettings = 'settings',
+  GlobalIssues = 'issues',
+  GlobalPulls = 'pulls',
+  GlobalMarketplace = 'marketplace',
+  GlobalExplore = 'explore',
+  GlobalNotifications = 'notifications'
+}
+
 export enum BROWSER_TYPE {
   Chrome = 'chrome',
   Firefox = 'firefox',

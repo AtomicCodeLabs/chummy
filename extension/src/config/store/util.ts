@@ -21,7 +21,6 @@ export const getFromChromeStorage = async (
     };
     log.toBg('Get store request -> bg', request);
     const response = await browser.runtime.sendMessage(clone(request));
-    log.debug('Response', response);
     if (response?.payload) {
       callback(response.payload);
     }
