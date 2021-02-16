@@ -50,10 +50,9 @@
     "hostedUIDomainName": "chummy9948bcd5-9948bcd5",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://gamma.chummy.atomiccode.io/account/\"],\"LogoutURLs\":[\"https://gamma.chummy.atomiccode.io/\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.chummy.atomiccode.io/account/\"],\"LogoutURLs\":[\"https://www.chummy.atomiccode.io/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.chummy.atomiccode.io/account/\"],\"LogoutURLs\":[\"https://www.chummy.atomiccode.io/\"]}"
+    "dependsOn": []
 }

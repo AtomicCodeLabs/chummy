@@ -22,12 +22,6 @@
       "Type": "String",
       "Default": "apichummyGraphQLAPIKeyOutput"
     },
-    "deploymentBucketName": {
-      "Type": "String"
-    },
-    "s3Key": {
-      "Type": "String"
-    },
     "functionchummyLambdaLayerArn": {
       "Type": "String",
       "Default": "functionchummyLambdaLayerArn"
@@ -155,7 +149,7 @@
         ],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-chummy-gamma-214559-deployment",
+          "S3Bucket": "amplify-chummy-prod-220137-deployment",
           "S3Key": "amplify-builds/chummyPostAuthTrigger-716b4753515273486730-build.zip"
         }
       }

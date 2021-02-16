@@ -111,7 +111,11 @@
         "chummy9948bcd5": {}
       },
       "function": {
-        "chummyPostAuthTrigger": {}
+        "chummyPostAuthTrigger": {},
+        "chummyLambdaLayer": {
+          "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
+          "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
+        }
       }
     },
     "nonCFNdata": {
@@ -129,7 +133,8 @@
                 {
                   "type": "private"
                 }
-              ]
+              ],
+              "hash": "B9o8K2UIqIx3h0t86chSzM1p+aBV1LQJjpOlFCr3ygM="
             }
           }
         }

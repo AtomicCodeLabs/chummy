@@ -3,6 +3,6 @@
     "value": "nodejs",
     "name": "NodeJS",
     "layerExecutablePath": "nodejs/node_modules",
-    "cloudTemplateValue": "nodejs12.x"
+    "cloudTemplateValue": "nodejs14.x"
   }
 ]
