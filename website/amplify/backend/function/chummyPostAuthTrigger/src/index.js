@@ -63,6 +63,9 @@ exports.handler = async (event, context, callback) => {
     }
   });
 
+  // Create new Premium subscription with trial for this customer
+
+
   // Update ddb user with metadata (cognito and stripe id's)
   const finalUser = await updateUserCollection(cognitoId, {
     metadata: {

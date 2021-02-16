@@ -24,10 +24,7 @@ const CheckoutSuccess = () => {
       // 1. Trigger lambda
       API.graphql({
         query: syncUser,
-        authMode: 'AMAZON_COGNITO_USER_POOLS',
-        variables: {
-          ddbId: user?.id
-        }
+        authMode: 'AMAZON_COGNITO_USER_POOLS'
       });
 
       // 2. Redirect to account/

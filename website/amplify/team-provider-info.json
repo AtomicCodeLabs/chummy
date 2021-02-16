@@ -68,7 +68,8 @@
         "chummyLambdaLayer": {
           "deploymentBucketName": "amplify-chummy-gamma-214559-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
-        }
+        },
+        "chummyCheckoutTrigger": {}
       }
     },
     "nonCFNdata": {
