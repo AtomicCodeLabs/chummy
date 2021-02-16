@@ -9,6 +9,14 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -24,9 +32,6 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
@@ -38,6 +43,14 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -53,9 +66,6 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
@@ -67,6 +77,14 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -82,9 +100,6 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;

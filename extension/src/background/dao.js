@@ -18,11 +18,7 @@ import {
   clone
 } from './util';
 import { isAllowed } from './throttling.util';
-import {
-  ACCOUNT_TYPE,
-  THROTTLING_OPERATION,
-  APP_URLS
-} from '../global/constants';
+import { THROTTLING_OPERATION, APP_URLS } from '../global/constants';
 import ThrottlingError from '../global/errors/throttling.error';
 import UserError from '../global/errors/user.error';
 
@@ -363,7 +359,7 @@ class DAO {
       );
 
       // Get user's collection or create if it doesn't exist
-      const user = await this.createOrGetUserCollection(response.sub);
+      const user = await this.getUserCollection(response.sub);
 
       // Now that a user doc has been fetched/created, set the user's properties in memory
       this.setUser({
@@ -398,9 +394,9 @@ class DAO {
   };
 
   // *** Data API ***
-  createOrGetUserCollection = async (userUuid) => {
+  getUserCollection = async (userUuid) => {
     let userDoc;
-    let isNewSignup = true;
+    // let isNewSignup = true;
     let error;
 
     try {
@@ -412,34 +408,34 @@ class DAO {
           graphqlOperation(queries.getUser, { id: userUuid })
         )
       )?.data?.getUser;
-      if (userDoc) {
-        isNewSignup = false;
-      }
+      // if (userDoc) {
+      //   isNewSignup = false;
+      // }
     } catch (e) {
       error = e;
     }
 
-    // If user doesn't exist, try creating one.
-    if (isNewSignup) {
-      try {
-        // User doesn't exist, so create one
-        log.apiWrite('[WRITE] User collection created');
+    // // If user doesn't exist, try creating one.
+    // if (isNewSignup) {
+    //   try {
+    //     // User doesn't exist, so create one
+    //     log.apiWrite('[WRITE] User collection created');
 
-        const newUser = {
-          id: userUuid,
-          accountType: ACCOUNT_TYPE.Community
-        };
-        userDoc = (
-          await this.api.graphql(
-            graphqlOperation(mutations.createUser, { input: newUser })
-          )
-        )?.data?.createUser;
-      } catch (e) {
-        error = e;
-      }
-    }
+    //     const newUser = {
+    //       id: userUuid,
+    //       accountType: ACCOUNT_TYPE.Community
+    //     };
+    //     userDoc = (
+    //       await this.api.graphql(
+    //         graphqlOperation(mutations.createUser, { input: newUser })
+    //       )
+    //     )?.data?.createUser;
+    //   } catch (e) {
+    //     error = e;
+    //   }
+    // }
 
-    if (error) {
+    if (!userDoc || error) {
       throw UserError.from(error);
     }
 

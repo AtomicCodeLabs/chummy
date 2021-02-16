@@ -2,10 +2,18 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($owner: String!) {
+  subscription OnCreateUser($owner: String) {
     onCreateUser(owner: $owner) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -21,17 +29,22 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($owner: String!) {
+  subscription OnUpdateUser($owner: String) {
     onUpdateUser(owner: $owner) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -47,17 +60,22 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($owner: String!) {
+  subscription OnDeleteUser($owner: String) {
     onDeleteUser(owner: $owner) {
       id
       accountType
+      metadata {
+        cognitoUsername
+        cognitoUserPoolId
+        stripeId
+      }
+      createdAt
+      updatedAt
+      owner
       bookmarks {
         items {
           id
@@ -73,14 +91,11 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
     }
   }
 `;
 export const onCreateBookmark = /* GraphQL */ `
-  subscription OnCreateBookmark($owner: String!) {
+  subscription OnCreateBookmark($owner: String) {
     onCreateBookmark(owner: $owner) {
       id
       userId
@@ -96,7 +111,7 @@ export const onCreateBookmark = /* GraphQL */ `
   }
 `;
 export const onUpdateBookmark = /* GraphQL */ `
-  subscription OnUpdateBookmark($owner: String!) {
+  subscription OnUpdateBookmark($owner: String) {
     onUpdateBookmark(owner: $owner) {
       id
       userId
@@ -112,7 +127,7 @@ export const onUpdateBookmark = /* GraphQL */ `
   }
 `;
 export const onDeleteBookmark = /* GraphQL */ `
-  subscription OnDeleteBookmark($owner: String!) {
+  subscription OnDeleteBookmark($owner: String) {
     onDeleteBookmark(owner: $owner) {
       id
       userId

@@ -38,7 +38,7 @@ const makeRequest = async (query, operationName, variables) => {
 };
 
 // Gets user doc, creates one if it doesn't exist
-const createOrGetUserCollection = async (userId) => {
+const createOrGetUserCollection = async (userId, event) => {
   // Check if user exists in DDB
   let userDoc;
   let isNewSignup = true;
@@ -46,16 +46,18 @@ const createOrGetUserCollection = async (userId) => {
 
   try {
     // Try fetching first
-    console.log('[READ] User collection + all user bookmarks read');
-    const data = await makeRequest(operations.getUser, 'getUser', {
-      id: userId
-    });
-    if (data?.errors) {
-      throw new Error(JSON.stringify(data?.errors));
-    }
-    userDoc = data?.getUser;
-    if (userDoc) {
-      isNewSignup = false;
+    if (userId) {
+      console.log('[READ] User collection + all user bookmarks read');
+      const data = await makeRequest(operations.getUser, 'getUser', {
+        id: userId
+      });
+      if (data?.errors) {
+        throw new Error(JSON.stringify(data?.errors));
+      }
+      userDoc = data?.getUser;
+      if (userDoc) {
+        isNewSignup = false;
+      }
     }
   } catch (e) {
     error = e;
@@ -68,7 +70,9 @@ const createOrGetUserCollection = async (userId) => {
       console.log('[WRITE] User collection created');
       const newUser = {
         id: userId,
-        accountType: 'Community'
+        accountType: 'community',
+        owner: event.userName,
+        onMailingList: 'true'
       };
       const data = await makeRequest(operations.createUser, 'createUser', {
         input: newUser
