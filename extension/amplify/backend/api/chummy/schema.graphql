@@ -1,12 +1,41 @@
-type User @model @auth(rules: [{ allow: owner }]) {
+type User
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "owner"
+        operations: [create, update, delete, read]
+      }
+      { allow: public, provider: apiKey }
+    ]
+  ) {
   id: ID!
   accountType: String!
   bookmarks: [Bookmark] @connection(keyName: "byUser", fields: ["id"])
+  metadata: UserMetadata
+  owner: String
+  onMailingList: String
+}
+
+type UserMetadata {
+  cognitoUsername: String
+  cognitoUserPoolId: String
+  stripeId: String
 }
 
 type Bookmark
   @model
-  @auth(rules: [{ allow: owner }])
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "owner"
+        operations: [create, update, delete, read]
+      }
+      { allow: public, provider: apiKey }
+    ]
+  )
   @key(name: "byUser", fields: ["userId", "name"]) {
   id: ID!
   userId: ID!
@@ -15,4 +44,21 @@ type Bookmark
   pinned: String! # We have to use String type because Boolean types can't be sort keys
   branch: String!
   repo: String!
+  owner: String
+}
+
+# Method resolver - https://dev.to/aws-builders/use-lambda-resolvers-in-your-graphql-api-with-aws-amplify-5e13
+type Mutation {
+  cancelSubscription(ddbId: String!): CancelSubscriptionResponse
+    @function(name: "chummyCheckoutTrigger-${env}")
+  syncUser(ddbId: String!): SyncUserResponse
+    @function(name: "chummyCheckoutTrigger-${env}")
+}
+
+type CancelSubscriptionResponse {
+  id: String!
+}
+
+type SyncUserResponse {
+  id: String!
 }
