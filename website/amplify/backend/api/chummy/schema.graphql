@@ -46,3 +46,19 @@ type Bookmark
   repo: String!
   owner: String
 }
+
+# Method resolver - https://dev.to/aws-builders/use-lambda-resolvers-in-your-graphql-api-with-aws-amplify-5e13
+type Mutation {
+  cancelSubscription(ddbId: String!): CancelSubscriptionResponse
+    @function(name: "chummyCheckoutTrigger-${env}")
+  syncUser(ddbId: String!): SyncUserResponse
+    @function(name: "chummyCheckoutTrigger-${env}")
+}
+
+type CancelSubscriptionResponse {
+  id: String!
+}
+
+type SyncUserResponse {
+  id: String!
+}
