@@ -9,6 +9,8 @@ const ActionButton = ({
   disabled = false,
   onClick,
   className,
+  bgColor = 'bg-gray-900',
+  textColor = 'text-white',
   ...props
 }) => {
   const isLink = !!to; // if not, is button
@@ -17,8 +19,10 @@ const ActionButton = ({
     return (
       <Link
         className={clsx(
-          'bg-gray-900 text-white rounded-sm text-sm sm:text-xs font-medium font-mono px-4 py-2 select-none',
+          'rounded-sm text-sm sm:text-xs font-medium font-mono px-4 py-2 select-none',
           'relative transition-all top-0 hover:border-white',
+          bgColor,
+          textColor,
           {
             'hover:-top-1 hover:border-b-4 hover:border-white': !disabled,
             'opacity-50': disabled
@@ -40,8 +44,10 @@ const ActionButton = ({
       tabIndex={0}
       role="button"
       className={clsx(
-        'bg-gray-900 text-white rounded-sm text-sm sm:text-xs font-medium font-mono px-4 py-2 select-none',
+        'rounded-sm text-sm sm:text-xs font-medium font-mono px-4 py-2 select-none',
         'relative transition-all top-0 focus:outline-none',
+        bgColor,
+        textColor,
         {
           'hover:-top-1 hover:border-b-4 hover:border-white': !disabled,
           'opacity-50': disabled
