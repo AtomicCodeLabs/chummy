@@ -1,29 +1,49 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { API } from 'aws-amplify';
 import { navigate } from 'gatsby';
 
 import Layout from '../../../components/layout';
 import SEO from '../../../components/seo';
 import AuthBox from '../../../components/boxes/AuthBox';
 import Spinner from '../../../components/spinners/Spinner';
+import useUser from '../../../hooks/useUser';
+import useEffectOnce from '../../../hooks/useEffectOnce';
+
+import { syncUser } from '../../../graphqlCustom/functions';
 
 /*
  * This page is what we're redirected to by Stripe after a checkout success!
  */
 const CheckoutSuccess = () => {
-  // Redirect to /account/ page immediately with proper toasts to pop
-  useEffect(() => {
-    navigate('/account', {
-      state: {
-        toastsToPop: [
-          {
-            type: 'success',
-            title: 'Checkout success',
-            message: 'Congratulations on your purchase!'
-          }
-        ]
-      }
-    });
-  }, []);
+  const user = useUser();
+
+  // 1. Send sync user event to trigger lambda function to sync ddb user
+  // 2. Redirect to /account/ page immediately with proper toasts to pop
+  useEffectOnce(() => {
+    if (user) {
+      // 1. Trigger lambda
+      API.graphql({
+        query: syncUser,
+        authMode: 'AMAZON_COGNITO_USER_POOLS',
+        variables: {
+          ddbId: user?.id
+        }
+      });
+
+      // 2. Redirect to account/
+      navigate('/account', {
+        state: {
+          toastsToPop: [
+            {
+              type: 'success',
+              title: 'Checkout success',
+              message: 'Congratulations on your purchase!'
+            }
+          ]
+        }
+      });
+    }
+  }, [user]);
 
   return (
     <Layout
