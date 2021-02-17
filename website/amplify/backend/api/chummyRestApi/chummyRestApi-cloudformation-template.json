@@ -29,26 +29,27 @@
         {
           "Ref": "env"
         },
-    
-    
-          "functionchummyServerName": {
-            "Type": "String",
-            "Default": "functionchummyServerName"
+        "NONE"
+      ]
+    }
+  },
+  "Resources": {
+    "chummyRestApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Description": "",
+        "Name": "chummyRestApi",
+        "Body": {
+          "swagger": "2.0",
+          "info": {
+            "version": "2018-05-24T17:52:00Z",
+            "title": "chummyRestApi"
           },
-        
-          
-          "functionchummyServerArn": {
-            "Type": "String",
-            "Default": "functionchummyServerArn"
-          }
-        
-          
-          
-    
-    },
-     "Conditions": {
-        "ShouldNotCreateEnvResources": {
-            "Fn::Equals": [
+          "host": {
+            "Fn::Join": [
+              "",
+              [
+                "apigateway.",
                 {
                   "Ref": "AWS::Region"
                 },
@@ -70,50 +71,27 @@
                     }
                   ]
                 ]
-              },
-            "basePath": {
-              "Fn::If": [
-                "ShouldNotCreateEnvResources",
-                "/Prod",
-                {
-                  "Fn::Join": [
-                      "",
-                      [
-                          "/",
-                          {
-                              "Ref": "env"
-                          }
-                      ]
-                  ]
-                } 
-              ]
-            },
-            "schemes": [
-              "https"
-            ],
-            "paths": {
-              
-              "/": {
-                "options": {
-                  "consumes": [
-                    "application/json"
-                  ],
-                  "produces": [
-                    "application/json"
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "200 response",
-                      "headers": {
-                        "Access-Control-Allow-Origin": {
-                          "type": "string"
-                        },
-                        "Access-Control-Allow-Methods": {
-                          "type": "string"
-                        },
-                        "Access-Control-Allow-Headers": {
-                          "type": "string"
-                        }
+              }
+            ]
+          },
+          "schemes": ["https"],
+          "paths": {
+            "/": {
+              "options": {
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Origin": {
+                        "type": "string"
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string"
+                      },
+                      "Access-Control-Allow-Headers": {
+                        "type": "string"
                       }
                     }
                   }
@@ -129,60 +107,23 @@
                       }
                     }
                   },
-                  
-                  "x-amazon-apigateway-integration": {
-                    "responses": {
-                      "default": {
-                        "statusCode": "200"
-                      }
-                    },
-                    "uri": {
-                        "Fn::Join": [
-                          "",
-                          [
-                            "arn:aws:apigateway:",
-                            {
-                              "Ref": "AWS::Region"
-                            },
-                            ":lambda:path/2015-03-31/functions/",
-                            
-                            {
-                                
-                                "Ref": "functionchummyServerArn"
-                            },
-                            
-                            "/invocations"
-                          ]
-                        ]
-                      },
-                    "passthroughBehavior": "when_no_match",
-                    "httpMethod": "POST",
-                    "type": "aws_proxy"
-                  }
+                  "requestTemplates": {
+                    "application/json": "{\"statusCode\": 200}"
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "type": "mock"
                 }
               },
-              "//{proxy+}": {
-                "options": {
-                  "consumes": [
-                    "application/json"
-                  ],
-                  "produces": [
-                    "application/json"
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "200 response",
-                      "headers": {
-                        "Access-Control-Allow-Origin": {
-                          "type": "string"
-                        },
-                        "Access-Control-Allow-Methods": {
-                          "type": "string"
-                        },
-                        "Access-Control-Allow-Headers": {
-                          "type": "string"
-                        }
-                      }
+              "x-amazon-apigateway-any-method": {
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "parameters": [
+                  {
+                    "in": "body",
+                    "name": "RequestSchema",
+                    "required": false,
+                    "schema": {
+                      "$ref": "#/definitions/RequestSchema"
                     }
                   }
                 ],
@@ -201,30 +142,21 @@
                       "statusCode": "200"
                     }
                   },
-                  
-                  "x-amazon-apigateway-integration": {
-                    "responses": {
-                      "default": {
-                        "statusCode": "200"
-                      }
-                    },
-                    "uri": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "arn:aws:apigateway:",
-                          {
-                            "Ref": "AWS::Region"
-                          },
-                          ":lambda:path/2015-03-31/functions/",
-                          
-                          {
-                            
-                            "Ref": "functionchummyServerArn"
-                          },
-                          
-                          "/invocations"
-                        ]
+                  "uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+
+                        {
+                          "Ref": "functionchummyServerArn"
+                        },
+
+                        "/invocations"
                       ]
                     ]
                   },
@@ -294,20 +226,13 @@
                   }
                 },
 
-                  
-        
-        
-        "functionchummyServerPermissionchummyRestApi": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": 
-                    {
-                        "Ref":  "functionchummyServerName"
-                    },
-                    
-                    "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
+                "x-amazon-apigateway-integration": {
+                  "responses": {
+                    "default": {
+                      "statusCode": "200"
+                    }
+                  },
+                  "uri": {
                     "Fn::Join": [
                       "",
                       [
@@ -363,17 +288,28 @@
             }
           }
         },
-        
-        
-        
-      "DeploymentAPIGWchummyRestApi8391edd6": {
-        "Type": "AWS::ApiGateway::Deployment",
-        "Properties": {
-          "Description": "The Development stage deployment of your API.",
-          "StageName": {
-            "Fn::If": [
-              "ShouldNotCreateEnvResources",
-              "Prod", 
+        "FailOnWarnings": true
+      }
+    },
+
+    "functionchummyServerPermissionchummyRestApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "functionchummyServerName"
+        },
+
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
               {
                 "Ref": "AWS::AccountId"
               },
@@ -388,7 +324,7 @@
       }
     },
 
-    "DeploymentAPIGWchummyRestApi8e42210c": {
+    "DeploymentAPIGWchummyRestApi8391edd6": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "Description": "The Development stage deployment of your API.",
