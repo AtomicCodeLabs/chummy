@@ -56,7 +56,7 @@ const Navbar = ({
           <div className="inline-flex flex-row items-center flex-1">
             <Logo
               isResponsive
-              isSimpleNavbar
+              // isSimpleNavbar
               className="h-12"
               logoClassName="mr-1.5 w-7 md:w-5"
             />
