@@ -34,6 +34,13 @@ export default ({
     }
   `);
 
+  console.log(
+    'response',
+    isResponsive,
+    isSimpleNavbar,
+    isResponsive && !isSimpleNavbar
+  );
+
   return (
     <Link
       className={clsx('text-current	flex md:h-auto items-center', className)}
