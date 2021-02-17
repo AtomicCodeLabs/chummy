@@ -11,11 +11,14 @@
 Amplify Params - DO NOT EDIT */
 
 const Stripe = require('stripe');
-const SSM = new (require('aws-sdk/clients/ssm'))();
 const AWS = require('aws-sdk');
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
-const { createOrGetUserCollection, updateUserCollection } = require('./util');
+const {
+  createOrGetUserCollection,
+  updateUserCollection,
+  getSecretStripeKey
+} = require('./util');
 
 exports.handler = async (event, context, callback) => {
   // Create and get user collection
@@ -34,20 +37,8 @@ exports.handler = async (event, context, callback) => {
     return;
   }
 
-  // Grab stripe keys from SSM
-  const stripeSecretKeyName =
-    process.env.ENV === 'prod'
-      ? `STRIPE_LIVE_SECRET_KEY`
-      : `STRIPE_TEST_SECRET_KEY`;
-
-  const stripeSecretKey = (
-    await SSM.getParameter({
-      Name: stripeSecretKeyName,
-      WithDecryption: true
-    }).promise()
-  )?.Parameter?.Value;
-
   // Initialize Stripe
+  const stripeSecretKey = await getSecretStripeKey();
   const stripe = Stripe(stripeSecretKey);
 
   // Create new customer on Stripe
@@ -64,7 +55,6 @@ exports.handler = async (event, context, callback) => {
   });
 
   // Create new Premium subscription with trial for this customer
-
 
   // Update ddb user with metadata (cognito and stripe id's)
   const finalUser = await updateUserCollection(cognitoId, {

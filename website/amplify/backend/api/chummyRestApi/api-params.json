@@ -16,7 +16,7 @@
         }
     ],
     "privacy": {
-        "auth": 0,
+        "auth": 1,
         "unauth": 0,
         "authRoleName": "amplify-chummy-prod-220137-authRole",
         "unAuthRoleName": "amplify-chummy-prod-220137-unauthRole"
