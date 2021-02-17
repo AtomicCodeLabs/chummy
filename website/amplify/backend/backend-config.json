@@ -29,7 +29,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "chummyCheckoutTrigger",
+          "resourceName": "chummyServer",
           "attributes": [
             "Name",
             "Arn"
@@ -75,7 +75,7 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "chummyCheckoutTrigger": {
+    "chummyServer": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",

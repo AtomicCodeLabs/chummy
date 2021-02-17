@@ -21,7 +21,7 @@
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
-          "nodejs12.x"
+          "nodejs14.x"
         ],
         "Content": {
           "S3Bucket": {
