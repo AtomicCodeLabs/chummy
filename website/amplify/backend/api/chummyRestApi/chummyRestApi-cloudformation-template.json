@@ -14,15 +14,15 @@
         },
     
     
-          "functionchummyCheckoutTriggerName": {
+          "functionchummyServerName": {
             "Type": "String",
-            "Default": "functionchummyCheckoutTriggerName"
+            "Default": "functionchummyServerName"
           },
         
           
-          "functionchummyCheckoutTriggerArn": {
+          "functionchummyServerArn": {
             "Type": "String",
-            "Default": "functionchummyCheckoutTriggerArn"
+            "Default": "functionchummyServerArn"
           }
         
           
@@ -90,7 +90,7 @@
             ],
             "paths": {
               
-              "/stripe-webhook": {
+              "/": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -176,7 +176,7 @@
                             
                             {
                                 
-                                "Ref": "functionchummyCheckoutTriggerArn"
+                                "Ref": "functionchummyServerArn"
                             },
                             
                             "/invocations"
@@ -189,7 +189,7 @@
                   }
                 }
               },
-              "/stripe-webhook/{proxy+}": {
+              "//{proxy+}": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -275,7 +275,7 @@
                           
                           {
                             
-                            "Ref": "functionchummyCheckoutTriggerArn"
+                            "Ref": "functionchummyServerArn"
                           },
                           
                           "/invocations"
@@ -332,12 +332,12 @@
                   
         
         
-        "functionchummyCheckoutTriggerPermissionchummyRestApi": {
+        "functionchummyServerPermissionchummyRestApi": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "FunctionName": 
                     {
-                        "Ref":  "functionchummyCheckoutTriggerName"
+                        "Ref":  "functionchummyServerName"
                     },
                     
                     "Action": "lambda:InvokeFunction",
@@ -367,7 +367,7 @@
         
         
         
-      "DeploymentAPIGWchummyRestApi": {
+      "DeploymentAPIGWchummyRestApi8391edd6": {
         "Type": "AWS::ApiGateway::Deployment",
         "Properties": {
           "Description": "The Development stage deployment of your API.",

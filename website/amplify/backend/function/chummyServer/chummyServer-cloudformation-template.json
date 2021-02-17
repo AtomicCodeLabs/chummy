@@ -49,12 +49,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "chummyCheckoutTrigger",
+            "chummyServer",
             {
               "Fn::Join": [
                 "",
                 [
-                  "chummyCheckoutTrigger",
+                  "chummyServer",
                   "-",
                   {
                     "Ref": "env"
@@ -89,7 +89,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs14.x",
         "Layers": [
           {
             "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:chummyLambdaLayer-gamma:1"
@@ -98,7 +98,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-chummy-gamma-214559-deployment",
-          "S3Key": "amplify-builds/chummyCheckoutTrigger-7a696c69714e34304541-build.zip"
+          "S3Key": "amplify-builds/chummyServer-56374b56305841372b48-build.zip"
         }
       }
     },
@@ -108,12 +108,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "chummyLambdaRoleb6959ed7",
+            "chummyLambdaRole8f0b9ca3",
             {
               "Fn::Join": [
                 "",
                 [
-                  "chummyLambdaRoleb6959ed7",
+                  "chummyLambdaRole8f0b9ca3",
                   "-",
                   {
                     "Ref": "env"
@@ -179,6 +179,21 @@
                   }
                 ]
               }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ssm:GetParameter",
+                "ssm:GetParameters"
+              ],
+              "Resource": "arn:aws:ssm:*:202575095365:parameter/*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminUpdateUserAttributes"
+              ],
+              "Resource": "arn:aws:cognito-idp:*:202575095365:userpool/*"
             }
           ]
         }
