@@ -110,6 +110,7 @@ class CFileStore {
    */
   cachedNodes: Map<string, Node>;
   openRepos: Map<string, Repo>;
+  lastNOpenTabIds: Set<number>; // Keep track of last N (defined by community throttle limit), ordered Set
   currentBranch: Branch; // Branch to show in files section (active tab)
   currentSession: Session;
 

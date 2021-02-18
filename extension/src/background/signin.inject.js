@@ -1,5 +1,7 @@
 import browser from 'webextension-polyfill';
 
+console.log('INJECT SIGNIN');
+
 /*
 Listen for messages from the page.
 If the message was from the page script, show an alert.
@@ -23,7 +25,6 @@ function authListener() {
 authListener();
 
 // Send message after page has loaded
-window.addEventListener('load', () => {
-  // Send message to emit auth to content script
-  window.postMessage({ action: 'trigger-send-to-cs' }, '*');
-});
+
+// Send message to emit auth to content script on script injection
+window.postMessage({ action: 'trigger-send-to-cs' }, '*');

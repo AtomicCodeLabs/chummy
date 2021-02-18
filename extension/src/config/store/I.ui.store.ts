@@ -40,11 +40,19 @@ export enum NotificationType {
   Info = 'Info'
 }
 
+// Prefixes
 export enum ErrorTypes {
   ThrottlingError = 'Throttling Error',
   UserError = 'Authentication Error',
   WindowError = 'Window Error',
   Error = 'Error'
+}
+
+export enum WarningTypes {
+  ThrottlingError = 'Throttling Warning',
+  UserError = 'Authentication Warning',
+  WindowError = 'Window Warning',
+  Error = 'Warning'
 }
 
 export interface Notification {
@@ -98,6 +106,8 @@ class CUiStore {
 export default interface IUiStore extends CUiStore {
   removePendingRequest(pendingState: SectionName): void;
   addPendingRequest(pendingState: SectionName): void;
+  addErrorPendingNotification(error: Error): void;
+  addWarningPendingNotification(error: Error): void;
 }
 
 export type UiStorePropsArray = Array<keyof IUiStore>;

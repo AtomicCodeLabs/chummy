@@ -9,9 +9,9 @@ export const getUserBookmarks = /* GraphQL */ `
           name
           path
           pinned
-          content
           branch
           repo
+          owner
           createdAt
           updatedAt
           owner
