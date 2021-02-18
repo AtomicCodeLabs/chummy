@@ -131,7 +131,7 @@
                         "AttributeType": "S"
                     },
                     {
-                        "AttributeName": "userId",
+                        "AttributeName": "owner",
                         "AttributeType": "S"
                     },
                     {
@@ -192,7 +192,7 @@
                         "IndexName": "byUser",
                         "KeySchema": [
                             {
-                                "AttributeName": "userId",
+                                "AttributeName": "owner",
                                 "KeyType": "HASH"
                             },
                             {

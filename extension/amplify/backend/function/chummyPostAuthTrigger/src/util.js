@@ -1,11 +1,16 @@
 const https = require('https');
 const AWS = require('aws-sdk');
+const SSM = new (require('aws-sdk/clients/ssm'))();
 
 const operations = require('./queries');
 
 const APPSYNC_URL = process.env.API_CHUMMY_GRAPHQLAPIENDPOINTOUTPUT;
 const APPSYNC_API_KEY = process.env.API_CHUMMY_GRAPHQLAPIKEYOUTPUT;
 const APPSYNC_ENDPOINT = new URL(APPSYNC_URL).hostname.toString();
+const stripeSecretKeyName =
+  process.env.ENV === 'prod'
+    ? `STRIPE_LIVE_SECRET_KEY`
+    : `STRIPE_TEST_SECRET_KEY`;
 
 const makeRequest = async (query, operationName, variables) => {
   const req = new AWS.HttpRequest(APPSYNC_URL, APPSYNC_API_KEY);
@@ -115,5 +120,16 @@ const updateUserCollection = async (userId, newUserObject) => {
   return user;
 };
 
+// Grab stripe keys from SSM
+const getSecretStripeKey = async () => {
+  return (
+    await SSM.getParameter({
+      Name: stripeSecretKeyName,
+      WithDecryption: true
+    }).promise()
+  )?.Parameter?.Value;
+};
+
+exports.getSecretStripeKey = getSecretStripeKey;
 exports.createOrGetUserCollection = createOrGetUserCollection;
 exports.updateUserCollection = updateUserCollection;
