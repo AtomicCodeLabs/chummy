@@ -1,12 +1,12 @@
 type User @aws_api_key @aws_cognito_user_pools {
   id: ID!
   accountType: String!
+  bookmarks: [Bookmark]
   metadata: UserMetadata
-  owner: String
+  owner: String!
   onMailingList: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
-  bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools
 }
 
 type UserMetadata @aws_api_key @aws_cognito_user_pools {
@@ -23,14 +23,14 @@ type Bookmark @aws_api_key @aws_cognito_user_pools {
   pinned: String!
   branch: String!
   repo: String!
-  owner: String
+  owner: String!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
 type Mutation {
-  cancelSubscription(ddbId: String!): CancelSubscriptionResponse
-  syncUser(ddbId: String!): SyncUserResponse
+  cancelSubscription: CancelSubscriptionResponse
+  syncUser: SyncUserResponse
   createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
   updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
   deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_cognito_user_pools
@@ -170,7 +170,7 @@ input CreateUserInput {
   id: ID
   accountType: String!
   metadata: UserMetadataInput
-  owner: String
+  owner: String!
   onMailingList: String
 }
 
@@ -230,7 +230,7 @@ input CreateBookmarkInput {
   pinned: String!
   branch: String!
   repo: String!
-  owner: String
+  owner: String!
 }
 
 input UpdateBookmarkInput {
@@ -258,14 +258,4 @@ input ModelBookmarkConditionInput {
   and: [ModelBookmarkConditionInput]
   or: [ModelBookmarkConditionInput]
   not: ModelBookmarkConditionInput
-}
-
-input ModelStringKeyConditionInput {
-  eq: String
-  le: String
-  lt: String
-  ge: String
-  gt: String
-  between: [String]
-  beginsWith: String
 }

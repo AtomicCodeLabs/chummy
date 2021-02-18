@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/",
+            "lambdaFunction": "chummyServer",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "chummyRestApi",
+    "apiName": "chummyRestApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "chummyServer"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-chummy-prod-220137-authRole",
+        "unAuthRoleName": "amplify-chummy-prod-220137-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "chummyServer",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "8af69879"
+}

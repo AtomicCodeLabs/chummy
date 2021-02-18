@@ -100,6 +100,30 @@
     "categories": {
       "auth": {
         "chummy9948bcd5": {}
+      },
+      "function": {
+        "chummyCheckoutTrigger": {},
+        "chummyPostAuthTrigger": {},
+        "chummyLambdaLayer": {
+          "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
+          "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
+        }
+      }
+    },
+    "nonCFNdata": {
+      "function": {
+        "chummyLambdaLayer": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "Q8cyTM5T02+yD+8z9l5tA/869mKNo4bHiVxVk/gPOak="
+            }
+          }
+        }
       }
     }
   }

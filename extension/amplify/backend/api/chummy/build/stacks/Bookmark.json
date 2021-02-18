@@ -129,14 +129,6 @@
                     {
                         "AttributeName": "id",
                         "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "userId",
-                        "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "name",
-                        "AttributeType": "S"
                     }
                 ],
                 "StreamSpecification": {
@@ -186,41 +178,7 @@
                             "Ref": "AWS::NoValue"
                         }
                     ]
-                },
-                "GlobalSecondaryIndexes": [
-                    {
-                        "IndexName": "byUser",
-                        "KeySchema": [
-                            {
-                                "AttributeName": "userId",
-                                "KeyType": "HASH"
-                            },
-                            {
-                                "AttributeName": "name",
-                                "KeyType": "RANGE"
-                            }
-                        ],
-                        "Projection": {
-                            "ProjectionType": "ALL"
-                        },
-                        "ProvisionedThroughput": {
-                            "Fn::If": [
-                                "ShouldUsePayPerRequestBilling",
-                                {
-                                    "Ref": "AWS::NoValue"
-                                },
-                                {
-                                    "ReadCapacityUnits": {
-                                        "Ref": "DynamoDBModelTableReadIOPS"
-                                    },
-                                    "WriteCapacityUnits": {
-                                        "Ref": "DynamoDBModelTableWriteIOPS"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
+                }
             },
             "DeletionPolicy": "Delete"
         },

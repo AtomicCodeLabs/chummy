@@ -21,7 +21,7 @@
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
-          "nodejs12.x"
+          "nodejs14.x"
         ],
         "Content": {
           "S3Bucket": {
@@ -65,16 +65,6 @@
         "Principal": {
           "Ref": "AWS::AccountId"
         }
-      }
-    },
-    "LambdaLayerPermissionawsAccounts2025750953651": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayer"
-        },
-        "Principal": "202575095365"
       }
     }
   },
