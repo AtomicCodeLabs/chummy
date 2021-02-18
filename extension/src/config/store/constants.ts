@@ -21,6 +21,7 @@ export const STORE_DEFAULTS: any = {
     currentWindowTab: null,
     cachedNodes: new Map(),
     openRepos: new Map(),
+    lastNOpenTabIds: new Set(),
     currentBranch: null,
     currentSession: INITIAL_SESSION,
     currentRepo: null

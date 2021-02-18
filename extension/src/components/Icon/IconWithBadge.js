@@ -18,13 +18,13 @@ const Circle = styled.div`
   height: calc(4px + ${iconPadding}px);
   position: absolute;
   border-radius: 100%;
-  background-color: ${({ color, ...props }) => color(props)};
+  background-color: ${({ subIconColor, ...props }) => subIconColor(props)};
 `;
 
 const Subtext = styled.span`
   position: absolute;
   font-size: ${smallestFontSize};
-  color: ${({ color, ...props }) => color(props)};
+  color: ${({ fontColor, ...props }) => fontColor(props)};
 `;
 
 export default observer(
@@ -44,9 +44,9 @@ export default observer(
         Icon={Icon}
         SubIcon={
           hasBadge ? (
-            <Circle color={badgeColor}>
+            <Circle subIconColor={badgeColor}>
               {!isBlank(subtextContext) && (
-                <Subtext color={fontColor}>{subtextToShow}</Subtext>
+                <Subtext fontColor={fontColor}>{subtextToShow}</Subtext>
               )}
             </Circle>
           ) : (

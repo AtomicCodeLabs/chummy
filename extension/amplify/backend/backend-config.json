@@ -22,6 +22,20 @@
           ]
         }
       }
+    },
+    "chummyRestApi": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "chummyServer",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "auth": {
@@ -61,7 +75,7 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "chummyCheckoutTrigger": {
+    "chummyServer": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",

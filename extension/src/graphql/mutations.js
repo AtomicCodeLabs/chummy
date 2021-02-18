@@ -1,6 +1,20 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const cancelSubscription = /* GraphQL */ `
+  mutation CancelSubscription {
+    cancelSubscription {
+      id
+    }
+  }
+`;
+export const syncUser = /* GraphQL */ `
+  mutation SyncUser {
+    syncUser {
+      id
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -14,9 +28,10 @@ export const createUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
+      onMailingList
       createdAt
       updatedAt
-      owner
       bookmarks {
         items {
           id
@@ -26,9 +41,9 @@ export const createUser = /* GraphQL */ `
           pinned
           branch
           repo
+          owner
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
@@ -48,9 +63,10 @@ export const updateUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
+      onMailingList
       createdAt
       updatedAt
-      owner
       bookmarks {
         items {
           id
@@ -60,9 +76,9 @@ export const updateUser = /* GraphQL */ `
           pinned
           branch
           repo
+          owner
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
@@ -82,9 +98,10 @@ export const deleteUser = /* GraphQL */ `
         cognitoUserPoolId
         stripeId
       }
+      owner
+      onMailingList
       createdAt
       updatedAt
-      owner
       bookmarks {
         items {
           id
@@ -94,9 +111,9 @@ export const deleteUser = /* GraphQL */ `
           pinned
           branch
           repo
+          owner
           createdAt
           updatedAt
-          owner
         }
         nextToken
       }
@@ -116,9 +133,9 @@ export const createBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -135,9 +152,9 @@ export const updateBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -154,9 +171,9 @@ export const deleteBookmark = /* GraphQL */ `
       pinned
       branch
       repo
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
