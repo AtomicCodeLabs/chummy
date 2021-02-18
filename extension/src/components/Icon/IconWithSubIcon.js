@@ -15,10 +15,10 @@ const SubContainer = styled.div`
   bottom: -${({ bottom }) => bottom}px;
   right: -${({ right }) => right}px;
 
-  ${({ color, active, ...props }) =>
+  ${({ subIconColor, active, ...props }) =>
     css`
       svg {
-        fill: ${color(props)} !important;
+        fill: ${subIconColor(props)} !important;
         opacity: ${active ? 1 : 0.5};
         position: absolute;
       }
@@ -26,7 +26,10 @@ const SubContainer = styled.div`
 `;
 
 const IconWithSubIcon = ({ Icon, SubIcon, offsetY, offsetX }) => {
-  const { color = sidebarInactiveIconColor, active = false } = SubIcon.props;
+  const {
+    subIconColor = sidebarInactiveIconColor,
+    active = false
+  } = SubIcon.props;
   return (
     <Container>
       {Icon}
@@ -34,7 +37,7 @@ const IconWithSubIcon = ({ Icon, SubIcon, offsetY, offsetX }) => {
         bottom={offsetY}
         right={offsetX}
         active={active}
-        color={color}
+        subIconColor={subIconColor}
       >
         {SubIcon}
       </SubContainer>

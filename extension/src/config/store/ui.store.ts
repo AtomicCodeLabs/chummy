@@ -1,5 +1,5 @@
 /* global chrome */
-import { observable, action, toJS, computed } from 'mobx';
+import { observable, action, computed } from 'mobx';
 
 import IUiStore, {
   Language,
@@ -11,11 +11,13 @@ import IUiStore, {
   SectionName,
   Notification,
   NotificationType,
-  ErrorTypes
+  ErrorTypes,
+  WarningTypes
 } from './I.ui.store';
 import { SPACING, SIDEBAR_SIDE } from '../../global/constants';
 import { STORE_DEFAULTS } from './constants';
 import { getFromChromeStorage, setInChromeStorage } from './util';
+import { isBlank } from '../../utils';
 import IUserStore from './I.user.store';
 import IRootStore from './I.root.store';
 
@@ -150,7 +152,25 @@ export default class UiStore implements IUiStore {
       id,
       type: NotificationType.Error,
       title: ErrorTypes[error.name],
-      message: error.message
+      message: isBlank(error?.message)
+        ? 'An unexpected error occurred.'
+        : error?.message
+    });
+  };
+
+  @action.bound addWarningPendingNotification = (error: {
+    name: keyof typeof WarningTypes;
+    message: string;
+    stack: any;
+  }) => {
+    const id = `${NotificationType.Warning}-${Date.now()}`;
+    this.pendingNotifications.set(id, {
+      id,
+      type: NotificationType.Warning,
+      title: WarningTypes[error.name],
+      message: isBlank(error?.message)
+        ? 'Something unexpected happened.'
+        : error?.message
     });
   };
 

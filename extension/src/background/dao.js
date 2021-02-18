@@ -242,6 +242,7 @@ class DAO {
       if (
         [
           'uid',
+          'owner',
           'email',
           'displayName',
           'photoURL',
@@ -328,7 +329,8 @@ class DAO {
           // Inject script
           browser.tabs
             .executeScript(tabId, {
-              file: resolveInjectJSFilenames('background.signin.inject')
+              file: resolveInjectJSFilenames('background.signin.inject'),
+              runAt: 'document_start'
             })
             .catch((e) => {
               log.error('Error injecting signin script', e);
@@ -359,15 +361,16 @@ class DAO {
       );
 
       // Get user's collection or create if it doesn't exist
-      const user = await this.getUserCollection(response.sub);
+      const user = await this.getUserCollection(response?.['custom:ddb_id']);
 
       // Now that a user doc has been fetched/created, set the user's properties in memory
       this.setUser({
-        uid: response.sub,
+        uid: response?.['custom:ddb_id'],
         email: response.email,
         displayName: response.name,
         photoURL: response.picture,
         apiKey: response['custom:access_token'],
+        owner: response.owner,
         accountType: user.accountType,
         bookmarks: user.bookmarks.items
       });
@@ -396,44 +399,24 @@ class DAO {
   // *** Data API ***
   getUserCollection = async (userUuid) => {
     let userDoc;
-    // let isNewSignup = true;
     let error;
 
     try {
       // Try fetching
       log.apiRead('[READ] User collection + all user bookmarks read');
 
+      if (!userUuid) {
+        throw new Error('User id cannot be null');
+      }
+
       userDoc = (
         await this.api.graphql(
           graphqlOperation(queries.getUser, { id: userUuid })
         )
       )?.data?.getUser;
-      // if (userDoc) {
-      //   isNewSignup = false;
-      // }
     } catch (e) {
       error = e;
     }
-
-    // // If user doesn't exist, try creating one.
-    // if (isNewSignup) {
-    //   try {
-    //     // User doesn't exist, so create one
-    //     log.apiWrite('[WRITE] User collection created');
-
-    //     const newUser = {
-    //       id: userUuid,
-    //       accountType: ACCOUNT_TYPE.Community
-    //     };
-    //     userDoc = (
-    //       await this.api.graphql(
-    //         graphqlOperation(mutations.createUser, { input: newUser })
-    //       )
-    //     )?.data?.createUser;
-    //   } catch (e) {
-    //     error = e;
-    //   }
-    // }
 
     if (!userDoc || error) {
       throw UserError.from(error);
@@ -444,15 +427,18 @@ class DAO {
 
   createBookmark = async (bookmark) => {
     // Make sure user is logged in
-    const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
+    const currentUser = this.getCurrentUserPayload()?.user;
+
+    console.log('CURRENT USER', currentUser);
 
     // Add bookmark in cloud db
     const newBookmark = {
       id: bookmark.bookmarkId,
-      userId: currentUserUuid,
+      userId: currentUser?.uid,
       name: bookmark.name,
       path: bookmark.path,
       pinned: bookmark.pinned,
+      owner: currentUser?.owner,
       branch: JSON.stringify(bookmark.branch),
       repo: JSON.stringify(bookmark.repo)
     };
@@ -465,9 +451,12 @@ class DAO {
       )
     ) {
       throw new ThrottlingError(
-        'Cannot create bookmark because the maximum number of bookmarks for your tier has been reached.'
+        'The maximum number of bookmarks for your tier has been reached. Please upgrade to Professional to create unlimited bookmarks.'
       );
     }
+
+    log.debug('NEW BOOKMARK', newBookmark);
+
     // Make create request
     await this.api.graphql(
       graphqlOperation(mutations.createBookmark, { input: newBookmark })
@@ -502,14 +491,15 @@ class DAO {
       return;
     }
     // Make sure user is logged in
-    const currentUserUuid = this.getCurrentUserPayload()?.user?.uid;
+    const currentUser = this.getCurrentUserPayload()?.user;
 
     // Update in cloud db
     log.apiWrite('[WRITE] Bookmark updated');
 
     const newBookmark = {
       id: bookmark.bookmarkId,
-      ...(currentUserUuid && { userId: currentUserUuid }),
+      ...(currentUser?.uid && { userId: currentUser?.uid }),
+      ...(currentUser?.owner && { owner: currentUser?.owner }),
       ...(bookmark.name && { name: bookmark.name }),
       ...(bookmark.path && { path: bookmark.path }),
       ...(bookmark.pinned && { pinned: bookmark.pinned }),

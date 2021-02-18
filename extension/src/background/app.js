@@ -4,7 +4,8 @@ import log from '../config/log';
 import {
   resolveInjectJSFilenames,
   createGithubUrl,
-  onTabFinishPending
+  onTabFinishPending,
+  isGithubRepoUrl
 } from './util';
 import {
   getParsedOpenRepositories,
@@ -45,7 +46,8 @@ const redirectTab = async (request) => {
         // on the page correctly all the time. Inject listener and then send message
         await browser.tabs
           .executeScript(window.tabId, {
-            file: resolveInjectJSFilenames('background.redirect.inject')
+            file: resolveInjectJSFilenames('background.redirect.inject'),
+            runAt: 'document_start'
           })
           .catch((e) => {
             log.error('Error injecting redirect script', e);
@@ -169,7 +171,7 @@ const redirectTab = async (request) => {
 
       return {
         action: 'get-open-repositories',
-        payload: openRepositories
+        payload: { openRepositories, isAdding: true }
       };
     } catch (error) {
       log.error('Error getting all windows', error);
@@ -228,16 +230,18 @@ const initializeOpenTabs = async () => {
 };
 initializeOpenTabs();
 
-const sendOpenRepositoryUpdatesMessage = async () => {
+const sendOpenRepositoryUpdatesMessage = async (isAdding = false) => {
   try {
     const openRepositories = await getParsedOpenRepositories();
     const response = {
       action: 'tab-updated',
-      payload: openRepositories
+      payload: { openRepositories, isAdding }
     };
+
     browser.runtime.sendMessage(response).catch((e) => {
       log.warn(
         'Cannot send message because extension is not open',
+        e?.stack,
         e?.message,
         response
       );
@@ -250,12 +254,15 @@ const sendOpenRepositoryUpdatesMessage = async () => {
 const initializeTabListeners = () => {
   browser.tabs.onCreated.addListener((tab) => {
     tabIdsToCreate.add(tab.id);
+    sendOpenRepositoryUpdatesMessage(true);
   });
   browser.tabs.onRemoved.addListener(() => {
     sendOpenRepositoryUpdatesMessage();
   });
   browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    sendOpenRepositoryUpdatesMessage();
+    if (tab.status === 'complete' && isGithubRepoUrl(tab.url)) {
+      sendOpenRepositoryUpdatesMessage();
+    }
     // Also send active tab change event so that current branch & window/tab
     // can be updated on frontend
     const isTabTitleUrl = changeInfo.url === tab.title; // Tab changed event not ready to be sent

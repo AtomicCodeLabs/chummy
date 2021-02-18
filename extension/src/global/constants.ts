@@ -23,7 +23,8 @@ export enum SPACING {
 }
 
 export enum THROTTLING_OPERATION {
-  CreateBookmark = 'createbookmark'
+  CreateBookmark = 'createbookmark',
+  OpenTabs = 'opentabs'
 }
 
 export enum SUBPAGES {

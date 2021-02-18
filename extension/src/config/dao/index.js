@@ -12,6 +12,7 @@ import {
   bookmarkRepoMapToArray
 } from '../../utils/bookmark';
 import UserError from '../../global/errors/user.error';
+import ThrottlingError from '../../global/errors/throttling.error';
 
 let isInitialized = false;
 
@@ -181,7 +182,11 @@ class DAO {
       // Only after request resolves, update local cache
       this.userStore.addBookmark(bookmarkRepo);
     } catch (error) {
-      this.uiStore.addErrorPendingNotification(error);
+      if (error.name === ThrottlingError.name) {
+        this.uiStore.addWarningPendingNotification(error);
+      } else {
+        this.uiStore.addErrorPendingNotification(error);
+      }
       log.error('Error creating bookmark', error);
       return { status: 'error', error };
     } finally {

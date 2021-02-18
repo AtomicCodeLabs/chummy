@@ -7,6 +7,7 @@ export const isAllowed = (user, operation) => {
 
   // Creating a bookmark
   if (operation === THROTTLING_OPERATION.CreateBookmark) {
+    console.log('THROTTINLG', user, operation);
     if (!user.bookmarks) return false;
     // Check if user exceeds tier limit
     if (

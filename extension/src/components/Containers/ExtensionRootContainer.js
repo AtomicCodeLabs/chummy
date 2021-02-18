@@ -34,17 +34,19 @@ const ExtensionRootContainer = observer(({ children }) => {
   // App wide listeners are initialized here.
   // On Open repositories update setOpenRepos
   useEffect(() => {
-    const removeListener = onUpdateOpenRepositories((repoList) => {
-      setOpenRepos(repoList);
-    });
+    const removeListener = onUpdateOpenRepositories(
+      ({ isAdding, openRepositories }) => {
+        setOpenRepos(openRepositories, isAdding);
+      }
+    );
     return removeListener;
   }, []);
 
   // Get all open repositories on startup
   useEffect(() => {
     if (openRepos.size === 0) {
-      getOpenRepositories((repoList) => {
-        setOpenRepos(repoList);
+      getOpenRepositories(({ isAdding, openRepositories }) => {
+        setOpenRepos(openRepositories, isAdding);
       });
     }
   }, [openRepos]);
