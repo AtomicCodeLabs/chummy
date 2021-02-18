@@ -1,12 +1,12 @@
 type User @aws_api_key @aws_cognito_user_pools {
   id: ID!
   accountType: String!
-  bookmarks: [Bookmark]
   metadata: UserMetadata
   owner: String!
   onMailingList: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+  bookmarks(name: ModelStringKeyConditionInput, filter: ModelBookmarkFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelBookmarkConnection @aws_api_key @aws_cognito_user_pools
 }
 
 type UserMetadata @aws_api_key @aws_cognito_user_pools {
@@ -258,4 +258,14 @@ input ModelBookmarkConditionInput {
   and: [ModelBookmarkConditionInput]
   or: [ModelBookmarkConditionInput]
   not: ModelBookmarkConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
 }

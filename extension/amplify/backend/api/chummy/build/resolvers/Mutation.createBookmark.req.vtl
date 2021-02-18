@@ -51,6 +51,8 @@ $util.qr($context.args.input.put("updatedAt", $util.defaultIfNull($ctx.args.inpu
 #end
 ## [End] Check authMode and execute owner/group checks **
 
+
+
 ## [Start] Prepare DynamoDB PutItem Request. **
 $util.qr($context.args.input.put("__typename", "Bookmark"))
 #set( $condition = {

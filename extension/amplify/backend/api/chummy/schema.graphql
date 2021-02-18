@@ -12,7 +12,7 @@ type User
   ) {
   id: ID!
   accountType: String!
-  bookmarks: [Bookmark] #@connection(keyName: "byUser", fields: ["id"])
+  bookmarks: [Bookmark] @connection(keyName: "byUser", fields: ["owner"])
   metadata: UserMetadata
   owner: String!
   onMailingList: String
@@ -35,8 +35,8 @@ type Bookmark
       }
       { allow: public, provider: apiKey }
     ]
-  ) {
-  #@key(name: "byUser", fields: ["userId", "name"])
+  )
+  @key(name: "byUser", fields: ["owner", "name"]) {
   id: ID!
   userId: ID!
   name: String!
