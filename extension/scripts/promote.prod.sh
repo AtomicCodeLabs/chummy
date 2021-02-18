@@ -14,7 +14,7 @@ git diff-index --quiet HEAD || HUSKY_SKIP_HOOKS=1 git commit -m "chore(pre-promo
 git push -u origin extension/prod
 
 # Merge
-HUSKY_SKIP_HOOKS=1 git merge -s recursive -X ours extension/gamma
+HUSKY_SKIP_HOOKS=1 git merge --no-edit -s recursive -X ours extension/gamma
 
 # Push target branch
 amplify push
