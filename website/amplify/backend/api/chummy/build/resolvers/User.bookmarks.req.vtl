@@ -2,11 +2,11 @@
 #set( $query = {
   "expression": "#partitionKey = :partitionKey",
   "expressionNames": {
-      "#partitionKey": "userId"
+      "#partitionKey": "owner"
   },
   "expressionValues": {
       ":partitionKey": {
-          "S": "$context.source.id"
+          "S": "$context.source.owner"
     }
   }
 } )
