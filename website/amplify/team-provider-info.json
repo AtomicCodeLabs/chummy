@@ -125,16 +125,10 @@
             "1": {
               "permissions": [
                 {
-                  "type": "awsAccounts",
-                  "accounts": [
-                    "202575095365"
-                  ]
-                },
-                {
                   "type": "private"
                 }
               ],
-              "hash": "B9o8K2UIqIx3h0t86chSzM1p+aBV1LQJjpOlFCr3ygM="
+              "hash": "Q8cyTM5T02+yD+8z9l5tA/869mKNo4bHiVxVk/gPOak="
             }
           }
         }
