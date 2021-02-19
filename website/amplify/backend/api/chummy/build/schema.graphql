@@ -2,7 +2,7 @@ type User @aws_api_key @aws_cognito_user_pools {
   id: ID!
   accountType: String!
   metadata: UserMetadata
-  owner: String
+  owner: String!
   onMailingList: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -23,7 +23,7 @@ type Bookmark @aws_api_key @aws_cognito_user_pools {
   pinned: String!
   branch: String!
   repo: String!
-  owner: String
+  owner: String!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -170,7 +170,7 @@ input CreateUserInput {
   id: ID
   accountType: String!
   metadata: UserMetadataInput
-  owner: String
+  owner: String!
   onMailingList: String
 }
 
@@ -230,7 +230,7 @@ input CreateBookmarkInput {
   pinned: String!
   branch: String!
   repo: String!
-  owner: String
+  owner: String!
 }
 
 input UpdateBookmarkInput {
