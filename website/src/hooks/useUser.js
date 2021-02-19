@@ -35,6 +35,7 @@ const useUser = (sendToExtension = false) => {
               payload: {
                 user: {
                   ...cognitoUser?.attributes,
+                  owner: cognitoUser?.username,
                   idToken: cognitoUser?.signInUserSession?.idToken?.jwtToken,
                   accessToken:
                     cognitoUser?.signInUserSession?.accessToken?.jwtToken,
