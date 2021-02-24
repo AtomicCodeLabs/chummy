@@ -12,11 +12,11 @@ const footerRoutes = {
     },
     {
       name: 'Features',
-      pathname: '/features'
+      pathname: '/#features'
     },
     {
       name: 'Pricing',
-      pathname: '/pricing'
+      pathname: '/checkout'
     },
     {
       name: "What's new?",
@@ -46,10 +46,10 @@ const footerRoutes = {
       name: 'About us',
       pathname: '/team'
     },
-    {
-      name: 'Security',
-      pathname: '/security'
-    },
+    // {
+    //   name: 'Security',
+    //   pathname: '/security'
+    // },
     {
       name: 'Privacy',
       pathname: '/privacy'
@@ -76,7 +76,7 @@ const footerRoutes = {
     },
     {
       name: 'Email us',
-      pathname: 'mailto: chummy@atomiccode.io'
+      pathname: 'mailto: hello@atomiccode.io'
     }
   ]
 };

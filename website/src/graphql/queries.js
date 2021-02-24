@@ -13,6 +13,7 @@ export const getUser = /* GraphQL */ `
       }
       owner
       onMailingList
+      isTrial
       createdAt
       updatedAt
       bookmarks {
@@ -33,6 +34,7 @@ export const listUsers = /* GraphQL */ `
         accountType
         owner
         onMailingList
+        isTrial
         createdAt
         updatedAt
       }
