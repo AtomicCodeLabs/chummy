@@ -155,8 +155,12 @@
         ],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-chummy-prod-220137-deployment",
-          "S3Key": "amplify-builds/chummyPostAuthTrigger-32767364567131636361-build.zip"
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
         }
       }
     },
