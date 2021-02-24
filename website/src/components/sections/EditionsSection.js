@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import EditionBox from '../boxes/EditionBox';
 import ToggleSwitch from '../ToggleSwitch';
 import usePrices from '../../hooks/usePrices';
+import useUser from '../../hooks/useUser';
 
-const EditionsSection = ({ showTrials = true }) => {
+export const EditionsContainer = () => {
   const [isMonthly, setIsMonthly] = useState(true); // alternative is yearly
   const prices = usePrices();
+  const user = useUser();
 
   return (
-    <div className="sm:text-center">
-      <h2>Choose your edition.</h2>
-      <div>Start your 14-day trial. No credit card required.</div>
+    <>
       <ToggleSwitch
         leftText="Monthly"
         rightText="Yearly 25% OFF"
@@ -46,14 +46,23 @@ const EditionsSection = ({ showTrials = true }) => {
                 features={features}
                 Icon={Icon}
                 unit={unit}
+                customerId={user?.['custom:stripe_id']}
+                userAccountType={user?.accountType}
+                isTrial={user?.isTrial}
                 className="md:w-full md:mx-auto"
-                showTrials={showTrials}
               />
             )
           )}
       </div>
-    </div>
+    </>
   );
 };
 
+const EditionsSection = () => (
+  <div className="sm:text-center">
+    <h2>Choose your edition.</h2>
+    <div>Start your 14-day trial. No credit card required.</div>
+    <EditionsContainer />
+  </div>
+);
 export default EditionsSection;

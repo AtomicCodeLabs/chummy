@@ -16,6 +16,7 @@ type User
   metadata: UserMetadata
   owner: String!
   onMailingList: String
+  isTrial: String
 }
 
 type UserMetadata {

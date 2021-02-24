@@ -15,6 +15,7 @@ const Layout = ({
   hideFooter = false,
   fitFooter = false,
   isSticky = true,
+  isAccountPage = false,
   mainClassName = 'bg-white',
   innerMainClassName = '',
   footerClassName = '',
@@ -45,6 +46,7 @@ const Layout = ({
           isSimpleNavbar={isSimpleNavbar}
           isSticky={isSticky}
           siteTitle={data.site.siteMetadata?.title || `Title`}
+          isAccountPage={isAccountPage}
         />
       )}
       {SplashSection && (

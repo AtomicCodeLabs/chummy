@@ -63,7 +63,7 @@ export const TableRowSection = ({
         <div
           // eslint-disable-next-line react/no-array-index-key
           key={i}
-          className={clsx(`w-${width}/12`, {
+          className={clsx(`w-${width}/12`, 'pr-3 last:pr-0', {
             'text-right': i === items.length - 1,
             'text-left': i !== items.length - 1
           })}
@@ -91,7 +91,7 @@ export const BulletsSection = ({
   disabledButtonText = null,
   buttonClassName = '',
   isButtonDisabled = () => false,
-  onSubmit = () => {},
+  onSubmit = async () => {},
   type = 'radio', // or checkbox
   className
 }) => {
@@ -102,6 +102,7 @@ export const BulletsSection = ({
       {}
     );
   const [valuesToChecked, setValuesToChecked] = useState(getDefaults());
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setValuesToChecked(getDefaults());
   }, [options]);
@@ -118,8 +119,6 @@ export const BulletsSection = ({
       return findChecklist();
     }
   };
-
-  console.log('Values', options, valuesToChecked);
 
   const isDisabled = (() => {
     const found = findSelectedValue();
@@ -181,12 +180,18 @@ export const BulletsSection = ({
               ))}
             <div className="flex items-center pt-4 h-14">
               <ActionButton
-                onClick={() => {
+                onClick={async (e) => {
+                  e.preventDefault();
+                  setLoading(true);
                   const found = findSelectedValue();
-                  if (found) onSubmit(found);
+                  if (found) {
+                    await onSubmit(found);
+                  }
+                  setLoading(false);
                 }}
                 className={clsx('text-center', buttonClassName)}
                 disabled={isDisabled}
+                isLoading={loading}
               >
                 {isDisabled ? disabledButtonText || buttonText : buttonText}
               </ActionButton>

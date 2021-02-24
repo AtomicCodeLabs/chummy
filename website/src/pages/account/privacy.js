@@ -10,7 +10,7 @@ import sendEmail from '../../config/email';
 import { updateUser } from '../../graphql/mutations';
 
 const Privacy = () => {
-  const user = useUser();
+  const user = useUser({ isPublic: false });
   const { createToast } = useToaster();
   const [emailButtonDisabled, setEmailDisabled] = useState({
     download: false,

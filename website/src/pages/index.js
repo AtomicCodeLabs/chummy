@@ -8,10 +8,10 @@ import SEO from '../components/seo';
 import ColumnSection from '../components/sections/ColumnSection';
 import FeaturesSection from '../components/sections/FeaturesSection';
 import ReasonsSection from '../components/sections/ReasonsSection';
-import ActionButton from '../components/buttons/ActionButton';
 import BrowserBox from '../components/boxes/BrowserBox';
 import ConstrainedContainer from '../components/sections/ConstrainedContainer';
 import EditionsSection from '../components/sections/EditionsSection';
+import SigninButton from '../components/buttons/SigninButton';
 
 const IndexPage = () => {
   const data = useStaticQuery(graphql`
@@ -36,29 +36,42 @@ const IndexPage = () => {
   return (
     <Layout
       footerClassName="mt-60"
+      mainClassName="overflow-hidden"
       SplashSection={
         <>
-          <ConstrainedContainer className="pt-8 mt-10 md:mt-0 px-14 pb-14 md:px-12 md:pb-12 md:pt-6 sm:px-6 sm:pb-6 sm:pt-6">
+          <ConstrainedContainer className="pt-8 md:mt-0 px-14 pb-14 md:px-12 md:pb-12 md:pt-6 sm:px-6 sm:pb-6 sm:pt-6">
             <ColumnSection
               title={
                 <h1>
-                  Use Github, <span className="italic">Productively</span>.
+                  Use Github,{' '}
+                  <span
+                    className="italic"
+                    style={{
+                      background:
+                        'linear-gradient(to top, #39FF14 50%, transparent 50%)'
+                    }}
+                  >
+                    Productively
+                  </span>
+                  .
                 </h1>
               }
               colWidth={9}
               titleClassName="my-0 mb-10 md:mb-5"
               isCentered
             >
-              <p className="text-lg md:text-sm">
+              <p className="text-lg md:text-base sm:text-sm">
                 Chummy is a browser extension that helps you stay focused on
                 what matters to you, whether that’s developing, contributing,
                 browsing, or stargazing a bunch of random repositories.
               </p>
               <div className="inline-flex flex-col justify-center md:flex-col">
                 <div className="flex h-20 mx-auto">
-                  <ActionButton to="/signin" className="my-auto">
-                    Get Started for Free
-                  </ActionButton>
+                  <SigninButton
+                    className="my-auto"
+                    signedInText="Get Started for Free"
+                    signedOutText="Get Started for Free"
+                  />
                 </div>
                 <BrowserBox className="mx-auto mb-4" />
                 <div className="mx-auto mb-4 text-xs text-gray-500 sm:text-xxs md:mx-0">
@@ -101,7 +114,7 @@ const IndexPage = () => {
           </svg>
         </>
       }
-      splashSectionClassName="-mb-32 md:-mb-16"
+      splashSectionClassName="-mb-8 md:-mb-4"
     >
       <SEO title="Home" />
       <FeaturesSection />
