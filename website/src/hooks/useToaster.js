@@ -15,6 +15,7 @@ const useToaster = () => {
       </>,
       {
         position: 'bottom-right',
+        hideAfter: 5,
         onClick: () => {
           hide();
         }

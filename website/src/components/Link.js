@@ -5,11 +5,18 @@ import { Link as GatsbyLink } from 'gatsby';
 // Since DOM elements <a> cannot receive activeClassName
 // and partiallyActive, destructure the prop here and
 // pass it only to GatsbyLink
-const Link = ({ children, to, activeClassName, partiallyActive, ...other }) => {
+const Link = ({
+  children,
+  to,
+  activeClassName,
+  state,
+  partiallyActive,
+  ...other
+}) => {
   // Tailor the following test to your environment.
   // This example assumes that any internal link (intended for Gatsby)
   // will start with exactly one slash, and that anything else is external.
-  const internal = /^\/(?!\/)/.test(to);
+  const internal = /^[/#](?!\/)/.test(to);
 
   // Use Gatsby Link for internal links, and <a> for others
   if (internal) {
@@ -18,7 +25,7 @@ const Link = ({ children, to, activeClassName, partiallyActive, ...other }) => {
         to={to}
         activeClassName={activeClassName}
         partiallyActive={partiallyActive}
-        state={to === '/signin' ? { fromWebsite: true } : {}} // If route is signin, attach location state that indicates it's coming from the website
+        state={to === '/signin' ? { fromWebsite: true, ...state } : state} // If route is signin, attach location state that indicates it's coming from the website
         {...other}
       >
         {children}

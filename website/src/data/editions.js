@@ -1,5 +1,6 @@
 import React from 'react';
-import { CgDice1, CgDice2, CgDice3 } from 'react-icons/cg';
+import { CgGlassAlt, CgCoffee } from 'react-icons/cg';
+import { BiWine } from 'react-icons/bi';
 
 export default {
   Community: {
@@ -7,7 +8,7 @@ export default {
     nicknameId: { monthly: 'Community Free', yearly: 'Community Free' },
     description: 'All the core features to get you started',
     unit: '',
-    Icon: <CgDice1 />,
+    Icon: <CgGlassAlt />,
     features: [
       'Core features:',
       'Repositories and tab management',
@@ -29,7 +30,7 @@ export default {
     },
     description: 'Unlimited everything + more features',
     unit: '/mo',
-    Icon: <CgDice2 />,
+    Icon: <CgCoffee />,
     features: [
       'Everything in Community, plus:',
       'Unlimited bookmarks',
@@ -51,11 +52,17 @@ export default {
       yearly: 'yearly_unit_amount'
     },
     description: 'Professional licenses for teams of 5+',
-    unit: '/mo/seat',
-    Icon: <CgDice3 />,
+    unit: (
+      <>
+        /mo
+        <br />
+        /seat
+      </>
+    ),
+    Icon: <BiWine />,
     features: [
       'Everything in Professional, plus:',
-      'License management portal for teams',
+      // 'License management portal for teams',
       'Github Enterprise integration',
       'Priority Support'
     ]

@@ -11,7 +11,7 @@ import useInvoices from '../../hooks/useInvoices';
 import Link from '../../components/Link';
 
 const Billing = () => {
-  const user = useUser();
+  const user = useUser({ isPublic: false });
 
   const invoices = useInvoices(user?.['custom:stripe_id']);
 

@@ -6,17 +6,21 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 
 import NavItem from './NavItem';
 import ActionButton from '../buttons/ActionButton';
+import SigninButton from '../buttons/SigninButton';
 import { defaultRoutes } from './routes';
 import Logo from '../Logo';
 import { matchRoutes } from '../../utils';
+import useUser from '../../hooks/useUser';
 
 const Navbar = ({
   bgColor,
   secondaryBgColor,
   isSimpleNavbar = false,
-  isSticky = true
+  isSticky = true,
+  isAccountPage = false // nav items specific to account layout should show up
 }) => {
   const { pathname } = useLocation();
+  const user = useUser();
   const [isScrollAtTop, setIsScrollAtTop] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -34,13 +38,12 @@ const Navbar = ({
       className={clsx(
         'box-border flex flex-col mx-auto w-full flex-nowrap',
         'pb-4 md:py-2.5 z-20',
-        `transition-colors duration-300  bg-transparent md:${secondaryBgColor} md:border-b-2 md:border-gray-300`,
+        `transition-colors duration-300  bg-transparent md:${secondaryBgColor} md:border-b-2 md:border-gray-200`,
         { 'sticky md:top-0': isSticky },
         {
           '-top-10 pt-14': !isSimpleNavbar,
           'top-0 pt-4': isSimpleNavbar,
-          [`${secondaryBgColor} shadow-sm border-b-2`]:
-            !isScrollAtTop || isSimpleNavbar,
+          [`${secondaryBgColor} shadow-sm border-b-2 border-gray-200`]: !isScrollAtTop,
           [bgColor]: isScrollAtTop && !isSimpleNavbar
         }
       )}
@@ -57,6 +60,7 @@ const Navbar = ({
             <Logo
               isResponsive
               // isSimpleNavbar
+              collapse={!isAccountPage}
               className="h-12"
               logoClassName="mr-1.5 w-7 md:w-5"
             />
@@ -78,9 +82,7 @@ const Navbar = ({
                       {name}
                     </NavItem>
                   ))}
-                  <ActionButton to="/signin" className="ml-4">
-                    Sign in with Github
-                  </ActionButton>
+                  <SigninButton className="ml-4" />
                 </div>
                 <div className="hidden md:block">
                   <div
@@ -99,6 +101,25 @@ const Navbar = ({
               {/* End Right */}
             </>
           )}
+          {isSimpleNavbar &&
+            isAccountPage &&
+            !['professional', 'enterprise'].includes(user?.accountType) && (
+              <>
+                {/* Right */}
+                <div className="inline-flex items-start">
+                  <div className="block">
+                    <ActionButton
+                      bgColor="bg-green-500"
+                      to="/checkout"
+                      className="px-4 py-2 ml-4"
+                    >
+                      Get Professional
+                    </ActionButton>
+                  </div>
+                </div>
+                {/* End Right */}
+              </>
+            )}
         </div>
         {/* Mobile Menu */}
         {!isSimpleNavbar && isMenuOpen && (
@@ -116,10 +137,24 @@ const Navbar = ({
               </NavItem>
             ))}
             {/* <div className="h-px bg-gray-300"></div> */}
-            <div className="flex py-4 -mt-2">
-              <ActionButton to="/signin" className="ml-4">
-                Sign in with Github
-              </ActionButton>
+            <div className="flex">
+              {user ? (
+                <NavItem
+                  to="/account"
+                  className="w-full px-6 py-4 font-bold text-green-700"
+                  isMobile
+                >
+                  My Account
+                </NavItem>
+              ) : (
+                <ActionButton
+                  animated={false}
+                  to="/signin"
+                  className="my-4 mt-2 ml-4"
+                >
+                  Sign in with Github
+                </ActionButton>
+              )}
             </div>
           </div>
         )}
