@@ -19,6 +19,23 @@ module.exports = {
   plugins: [
     { resolve: `gatsby-plugin-react-helmet` },
     {
+      resolve: `gatsby-plugin-env-variables`,
+      options: {
+        allowList: [
+          'EMAILJS_SERVICE_ID',
+          'EMAILJS_TEMPLATE_ID',
+          'EMAILJS_USER_ID',
+          'WEBSITE_BASE_URL',
+          'WEBSITE_SIGNIN',
+          'WEBSITE_REDIRECT',
+          'STRIPE_PUBLISHABLE_KEY',
+          'STRIPE_SECRET_KEY',
+          'ASSETS_PUBLIC_PATH',
+          'STAGE'
+        ]
+      }
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
