@@ -6,7 +6,7 @@ import SEO from '../components/seo';
 import AuthBox from '../components/boxes/AuthBox';
 import Logo from '../components/Logo';
 import ActionButton from '../components/buttons/ActionButton';
-import Spinner from '../components/spinners/Spinner';
+import BoxSpinner from '../components/spinners/BoxSpinner';
 
 /*
  * Two states of this page exists:
@@ -21,14 +21,17 @@ import Spinner from '../components/spinners/Spinner';
  */
 const SignIn = ({ location }) => {
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
   const fromExtension = !location.state?.fromWebsite;
 
   const signIn = async () => {
+    setLoading(true);
     try {
       await Auth.federatedSignIn({ provider: 'Github' });
     } catch (e) {
       console.error('Error', e);
       setError(e);
+      setLoading(false);
     }
   };
 
@@ -50,7 +53,7 @@ const SignIn = ({ location }) => {
       <div className="flex items-center justify-center bg-white rounded-lg shadow-lg">
         {fromExtension ? (
           <AuthBox
-            Icon={<Spinner className="bg-green-500" />}
+            Icon={<BoxSpinner className="bg-green-500" />}
             title={<h3>One moment please.</h3>}
             className="flex flex-col items-center justify-center w-84 md:w-full"
           >
@@ -65,7 +68,11 @@ const SignIn = ({ location }) => {
             className="flex flex-col items-center justify-center w-80 md:w-full"
           >
             <div className="flex mx-auto h-14 md:h-10 sm:h-10">
-              <ActionButton onClick={signIn} className="my-auto">
+              <ActionButton
+                onClick={signIn}
+                className="my-auto"
+                isLoading={loading}
+              >
                 Sign in with Github
               </ActionButton>
             </div>

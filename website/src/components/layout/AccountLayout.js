@@ -1,13 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import { navigate } from 'gatsby';
+import { Auth } from 'aws-amplify';
 import { useLocation } from '@reach/router';
 import { ModalContainer, Reoverlay } from 'reoverlay';
-// import { Elements } from '@stripe/react-stripe-js';
 
-import { matchRoutes } from '../../utils';
+import { clearUserStorage, matchRoutes } from '../../utils';
 import { privateRoutes } from './routes';
-// import getStripe from '../../config/stripe';
 
 import Layout from './index';
 import Link from '../Link';
@@ -17,15 +16,14 @@ const AccountLayout = ({ className, title, children }) => {
   const { pathname } = useLocation();
 
   return (
-    // <Elements stripe={getStripe()}>
     <>
       <Layout
         isSimpleNavbar
-        // isSticky={false}
-        mainClassName="h-screen bg-white"
+        mainClassName="min-h-screen	h-full bg-white"
         innerMainClassName="justify-start items-center"
-        navbarSecondaryBgColor="bg-gray-200"
+        navbarSecondaryBgColor="bg-white"
         footerClassName="mt-32 w-full inset-x-0"
+        isAccountPage
         fitFooter
       >
         <div
@@ -59,10 +57,11 @@ const AccountLayout = ({ className, title, children }) => {
               onClick={() => {
                 Reoverlay.showModal(ConfirmModalBox, {
                   confirmText: 'Are you sure you want to log out?',
+                  yesText: 'Yes, I want to log out',
                   onConfirm: () => {
                     // On confirm
-                    sessionStorage.removeItem('currentUser');
-                    sessionStorage.removeItem('currentUserInvoices');
+                    Auth.signOut();
+                    clearUserStorage();
                     navigate('/');
                   }
                 });
@@ -86,7 +85,6 @@ const AccountLayout = ({ className, title, children }) => {
       </Layout>
       <ModalContainer />
     </>
-    // </Elements>
   );
 };
 

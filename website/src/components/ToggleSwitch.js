@@ -19,16 +19,22 @@ export default ({
     onKeyDown={toggle}
   >
     <div
-      className={clsx('z-10 w-1/2 px-4 py-4 text-sm font-bold bg-transparent', {
-        'text-gray-800': isLeft
-      })}
+      className={clsx(
+        'flex justify-center items-center z-10 w-1/2 px-4 py-4 text-sm font-bold bg-transparent',
+        {
+          'text-gray-800': isLeft
+        }
+      )}
     >
       {leftText}
     </div>
     <div
-      className={clsx('z-10 w-1/2 px-4 py-4 text-sm font-bold bg-transparent', {
-        'text-gray-800': !isLeft
-      })}
+      className={clsx(
+        'flex justify-center items-center z-10 w-1/2 px-4 py-4 text-sm font-bold bg-transparent',
+        {
+          'text-gray-800': !isLeft
+        }
+      )}
     >
       {rightText}
     </div>

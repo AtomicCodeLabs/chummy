@@ -4,13 +4,8 @@ import { CgExternal } from 'react-icons/cg';
 import SEO from '../../components/seo';
 import AccountLayout from '../../components/layout/AccountLayout';
 import { BulletsSection } from '../../components/sections/AccountSection';
-import useUser from '../../hooks/useUser';
 
-const Feedback = () => {
-  const user = useUser();
-  console.log('Feedback', user);
-
-  return (
+const Feedback = () => (
     <AccountLayout title={<h2 className="mb-10">Feedback</h2>}>
       <SEO title="Privacy" />
       <div className="pb-6 text-base font-light text-gray-700 sm:text-sm">
@@ -18,7 +13,7 @@ const Feedback = () => {
         important role in making our product better for you.
       </div>
       <BulletsSection
-        title="Manage your personal data"
+        title="What's on your mind?"
         options={[
           {
             label: 'I have a feature request.',
@@ -33,7 +28,7 @@ const Feedback = () => {
             value: ['general', false]
           },
           {
-            label: 'I have a question.',
+            label: 'I have a question about my subscription.',
             value: ['question', false]
           }
         ]}
@@ -65,16 +60,16 @@ const Feedback = () => {
             win.focus();
           }
           if (selectedOption === 'question') {
-            const win = window.open(
-              'https://github.com/alexkim205/chummy/issues/new?assignees=&labels=question&template=question.md&title=%5BQ%5D+',
-              '_blank'
-            );
-            win.focus();
+            window.location.href = 'mailto:hello@atomiccode.io';
+            // const win = window.open(
+            //   'https://github.com/alexkim205/chummy/issues/new?assignees=&labels=question&template=question.md&title=%5BQ%5D+',
+            //   '_blank'
+            // );
+            // win.focus();
           }
         }}
         hasTopBorder
       />
     </AccountLayout>
   );
-};
 export default Feedback;

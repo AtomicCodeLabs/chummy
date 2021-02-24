@@ -40,13 +40,16 @@ const FeaturesSection = () => {
 
   return (
     <>
+      <div className="relative invisible block" id="features">
+        Features Section
+      </div>
       <ColumnSection
         title={
-          <h2>
-            Github can be <span className="italic text-red-500">difficult</span>{' '}
-            to navigate. <br />
+          <h2 className="leading-tight">
+            Github can be <span className="text-red-500">difficult</span> to
+            navigate. <br />
             Chummy comes packed with features that make it{' '}
-            <span className="italic text-green-500">easy</span>.
+            <span className="text-green-500">easy</span>.
           </h2>
         }
         className="sm:mt-12"

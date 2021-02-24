@@ -17,7 +17,8 @@ const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 const {
   createOrGetUserCollection,
   updateUserCollection,
-  getSecretStripeKey
+  getSecretStripeKey,
+  getPriceId
 } = require('./util');
 
 exports.handler = async (event, context, callback) => {
@@ -26,7 +27,7 @@ exports.handler = async (event, context, callback) => {
     event?.request?.userAttributes['custom:ddb_id'],
     event
   );
-  const cognitoId = user?.id;
+  const ddbId = user?.id;
 
   // If it's not a new signup, the following steps have already been done.
   // Theoretically should never happen because lambda trigger is post confirmation trigger,
@@ -49,15 +50,30 @@ exports.handler = async (event, context, callback) => {
     metadata: {
       cognitoUsername: event?.userName,
       cognitoUserPoolId: event?.userPoolId,
-      cognitoSub: cognitoId,
+      ddbId,
       githubProfile: event?.request?.userAttributes?.profile
     }
   });
 
   // Create new Premium subscription with trial for this customer
+  const professionalMonthlyPriceId = getPriceId('professional', 'monthly');
+  const subscription = await stripe.subscriptions.create({
+    customer: customer?.id,
+    items: [{ price: professionalMonthlyPriceId }],
+    cancel_at_period_end: true,
+    trial_period_days: 14,
+    metadata: {
+      isTrial: true
+    }
+    // trial_end: 'now' // for testing
+  });
+
+  console.log('subscription', subscription);
 
   // Update ddb user with metadata (cognito and stripe id's)
-  const finalUser = await updateUserCollection(cognitoId, {
+  const finalUser = await updateUserCollection(ddbId, {
+    accountType: 'professional', // When user is first created, give them trial
+    isTrial: true,
     metadata: {
       cognitoUsername: event?.userName,
       cognitoUserPoolId: event?.userPoolId,
@@ -82,7 +98,9 @@ exports.handler = async (event, context, callback) => {
       Username: event?.userName
     },
     function (err, data) {
-      console.error('Error updating Cognito attributes', err, data);
+      if (err) {
+        console.error('Error updating Cognito attributes', err, data);
+      }
     }
   );
 
