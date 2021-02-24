@@ -2,11 +2,15 @@ import React from 'react';
 import clsx from 'clsx';
 
 import Link from '../Link';
+import ButtonSpinner from '../spinners/ButtonSpinner';
 
 const ActionButton = ({
   children,
   to,
   disabled = false,
+  disabledFade = true,
+  animated = true,
+  isLoading = false,
   onClick,
   className,
   bgColor = 'bg-gray-900',
@@ -14,6 +18,8 @@ const ActionButton = ({
   ...props
 }) => {
   const isLink = !!to; // if not, is button
+
+  console.log('IS LOADING', isLoading);
 
   if (isLink) {
     return (
@@ -24,15 +30,26 @@ const ActionButton = ({
           bgColor,
           textColor,
           {
-            'hover:-top-1 hover:border-b-4 hover:border-white': !disabled,
-            'opacity-50': disabled
+            'hover:-top-1 hover:border-b-4 hover:border-white':
+              !disabled && !isLoading && animated,
+            'opacity-50': (disabled && disabledFade) || isLoading
           },
           className
         )}
-        to={to}
+        to={!isLoading && !disabled ? to : null}
         {...props}
       >
-        {children}
+        <span className="inline-flex items-center">
+          {children}
+          <div
+            className={clsx('', {
+              'ml-3 block': isLoading,
+              hidden: !isLoading
+            })}
+          >
+            <ButtonSpinner />
+          </div>
+        </span>
       </Link>
     );
   }
@@ -49,15 +66,26 @@ const ActionButton = ({
         bgColor,
         textColor,
         {
-          'hover:-top-1 hover:border-b-4 hover:border-white': !disabled,
-          'opacity-50': disabled
+          'hover:-top-1 hover:border-b-4 hover:border-white':
+            !disabled && !isLoading && animated,
+          'opacity-50': (disabled && disabledFade) || isLoading
         },
         className
       )}
-      onClick={onClick}
+      onClick={!isLoading && !disabled ? onClick : null}
       {...props}
     >
-      {children}
+      <span className="inline-flex items-center">
+        {children}
+        <div
+          className={clsx('', {
+            'ml-3 block': isLoading,
+            hidden: !isLoading
+          })}
+        >
+          <ButtonSpinner />
+        </div>
+      </span>
     </div>
   );
 };

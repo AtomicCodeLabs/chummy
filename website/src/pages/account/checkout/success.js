@@ -5,7 +5,7 @@ import { navigate } from 'gatsby';
 import Layout from '../../../components/layout';
 import SEO from '../../../components/seo';
 import AuthBox from '../../../components/boxes/AuthBox';
-import Spinner from '../../../components/spinners/Spinner';
+import BoxSpinner from '../../../components/spinners/BoxSpinner';
 import useUser from '../../../hooks/useUser';
 import useEffectOnce from '../../../hooks/useEffectOnce';
 
@@ -15,7 +15,7 @@ import { syncUser } from '../../../graphqlCustom/functions';
  * This page is what we're redirected to by Stripe after a checkout success!
  */
 const CheckoutSuccess = () => {
-  const user = useUser();
+  const user = useUser({ isPublic: false });
 
   // 1. Send sync user event to trigger lambda function to sync ddb user
   // 2. Redirect to /account/ page immediately with proper toasts to pop
@@ -52,7 +52,7 @@ const CheckoutSuccess = () => {
       <SEO title="CheckoutSuccess" />
       <div className="flex items-center justify-center bg-white rounded-lg shadow-lg">
         <AuthBox
-          Icon={<Spinner className="bg-green-500" />}
+          Icon={<BoxSpinner className="bg-green-500" />}
           title={<h3>One moment please.</h3>}
           className="flex flex-col items-center justify-center w-84 md:w-full"
         >

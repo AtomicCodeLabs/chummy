@@ -5,18 +5,29 @@ import { navigate } from 'gatsby';
 import { getUser } from '../graphql/queries';
 import { onUpdateUser } from '../graphql/subscriptions';
 
-const useUser = (sendToExtension = false) => {
+const useUser = (props) => {
+  const { sendToExtension = false, isPublic = true } = props || {};
+
   const [cachedCognitoUser, setCachedCognitoUser] = useState();
   const [account, setAccount] = useState();
 
   const getCurrentUser = async () => {
-    const cognitoUser =
-      cachedCognitoUser || (await Auth.currentAuthenticatedUser());
+    let cognitoUser = cachedCognitoUser;
 
-    // If not logged in, immediately redirect to home page
     if (!cognitoUser) {
-      navigate('/');
+      try {
+        cognitoUser = await Auth.currentAuthenticatedUser();
+      } catch (authErr) {
+        // If not logged in, immediately redirect to home page
+        // If it's on sign in page, let the user sign in, don't navigate away
+        if (!isPublic) {
+          navigate('/');
+        }
+        return null;
+      }
     }
+
+    console.log('GET COGNITO USER', cognitoUser);
 
     setCachedCognitoUser(cognitoUser);
     return cognitoUser;
@@ -64,6 +75,7 @@ const useUser = (sendToExtension = false) => {
   useEffect(() => {
     const fetchUser = async () => {
       const cognitoUser = await getCurrentUser();
+      if (!cognitoUser) return;
 
       // If one doesn't already exist in storage, fetch user
       let cachedUser = JSON.parse(sessionStorage.getItem('currentUser'));

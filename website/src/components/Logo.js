@@ -10,6 +10,7 @@ export default ({
   isDarkBg = false,
   hideIcon = false,
   noText = false,
+  collapse = true, // responsive collapse
   isSimpleNavbar = false,
   to = '/',
   className,
@@ -34,13 +35,6 @@ export default ({
     }
   `);
 
-  console.log(
-    'response',
-    isResponsive,
-    isSimpleNavbar,
-    isResponsive && !isSimpleNavbar
-  );
-
   return (
     <Link
       className={clsx('text-current	flex md:h-auto items-center', className)}
@@ -58,7 +52,7 @@ export default ({
         <div
           className={clsx('flex flex-col md:flex', {
             'items-center md:flex-row': isResponsive,
-            'mg-lg:hidden': isResponsive && !isSimpleNavbar, // don't hide text if simple navbar
+            'md-lg:hidden': isResponsive && !isSimpleNavbar && collapse, // don't hide text if simple navbar
             'items-start': !isResponsive
           })}
         >
