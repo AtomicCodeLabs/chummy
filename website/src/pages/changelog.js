@@ -2,9 +2,8 @@ import React from 'react';
 
 import Layout from '../components/layout';
 import SEO from '../components/seo';
-import TermsCard from '../components/legal/TermsCard';
 
-const TermsPage = () => (
+const ChangelogPage = () => (
   <Layout
     // isSimpleNavbar
     mainClassName="min-h-screen h-full bg-blue-50"
@@ -14,11 +13,9 @@ const TermsPage = () => (
     footerClassName="w-full inset-x-0"
     fitFooter
   >
-    <SEO title="Terms" />
-    <h2>Terms & Conditions</h2>
-    <p className="text-gray-500">Last updated: February 23, 2021</p>
-    <TermsCard />
+    <SEO title="Changelog" />
+    <h2>Changelog</h2>
   </Layout>
 );
 
-export default TermsPage;
+export default ChangelogPage;

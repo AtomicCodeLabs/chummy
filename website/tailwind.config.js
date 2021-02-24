@@ -51,7 +51,8 @@ module.exports = {
       borderWidth: ['hover'],
       translate: ['hover'],
       ringWidth: ['hover'],
-      ringColor: ['hover']
+      ringColor: ['hover'],
+      padding: ['last']
     }
   },
   plugins: []

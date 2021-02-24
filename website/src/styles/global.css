@@ -10,10 +10,10 @@
     @apply text-base md:text-sm;
   }
   h1 {
-    @apply mt-6 mb-5 text-5xl md:text-4xl sm:text-3xl;
+    @apply mt-6 mb-5 text-7xl md:text-6xl sm:text-5xl;
   }
   h2 {
-    @apply mt-5 mb-4 text-4xl md:text-3xl sm:text-2xl;
+    @apply mt-5 mb-4 text-5xl md:text-4xl sm:text-2xl;
   }
   h3 {
     @apply mt-3 mb-2 text-2xl md:text-xl sm:text-lg;
