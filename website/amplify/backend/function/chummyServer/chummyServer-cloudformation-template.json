@@ -25,12 +25,6 @@
     "functionchummyLambdaLayerArn": {
       "Type": "String",
       "Default": "functionchummyLambdaLayerArn"
-    },
-    "deploymentBucketName": {
-      "Type": "String"
-    },
-    "s3Key": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -103,12 +97,8 @@
         ],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
+          "S3Bucket": "amplify-chummy-prod-220137-deployment",
+          "S3Key": "amplify-builds/chummyServer-6e733532697474623078-build.zip"
         }
       }
     },
