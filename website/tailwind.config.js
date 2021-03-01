@@ -46,6 +46,9 @@ module.exports = {
       }),
       margin: {
         full: '100%'
+      },
+      colors: {
+        'neon-green': { 300: '#5cff3d', 400: '#39FF14', 500: '#2deb09' }
       }
     }
   },

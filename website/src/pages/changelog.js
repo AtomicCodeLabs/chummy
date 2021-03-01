@@ -13,7 +13,7 @@ const ChangelogPage = () => {
     const fetchChangelogData = async () => {
       const response = await (
         await fetch(
-          'https://raw.githubusercontent.com/alexkim205/chummy/extension/prod/extension/CHANGELOG.md?token=ADGWG2VQLULKJNG2ZH5GYKDAICB56'
+          'https://raw.githubusercontent.com/AtomicCodeLabs/chummy/extension/prod/extension/CHANGELOG.md?token=ADGWG2VQLULKJNG2ZH5GYKDAICB56'
         )
       ).text();
       const { raw, ...sectionData } = md2Json.parse(response)?.Changelog;

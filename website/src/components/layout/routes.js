@@ -5,7 +5,7 @@ export const defaultRoutes = [
   },
   {
     name: 'Community',
-    pathname: 'https://github.com/alexkim205/chummy'
+    pathname: 'https://github.com/AtomicCodeLabs/chummy'
   },
   {
     name: 'Pricing',

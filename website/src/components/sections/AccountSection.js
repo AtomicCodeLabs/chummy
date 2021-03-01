@@ -1,7 +1,7 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import ActionButton from '../buttons/ActionButton';
 
@@ -115,6 +115,11 @@ export const BulletsSection = ({
         Object.assign(obj, { [value]: defaultValue }),
       {}
     );
+  const valuesToButtonText = options.reduce(
+    (obj, { value: [value], buttonText: buttonTextOverride }) =>
+      Object.assign(obj, { [value]: buttonTextOverride || buttonText }),
+    {}
+  );
   const [valuesToChecked, setValuesToChecked] = useState(getDefaults());
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -125,22 +130,24 @@ export const BulletsSection = ({
   const findRadio = () =>
     Object.entries(valuesToChecked).find(([, checked]) => checked === true);
   const findChecklist = () => Object.entries(valuesToChecked)?.[0];
-  const findSelectedValue = () => {
+  const findSelected = useMemo(() => {
     if (type === 'radio') {
       return findRadio();
     }
     if (type === 'checkbox') {
       return findChecklist();
     }
-  };
+  }, [valuesToChecked]);
 
   const isDisabled = (() => {
-    const found = findSelectedValue();
+    const found = findSelected;
     if (found) {
       return isButtonDisabled(found);
     }
     return false;
   })();
+
+  console.log('VALUES', valuesToButtonText, findSelected);
 
   return (
     <>
@@ -197,7 +204,7 @@ export const BulletsSection = ({
                 onClick={async (e) => {
                   e.preventDefault();
                   setLoading(true);
-                  const found = findSelectedValue();
+                  const found = findSelected;
                   if (found) {
                     await onSubmit(found);
                   }
@@ -207,7 +214,11 @@ export const BulletsSection = ({
                 disabled={isDisabled}
                 isLoading={loading}
               >
-                {isDisabled ? disabledButtonText || buttonText : buttonText}
+                {isDisabled
+                  ? disabledButtonText ||
+                    valuesToButtonText[findSelected?.[0]] ||
+                    buttonText
+                  : valuesToButtonText[findSelected?.[0]] || buttonText}
               </ActionButton>
             </div>
           </form>
