@@ -62,17 +62,17 @@ const footerRoutes = {
   'Contact Us': [
     {
       name: 'Github',
-      pathname: 'https://github.com/alexkim205/chummy'
+      pathname: 'https://github.com/AtomicCodeLabs/chummy'
     },
     {
       name: 'Feature',
       pathname:
-        'https://github.com/alexkim205/chummy/issues/new?assignees=&labels=feature-request&template=feature-request.md&title=%5BFEAT%5D+'
+        'https://github.com/AtomicCodeLabs/chummy/issues/new?assignees=&labels=feature-request&template=feature-request.md&title=%5BFEAT%5D+'
     },
     {
       name: 'Bug',
       pathname:
-        'https://github.com/alexkim205/chummy/issues/new?assignees=&labels=bug-report&template=bug.md&title=%5BBUG%5D+'
+        'https://github.com/AtomicCodeLabs/chummy/issues/new?assignees=&labels=bug-report&template=bug.md&title=%5BBUG%5D+'
     },
     {
       name: 'Email us',

@@ -59,7 +59,6 @@ const EditionBox = ({
           ).toString()
         }
       });
-      console.log('SESSION', session);
 
       const stripe = await getStripe();
       const checkoutResponse = await stripe.redirectToCheckout({
@@ -179,7 +178,7 @@ const EditionBox = ({
         },
         className
       )}
-      style={isFeatured ? { borderTop: '12px solid #34D399' } : {}}
+      style={isFeatured ? { borderTop: '12px solid #2deb09' } : {}}
     >
       <div
         className={clsx('flex flex-col px-7 pb-7 sm:py-6 sm:px-8 xs:px-6', {
