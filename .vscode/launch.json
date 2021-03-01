@@ -33,7 +33,7 @@
       "type": "chrome",
       "request": "launch",
       "port": 9222,
-      "url": "https://github.com/alexkim205/chummy",
+      "url": "https://github.com/AtomicCodeLabs/chummy",
       "webRoot": "${workspaceFolder}/extension/dist/dev"
     },
     {

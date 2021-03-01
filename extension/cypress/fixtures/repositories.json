@@ -1,9 +1,9 @@
 {
   "action": "get-open-repositories",
   "payload": {
-    "alexkim205/chummy": [
+    "AtomicCodeLabs/chummy": [
       {
-        "url": "https://github.com/alexkim205/chummy",
+        "url": "https://github.com/AtomicCodeLabs/chummy",
         "owner": "alexkim205",
         "repo": "chummy",
         "tab": {
@@ -15,7 +15,7 @@
         "type": "tree"
       },
       {
-        "url": "https://github.com/alexkim205/chummy",
+        "url": "https://github.com/AtomicCodeLabs/chummy",
         "owner": "alexkim205",
         "repo": "chummy",
         "tab": {

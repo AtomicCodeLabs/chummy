@@ -62,6 +62,8 @@ export const APP_URLS = {
     BASE: process.env.WEBSITE_BASE_URL,
     SIGNIN: 'signin/',
     REDIRECT: 'account/',
+    ACCOUNT: 'account/',
+    FEEDBACK: 'account/feedback/',
     TUTORIAL: 'tutorial/'
   }
 };
@@ -73,6 +75,6 @@ export const GITHUB_URLS = {
     'https://docs.github.com/en/free-pro-team@latest/github/searching-for-information-on-github/searching-code',
   REPO_INDEXING:
     'https://github.blog/changelog/2020-12-17-changes-to-code-search-indexing/',
-  FEEDBACK: 'https://github.com/alexkim205/chummy/issues/new/choose',
-  MAIN_REPO: 'https://github.com/alexkim205/chummy'
+  FEEDBACK: 'https://github.com/AtomicCodeLabs/chummy/issues/new/choose',
+  MAIN_REPO: 'https://github.com/AtomicCodeLabs/chummy'
 };

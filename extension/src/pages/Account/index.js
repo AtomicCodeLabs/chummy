@@ -19,7 +19,7 @@ import useTheme from '../../hooks/useTheme';
 import { capitalize } from '../../utils';
 import { redirectToUrl } from '../../utils/browser';
 import { ICON } from '../../constants/sizes';
-import { GITHUB_URLS } from '../../global/constants';
+import { APP_URLS, GITHUB_URLS } from '../../global/constants';
 
 export default observer(() => {
   checkCurrentUser();
@@ -49,11 +49,16 @@ export default observer(() => {
         <Panel title="Tier" description={capitalize(user.accountType)} />
         <PanelDivider />
         <Panel
-          title="Feedback + Suggestions"
+          title="Feedback"
           description="Enjoying the app? Found a bug? Need a feature?"
           center
           onClick={() => {
-            redirectToUrl(GITHUB_URLS.FEEDBACK);
+            redirectToUrl(
+              new URL(
+                APP_URLS.WEBSITE.FEEDBACK,
+                APP_URLS.WEBSITE.BASE
+              ).toString()
+            );
           }}
           rightPanel={<LinkExternalIcon size={ICON.SIZE(STPayload)} />}
         />

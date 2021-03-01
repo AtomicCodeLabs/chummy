@@ -23,7 +23,7 @@
     "lint": "eslint --fix --ext .js,.jsx .",
     "serve": "serve dist",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version -- --no-verify",
-    "release:dry": "standard-version -- --dry-run --no-verify",
+    "release:dry": "standard-version -- --dry-run",
     "prerelease": "standard-version release -- --prerelease beta --no-verify",
     "clean": "rm -rf dist webpack/reports",
     "cy:open": "yarn concurrently \"yarn dev\" \"yarn serve\" \"cross-env TARGET=dev cypress open --env TARGET=dev --config baseUrl=http://localhost:5000/dev\"",
@@ -57,8 +57,8 @@
     "process": "^0.11.10",
     "prop-types": "^15.7.2",
     "quick-score": "^0.0.9",
-    "rc-scrollbars": "^1.0.3",
     "react": "^16.13.1",
+    "react-custom-scroller": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.9.5",
     "react-resizable": "^1.11.0",
@@ -134,7 +134,7 @@
     "webpack-cli": "^4.2.0"
   },
   "lint-staged": {
-    "**/*.+(js|jsx|json|css|md)": [
+    "**/*.+(js|jsx)": [
       "prettier --write"
     ],
     "**/*.js": [

@@ -5,8 +5,13 @@ import Auth from '@aws-amplify/auth';
 import browser from 'webextension-polyfill';
 
 import awsExports from '../aws-exports';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
+import { getUser } from '../graphql/queries';
+import {
+  createBookmark,
+  deleteBookmark,
+  updateBookmark
+} from '../graphql/mutations';
+import { onUpdateUser } from '../graphql/subscriptions';
 import * as compositeQueries from '../config/dao/queries';
 
 import log from '../config/log';
@@ -64,6 +69,7 @@ class DAO {
     // this.accountType = null; // Keep accountType to know which request user is allowed to make
     // this.bookmarks = [];
     this.listeners = null;
+    this.userSubscription = null;
 
     // If user hasn't signed out yet, apiKey will still be in
     // chrome storage. Use that for future requests.
@@ -76,6 +82,7 @@ class DAO {
     // Subscribe only once
     if (!this.listeners) {
       this.subscribeListeners(); // Will get initialized on extension open
+      this.listeners = true;
     }
   }
 
@@ -224,6 +231,35 @@ class DAO {
     }
   };
 
+  subscribeToUserUpdates = (owner) => {
+    if (!this.userSubscription) {
+      // Subscribe
+      this.userSubscription = this.api
+        .graphql({
+          query: onUpdateUser,
+          authMode: 'AMAZON_COGNITO_USER_POOLS',
+          variables: { owner }
+        })
+        .subscribe({
+          next: async ({ value }) => {
+            log.apiRead('[READ] Get updated user', value);
+            const ddbUser = value?.data?.onUpdateUser;
+            // Only update account type for now
+            if (ddbUser?.accountType !== this.user.accountType) {
+              this.setUser({ accountType: ddbUser.accountType });
+            }
+
+            // Send user update event to extension
+            const payload = this.getCurrentUserPayload();
+            this.sendMessageToExtension({
+              payload,
+              action: 'update-user'
+            });
+          }
+        });
+    }
+  };
+
   subscribeListeners = () => {
     browser.runtime.onMessage.addListener(this.cleanupAuthListener);
     browser.runtime.onMessage.addListener(this.cleanupDataListener);
@@ -232,11 +268,12 @@ class DAO {
   unsubscribeListeners = () => {
     browser.runtime.onMessage.removeListener(this.cleanupAuthListener);
     browser.runtime.onMessage.removeListener(this.cleanupDataListener);
+    this.userSubscription?.unsubscribe();
   };
 
   // *** Class Methods ***
 
-  setUser = async (user) => {
+  setUser = (user) => {
     // Only set the attributes that are available
     Object.keys(user).forEach((attr) => {
       if (
@@ -374,6 +411,11 @@ class DAO {
         accountType: user.accountType,
         bookmarks: user.bookmarks.items
       });
+
+      // Subscribe to user updates after signin
+      this.subscribeToUserUpdates(response.owner);
+
+      // Subscribe to any user updates
     } catch (error) {
       log.error('Error setting user after sign in', error);
       throw UserError.from(error);
@@ -387,6 +429,7 @@ class DAO {
         apiKey: null
       });
       this.setBookmarks([]);
+      this.userSubscription?.unsubscribe();
     } catch (error) {
       log.error('Error signing out', error);
     }
@@ -410,9 +453,7 @@ class DAO {
       }
 
       userDoc = (
-        await this.api.graphql(
-          graphqlOperation(queries.getUser, { id: userUuid })
-        )
+        await this.api.graphql(graphqlOperation(getUser, { id: userUuid }))
       )?.data?.getUser;
     } catch (e) {
       error = e;
@@ -428,8 +469,6 @@ class DAO {
   createBookmark = async (bookmark) => {
     // Make sure user is logged in
     const currentUser = this.getCurrentUserPayload()?.user;
-
-    console.log('CURRENT USER', currentUser);
 
     // Add bookmark in cloud db
     const newBookmark = {
@@ -459,7 +498,7 @@ class DAO {
 
     // Make create request
     await this.api.graphql(
-      graphqlOperation(mutations.createBookmark, { input: newBookmark })
+      graphqlOperation(createBookmark, { input: newBookmark })
     );
     log.apiWrite('[WRITE] New bookmark created');
 
@@ -473,7 +512,7 @@ class DAO {
 
     // Make delete request
     await this.api.graphql(
-      graphqlOperation(mutations.deleteBookmark, {
+      graphqlOperation(deleteBookmark, {
         input: { id: bookmark.bookmarkId }
       })
     );
@@ -509,7 +548,7 @@ class DAO {
 
     // Make create request
     await this.api.graphql(
-      graphqlOperation(mutations.updateBookmark, { input: newBookmark })
+      graphqlOperation(updateBookmark, { input: newBookmark })
     );
 
     // Update local cache of bookmark

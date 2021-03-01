@@ -6,7 +6,7 @@ labels: question
 assignees: ''
 ---
 
-**Before submitting this issue, make sure you've read over the [I Have a Question](https://github.com/alexkim205/chummy/blob/master/docs/CONTRIBUTING.md#i-have-a-question) section of the Contributing guidelines.**
+**Before submitting this issue, make sure you've read over the [I Have a Question](https://github.com/AtomicCodeLabs/chummy/blob/master/docs/CONTRIBUTING.md#i-have-a-question) section of the Contributing guidelines.**
 
 ### Version Information
 

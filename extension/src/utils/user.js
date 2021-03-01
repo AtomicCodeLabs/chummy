@@ -9,6 +9,17 @@ export const onSignInComplete = (callback = () => {}) => {
     }
   };
   browser.runtime.onMessage.addListener(toCall);
+  return () => browser.runtime.onMessage.removeListener(toCall);
+};
+
+export const onUserUpdate = (callback = () => {}) => {
+  const toCall = (request) => {
+    if (request.action === 'update-user') {
+      callback(request);
+    }
+  };
+  browser.runtime.onMessage.addListener(toCall);
+  return () => browser.runtime.onMessage.removeListener(toCall);
 };
 
 export const getAllBookmarks = async () => {
