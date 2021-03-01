@@ -1,7 +1,7 @@
 export const defaultRoutes = [
   {
     name: 'Features',
-    pathname: '/#features'
+    pathname: '/features'
   },
   {
     name: 'Community',
@@ -10,6 +10,10 @@ export const defaultRoutes = [
   {
     name: 'Pricing',
     pathname: '/checkout'
+  },
+  {
+    name: 'Us',
+    pathname: '/team'
   },
   {
     name: 'Changelog',
