@@ -10,6 +10,8 @@ export const EditionsContainer = () => {
   const prices = usePrices();
   const user = useUser();
 
+  console.log('USER', user);
+
   return (
     <>
       <ToggleSwitch
@@ -48,7 +50,7 @@ export const EditionsContainer = () => {
                 unit={unit}
                 customerId={user?.['custom:stripe_id']}
                 userAccountType={user?.accountType}
-                isTrial={user?.isTrial}
+                isTrial={user?.isTrial === 'true'}
                 className="md:w-full md:mx-auto"
               />
             )
@@ -61,7 +63,9 @@ export const EditionsContainer = () => {
 const EditionsSection = () => (
   <div className="sm:text-center">
     <h2>Choose your edition.</h2>
-    <div>Start your 14-day trial. No credit card required.</div>
+    <div>
+      Start your 14-day trial included with all plans. No credit card required.
+    </div>
     <EditionsContainer />
   </div>
 );

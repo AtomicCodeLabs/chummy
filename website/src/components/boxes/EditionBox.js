@@ -187,7 +187,7 @@ const EditionBox = ({
           'pt-10': !isFeatured
         })}
       >
-        <div className="self-center w-16 h-16 mt-6 mb-3 md:h-14 md:w-14 sm:h-12 sm:w-12">
+        <div className="self-center w-20 h-20 mt-10 mb-8 md:h-16 md:w-16 sm:h-14 sm:w-14">
           {cloneElement(Icon, { className: 'h-full w-full' })}
         </div>
         <h4 className="font-mono uppercase">{title}</h4>

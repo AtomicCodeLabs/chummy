@@ -38,13 +38,15 @@ const Navbar = ({
       className={clsx(
         'box-border flex flex-col mx-auto w-full flex-nowrap',
         'pb-4 md:py-2.5 z-20',
-        `transition-colors duration-300  bg-transparent md:${secondaryBgColor} md:border-b-2 md:border-gray-200`,
-        { 'sticky md:top-0': isSticky },
+        `transition-colors duration-300 bg-transparent md:border-b-2 md:border-gray-200`,
         {
+          'sticky md:top-0': isSticky,
           '-top-10 pt-14': !isSimpleNavbar,
           'top-0 pt-4': isSimpleNavbar,
+          [bgColor]: isScrollAtTop && !isSimpleNavbar,
+          'bg-transparent': !(isScrollAtTop && !isSimpleNavbar),
           [`${secondaryBgColor} shadow-sm border-b-2 border-gray-200`]: !isScrollAtTop,
-          [bgColor]: isScrollAtTop && !isSimpleNavbar
+          'md:bg-white': secondaryBgColor === 'bg-white'
         }
       )}
     >
@@ -77,7 +79,11 @@ const Navbar = ({
                       key={rPathname}
                       to={rPathname}
                       isActive={matchRoutes(rPathname, pathname)}
-                      className="px-4 py-2"
+                      className={clsx('px-4 py-2', {
+                        'md-1-lg:hidden': !['/features', '/checkout'].includes(
+                          rPathname
+                        )
+                      })}
                     >
                       {name}
                     </NavItem>

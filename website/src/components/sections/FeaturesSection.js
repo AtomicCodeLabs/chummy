@@ -8,7 +8,7 @@ import { features, extraFeatures } from '../../data/features';
 import ResponsiveGridSection from './ReponsiveGridSection';
 import ReasonBox from '../boxes/ReasonBox';
 
-const FeaturesSection = () => {
+export const FeaturesContainer = ({ expanded = false }) => {
   const data = useStaticQuery(graphql`
     query {
       full: file(relativePath: { eq: "features/full.png" }) {
@@ -40,21 +40,8 @@ const FeaturesSection = () => {
 
   return (
     <>
-      <div className="relative invisible block" id="features">
-        Features Section
-      </div>
-      <ColumnSection
-        title={
-          <h2 className="leading-tight">
-            Github can be <span className="text-red-500">difficult</span> to
-            navigate. <br />
-            Chummy comes packed with features that make it{' '}
-            <span className="text-green-500">easy</span>.
-          </h2>
-        }
-        className="sm:mt-12"
-      >
-        {features.map(({ image, image2, features: _features }) => (
+      {[...features, ...(expanded ? extraFeatures : [])].map(
+        ({ image, image2, features: _features }) => (
           <FeatureBox
             key={_features[0].title}
             Image={
@@ -84,25 +71,53 @@ const FeaturesSection = () => {
                 />
               ))}
           </FeatureBox>
-        ))}
+        )
+      )}
+      {!expanded && (
         <ResponsiveGridSection
           hasTitleSection={false}
           className="-mx-7 sm:-mx-6"
         >
-          {extraFeatures.map(({ Icon, title, description }) => (
-            <ReasonBox
-              key={title}
-              Icon={Icon}
-              title={title}
-              description={description}
-              className="sm:mx-auto"
-            />
+          {extraFeatures.map(({ features: _features }) => (
+            <>
+              {_features &&
+                _features.map(({ Icon, title, description }) => (
+                  <ReasonBox
+                    key={title}
+                    Icon={Icon}
+                    title={title}
+                    description={description}
+                    className="sm:mx-auto"
+                  />
+                ))}
+            </>
           ))}
         </ResponsiveGridSection>
-      </ColumnSection>
+      )}
     </>
   );
 };
+
+const FeaturesSection = () => (
+  <>
+    <div className="relative invisible block" id="features">
+      Features Section
+    </div>
+    <ColumnSection
+      title={
+        <h2 className="leading-tight">
+          Github can be <span className="text-red-500">difficult</span> to
+          navigate. <br />
+          Chummy comes packed with features that make it{' '}
+          <span className="text-green-500">easy</span>.
+        </h2>
+      }
+      className="sm:mt-12"
+    >
+      <FeaturesContainer />
+    </ColumnSection>
+  </>
+);
 
 export default FeaturesSection;
 

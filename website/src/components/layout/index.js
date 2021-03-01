@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import clsx from 'clsx';
-import { useStaticQuery, graphql } from 'gatsby';
 
 import initializeAmplify from '../../config/amplify';
 import Navbar from './Navbar';
@@ -22,16 +21,6 @@ const Layout = ({
   navbarBgColor = 'bg-green-200',
   navbarSecondaryBgColor = 'bg-white'
 }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `);
-
   // Initialize Amplify
   useEffect(() => {
     initializeAmplify();
@@ -45,7 +34,6 @@ const Layout = ({
           secondaryBgColor={navbarSecondaryBgColor}
           isSimpleNavbar={isSimpleNavbar}
           isSticky={isSticky}
-          siteTitle={data.site.siteMetadata?.title || `Title`}
           isAccountPage={isAccountPage}
         />
       )}

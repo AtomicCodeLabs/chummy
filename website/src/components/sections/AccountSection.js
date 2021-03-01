@@ -63,9 +63,23 @@ export const TableRowSection = ({
         <div
           // eslint-disable-next-line react/no-array-index-key
           key={i}
-          className={clsx(`w-${width}/12`, 'pr-3 last:pr-0', {
+          className={clsx('pr-3 last:pr-0', {
             'text-right': i === items.length - 1,
-            'text-left': i !== items.length - 1
+            'text-left': i !== items.length - 1,
+            // Need to catch widths separately so that tailwind doesn't purge the css
+            'w-0': width === 0,
+            'w-1/12': width === 1,
+            'w-2/12': width === 2,
+            'w-3/12': width === 3,
+            'w-4/12': width === 4,
+            'w-5/12': width === 5,
+            'w-6/12': width === 6,
+            'w-7/12': width === 7,
+            'w-8/12': width === 8,
+            'w-9/12': width === 9,
+            'w-10/12': width === 10,
+            'w-11/12': width === 11,
+            'w-full': width === 12
           })}
         >
           <div className="py-5 my-0 text-gray-700">

@@ -12,7 +12,7 @@ const footerRoutes = {
     },
     {
       name: 'Features',
-      pathname: '/#features'
+      pathname: '/features'
     },
     {
       name: 'Pricing',
