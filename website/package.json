@@ -1,17 +1,20 @@
 {
   "name": "Chummy",
-  "description": "Website for Chummy Extension",
+  "motto": "Use Github, But Productively",
+  "description": "Unclutter your daily Github workflow with Chummy, a browser extension that brings an IDE-like experience to Github.",
   "extensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
+  "url": "https://chummy.atomiccode.io",
   "version": "1.0.0",
   "author": "Alex Kim",
+  "twitter": "@alexgyujinkim",
   "email": "hello@atomiccode.io",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexkim205/chummy"
+    "url": "https://github.com/AtomicCodeLabs/chummy"
   },
   "bugs": {
-    "url": "https://github.com/alexkim205/chummy/issues"
+    "url": "https://github.com/AtomicCodeLabs/chummy/issues"
   },
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
@@ -26,6 +29,7 @@
     "lint:check": "eslint --ext .js,.jsx .",
     "lint": "eslint --fix --ext .js,.jsx .",
     "status": "git status && amplify status",
+    "preload-fonts": "gatsby-preload-fonts",
     "checkout:dev": "git checkout website/dev && git pull && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout website/gamma && git pull && amplify env checkout gamma && amplify pull --yes",
     "checkout:prod": "git checkout website/prod && git pull && amplify env checkout prod && amplify pull --yes",
@@ -52,15 +56,19 @@
     "gatsby-image": "^2.5.0",
     "gatsby-plugin-manifest": "^2.6.1",
     "gatsby-plugin-offline": "^3.4.0",
+    "gatsby-plugin-preload-fonts": "^1.9.1",
     "gatsby-plugin-react-helmet": "^3.4.0",
     "gatsby-plugin-react-svg": "^3.0.0",
+    "gatsby-plugin-robots-txt": "^1.5.5",
     "gatsby-plugin-sharp": "^2.14.0",
     "gatsby-source-filesystem": "^2.11.0",
     "gatsby-source-stripe": "^3.2.1",
     "gatsby-transformer-sharp": "^2.12.0",
+    "md-2-json": "^1.0.6",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-gif-player": "^0.4.2",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.1.0",
     "reoverlay": "^1.0.0"
@@ -85,10 +93,22 @@
     "tailwindcss": "^2.0.2"
   },
   "keywords": [
-    "gatsby"
+    "github",
+    "extension",
+    "refined",
+    "octotree",
+    "addon",
+    "git",
+    "chrome",
+    "browser",
+    "productivity",
+    "chummy",
+    "chummy.io",
+    "file viewer",
+    "ide"
   ],
   "lint-staged": {
-    "**/*.+(js|jsx|json|css|md)": [
+    "**/*.+(js|jsx)": [
       "prettier --write"
     ],
     "**/*.js": [

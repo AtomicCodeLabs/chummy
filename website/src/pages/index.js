@@ -116,7 +116,7 @@ const IndexPage = () => {
       }
       splashSectionClassName="-mb-8 md:-mb-4"
     >
-      <SEO title="Home" />
+      <SEO title="Chummy" description="Browse Github better" />
       <FeaturesSection />
       <ReasonsSection />
       <EditionsSection />

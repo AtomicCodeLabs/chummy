@@ -113,7 +113,7 @@ const Privacy = () => {
         options={[
           {
             label:
-              'Keep me updated with the latest releases via email. We’ll send an email only when major versions are released.',
+              "Keep me updated with the latest releases via email. We don't spam!",
             value: ['email', user?.onMailingList === 'true']
           }
         ]}

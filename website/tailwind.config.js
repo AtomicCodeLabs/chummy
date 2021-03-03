@@ -2,14 +2,18 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}'],
+  purge: {
+    enabled: process.env.NODE_ENV === 'production',
+    content: ['./src/**/*.{js,jsx,ts,tsx,html}', 'public/**/*.html']
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     screens: {
       '2xl': { max: '1535px' },
       xl: { max: '1279px' },
       lg: { max: '1023px' },
-      'md-lg': { max: '888px' },
+      'md-lg': { max: '940px' }, // used for navbar
+      'md-1-lg': { max: '830px' }, // used for navbar
       md: { max: '777px' },
       sm: { max: '640px' },
       xs: { max: '550px' }
@@ -42,6 +46,9 @@ module.exports = {
       }),
       margin: {
         full: '100%'
+      },
+      colors: {
+        'neon-green': { 300: '#5cff3d', 400: '#39FF14', 500: '#2deb09' }
       }
     }
   },

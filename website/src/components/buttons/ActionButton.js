@@ -19,8 +19,6 @@ const ActionButton = ({
 }) => {
   const isLink = !!to; // if not, is button
 
-  console.log('IS LOADING', isLoading);
-
   if (isLink) {
     return (
       <Link
