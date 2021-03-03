@@ -121,7 +121,7 @@ const prodProductIdMap = {
   community: PROD_PRODUCT_COM
 };
 
-const priceIdMap = {
+const productIdMap = {
   prod: prodProductIdMap,
   dev: testProductIdMap,
   gamma: testProductIdMap
@@ -129,13 +129,15 @@ const priceIdMap = {
 
 // Grab price id
 const getPriceId = async (tier = 'professional', type = 'monthly', stripe) => {
-  const productId = priceIdMap?.[ENV]?.[tier];
+  const productId = productIdMap?.[ENV]?.[tier];
+  console.log('Using product id', productId);
 
-  const prices = await stripe.prices.list({
-    active: true,
-    product: productId
-  })?.data;
-  console.log('Fetched prices', prices);
+  const prices = (
+    await stripe.prices.list({
+      active: true,
+      product: productId
+    })
+  )?.data;
 
   return prices.find(
     ({ nickname }) => nickname === `${capitalize(tier)} ${capitalize(type)}`
