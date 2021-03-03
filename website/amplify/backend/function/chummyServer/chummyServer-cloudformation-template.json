@@ -97,7 +97,7 @@
         ],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-chummy-gamma-214559-deployment",
+          "S3Bucket": "amplify-chummy-prod-220137-deployment",
           "S3Key": "amplify-builds/chummyServer-576a5678656858694f49-build.zip"
         }
       }
