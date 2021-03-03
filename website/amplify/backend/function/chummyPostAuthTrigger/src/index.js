@@ -56,7 +56,12 @@ exports.handler = async (event, context, callback) => {
   });
 
   // Create new Premium subscription with trial for this customer
-  const professionalMonthlyPriceId = getPriceId('professional', 'monthly');
+  const professionalMonthlyPriceId = await getPriceId(
+    'professional',
+    'monthly',
+    stripe
+  );
+  console.log('Fetched price id', professionalMonthlyPriceId);
   const subscription = await stripe.subscriptions.create({
     customer: customer?.id,
     items: [{ price: professionalMonthlyPriceId }],
