@@ -130,51 +130,47 @@ const getSecretStripeKey = async () => {
 };
 
 // https://dashboard.stripe.com/products
-const TEST_PRO_MONTHLY_PRICEID = 'price_1IKAOLBYrFSX6VWj1XLblSmM';
-const TEST_PRO_YEARLY_PRICEID = 'price_1IKAOLBYrFSX6VWjNlbanArM';
-const TEST_ENT_MONTHLY_PRICEID = 'price_1IKALGBYrFSX6VWjbC6BbkhR';
-const TEST_ENT_YEARLY_PRICEID = 'price_1IKALGBYrFSX6VWjJQaFW6Eq';
-const TEST_COM_PRICEID = 'price_1IJRbgBYrFSX6VWjNKNwvMRE';
-const PROD_PRO_MONTHLY_PRICEID = 'price_1IJRaGBYrFSX6VWj3KouvKhl';
-const PROD_PRO_YEARLY_PRICEID = 'price_1IJRaGBYrFSX6VWjS9ALtuH0';
-const PROD_ENT_MONTHLY_PRICEID = 'price_1IJRaLBYrFSX6VWj0rhlXomA';
-const PROD_ENT_YEARLY_PRICEID = 'price_1IJRaLBYrFSX6VWjD71sQ2C4';
-const PROD_COM_PRICEID = 'price_1IJRcIBYrFSX6VWjIrcvbjLJ';
-const testPriceIdMap = {
-  monthly: {
-    professional: TEST_PRO_MONTHLY_PRICEID,
-    enterprise: TEST_ENT_MONTHLY_PRICEID,
-    community: TEST_COM_PRICEID
-  },
-  yearly: {
-    professional: TEST_PRO_YEARLY_PRICEID,
-    enterprise: TEST_ENT_YEARLY_PRICEID,
-    community: TEST_COM_PRICEID
-  }
+const TEST_PRODUCT_PRO = 'prod_Iw2ToEzxF2UP1b';
+const TEST_PRODUCT_ENT = 'prod_Iw2Q8lOAe543xu';
+const TEST_PRODUCT_COM = 'prod_IvICdMDKOEVBtS';
+const PROD_PRODUCT_PRO = 'prod_IvIA7CcfiuHKUQ';
+const PROD_PRODUCT_ENT = 'prod_IvIAUNAqTmzCQU';
+const PROD_PRODUCT_COM = 'prod_IvICHeA5zZKlov';
+
+const testProductIdMap = {
+  professional: TEST_PRODUCT_PRO,
+  enterprise: TEST_PRODUCT_ENT,
+  community: TEST_PRODUCT_COM
 };
-const prodPriceIdMap = {
-  monthly: {
-    professional: PROD_PRO_MONTHLY_PRICEID,
-    enterprise: PROD_ENT_MONTHLY_PRICEID,
-    community: PROD_COM_PRICEID
-  },
-  yearly: {
-    professional: PROD_PRO_YEARLY_PRICEID,
-    enterprise: PROD_ENT_YEARLY_PRICEID,
-    community: PROD_COM_PRICEID
-  }
+
+const prodProductIdMap = {
+  professional: PROD_PRODUCT_PRO,
+  enterprise: PROD_PRODUCT_ENT,
+  community: PROD_PRODUCT_COM
 };
-const priceIdMap = {
-  prod: prodPriceIdMap,
-  dev: testPriceIdMap,
-  gamma: testPriceIdMap
+
+const productIdMap = {
+  prod: prodProductIdMap,
+  dev: testProductIdMap,
+  gamma: testProductIdMap
 };
 
 // Grab price id
-const getPriceId = (tier = 'professional', type = 'monthly') => {
-  return (
-    priceIdMap?.[ENV]?.[type]?.[tier] || priceIdMap?.[ENV]?.yearly.community
-  );
+const getPriceId = async (tier = 'professional', type = 'monthly', stripe) => {
+  const productId = productIdMap?.[ENV]?.[tier];
+  console.log('Using product id', productId);
+
+  const prices = (
+    await stripe.prices.list({
+      active: true,
+      product: productId
+    })
+  )?.data;
+  console.log('Fetched prices', prices);
+
+  return prices.find(
+    ({ nickname }) => nickname === `${capitalize(tier)} ${capitalize(type)}`
+  )?.id;
 };
 
 exports.getSecretStripeKey = getSecretStripeKey;

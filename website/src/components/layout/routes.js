@@ -1,15 +1,19 @@
 export const defaultRoutes = [
   {
     name: 'Features',
-    pathname: '/#features'
+    pathname: '/features'
   },
   {
     name: 'Community',
-    pathname: 'https://github.com/alexkim205/chummy'
+    pathname: 'https://github.com/AtomicCodeLabs/chummy/discussions'
   },
   {
     name: 'Pricing',
     pathname: '/checkout'
+  },
+  {
+    name: 'Us',
+    pathname: '/team'
   },
   {
     name: 'Changelog',

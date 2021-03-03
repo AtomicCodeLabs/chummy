@@ -21,7 +21,11 @@ const useUser = (props) => {
         // If not logged in, immediately redirect to home page
         // If it's on sign in page, let the user sign in, don't navigate away
         if (!isPublic) {
-          navigate('/');
+          navigate('/signin', {
+            state: {
+              fromWebsite: true
+            }
+          });
         }
         return null;
       }
