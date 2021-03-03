@@ -31,8 +31,6 @@ const useUser = (props) => {
       }
     }
 
-    console.log('GET COGNITO USER', cognitoUser);
-
     setCachedCognitoUser(cognitoUser);
     return cognitoUser;
   };
