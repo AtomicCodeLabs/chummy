@@ -34,6 +34,7 @@ const SignIn = ({ location }) => {
       setLoading(false);
     }
   };
+  console.log('CHANGE');
 
   useEffect(() => {
     // If `fromWebsite` doesn't exist in location state, automatically signin

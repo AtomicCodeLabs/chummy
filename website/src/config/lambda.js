@@ -12,7 +12,6 @@ const lambdaApi = async (functionName, requestObj) => {
     return;
   }
   const essentialCred = Auth.essentialCredentials(cred);
-  console.log('creds', essentialCred);
 
   const serviceInfo = {
     region: 'us-west-2',
@@ -28,8 +27,6 @@ const lambdaApi = async (functionName, requestObj) => {
     ...requestObj
   };
   const signedRequest = Signer.sign(request, accessInfo, serviceInfo);
-
-  console.log('BEFORE SENDING REEQUEST', signedRequest);
 
   // synchronous post request
   axios({
