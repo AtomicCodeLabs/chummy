@@ -13,8 +13,12 @@ require('dotenv').config({
 module.exports = {
   siteMetadata: {
     title: packageInfo.name,
+    motto: packageInfo.motto,
     description: packageInfo.description,
-    author: packageInfo.author
+    author: packageInfo.author,
+    url: packageInfo.url,
+    twitterUsername: packageInfo.twitter,
+    keywords: packageInfo.keywords
   },
   plugins: [
     { resolve: `gatsby-plugin-react-helmet` },
@@ -64,6 +68,8 @@ module.exports = {
         secretKey: process.env.STRIPE_SECRET_KEY,
         downloadFiles: false
       }
-    }
+    },
+    { resolve: 'gatsby-plugin-robots-txt' },
+    { resolve: 'gatsby-plugin-preload-fonts' }
   ]
 };

@@ -8,6 +8,7 @@ import ActionButton from '../buttons/ActionButton';
 
 import getStripe from '../../config/stripe';
 import { capitalize, clearUserStorage } from '../../utils';
+import ButtonSpinner from '../spinners/ButtonSpinner';
 
 const EditionBox = ({
   title,
@@ -21,7 +22,8 @@ const EditionBox = ({
   customerId,
   userAccountType = 'community',
   isTrial = false,
-  isFeatured = false
+  isFeatured = false,
+  isLoading = false
 }) => {
   const isCommunity = title === 'Community';
   const isLoggedIn = !!customerId;
@@ -59,7 +61,6 @@ const EditionBox = ({
           ).toString()
         }
       });
-      console.log('SESSION', session);
 
       const stripe = await getStripe();
       const checkoutResponse = await stripe.redirectToCheckout({
@@ -179,7 +180,7 @@ const EditionBox = ({
         },
         className
       )}
-      style={isFeatured ? { borderTop: '12px solid #34D399' } : {}}
+      style={isFeatured ? { borderTop: '12px solid #2deb09' } : {}}
     >
       <div
         className={clsx('flex flex-col px-7 pb-7 sm:py-6 sm:px-8 xs:px-6', {
@@ -187,7 +188,7 @@ const EditionBox = ({
           'pt-10': !isFeatured
         })}
       >
-        <div className="self-center w-16 h-16 mt-6 mb-3 md:h-14 md:w-14 sm:h-12 sm:w-12">
+        <div className="self-center w-20 h-20 mt-10 mb-8 md:h-16 md:w-16 sm:h-14 sm:w-14">
           {cloneElement(Icon, { className: 'h-full w-full' })}
         </div>
         <h4 className="font-mono uppercase">{title}</h4>
@@ -206,7 +207,7 @@ const EditionBox = ({
                   </span>
                 </div>
                 <span className="text-gray-900 text-7xl md:text-6xl sm:text-5xl">
-                  {price}
+                  {isLoading ? <ButtonSpinner /> : price}
                 </span>
                 <div className="flex items-end w-4">
                   <span className="text-xl text-gray-500 md:text-lg sm:text-md">
