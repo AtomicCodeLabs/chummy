@@ -34,7 +34,6 @@ module.exports = {
           'WEBSITE_REDIRECT',
           'STRIPE_PUBLISHABLE_KEY',
           'STRIPE_SECRET_KEY',
-          'ASSETS_PUBLIC_PATH',
           'STAGE'
         ]
       }
