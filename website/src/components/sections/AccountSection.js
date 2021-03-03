@@ -147,8 +147,6 @@ export const BulletsSection = ({
     return false;
   })();
 
-  console.log('VALUES', valuesToButtonText, findSelected);
-
   return (
     <>
       {hasTopBorder && <div className="h-px bg-gray-300" />}
