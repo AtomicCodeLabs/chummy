@@ -43,7 +43,7 @@ export const FeaturesContainer = ({ expanded = false }) => {
       {[...features, ...(expanded ? extraFeatures : [])].map(
         ({ image, image2, features: _features }) => (
           <FeatureBox
-            key={_features[0].title}
+            key={`${_features[0].title}-${features.length}`}
             Image={
               <Img
                 fluid={data[image]?.childImageSharp?.fluid}
@@ -79,7 +79,7 @@ export const FeaturesContainer = ({ expanded = false }) => {
           className="-mx-7 sm:-mx-6"
         >
           {extraFeatures.map(({ features: _features }) => (
-            <>
+            <React.Fragment key={_features?.[0]?.title}>
               {_features &&
                 _features.map(({ Icon, title, description }) => (
                   <ReasonBox
@@ -90,7 +90,7 @@ export const FeaturesContainer = ({ expanded = false }) => {
                     className="sm:mx-auto"
                   />
                 ))}
-            </>
+            </React.Fragment>
           ))}
         </ResponsiveGridSection>
       )}

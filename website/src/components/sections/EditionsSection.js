@@ -7,42 +7,36 @@ import useUser from '../../hooks/useUser';
 
 export const EditionsContainer = () => {
   const [isMonthly, setIsMonthly] = useState(true); // alternative is yearly
-  const prices = usePrices();
+  const { loading, prices } = usePrices();
   const user = useUser();
-
-  console.log('USER', user);
 
   return (
     <>
       <ToggleSwitch
         leftText="Monthly"
-        rightText="Yearly 25% OFF"
+        rightText="Yearly 20% OFF"
         isLeft={isMonthly}
         toggle={() => setIsMonthly(!isMonthly)}
         className="my-12"
       />
       <div className="grid content-center grid-cols-3 my-10 md:grid-cols-1 gap-7 sm:gap-6 -mx-7 sm:-mx-6 md:my-8 sm:my-6">
         {prices &&
-          Object.entries(
-            prices
-          ).map(
-            ([
-              key,
-              {
-                title,
-                description,
-                monthlyPrice,
-                yearlyPrice,
-                features,
-                Icon,
-                unit
-              }
-            ]) => (
+          ['Community', 'Professional', 'Enterprise'].map((tier) => {
+            const {
+              title,
+              description,
+              monthlyPrice,
+              yearlyPrice,
+              features,
+              Icon,
+              unit
+            } = prices[tier];
+            return (
               <EditionBox
-                key={key}
+                key={tier}
                 title={title}
                 description={description}
-                price={isMonthly ? monthlyPrice : yearlyPrice}
+                price={isMonthly ? monthlyPrice : yearlyPrice / 12}
                 isMonthly={isMonthly}
                 isFeatured={title === 'Professional'}
                 features={features}
@@ -51,10 +45,11 @@ export const EditionsContainer = () => {
                 customerId={user?.['custom:stripe_id']}
                 userAccountType={user?.accountType}
                 isTrial={user?.isTrial === 'true'}
+                isLoading={loading}
                 className="md:w-full md:mx-auto"
               />
-            )
-          )}
+            );
+          })}
       </div>
     </>
   );

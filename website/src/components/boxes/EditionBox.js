@@ -8,6 +8,7 @@ import ActionButton from '../buttons/ActionButton';
 
 import getStripe from '../../config/stripe';
 import { capitalize, clearUserStorage } from '../../utils';
+import ButtonSpinner from '../spinners/ButtonSpinner';
 
 const EditionBox = ({
   title,
@@ -21,7 +22,8 @@ const EditionBox = ({
   customerId,
   userAccountType = 'community',
   isTrial = false,
-  isFeatured = false
+  isFeatured = false,
+  isLoading = false
 }) => {
   const isCommunity = title === 'Community';
   const isLoggedIn = !!customerId;
@@ -205,7 +207,7 @@ const EditionBox = ({
                   </span>
                 </div>
                 <span className="text-gray-900 text-7xl md:text-6xl sm:text-5xl">
-                  {price}
+                  {isLoading ? <ButtonSpinner /> : price}
                 </span>
                 <div className="flex items-end w-4">
                   <span className="text-xl text-gray-500 md:text-lg sm:text-md">
