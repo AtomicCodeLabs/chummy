@@ -7,8 +7,8 @@ const browsers = [
   { name: 'chrome' },
   { name: 'firefox' },
   { name: 'edge' },
-  { name: 'opera' },
-  { name: 'safari' }
+  { name: 'opera' }
+  // { name: 'safari' }
 ];
 
 const BrowserBox = ({ className }) => {
@@ -26,9 +26,9 @@ const BrowserBox = ({ className }) => {
       opera: file(relativePath: { eq: "browsers/opera.png" }) {
         ...iconImage
       }
-      safari: file(relativePath: { eq: "browsers/safari.png" }) {
-        ...iconImage
-      }
+      # safari: file(relativePath: { eq: "browsers/safari.png" }) {
+      #   ...iconImage
+      # }
     }
   `);
 

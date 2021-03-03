@@ -8,3 +8,4 @@ public/*
 .vscode/*
 amplify/*
 src/aws-exports.js
+font-preload-cache.json

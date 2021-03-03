@@ -1,7 +1,7 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import ActionButton from '../buttons/ActionButton';
 
@@ -63,9 +63,23 @@ export const TableRowSection = ({
         <div
           // eslint-disable-next-line react/no-array-index-key
           key={i}
-          className={clsx(`w-${width}/12`, 'pr-3 last:pr-0', {
+          className={clsx('pr-3 last:pr-0', {
             'text-right': i === items.length - 1,
-            'text-left': i !== items.length - 1
+            'text-left': i !== items.length - 1,
+            // Need to catch widths separately so that tailwind doesn't purge the css
+            'w-0': width === 0,
+            'w-1/12': width === 1,
+            'w-2/12': width === 2,
+            'w-3/12': width === 3,
+            'w-4/12': width === 4,
+            'w-5/12': width === 5,
+            'w-6/12': width === 6,
+            'w-7/12': width === 7,
+            'w-8/12': width === 8,
+            'w-9/12': width === 9,
+            'w-10/12': width === 10,
+            'w-11/12': width === 11,
+            'w-full': width === 12
           })}
         >
           <div className="py-5 my-0 text-gray-700">
@@ -101,6 +115,11 @@ export const BulletsSection = ({
         Object.assign(obj, { [value]: defaultValue }),
       {}
     );
+  const valuesToButtonText = options.reduce(
+    (obj, { value: [value], buttonText: buttonTextOverride }) =>
+      Object.assign(obj, { [value]: buttonTextOverride || buttonText }),
+    {}
+  );
   const [valuesToChecked, setValuesToChecked] = useState(getDefaults());
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -111,22 +130,24 @@ export const BulletsSection = ({
   const findRadio = () =>
     Object.entries(valuesToChecked).find(([, checked]) => checked === true);
   const findChecklist = () => Object.entries(valuesToChecked)?.[0];
-  const findSelectedValue = () => {
+  const findSelected = useMemo(() => {
     if (type === 'radio') {
       return findRadio();
     }
     if (type === 'checkbox') {
       return findChecklist();
     }
-  };
+  }, [valuesToChecked]);
 
   const isDisabled = (() => {
-    const found = findSelectedValue();
+    const found = findSelected;
     if (found) {
       return isButtonDisabled(found);
     }
     return false;
   })();
+
+  console.log('VALUES', valuesToButtonText, findSelected);
 
   return (
     <>
@@ -183,7 +204,7 @@ export const BulletsSection = ({
                 onClick={async (e) => {
                   e.preventDefault();
                   setLoading(true);
-                  const found = findSelectedValue();
+                  const found = findSelected;
                   if (found) {
                     await onSubmit(found);
                   }
@@ -193,7 +214,11 @@ export const BulletsSection = ({
                 disabled={isDisabled}
                 isLoading={loading}
               >
-                {isDisabled ? disabledButtonText || buttonText : buttonText}
+                {isDisabled
+                  ? disabledButtonText ||
+                    valuesToButtonText[findSelected?.[0]] ||
+                    buttonText
+                  : valuesToButtonText[findSelected?.[0]] || buttonText}
               </ActionButton>
             </div>
           </form>

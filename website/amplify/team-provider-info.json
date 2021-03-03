@@ -21,7 +21,8 @@
           "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
         },
-        "chummyCheckoutRequest": {}
+        "chummyCheckoutRequest": {},
+        "chummyServer": {}
       }
     },
     "nonCFNdata": {

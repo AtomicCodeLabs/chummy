@@ -74,22 +74,37 @@ export const features = [
 
 export const extraFeatures = [
   {
-    Icon: <CgUndo />,
-    title: 'Saved Sessions',
-    description:
-      'Pick up where you left off with saved sessions. Reopen the files and pages that are important to you with one click.'
+    features: [
+      {
+        Icon: <CgUndo />,
+        title: 'Saved Sessions',
+        description:
+          'Pick up where you left off with saved sessions. Reopen the files and pages that are important to you with one click.'
+      }
+    ],
+    image: 'theme'
   },
   {
-    Icon: <CgStack />,
-    title: 'Sticky Window',
-    description:
-      "Don't get lost in your windows! Always keep the extension visible and attached to your main window, wherever you click."
+    features: [
+      {
+        Icon: <CgStack />,
+        title: 'Sticky Window',
+        description:
+          "Don't get lost in your windows! Always keep the extension visible and attached to your main window, wherever you click."
+      }
+    ],
+    image: 'theme'
   },
   {
-    Icon: <CgTimer />,
-    title: 'Optimized Speed',
-    description:
-      'Browse quickly. Files are lazy loaded and cached at the folder level so that browsing even the largest repositories is a breeze!'
+    features: [
+      {
+        Icon: <CgTimer />,
+        title: 'Optimized Speed',
+        description:
+          'Browse quickly. Files are lazy loaded and cached at the folder level so that browsing even the largest repositories is a breeze!'
+      }
+    ],
+    image: 'theme'
   }
   // {
   //   Icon: <CgNotes />,

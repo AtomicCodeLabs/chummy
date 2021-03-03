@@ -41,7 +41,7 @@ export default ({
     {/* Slider */}
     <div
       className={clsx(
-        'transition-transform transform bg-green-400 absolute w-1/2 h-full inset-y-0 rounded-full shadow-md',
+        'transition-transform transform bg-neon-green-500 absolute w-1/2 h-full inset-y-0 rounded-full shadow-md',
         {
           'translate-x-0': isLeft,
           'translate-x-full': !isLeft
