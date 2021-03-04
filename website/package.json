@@ -126,5 +126,8 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  }
+  }, 
+  "browserslist": [
+    "defaults"
+  ]
 }
