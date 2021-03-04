@@ -118,7 +118,7 @@
       "function": {
         "chummyPostAuthTrigger": {
           "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
-          "s3Key": "amplify-builds/chummyPostAuthTrigger-61783462595042764174-build.zip"
+          "s3Key": "amplify-builds/chummyPostAuthTrigger-774e6c67455543505a74-build.zip"
         },
         "chummyLambdaLayer": {
           "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
