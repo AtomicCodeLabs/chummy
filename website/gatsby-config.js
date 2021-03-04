@@ -17,6 +17,7 @@ module.exports = {
     description: packageInfo.description,
     author: packageInfo.author,
     url: packageInfo.url,
+    siteUrl: packageInfo.url, // for robots txt
     twitterUsername: packageInfo.twitter,
     keywords: packageInfo.keywords
   },
