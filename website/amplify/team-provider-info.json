@@ -16,7 +16,10 @@
         "chummy9948bcd5": {}
       },
       "function": {
-        "chummyPostAuthTrigger": {},
+        "chummyPostAuthTrigger": {
+          "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
+          "s3Key": "amplify-builds/chummyPostAuthTrigger-774e6c67455543505a74-build.zip"
+        },
         "chummyLambdaLayer": {
           "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
