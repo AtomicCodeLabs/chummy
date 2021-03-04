@@ -107,12 +107,18 @@
         "chummy9948bcd5": {}
       },
       "function": {
-        "chummyPostAuthTrigger": {},
+        "chummyPostAuthTrigger": {
+          "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
+          "s3Key": "amplify-builds/chummyPostAuthTrigger-32767364567131636361-build.zip"
+        },
         "chummyLambdaLayer": {
           "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
         },
-        "chummyServer": {}
+        "chummyServer": {
+          "deploymentBucketName": "amplify-chummy-prod-220137-deployment",
+          "s3Key": "amplify-builds/chummyServer-6e733532697474623078-build.zip"
+        }
       }
     },
     "nonCFNdata": {
