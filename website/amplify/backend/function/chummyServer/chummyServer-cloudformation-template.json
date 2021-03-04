@@ -25,6 +25,12 @@
     "functionchummyLambdaLayerArn": {
       "Type": "String",
       "Default": "functionchummyLambdaLayerArn"
+    },
+    "deploymentBucketName": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
     }
   },
   "Conditions": {

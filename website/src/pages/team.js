@@ -1,5 +1,5 @@
 import React from 'react';
-import Gif from '../components/Gif';
+import Loadable from '@loadable/component';
 
 import Layout from '../components/layout';
 import ConstrainedContainer from '../components/sections/ConstrainedContainer';
@@ -8,6 +8,8 @@ import { TeamText, WhyChummy } from '../data/team';
 
 import teamGif from '../images/team/team.gif';
 import teamImg from '../images/team/team.jpg';
+
+const Gif = Loadable(() => import('../components/Gif'));
 
 const TeamPage = () => (
   <Layout
