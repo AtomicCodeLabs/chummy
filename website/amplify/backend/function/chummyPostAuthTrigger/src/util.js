@@ -11,11 +11,6 @@ const ENV = process.env.ENV;
 const stripeSecretKeyName =
   ENV === 'prod' ? `STRIPE_LIVE_SECRET_KEY` : `STRIPE_TEST_SECRET_KEY`;
 
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
-
 const makeRequest = async (query, operationName, variables) => {
   const req = new AWS.HttpRequest(APPSYNC_URL, APPSYNC_API_KEY);
 
