@@ -326,7 +326,7 @@ const getSession = async (req) => {
   // Everything checks out
   const stripeSecretKey = await getSecretStripeKey();
   const stripe = Stripe(stripeSecretKey);
-  const priceId = getPriceId(req?.body?.tier, req?.body?.type);
+  const priceId = await getPriceId(req?.body?.tier, req?.body?.type, stripe);
   console.log('Creating session for price', priceId);
 
   const session = await stripe.checkout.sessions.create({
