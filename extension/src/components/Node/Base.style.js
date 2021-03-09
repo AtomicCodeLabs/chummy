@@ -145,6 +145,20 @@ export const Icon = styled.div`
     fill: ${({ iconFill, ...props }) =>
       iconFill ? `${iconFill(props)} !important` : nodeIconColor(props)};
   }
+
+  ${({ hoverable, disabled }) =>
+    disabled
+      ? css`
+          opacity: 0.5;
+          cursor: not-allowed;
+        `
+      : hoverable &&
+        css`
+          opacity: 0.7;
+          &:hover {
+            opacity: 1;
+          }
+        `}
 `;
 
 export const RightIconContainer = styled.div`

@@ -26,7 +26,7 @@ const HelpContainer = styled.div`
 
   font-size: ${h3FontSize};
   color: ${lighterTextColor};
-  font-weight: 300;
+  font-weight: 400;
   text-align: center;
 
   .section:not(:last-child) {

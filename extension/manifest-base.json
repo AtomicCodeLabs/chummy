@@ -15,7 +15,8 @@
   },
   "web_accessible_resources": [
     "background.redirect.inject.js",
-    "background.signin.inject.js"
+    "background.signin.inject.js",
+    "background.style.inject.js"
   ],
   "permissions": ["tabs", "storage", "*://github.com/*"],
   "icons": {

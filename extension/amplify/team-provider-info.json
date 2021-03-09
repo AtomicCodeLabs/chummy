@@ -19,6 +19,10 @@
         "chummyLambdaLayer": {
           "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
+        },
+        "chummyPostAuthTrigger": {
+          "deploymentBucketName": "amplify-chummy-dev-213651-deployment",
+          "s3Key": "amplify-builds/chummyPostAuthTrigger-774e6c67455543505a74-build.zip"
         }
       }
     },
@@ -66,8 +70,14 @@
           "deploymentBucketName": "amplify-chummy-gamma-214559-deployment",
           "s3Key": "amplify-builds/chummyLambdaLayer-build.zip"
         },
-        "chummyPostAuthTrigger": {},
-        "chummyServer": {}
+        "chummyPostAuthTrigger": {
+          "deploymentBucketName": "amplify-chummy-gamma-214559-deployment",
+          "s3Key": "amplify-builds/chummyPostAuthTrigger-774e6c67455543505a74-build.zip"
+        },
+        "chummyServer": {
+          "deploymentBucketName": "amplify-chummy-gamma-214559-deployment",
+          "s3Key": "amplify-builds/chummyServer-576a5678656858694f49-build.zip"
+        }
       }
     },
     "nonCFNdata": {
