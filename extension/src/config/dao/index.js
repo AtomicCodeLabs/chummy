@@ -93,6 +93,27 @@ class DAO {
     this.userStore.setPending(false);
   };
 
+  updateUser = (req) => {
+    // Check for error and handle
+    if (req.error) {
+      this.userStore.setError(req.error);
+      this.userStore.setPending(false);
+      return;
+    }
+
+    if (!req?.payload?.user || isBlank(req.payload.user)) {
+      this.userStore.setError('Error: User missing in payload.');
+      this.userStore.setPending(false);
+      return;
+    }
+
+    // Set user store
+    this.userStore.setUser({
+      user: req.payload.user
+    });
+    this.octoDAO.authenticate(req?.payload?.user?.apiKey);
+  };
+
   signOut = () => {
     const request = { action: 'sign-out' };
     log.toBg('Sign out request -> bg', request);

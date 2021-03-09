@@ -10,6 +10,7 @@ import TextButton from '../../components/Buttons/TextButton';
 import { Flag } from '../../components/Text';
 import Scrollbars from '../../components/Scrollbars';
 import {
+  isDistractionFreeModeConfig,
   isStickyWindowConfig,
   sidebarSideConfig,
   spacingConfig,
@@ -30,6 +31,8 @@ export default observer(() => {
     setSpacing,
     isStickyWindow,
     setIsStickyWindow,
+    isDistractionFreeMode,
+    setIsDistractionFreeMode,
     sidebarSide,
     setSidebarSide,
     addGenericPendingNotification,
@@ -115,6 +118,34 @@ export default observer(() => {
             }}
             isOptionDisabled={(option) =>
               !isStickyWindowConfig.browsers.includes(browserName) ||
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Distraction Free Mode"
+          description="Toggle to hide distractions when browsing files on Github."
+          flag={
+            !isDistractionFreeModeConfig.browsers.includes(browserName) && (
+              <ChromiumOnly />
+            )
+          }
+        >
+          <Select
+            name="isDistractionFreeModeSetting"
+            value={injectInfoIntoOption(
+              isDistractionFreeModeConfig.options.find(
+                (o) => o.value === isDistractionFreeMode
+              )
+            )}
+            placeholder="Distraction Free Mode"
+            options={isDistractionFreeModeConfig.options}
+            onChange={(option) => {
+              setIsDistractionFreeMode(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !isDistractionFreeModeConfig.browsers.includes(browserName) ||
               !option.tiers.includes(user.accountType)
             }
           />

@@ -2,10 +2,11 @@
 import browser from 'webextension-polyfill';
 import log from '../config/log';
 import {
-  resolveInjectJSFilenames,
+  resolveInjectFilenames,
   createGithubUrl,
   onTabFinishPending,
-  isGithubRepoUrl
+  isGithubRepoUrl,
+  syncTabStyle
 } from './util';
 import {
   getParsedOpenRepositories,
@@ -33,6 +34,7 @@ const redirectTab = async (request) => {
         // Create a listener for when tab finishes pending;
         onTabFinishPending(tab.id, (finishedTab) => {
           // send change active tab event
+          console.log('TAB FINISHED PENDING', tab.id, finishedTab);
           sendActiveTabChanged(finishedTab);
         });
       } catch (error) {
@@ -46,7 +48,7 @@ const redirectTab = async (request) => {
         // on the page correctly all the time. Inject listener and then send message
         await browser.tabs
           .executeScript(window.tabId, {
-            file: resolveInjectJSFilenames('background.redirect.inject'),
+            file: resolveInjectFilenames('background.redirect.inject', 'js'),
             runAt: 'document_start'
           })
           .catch((e) => {
@@ -59,7 +61,7 @@ const redirectTab = async (request) => {
         };
         browser.tabs.sendMessage(window.tabId, response).catch((e) => {
           log.warn(
-            'Cannot message because extension is not open',
+            'Cannot message because tab is not open',
             e?.message,
             response
           );
@@ -69,11 +71,8 @@ const redirectTab = async (request) => {
 
         // Create a listener for when tab finishes pending;
         onTabFinishPending(tab.id, (finishedTab) => {
-          // send change active tab event
           sendActiveTabChanged(finishedTab);
         });
-
-        sendActiveTabChanged(tab);
       } catch (error) {
         log.error('Error redirecting active tab', error);
       }
@@ -204,6 +203,40 @@ browser.runtime.onMessage.addListener((request) => {
     ].includes(request.action)
   ) {
     return redirectTab(request);
+  }
+});
+
+// Respond to requests to style something in the main window(s)
+const triggerStyleAction = async (request) => {
+  // Toggle distraction free mode
+  if (request.action === 'distraction-free') {
+    try {
+      // Get all open repositories
+      // let openTabIds;
+      // if (request.tab === 'active') {
+      //   openTabIds = [(await browser.tabs.getCurrent())?.id];
+      // } else {
+      // }
+      const openTabIds = (await getParsedOpenRepositories()).map(
+        ({ tab: { tabId } }) => tabId
+      );
+
+      // Inject script that will listen for toggle distraction free message to all github tabs
+      // And then send a message to each tab to actually change the style
+      openTabIds.forEach((tabId) => {
+        syncTabStyle(tabId);
+      });
+    } catch (error) {
+      log.error('Error toggling distraction free mode', error);
+    }
+    return null;
+  }
+
+  return null;
+};
+browser.runtime.onMessage.addListener((request) => {
+  if (['distraction-free'].includes(request.action)) {
+    return triggerStyleAction(request);
   }
 });
 

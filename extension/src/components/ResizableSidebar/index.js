@@ -20,8 +20,10 @@ import {
 } from './style';
 import ToastContainer from '../Toast/Container';
 import IconButton from '../Buttons/IconButton';
+import Collapse from './ActionButtons/Collapse';
 import Spinner from '../Loading/Spinner';
 import { SIDE_TAB, EXTENSION_WIDTH } from '../../constants/sizes';
+import DistractionFree from './ActionButtons/DistractionFreeMode';
 
 const ResizableSidebar = observer(({ children }) => {
   const {
@@ -97,6 +99,12 @@ const ResizableSidebar = observer(({ children }) => {
           <ExpandingContainerHeaderContainer data-testid="page-title">
             {sidebarHeaderTitle}
             <ExpandingContainerHeaderSpacer />
+            <ExpandingContainerHeaderIcon marginLeft="0px">
+              {sidebarHeaderTitle === 'Explorer' && <Collapse />}
+            </ExpandingContainerHeaderIcon>
+            <ExpandingContainerHeaderIcon marginLeft="0px">
+              <DistractionFree />
+            </ExpandingContainerHeaderIcon>
             {!!pendingRequestCount.get(sidebarHeaderTitle) && (
               <ExpandingContainerHeaderIcon>
                 <Spinner />

@@ -270,13 +270,13 @@ export const isGammaOrProd = () => {
 };
 
 // Figure out if we need to append the version to the end
-export const resolveInjectJSFilenames = (basename) => {
+export const resolveInjectFilenames = (basename, ext = 'js') => {
   if (!isGammaOrProd()) {
     // must be dev
-    return `${basename}.js`;
+    return `${basename}.${ext}`;
   }
   // gamma and prod files are versioned
-  return `${basename}_${process.env.VERSION}.js`;
+  return `${basename}_${process.env.VERSION}.${ext}`;
 };
 
 export const clone = (obj) => {
@@ -320,4 +320,26 @@ export const onTabFinishPending = (tabId, callback) => {
   setTimeout(() => {
     browser.tabs.onUpdated.removeListener(listener);
   }, 60_000);
+};
+
+export const syncTabStyle = async (tabId) => {
+  await browser.tabs
+    .executeScript(tabId, {
+      file: resolveInjectFilenames('background.style.inject', 'js'),
+      runAt: 'document_start'
+    })
+    .catch((e) => {
+      log.error('Error injecting style script', e);
+    });
+  // Trigger listener with current style setting
+  const { isDistractionFreeMode } = await browser.storage.sync.get([
+    'isDistractionFreeMode'
+  ]);
+  const response = {
+    action: 'distraction-free-content-script',
+    payload: { isDistractionFreeMode }
+  };
+  browser.tabs.sendMessage(tabId, response).catch((e) => {
+    log.warn('Cannot message because tab is not open', e?.message, response);
+  });
 };

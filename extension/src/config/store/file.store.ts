@@ -35,7 +35,7 @@ export default class FileStore implements IFileStore {
 
   @observable isPending: boolean;
   @observable currentWindowTab: WindowTab;
-  cachedNodes: Map<string, Node>;
+  @observable cachedNodes: Map<string, Node>;
   @observable openRepos: Map<string, Repo>;
   @observable lastNOpenTabIds: Set<number>;
   @observable currentBranch: Branch;
@@ -117,13 +117,22 @@ export default class FileStore implements IFileStore {
     });
   }
 
+  static getNodeKey(
+    owner: string,
+    repo: string,
+    branch: string,
+    path: string
+  ): string {
+    return `${owner}:${repo}:${branch}:${path}`;
+  }
+
   @action.bound getNode(
     owner: string,
     repo: string,
     branch: Branch,
     path: string
   ): Node {
-    const key = `${owner}:${repo}:${branch.name}:${path}`;
+    const key = FileStore.getNodeKey(owner, repo, branch.name, path);
     return this.cachedNodes.get(key);
   }
 
@@ -146,11 +155,52 @@ export default class FileStore implements IFileStore {
     branch: Branch,
     path: string
   ): void {
-    const key = `${owner}:${repo}:${branch.name}:${path}`;
+    const key = FileStore.getNodeKey(owner, repo, branch.name, path);
     const foundNode = this.cachedNodes.get(key);
-    if (foundNode) {
+    if (foundNode && foundNode.isOpen) {
       this.cachedNodes.set(key, { ...foundNode, isOpen: false });
     }
+  }
+
+  @action.bound closeAllNodesBelow(
+    owner: string,
+    repo: string,
+    branch: Branch,
+    path: string
+  ): void {
+    const key = `${owner}:${repo}:${branch.name}:${path}`;
+    const foundNode = this.cachedNodes.get(key);
+
+    if (foundNode) {
+      // traverse through all nodes under this root and close them
+      this.traverseNode(foundNode, (childNode: Node) => {
+        if (childNode?.type === 'tree') {
+          this.closeNode(owner, repo, branch, childNode?.path);
+        }
+      });
+    }
+  }
+
+  @action.bound traverseNode(
+    node: Node,
+    callback = (callNode: Node) => {
+      console.log(callNode);
+    }
+  ) {
+    node?.children?.forEach((childNode: Node) => {
+      const childNodeKey = FileStore.getNodeKey(
+        node.repo.owner,
+        node.repo.name,
+        node.branch.name,
+        childNode.path
+      );
+      const foundChildNode = this.cachedNodes.get(childNodeKey);
+      if (foundChildNode?.type === 'tree') {
+        this.traverseNode(foundChildNode, callback);
+      }
+      // Callback happens after traversal
+      callback(childNode);
+    });
   }
 
   @action.bound clearCachedNodes = () => {

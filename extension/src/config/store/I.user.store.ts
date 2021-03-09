@@ -9,6 +9,7 @@ export interface User {
   apiKey: string;
   accountType: ACCOUNT_TYPE;
   email: string;
+  isTrial: boolean;
 }
 
 export default interface IUserStore {

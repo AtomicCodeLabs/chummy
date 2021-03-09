@@ -11,7 +11,7 @@ import {
 import { SUBPAGES, GLOBAL_SUBPAGES, DEFAULT_BRANCH } from '../global/constants';
 import { UserError } from '../global/errors';
 import log from '../config/log';
-import { isGithubRepoUrl, isNumeric, isBlank } from './util';
+import { isGithubRepoUrl, isNumeric, isBlank, syncTabStyle } from './util';
 
 export default class UrlParser {
   static async build(
@@ -399,4 +399,8 @@ export const sendActiveTabChanged = async (tab) => {
       response
     );
   });
+
+  // After active tab changes, inject style script to make sure style
+  // stays consistent across tabs
+  syncTabStyle(tab.id);
 };

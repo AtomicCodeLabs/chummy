@@ -40,6 +40,18 @@ export const spacingConfig = {
   ]
 };
 
+export const isDistractionFreeModeConfig = {
+  browsers: ALL_BROWSERS,
+  options: [
+    { value: true, label: 'Yes', tiers: NOT_COMMUNITY },
+    {
+      value: false,
+      label: 'No',
+      tiers: ALL_TIERS
+    }
+  ]
+};
+
 export const isStickyWindowConfig = {
   browsers: CHROMIUM,
   options: [

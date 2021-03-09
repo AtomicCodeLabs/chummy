@@ -91,6 +91,7 @@ const RightPanel = styled.div`
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
+  font-size: ${fontSize};
 `;
 
 const Title = styled.div`

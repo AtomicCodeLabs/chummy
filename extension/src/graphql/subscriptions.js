@@ -13,6 +13,7 @@ export const onCreateUser = /* GraphQL */ `
       }
       owner
       onMailingList
+      isTrial
       createdAt
       updatedAt
       bookmarks {
@@ -45,6 +46,7 @@ export const onUpdateUser = /* GraphQL */ `
       }
       owner
       onMailingList
+      isTrial
       createdAt
       updatedAt
       bookmarks {
@@ -77,6 +79,7 @@ export const onDeleteUser = /* GraphQL */ `
       }
       owner
       onMailingList
+      isTrial
       createdAt
       updatedAt
       bookmarks {

@@ -41,6 +41,7 @@ export const STORE_DEFAULTS: any = {
     spacing: SPACING.Cozy,
     pendingRequestCount: new Map(),
     isStickyWindow: false,
+    isDistractionFreeMode: false,
     pendingNotifications: new Map(), // frontend pops from queue until map is empty
     notifications: new Map(), // notificationsToShow end up here once processed
     sidebarView: SidebarView.Project,

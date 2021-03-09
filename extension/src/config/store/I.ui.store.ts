@@ -71,6 +71,7 @@ class CUiStore {
   spacing: SPACING;
   pendingRequestCount: Map<SectionName, number>;
   isStickyWindow: boolean;
+  isDistractionFreeMode: boolean;
   pendingNotifications: Map<string, Notification>;
   notifications: Map<string, Notification>;
 

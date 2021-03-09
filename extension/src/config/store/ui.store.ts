@@ -29,6 +29,7 @@ export default class UiStore implements IUiStore {
   @observable spacing: SPACING;
   @observable pendingRequestCount: Map<SectionName, number>;
   @observable isStickyWindow: boolean;
+  @observable isDistractionFreeMode: boolean;
   @observable pendingNotifications: Map<string, Notification>;
   @observable notifications: Map<string, Notification>;
   @observable sidebarView: SidebarView;
@@ -140,6 +141,13 @@ export default class UiStore implements IUiStore {
   @action.bound setIsStickyWindow = (isStickyWindow: boolean): void => {
     setInChromeStorage({ isStickyWindow });
     this.isStickyWindow = isStickyWindow;
+  };
+
+  @action.bound setIsDistractionFreeMode = (
+    isDistractionFreeMode: boolean
+  ): void => {
+    setInChromeStorage({ isDistractionFreeMode });
+    this.isDistractionFreeMode = isDistractionFreeMode;
   };
 
   @action.bound addErrorPendingNotification = (error: {
