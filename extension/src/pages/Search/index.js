@@ -73,7 +73,7 @@ export default observer(() => {
       queryCode: selectedQueryCode || '',
       queryPath: selectedQueryPath || '',
       repository: selectedOpenRepo
-        ? repoOptions.filter((o) => o.value === selectedOpenRepo)[0] // https://stackoverflow.com/questions/43495696/how-to-set-a-default-value-in-react-select
+        ? repoOptions.filter((o) => o?.value === selectedOpenRepo)[0] // https://stackoverflow.com/questions/43495696/how-to-set-a-default-value-in-react-select
         : repoOptions.length && repoOptions[0],
       language: selectedLanguage
         ? { label: selectedLanguage, value: selectedLanguage }
