@@ -1,13 +1,13 @@
 import browser from 'webextension-polyfill';
 // eslint-disable-next-line import/no-cycle
-import { isProduction } from '../utils';
+// import { isProduction } from '../utils';
 
 const logWrapper = (styler, msg, ...args) => {
-  if (!isProduction()) {
-    browser.extension
-      .getBackgroundPage()
-      .console.log(`%c${msg}`, styler, ...args);
-  }
+  // if (!isProduction()) {
+  browser.extension
+    .getBackgroundPage()
+    .console.log(`%c${msg}`, styler, ...args);
+  // }
 };
 
 // used like log.error(), log(), etc.
