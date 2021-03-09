@@ -24,6 +24,7 @@ module.exports = {
     'background.storage': '../src/background/storage.js',
     'background.redirect.inject': '../src/background/redirect.inject.js',
     'background.signin.inject': '../src/background/signin.inject.js',
+    'background.style.inject': '../src/background/style.inject.js',
     'content-script': '../src/content-scripts/index.js',
     popup: '../src/popup/index.js'
   },

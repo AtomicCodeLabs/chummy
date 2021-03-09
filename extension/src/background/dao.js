@@ -19,7 +19,7 @@ import {
   isCurrentWindow,
   isExtensionOpen,
   storeTokens,
-  resolveInjectJSFilenames,
+  resolveInjectFilenames,
   clone
 } from './util';
 import { isAllowed } from './throttling.util';
@@ -274,6 +274,7 @@ class DAO {
   // *** Class Methods ***
 
   setUser = (user) => {
+    log.debug('SETTING USER', user);
     // Only set the attributes that are available
     Object.keys(user).forEach((attr) => {
       if (
@@ -285,6 +286,7 @@ class DAO {
           'photoURL',
           'apiKey',
           'accountType',
+          'isTrial',
           'bookmarks'
         ].includes(attr)
       ) {
@@ -366,7 +368,7 @@ class DAO {
           // Inject script
           browser.tabs
             .executeScript(tabId, {
-              file: resolveInjectJSFilenames('background.signin.inject'),
+              file: resolveInjectFilenames('background.signin.inject', 'js'),
               runAt: 'document_start'
             })
             .catch((e) => {
@@ -408,6 +410,7 @@ class DAO {
         photoURL: response.picture,
         apiKey: response['custom:access_token'],
         owner: response.owner,
+        isTrial: user.isTrial === 'true',
         accountType: user.accountType,
         bookmarks: user.bookmarks.items
       });

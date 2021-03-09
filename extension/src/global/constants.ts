@@ -64,6 +64,7 @@ export const APP_URLS = {
     REDIRECT: 'account/',
     ACCOUNT: 'account/',
     FEEDBACK: 'account/feedback/',
+    CHECKOUT: 'checkout/',
     TUTORIAL: 'tutorial/'
   }
 };

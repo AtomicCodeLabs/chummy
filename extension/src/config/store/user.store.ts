@@ -54,6 +54,7 @@ export default class UserStore implements IUserStore {
       displayName = null,
       photoURL = null,
       accountType = null,
+      isTrial = null,
       apiKey = null,
       email = null
     } = user;
@@ -61,6 +62,7 @@ export default class UserStore implements IUserStore {
       uid,
       displayName,
       photoURL,
+      isTrial,
       email,
       apiKey: apiKey || this.user?.apiKey,
       accountType:

@@ -85,6 +85,7 @@ export const H3 = styled.h3`
 export const A = styled.span`
   text-decoration: underline;
   cursor: pointer;
+  color: ${({ color, ...props }) => (color ? color(props) : textColor(props))};
 
   &:hover {
     color: ${textColor};

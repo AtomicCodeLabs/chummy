@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FileDirectoryIcon } from '@primer/octicons-react';
+import { observer } from 'mobx-react-lite';
 
 import getFolderFiles from '../../hooks/getFolderFiles';
 // eslint-disable-next-line import/no-cycle
@@ -10,21 +11,25 @@ import OpenCloseChevron from '../OpenCloseChevron';
 import Spinner from '../Loading/Spinner';
 import { folderIconColor } from '../../constants/theme';
 import { useFileStore } from '../../hooks/store';
+import FileStore from '../../config/store/file.store';
 import useTheme from '../../hooks/useTheme';
 import { ICON } from '../../constants/sizes';
 
-const Folder = ({ owner, repo, branch, data, level }) => {
+const Folder = observer(({ owner, repo, branch, data, level }) => {
   const { spacing } = useTheme();
-  const { openNode, closeNode, getNode } = useFileStore();
+  const { openNode, closeNode, cachedNodes } = useFileStore();
   const [open, setOpen] = useState(false);
   const nodes = getFolderFiles(
     { owner, repo, branch, treePath: data.path },
     open
   );
 
+  // console.log(toJS(getNode(owner, repo, branch, data.path)));
+  const nodeKey = FileStore.getNodeKey(owner, repo, branch.name, data.path);
+
   useEffect(() => {
-    setOpen(getNode(owner, repo, branch, data.path)?.isOpen || false);
-  }, [getNode(owner, repo, branch, data.path)]);
+    setOpen(cachedNodes.get(nodeKey)?.isOpen || false);
+  }, [cachedNodes.get(nodeKey)?.isOpen]);
 
   const handleClick = () => {
     if (open) {
@@ -72,7 +77,7 @@ const Folder = ({ owner, repo, branch, data, level }) => {
       </>
     </>
   );
-};
+});
 
 Folder.propTypes = {
   owner: PropTypes.string.isRequired,
