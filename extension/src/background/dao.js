@@ -20,7 +20,8 @@ import {
   isExtensionOpen,
   storeTokens,
   resolveInjectFilenames,
-  clone
+  clone,
+  stripDomain
 } from './util';
 import { isAllowed } from './throttling.util';
 import { THROTTLING_OPERATION, APP_URLS } from '../global/constants';
@@ -359,7 +360,7 @@ class DAO {
         // make sure the status is 'complete' and it's the right tab
         if (
           tabId === createdTab.id &&
-          tab.url.indexOf(redirectUrl) !== -1 &&
+          stripDomain(tab.url) === stripDomain(redirectUrl) &&
           tab.status === 'complete'
         ) {
           // Remove listener after one inject

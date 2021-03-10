@@ -214,6 +214,11 @@ export const isBlank = (o) => {
   return false;
 };
 
+export const stripDomain = (s) => {
+  // Remove https:// and https://www. from all urls
+  return s.replace(/^(http|https):\/\/(www.)?/, '');
+};
+
 const decodePayload = (jwtToken) => {
   const payload = jwtToken.split('.')[1];
   try {
