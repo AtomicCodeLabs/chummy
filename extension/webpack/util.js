@@ -9,6 +9,11 @@ const packageInfo = JSON.parse(
   )
 );
 
+const stripDomain = (s) => {
+  // Remove https:// and https://www. from all urls
+  return s.replace(/^(http|https):\/\/(www.)?/, '');
+};
+
 // All shared properties of manifest.json go here.
 // eslint-disable-next-line import/prefer-default-export
 function formBaseManifest(content) {
@@ -19,7 +24,12 @@ function formBaseManifest(content) {
     version: packageInfo.version,
     permissions: [
       ...baseManifest.permissions,
-      `${process.env.WEBSITE_BASE_URL}*`
+      ...(process.env.NODE_ENV === 'development'
+        ? [process.env.WEBSITE_BASE_URL]
+        : [
+            `https://${stripDomain(process.env.WEBSITE_BASE_URL)}*`, // always secure https://
+            `https://www.${stripDomain(process.env.WEBSITE_BASE_URL)}*` // include www. version
+          ])
     ]
   };
 }
@@ -48,4 +58,5 @@ const generateReports = (domain, browser) => {
 
 module.exports.formBaseManifest = formBaseManifest;
 module.exports.generateReports = generateReports;
+module.exports.stripDomain = stripDomain;
 module.exports.packageInfo = packageInfo;
