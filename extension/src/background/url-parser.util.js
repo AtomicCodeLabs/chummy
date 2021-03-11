@@ -200,14 +200,25 @@ export default class UrlParser {
     // just the url if the branch name has /'s
     const regexedTitle = this.title.match(REPO_TITLE_REGEX);
     // Get everything in between " at " and " . "; if empty, rest of url is branch name (/'s and all)
-    const branchName = regexedTitle
-      ? regexedTitle[1]
-      : this.parsedRepoInfo.slice(3).join('/');
+    const branchName = (() => {
+      if (this.title.includes('Page not found')) {
+        return this.defaultBranch;
+      }
+      if (regexedTitle) {
+        return regexedTitle[1];
+      }
+      return this.parsedRepoInfo.slice(3).join('/');
+    })();
     const parsedWithoutBranch = this.urlObject.pathname
       .slice(1)
       .replace(`/${branchName}`, '') // remove branch from url to get
       .split('/'); // [alexkim205, tomaso, tree?/blob?, filePath?[*?/*]]
-    const parsedFilePath = parsedWithoutBranch.slice(3).join('/');
+    const parsedFilePath = (() => {
+      if (this.title.includes('Page not found')) {
+        return '';
+      }
+      return parsedWithoutBranch.slice(3).join('/');
+    })();
     return {
       ...this.payloadRepoInfo,
       tab: {
