@@ -6,7 +6,8 @@ import {
   createGithubUrl,
   onTabFinishPending,
   isGithubRepoUrl,
-  syncTabStyle
+  syncTabStyle,
+  stripDomain
 } from './util';
 import {
   getParsedOpenRepositories,
@@ -29,14 +30,15 @@ const redirectTab = async (request) => {
           active: true
         };
 
-        const tab = await browser.tabs.create(newTab);
+        browser.tabs.create(newTab);
+        // const tab = await browser.tabs.create(newTab);
 
         // Create a listener for when tab finishes pending;
-        onTabFinishPending(tab.id, (finishedTab) => {
-          // send change active tab event
-          console.log('TAB FINISHED PENDING', tab.id, finishedTab);
-          sendActiveTabChanged(finishedTab);
-        });
+        // onTabFinishPending(tab.id, (finishedTab) => {
+        //   // send change active tab event
+        //   log.debug('[EVENT]: Redirect to new tab event', finishedTab, tab);
+        //   sendActiveTabChanged(finishedTab);
+        // });
       } catch (error) {
         log.error('Error creating tab', error);
       }
@@ -67,12 +69,13 @@ const redirectTab = async (request) => {
           );
         });
         // send change active tab event
-        const tab = await browser.tabs.get(window.tabId);
+        // const tab = await browser.tabs.get(window.tabId);
 
         // Create a listener for when tab finishes pending;
-        onTabFinishPending(tab.id, (finishedTab) => {
-          sendActiveTabChanged(finishedTab);
-        });
+        // onTabFinishPending(tab.id, (finishedTab) => {
+        //   log.debug('[EVENT]: Redirect to active tab event', finishedTab, tab);
+        //   sendActiveTabChanged(finishedTab);
+        // });
       } catch (error) {
         log.error('Error redirecting active tab', error);
       }
@@ -298,8 +301,11 @@ const initializeTabListeners = () => {
     }
     // Also send active tab change event so that current branch & window/tab
     // can be updated on frontend
-    const isTabTitleUrl = changeInfo.url === tab.title; // Tab changed event not ready to be sent
-    if (tab.active && changeInfo.url && !isTabTitleUrl) {
+    const isTitleUpdated =
+      changeInfo.title &&
+      stripDomain(changeInfo.title) !== stripDomain(tab.url); // Tab changed event not ready to be sent
+    if (tab.active && isTitleUpdated) {
+      // log.debug('[EVENT]: TAB UPDATE EVENT', tab, changeInfo);
       sendActiveTabChanged(tab);
     }
   });

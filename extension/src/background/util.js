@@ -215,6 +215,7 @@ export const isBlank = (o) => {
 };
 
 export const stripDomain = (s) => {
+  if (!s) return '';
   // Remove https:// and https://www. from all urls
   return s.replace(/^(http|https):\/\/(www.)?/, '');
 };
