@@ -18,8 +18,8 @@ const FilesSection = observer(() => {
         return;
       }
       const responseNodes = await octoDAO.getRepositoryNodes(
-        currentBranch.repo.owner,
-        currentBranch.repo.name,
+        currentBranch?.repo?.owner,
+        currentBranch?.repo?.name,
         currentBranch,
         ''
       );
@@ -28,7 +28,12 @@ const FilesSection = observer(() => {
     if (octoDAO) {
       getBranchNodes();
     }
-  }, [octoDAO?.graphqlAuth, currentBranch]);
+  }, [
+    octoDAO?.graphqlAuth,
+    currentBranch?.repo?.owner,
+    currentBranch?.repo?.name,
+    currentBranch?.name
+  ]);
 
   return (
     <>
