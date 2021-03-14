@@ -5,3 +5,4 @@ webpack/reports/*
 github-cognito-openid-wrapper/*
 amplify/*
 src/aws-exports.js
+CHANGELOG.md
