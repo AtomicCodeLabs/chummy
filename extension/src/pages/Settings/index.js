@@ -9,6 +9,7 @@ import { Select } from '../../components/Form/Select';
 import TextButton from '../../components/Buttons/TextButton';
 import { Flag } from '../../components/Text';
 import Scrollbars from '../../components/Scrollbars';
+import { toggleDistractionFreeMode } from '../../components/ResizableSidebar/ActionButtons/util';
 import {
   isDistractionFreeModeConfig,
   isStickyWindowConfig,
@@ -142,6 +143,7 @@ export default observer(() => {
             placeholder="Distraction Free Mode"
             options={isDistractionFreeModeConfig.options}
             onChange={(option) => {
+              toggleDistractionFreeMode(option.value);
               setIsDistractionFreeMode(option.value);
             }}
             isOptionDisabled={(option) =>
