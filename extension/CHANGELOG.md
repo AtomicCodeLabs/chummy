@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/AtomicCodeLabs/chummy/compare/v1.1.0...v1.1.1) (2021-03-16)
+
+
+### Bug Fixes
+
+* bug where toggling df mode from settings page was noop ([0ed3f8b](https://github.com/AtomicCodeLabs/chummy/commit/0ed3f8b8225f3774bd40b750c91c024e8ab05841))
+
 ## [1.1.0](https://github.com/AtomicCodeLabs/chummy/compare/v1.0.0...v1.1.0) (2021-03-14)
 
 
