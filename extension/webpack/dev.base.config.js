@@ -119,7 +119,8 @@ module.exports = {
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
         SC_DISABLE_SPEEDY: true,
-        EXTENSION_ID: JSON.stringify(packageInfo.extensionId)
+        CHROME_EXTENSION_ID: JSON.stringify(packageInfo.chromeExtensionId),
+        EDGE_EXTENSION_ID: JSON.stringify(packageInfo.edgeExtensionId)
       }
     }),
     new webpack.HotModuleReplacementPlugin(),

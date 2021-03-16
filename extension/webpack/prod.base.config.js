@@ -95,7 +95,8 @@ module.exports = {
         SC_ATTR: JSON.stringify('data-styled-tomas'),
         REACT_APP_SC_DISABLE_SPEEDY: true,
         SC_DISABLE_SPEEDY: true,
-        EXTENSION_ID: JSON.stringify(packageInfo.extensionId),
+        CHROME_EXTENSION_ID: JSON.stringify(packageInfo.chromeExtensionId),
+        EDGE_EXTENSION_ID: JSON.stringify(packageInfo.edgeExtensionId),
         ASSETS_PUBLIC_PATH: JSON.stringify(process.env.ASSETS_PUBLIC_PATH),
         WEBSITE_BASE_URL: JSON.stringify(process.env.WEBSITE_BASE_URL)
       }
