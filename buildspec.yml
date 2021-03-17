@@ -28,11 +28,15 @@ phases:
   build:
     commands:
       - yarn build:moz
-      - yarn build:web
+      - yarn build:chrome
+      - yarn build:edge
+      - yarn build:opera
   post_build:
     commands:
       - yarn cy:run:moz
-      - yarn cy:run:web
+      - yarn cy:run:chrome
+      - yarn cy:run:edge
+      - yarn cy:run:opera
       - yarn ci:publish
 
 artifacts:
