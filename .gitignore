@@ -5,6 +5,7 @@ ci/
 
 # Extension
 extension/dist
+extension/dist.prod
 extension/webpack/reports/**/*
 extension/cypress/screenshots
 extension/cypress/videos
