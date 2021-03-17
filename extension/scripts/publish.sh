@@ -13,7 +13,9 @@ aws s3 cp dist_$VERSION.chrome.zip s3://chummy-assets-$STAGE/$VERSION/
 zip -r dist_$VERSION.edge.zip edge
 aws s3 cp dist_$VERSION.edge.zip s3://chummy-assets-$STAGE/$VERSION/
 
-zip -r dist_$VERSION.opera.zip opera
+cd opera
+zip -r ../dist_$VERSION.opera.zip .
+cd ..
 aws s3 cp dist_$VERSION.opera.zip s3://chummy-assets-$STAGE/$VERSION/
 
 cd moz
