@@ -31,7 +31,7 @@ addExtensionCommands(Cypress);
 
 // Find element by id
 Cypress.Commands.add('findById', (id) => {
-  return cy.get(`[data-testid=${id}]`);
+  return cy.get(`[data-testid=${id}]`, { timeout: 10000 });
 });
 
 // Navigate to sidebar page
