@@ -1,4 +1,3 @@
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -7,11 +6,6 @@ const { formBaseManifest } = require('./util');
 
 module.exports = {
   ...base,
-  output: {
-    ...base.output,
-    path: path.join(__dirname, '../dist/web'),
-    publicPath: '/'
-  },
   plugins: [
     ...base.plugins,
     new CopyPlugin({
