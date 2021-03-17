@@ -51,7 +51,7 @@ export enum GLOBAL_SUBPAGES {
 export enum BROWSER_TYPE {
   Chrome = 'chrome',
   Firefox = 'firefox',
-  Edge = 'edge',
+  Edge = 'microsoft edge',
   Safari = 'safari',
   Opera = 'opera',
   Brave = 'brave'

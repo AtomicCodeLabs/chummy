@@ -23,7 +23,12 @@ const buildConfig = {
   }
 };
 
+const versionFile = {
+  filename: './.version',
+  type: 'plain-text'
+};
+
 module.exports = {
-  bumpFiles: [tracker, buildConfig],
+  bumpFiles: [tracker, buildConfig, versionFile],
   packageFiles: [tracker]
 };

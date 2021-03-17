@@ -9,6 +9,7 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
+    "download": "./scripts/download.sh",
     "dev:web": "cross-env NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.web.config.js",
     "dev:moz": "cross-env NODE_ENV=development webpack --mode=development --watch --config ./webpack/dev.moz.config.js",
     "gamma:web": "yarn checkout:dev && amplify env checkout gamma && cross-env NODE_ENV=gamma webpack --mode=production --config ./webpack/gamma.web.config.js && yarn checkout:dev",
@@ -161,7 +162,7 @@
       "compression": "none"
     },
     {
-      "path": "./dist/+(moz|web)/[!popup_]*.js",
+      "path": "./dist/+(moz|chrome|edge|opera)/[!popup_]*.js",
       "maxSize": "300 kB",
       "compression": "none"
     }
