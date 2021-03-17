@@ -35,8 +35,6 @@ phases:
     commands:
       - yarn cy:run:moz
       - yarn cy:run:chrome
-      - yarn cy:run:edge
-      - yarn cy:run:opera
       - yarn ci:publish
 
 artifacts:
