@@ -1,5 +1,6 @@
 node_modules/*
 dist/*
+dist.prod/*
 webpack/reports/*
 .vscode/*
 github-cognito-openid-wrapper/*
