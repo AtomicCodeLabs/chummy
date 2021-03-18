@@ -35,6 +35,7 @@ export default {
       'Everything in Community, plus:',
       'Unlimited bookmarks',
       'Unlimited tabs',
+      'Distraction free mode',
       'Zero, Dense, Cozy, and Comfortable spacing options',
       'Dark mode + more themes',
       'Sticky extension',

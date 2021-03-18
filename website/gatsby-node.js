@@ -11,7 +11,12 @@ exports.onCreateWebpackConfig = ({ stage, plugins, actions }) => {
   actions.setWebpackConfig({
     plugins: [
       plugins.define({
-        'process.env.EXTENSION_ID': JSON.stringify(packageInfo.extensionId)
+        'process.env.CHROME_EXTENSION_ID': JSON.stringify(
+          packageInfo.chromeExtensionId
+        ),
+        'process.env.EDGE_EXTENSION_ID': JSON.stringify(
+          packageInfo.edgeExtensionId
+        )
       })
     ]
   });
