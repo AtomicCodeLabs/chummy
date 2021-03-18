@@ -33,13 +33,12 @@ export const WhyChummy = () => (
       I started Chummy to address my own pain points with Github, but it has
       become a collection of features that I&apos;ve had requested from friends
       and coworkers who&apos;ve validated my own frustrations with Github.
-      Chummy&apos;s a continuously growing toolbox that will receive feature
-      updates driven by you, the user, so please feel free to leave any kind of
-      feedback.
+      Chummy&apos;s a continuously growing toolbox, so please leave some
+      feedback so that we can make Github work for you.
     </p>
     <br />
     <p className="text-lg text-left md:text-base sm:text-sm">
-      Thank you, and I hope you enjoy using Chummy!
+      Thank you, and enjoy Chummy!
     </p>
     <br />
     <br />

@@ -25,7 +25,7 @@ function SEO({ description, lang, meta, title, pathname }) {
             twitterUsername
           }
         }
-        metaImage: file(relativePath: { eq: "social1200_628.png" }) {
+        metaImage: file(relativePath: { eq: "social/social1200_628.png" }) {
           childImageSharp {
             fluid(maxHeight: 628) {
               ...GatsbyImageSharpFluid
