@@ -1,7 +1,4 @@
-import React, { cloneElement } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
-import Img from 'gatsby-image';
-import { CgArrowRight } from 'react-icons/cg';
+import React from 'react';
 
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -12,28 +9,10 @@ import BrowserBox from '../components/boxes/BrowserBox';
 import ConstrainedContainer from '../components/sections/ConstrainedContainer';
 import EditionsSection from '../components/sections/EditionsSection';
 import SigninButton from '../components/buttons/SigninButton';
+import { DemoVideo } from '../components/sections/DemoSection';
+import ActionButton from '../components/buttons/ActionButton';
 
-const IndexPage = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      before: file(relativePath: { eq: "features/before_mockup.png" }) {
-        childImageSharp {
-          fluid(maxWidth: 1000, quality: 90) {
-            ...GatsbyImageSharpFluid
-          }
-        }
-      }
-      after: file(relativePath: { eq: "features/after_mockup.png" }) {
-        childImageSharp {
-          fluid(maxWidth: 1000, quality: 90) {
-            ...GatsbyImageSharpFluid
-          }
-        }
-      }
-    }
-  `);
-
-  return (
+const IndexPage = () => (
     <Layout
       footerClassName="mt-60"
       mainClassName="overflow-hidden"
@@ -80,8 +59,18 @@ const IndexPage = () => {
                 </div>
               </div>
             </ColumnSection>
-            <div className="flex flex-row items-center justify-center md:flex-col">
-              <div className="w-7/12 md:w-full">
+            <div className="flex flex-col items-center justify-center">
+              <DemoVideo />
+              <div className="flex h-20 mx-auto">
+                <ActionButton
+                  to="/tutorial"
+                  className="my-auto"
+                  bgColor="bg-indigo-800"
+                >
+                  A 3 Step Tutorial
+                </ActionButton>
+              </div>
+              {/* <div className="w-7/12 md:w-full">
                 <Img
                   fluid={data.before?.childImageSharp?.fluid}
                   alt="Cluttered windows"
@@ -98,7 +87,7 @@ const IndexPage = () => {
                   fluid={data.after?.childImageSharp?.fluid}
                   alt="Chummy window"
                 />
-              </div>
+              </div> */}
             </div>
           </ConstrainedContainer>
           <svg
@@ -122,6 +111,5 @@ const IndexPage = () => {
       <EditionsSection />
     </Layout>
   );
-};
 
 export default IndexPage;
