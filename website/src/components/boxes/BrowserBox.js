@@ -3,15 +3,10 @@ import clsx from 'clsx';
 import { useStaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 
-const browsers = [
-  { name: 'chrome' },
-  { name: 'firefox' },
-  { name: 'edge' },
-  { name: 'opera' }
-  // { name: 'safari' }
-];
+import browsers from '../../data/browsers';
+import Link from '../Link';
 
-const BrowserBox = ({ className }) => {
+const BrowserBox = ({ className, iconClassName = 'w-8 h-8 mx-1.5' }) => {
   const data = useStaticQuery(graphql`
     query {
       chrome: file(relativePath: { eq: "browsers/chrome.png" }) {
@@ -34,13 +29,18 @@ const BrowserBox = ({ className }) => {
 
   return (
     <div className={clsx('inline-flex', className)}>
-      {browsers.map(({ name }) => (
-        <Img
-          key={name}
-          fluid={data[name].childImageSharp.fluid}
-          alt={name}
-          className="w-8 h-8 mx-1.5"
-        />
+      {browsers.map(({ name, url }) => (
+        <Link
+          to={url}
+          className="transition-transform transform scale-100 hover:scale-110"
+        >
+          <Img
+            key={name}
+            fluid={data[name].childImageSharp.fluid}
+            alt={name}
+            className={clsx(iconClassName)}
+          />
+        </Link>
       ))}
     </div>
   );

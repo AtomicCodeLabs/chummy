@@ -33,6 +33,10 @@ const Navbar = ({
     [isScrollAtTop]
   );
 
+  const canUpgrade =
+    !['professional', 'enterprise'].includes(user?.accountType) ||
+    user?.isTrial === 'true';
+
   return (
     <div
       className={clsx(
@@ -107,25 +111,23 @@ const Navbar = ({
               {/* End Right */}
             </>
           )}
-          {isSimpleNavbar &&
-            isAccountPage &&
-            !['professional', 'enterprise'].includes(user?.accountType) && (
-              <>
-                {/* Right */}
-                <div className="inline-flex items-start">
-                  <div className="block">
-                    <ActionButton
-                      bgColor="bg-green-500"
-                      to="/checkout"
-                      className="px-4 py-2 ml-4"
-                    >
-                      Get Professional
-                    </ActionButton>
-                  </div>
+          {isSimpleNavbar && isAccountPage && canUpgrade && (
+            <>
+              {/* Right */}
+              <div className="inline-flex items-start">
+                <div className="block">
+                  <ActionButton
+                    bgColor="bg-green-500"
+                    to="/checkout"
+                    className="px-4 py-2 ml-4"
+                  >
+                    Get Professional
+                  </ActionButton>
                 </div>
-                {/* End Right */}
-              </>
-            )}
+              </div>
+              {/* End Right */}
+            </>
+          )}
         </div>
         {/* Mobile Menu */}
         {!isSimpleNavbar && isMenuOpen && (
