@@ -873,7 +873,7 @@ const PrivacyCard = () => (
 
     <P>
       If you have questions or comments about this notice, you may email us at
-      chummy@atomiccode.
+      hello@atomiccode.io.
     </P>
 
     <h3 id="request">

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 
 import FooterColumn from './FooterColumn';
 import Logo from '../Logo';
+import { BROWSER_URLS } from '../../data/browsers';
 
 const footerRoutes = {
   Product: [
@@ -25,20 +26,24 @@ const footerRoutes = {
   ],
   Integrations: [
     {
+      name: 'Tutorial',
+      pathname: '/tutorial'
+    },
+    {
       name: 'Google Chrome',
-      pathname: '/browsers/chrome'
+      pathname: BROWSER_URLS.CHROME
     },
     {
       name: 'Firefox',
-      pathname: '/browsers/firefox'
+      pathname: BROWSER_URLS.FIREFOX
     },
     {
       name: 'Microsoft Edge',
-      pathname: '/browsers/edge'
+      pathname: BROWSER_URLS.EDGE
     },
     {
       name: 'Opera',
-      pathname: '/browsers/opera'
+      pathname: BROWSER_URLS.OPERA
     }
   ],
   Company: [
