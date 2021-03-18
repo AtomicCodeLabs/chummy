@@ -1,6 +1,6 @@
 # Terms of Service
 
-_Last updated: January 10, 2021_
+_Last updated: February 23, 2021_
 
 ## Agreement to Terms
 
@@ -56,7 +56,7 @@ We offer a 30\-day free trial for the Professional Edition to new users who regi
 
 You can cancel your subscription at any time by logging into your account. Your cancellation will take effect at the end of the current paid term.
 
-If you are unsatisfied with our services, please email us at chummy@atomiccode.io.
+If you are unsatisfied with our services, please email us at hello@atomiccode.io.
 
 ## Software
 
@@ -235,4 +235,4 @@ These Terms of Use and any policies or operating rules posted by us on the Site 
 
 ## Contact Us
 
-In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at chummy@atomiccode.io.
+In order to resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at hello@atomiccode.io.

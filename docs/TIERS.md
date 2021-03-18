@@ -2,26 +2,25 @@
 
 ## Community
 
-- Repositories and Tab management
-- Search code
+- Repositories and tab management
+- Track up to 10 open tabs at a time
+- Powerful search tool
 - Vanilla light theme
 - Cozy spacing
 - Private repositories
-- Up to 10 bookmarks
 - Bookmarks search
-- Lazy loaded repository files
+- Bookmark up to 15 files
 
-## Professional (30 day trial)
+## Professional (14 day trial)
 
 - Everything in Community
 - Unlimited bookmarks
+- Unlimited tabs
+- Zero, Dense, Cozy, and Comfortable spacing options
 - Dark mode + more themes
-- More spacing options!
-- Sticky window
-- Priority email support
-- Priority feature development
+- Sticky extension
 
-## Enterprise (Teams of 5+)
+## Enterprise
 
 - Everything in Professional
-- License management
+- Github Enterprise Integration

@@ -34,6 +34,8 @@ This repository is separated into two branches, `master` and `website`.
 - **AWS S3** for storage of CDN's assets
 - **AWS Cloudfront** for delivery of CDN's
 - **AWS CodeBuild** for CI/CD
+- **AWS Lambda** for serverless API
+- **AWS API Gateway** for exposing Lambda functions
 - **AWS Parameter Store** for secure access of tokens
 
 #### Local
@@ -58,6 +60,10 @@ Webpack build configurations are slightly different across stages (dev/gamma/pro
 
 ### CHANGELOG
 
+#### `v1.0.0e`
+
+Using the Amplify CLI, we have several infrastructural pieces that are hosted on AWS. The important updates are the addition of two Lambda functions, a shared Lambda layer, and a REST API Gateway to interact with those Lambda functions. These functions interact with DDB and Stripe to ensure that customer information is synced across Cognito, Stripe, and DDB.
+
 #### `v1.0.0d`
 
 A lot of work has been done to abstract the process of CI/CD so that we can focus on dev work.
@@ -74,7 +80,7 @@ We've homebrewed our own CI/CD server, and now use Jenkins on EC2!
 
 In this version, we move on from Github actions to Jenkins on AWS to take more control over our pipelines. We serve an instance of Jenkins on an AWS EC2 instance which has IAM roles to fetch secret keys and .env files from S3 and Parameter Store. By doing so, we take away having to have any encrypt/decrypt logic sitting in the repository, and abstract it away into the cloud, which makes it tech stack agnostic in the scenario we change our minds and move on from Jenkins.
 
-This process required that we automate the process for spinning up a pre-configured Jenkins docker image on AWS EC2. Credentials are retrieved via AWS CLI and copied into a volume that Jenkins and the EC2 host shares. We configured Jenkins so that it can execute builds on Docker node images (yes, you heard it right, it's Docker-ception) on all branches in the `alexkim205/chummy` repo that contain a `Jenkinsfile`.
+This process required that we automate the process for spinning up a pre-configured Jenkins docker image on AWS EC2. Credentials are retrieved via AWS CLI and copied into a volume that Jenkins and the EC2 host shares. We configured Jenkins so that it can execute builds on Docker node images (yes, you heard it right, it's Docker-ception) on all branches in the `AtomicCodeLabs/chummy` repo that contain a `Jenkinsfile`.
 
 #### `v1.0.0a`
 

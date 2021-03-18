@@ -25,4 +25,4 @@ You don't have to worry about this list growing much even as new features are ad
 
 ## Transparency
 
-All of Chummy's source code is open sourced on Github and we perform regular security audits. If you spot a security risk, we do ask that you send an email to chummy@atomiccode.io per our [Security Policy](https://github.com/alexkim205/chummy/blob/extension/SECURITY.md).
+All of Chummy's source code is open sourced on Github and we perform regular security audits. If you spot a security risk, we do ask that you send an email to hello@atomiccode.io per our [Security Policy](https://github.com/AtomicCodeLabs/chummy/blob/extension/SECURITY.md).

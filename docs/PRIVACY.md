@@ -1,8 +1,8 @@
 # Privacy Policy
 
-_Last updated: January 10, 2021_
+_Last updated: February 23, 2021_
 
-Thank you for choosing to be part of our community at Atomic Code ("**Company**", "**we**", "**us**", "**our**"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at chummy@atomiccode.io.
+Thank you for choosing to be part of our community at Atomic Code ("**Company**", "**we**", "**us**", "**our**"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at hello@atomiccode.io.
 
 When you visit our website [https://chummy.atomiccode.io](https://chummy.atomiccode.io) (the "**Website**"), and more generally, use any of our services (the "**Services**", which include the Website), we appreciate that you are trusting us with your personal information. We take your privacy very seriously. In this privacy notice, we seek to explain to you in the clearest way possible what information we collect, how we use it and what rights you have in relation to it. We hope you take some time to read through it carefully, as it is important. If there are any terms in this privacy notice that you do not agree with, please discontinue use of our Services immediately.
 
@@ -84,7 +84,7 @@ We use the information we collect or receive:
 
 - **To facilitate account creation and logon process.** If you choose to link your account with us to a third-party account (such as your Google or Facebook account), we use the information you allowed us to collect from those third parties to facilitate account creation and logon process for the performance of the contract. See the section below headed "[How do we handle your social logins](#sociallogins)" for further information.
 
-- **To post testimonials.** We post testimonials on our Website that may contain personal information. Prior to posting a testimonial, we will obtain your consent to use your name and the content of the testimonial. If you wish to update, or delete your testimonial, please contact us at chummy@atomiccode.io and be sure to include your name, testimonial location, and contact information.
+- **To post testimonials.** We post testimonials on our Website that may contain personal information. Prior to posting a testimonial, we will obtain your consent to use your name and the content of the testimonial. If you wish to update, or delete your testimonial, please contact us at hello@atomiccode.io and be sure to include your name, testimonial location, and contact information.
 
 - **Request feedback.** We may use your information to request feedback and to contact you about your use of our Website.
 
@@ -198,7 +198,7 @@ If you are a resident in the European Economic Area and you believe we are unlaw
 
 If you are a resident in Switzerland, the contact details for the data protection authorities are available here: [https://www.edoeb.admin.ch/edoeb/en/home.html](https://www.edoeb.admin.ch/edoeb/en/home.html).
 
-If you have questions or comments about your privacy rights, you may email us at chummy@atomiccode.io.
+If you have questions or comments about your privacy rights, you may email us at hello@atomiccode.io.
 
 ### Account Information
 
@@ -234,8 +234,8 @@ We may update this privacy notice from time to time. The updated version will be
 
 ## 13\. How can you contact us about this notice?
 
-If you have questions or comments about this notice, you may email us at chummy@atomiccode.
+If you have questions or comments about this notice, you may email us at hello@atomiccode.io.
 
 ## 14\. How can you review, update, or delete the data we collect from you?
 
-Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your personal information, please visit: [https://chummy.atomiccode.io/account/privacy](https://chummy.atomiccode.io/account/privacy). We will respond to your request within 30 days.
+Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your personal information, please visit: [https://chummy.atomiccode.io/account/privacy](https://chummy.atomiccode.io/account/privacy). We will respond to your request within 14 days.
