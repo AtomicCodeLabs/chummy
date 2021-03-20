@@ -1,4 +1,4 @@
-# [Chummy](https://www.chummy.atomiccode.io) - Github with 🔋 included
+# [Chummy](https://www.chummy.atomiccode.io) - Github with 🔋's included
 
 ![splash](extension/public/social/social1200_628.png)
 
