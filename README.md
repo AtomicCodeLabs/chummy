@@ -1,4 +1,4 @@
-# [Chummy](https://www.chummy.atomiccode.io) - Github with 🔋's included
+# [Chummy](https://www.chummy.atomiccode.io) - Use Github with 🔋's included
 
 ![splash](extension/public/social/social1200_628.png)
 
@@ -25,13 +25,13 @@
 
 ---
 
-![Chrome](https://img.shields.io/badge/download-chrome-4C8BF5?style=for-the-badge&logo=google-chrome)
+[![Chrome](https://img.shields.io/badge/download-chrome-4C8BF5?style=for-the-badge&logo=google-chrome)](https://chrome.google.com/webstore/detail/chummy/ocmdenamdoeigigibgjfnconlhpekfgb)
 
-![Firefox](https://img.shields.io/badge/download-firefox-ff9400?style=for-the-badge&logo=firefox)
+[![Firefox](https://img.shields.io/badge/download-firefox-ff9400?style=for-the-badge&logo=firefox)](https://addons.mozilla.org/en-US/firefox/addon/chummy/)
 
-![Microsoft Edge](https://img.shields.io/badge/download-edge-3277BC?style=for-the-badge&logo=microsoft-edge)
+[![Microsoft Edge](https://img.shields.io/badge/download-edge-3277BC?style=for-the-badge&logo=microsoft-edge)](https://microsoftedge.microsoft.com/addons/detail/bpobpfbpikaikajipjoaoiijnkjikpfe)
 
-![Opera](https://img.shields.io/badge/download-opera-FF1B2D?style=for-the-badge&logo=opera)
+[![Opera](https://img.shields.io/badge/download-opera-FF1B2D?style=for-the-badge&logo=opera)](https://addons.opera.com/en/extensions/details/chummy/)
 
 ---
 
