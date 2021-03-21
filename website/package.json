@@ -56,6 +56,7 @@
     "emailjs-com": "^2.6.4",
     "gatsby": "^2.26.1",
     "gatsby-image": "^2.5.0",
+    "gatsby-plugin-google-gtag": "^3.1.0",
     "gatsby-plugin-manifest": "^2.6.1",
     "gatsby-plugin-offline": "^3.4.0",
     "gatsby-plugin-preload-fonts": "^1.9.1",
