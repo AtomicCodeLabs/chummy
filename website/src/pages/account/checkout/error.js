@@ -32,7 +32,7 @@ const CheckoutError = () => {
       mainClassName="h-full bg-gray-200 absolute inset-0"
       innerMainClassName="justify-center items-center"
     >
-      <SEO title="Checkout Error" />
+      <SEO title="Account - Checkout Error" />
       <div className="flex items-center justify-center bg-white rounded-lg shadow-lg">
         <AuthBox
           Icon={<BoxSpinner className="bg-green-500" />}

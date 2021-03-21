@@ -70,7 +70,7 @@ const Account = ({ location }) => {
 
   return (
     <AccountLayout title={<h2 className="mb-10">My Account</h2>}>
-      <SEO title="Account" />
+      <SEO title="Account - Dashboard" />
       <InfoSection
         title="Edition"
         leftText={

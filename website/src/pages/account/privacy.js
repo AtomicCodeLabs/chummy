@@ -27,7 +27,7 @@ const Privacy = () => {
 
   return (
     <AccountLayout title={<h2 className="mb-10">Privacy</h2>}>
-      <SEO title="Privacy" />
+      <SEO title="Account - Privacy" />
       <div className="pb-6 text-base font-light text-gray-700 sm:text-sm">
         We collect the bare essential data points like your email address,
         account type, and other non-sensitive information, to learn about how

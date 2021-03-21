@@ -22,11 +22,14 @@ export const Steps = () => {
   `);
   return (
     <>
-      <h2 className="mt-16 mb-10">Watch a 73&quot; demo.</h2>
+      <h2 className="mt-16 mb-10">Watch a 90&quot; demo.</h2>
       <div className="flex flex-col items-center">
         <DemoVideo />
       </div>
       <h2 className="mt-16 mb-10">Step 1. Download the extension.</h2>
+      <p className="mb-6 text-lg text-center md:text-base sm:text-md">
+        Click on one of the icons below.
+      </p>
       <div className="flex flex-col items-center">
         <BrowserBox iconClassName="w-12 h-12 mx-3" />
       </div>

@@ -48,10 +48,8 @@ export const DemoVideo = ({ className }) => {
             width="100%"
             height="100%"
             controls
-            muted
             pip
-            playbackRate={2}
-            url="https://www.youtube.com/watch?v=DRF7r29BPNY"
+            url="https://www.youtube.com/watch?v=sKid01-p09s"
           />
         </div>
       ) : (

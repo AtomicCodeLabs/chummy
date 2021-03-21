@@ -18,7 +18,10 @@ const TeamPage = () => (
     navbarSecondaryBgColor="bg-white"
     footerClassName="mt-60"
   >
-    <SEO title="Checkout" />
+    <SEO
+      title="About Us"
+      description="Choose from Chummy Community, Professional, and Enterprise."
+    />
     <ConstrainedContainer>
       <div className="text-center">
         <h1>
