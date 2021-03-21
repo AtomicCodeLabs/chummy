@@ -12,11 +12,13 @@ const TutorialPage = () => (
     navbarSecondaryBgColor="bg-white"
     footerClassName="mt-60"
   >
-    <SEO title="Checkout" />
+    <SEO
+      title="Tutorial"
+      description="Get started with Chummy in three easy steps."
+    />
     <ConstrainedContainer>
       <div className="text-center">
         <h1>
-          Getting started is{' '}
           <span
             className="italic"
             style={{
@@ -24,9 +26,9 @@ const TutorialPage = () => (
                 'linear-gradient(to top, #39FF14 50%, transparent 50%)'
             }}
           >
-            easy
-          </span>
-          .
+            3 easy steps
+          </span>{' '}
+          to get started
         </h1>
       </div>
       <div className="flex flex-col md:text-center">

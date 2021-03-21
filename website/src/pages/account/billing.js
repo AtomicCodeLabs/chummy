@@ -17,7 +17,7 @@ const Billing = () => {
 
   return (
     <AccountLayout title={<h2 className="mb-10">Billing History</h2>}>
-      <SEO title="Billing" />
+      <SEO title="Account - Billing" />
       {invoices && invoices.length ? (
         <>
           <TableRowSection

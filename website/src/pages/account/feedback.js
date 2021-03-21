@@ -13,7 +13,7 @@ const ButtonText = ({ children }) => (
 
 const Feedback = () => (
   <AccountLayout title={<h2 className="mb-10">Feedback</h2>}>
-    <SEO title="Feedback" />
+    <SEO title="Account - Feedback" />
     <div className="pb-6 text-base font-light text-gray-700 sm:text-sm">
       Thank you for choosing to leave feedback! Your feedback plays such an
       important role in making our product better for you.

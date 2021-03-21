@@ -6,12 +6,16 @@ import { FeaturesContainer } from '../components/sections/FeaturesSection';
 
 const FeaturesPage = () => (
   <Layout
+    mainClassName="overflow-hidden"
     innerMainClassName="justify-start items-center"
     navbarBgColor="bg-white"
     navbarSecondaryBgColor="bg-white"
     footerClassName="mt-60"
   >
-    <SEO title="Features" />
+    <SEO
+      title="Features"
+      description="Wondering what features Chummy has to offer? Explore the growing list of features that Chummy brings to your Github experience."
+    />
     <div className="text-center">
       <h1>
         <span

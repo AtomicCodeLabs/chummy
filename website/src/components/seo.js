@@ -42,13 +42,17 @@ function SEO({ description, lang, meta, title, pathname }) {
   const motto = site.siteMetadata?.motto;
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null;
 
+  const isHomePage = title === site.siteMetadata.title;
+
   return (
     <Helmet
       htmlAttributes={{
         lang
       }}
       title={title || site.siteMetadata?.title}
-      titleTemplate={motto ? `%s | ${motto}` : null}
+      titleTemplate={
+        motto ? `%s | ${isHomePage ? motto : site.siteMetadata.title}` : null
+      }
       link={
         canonical
           ? [
