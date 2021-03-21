@@ -14,7 +14,11 @@ const PrivacyPage = () => (
     footerClassName="w-full inset-x-0"
     fitFooter
   >
-    <SEO title="Privacy" />
+    <SEO
+      title="Privacy"
+      description="Chummy's privacy policy. tl;dr - We take your privacy seriously."
+    />
+    <h1 className="hidden">Privacy Policy</h1>
     <h2>Privacy Policy</h2>
     <p className="text-gray-500">Last updated: February 23, 2021</p>
     <PrivacyCard />

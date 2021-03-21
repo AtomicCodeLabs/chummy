@@ -12,6 +12,10 @@ const footerRoutes = {
       pathname: '/signin'
     },
     {
+      name: 'Tutorial',
+      pathname: '/tutorial'
+    },
+    {
       name: 'Features',
       pathname: '/features'
     },
@@ -25,10 +29,6 @@ const footerRoutes = {
     }
   ],
   Integrations: [
-    {
-      name: 'Tutorial',
-      pathname: '/tutorial'
-    },
     {
       name: 'Google Chrome',
       pathname: BROWSER_URLS.CHROME

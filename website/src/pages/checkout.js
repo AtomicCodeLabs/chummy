@@ -11,7 +11,10 @@ const CheckoutPage = () => (
     navbarSecondaryBgColor="bg-white"
     footerClassName="mt-60"
   >
-    <SEO title="Checkout" />
+    <SEO
+      title="Checkout"
+      description="It's free to get started with Chummy, no credit card required. Chummy comes in three editions: Community, Professional, and Enterprise. Discover which edition works best for you!"
+    />
     <div className="text-center">
       <h1>
         <span

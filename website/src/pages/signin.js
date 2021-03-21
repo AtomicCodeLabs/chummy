@@ -49,7 +49,11 @@ const SignIn = ({ location }) => {
       mainClassName="h-full bg-gray-200 absolute inset-0"
       innerMainClassName="justify-center items-center"
     >
-      <SEO title="Sign In" />
+      <SEO
+        title="Sign In"
+        description="Sign into Chummy using your existing Github account."
+      />
+      <h1 className="hidden">Sign In</h1>
       <div className="flex items-center justify-center bg-white rounded-lg shadow-lg">
         {fromExtension ? (
           <AuthBox

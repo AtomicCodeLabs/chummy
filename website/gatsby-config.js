@@ -69,7 +69,28 @@ module.exports = {
         downloadFiles: false
       }
     },
-    { resolve: 'gatsby-plugin-robots-txt' },
-    { resolve: 'gatsby-plugin-preload-fonts' }
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: packageInfo.url,
+        sitemap: `${packageInfo.url}/sitemap.xml`
+      }
+    },
+    { resolve: 'gatsby-plugin-preload-fonts' },
+    {
+      resolve: 'gatsby-plugin-advanced-sitemap',
+      options: {
+        exclude: [
+          `/404`,
+          `/404.html`,
+          `/account/checkout/error`,
+          `/account/checkout/success`,
+          `/account/billing`,
+          `/account/feedback`,
+          `/account/privacy`,
+          `/account`
+        ]
+      }
+    }
   ]
 };

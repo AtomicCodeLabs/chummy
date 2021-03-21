@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import Layout from '../components/layout';
+import Link from '../components/Link';
 import ConstrainedContainer from '../components/sections/ConstrainedContainer';
 import SEO from '../components/seo';
 
@@ -37,7 +38,10 @@ const ChangelogPage = () => {
       navbarSecondaryBgColor="bg-white"
       fitFooter
     >
-      <SEO title="Changelog" />
+      <SEO
+        title="Changelog"
+        description="Discover the latest and greatest updates to Chummy."
+      />
       <ConstrainedContainer className="font-mono">
         {error && (
           <h3 className="text-red-500">
@@ -47,7 +51,19 @@ const ChangelogPage = () => {
         )}
         {!error &&
           (loading ? (
-            <div>Fetching the latest changes...</div>
+            <>
+              <h1>Changelog</h1>
+              <p>
+                All notable changes to this project will be documented in this
+                file. See{' '}
+                <Link to="https://github.com/conventional-changelog/standard-version">
+                  standard-version
+                </Link>{' '}
+                for commit guidelines.
+              </p>
+              <br />
+              <p>Fetching the latest changes...</p>
+            </>
           ) : (
             <ReactMarkdown>{data}</ReactMarkdown>
           ))}

@@ -14,7 +14,8 @@ const TermsPage = () => (
     footerClassName="w-full inset-x-0"
     fitFooter
   >
-    <SEO title="Terms" />
+    <SEO title="Terms" description="Chummy's terms and conditions." />
+    <h1 className="hidden">Terms & Conditions</h1>
     <h2>Terms & Conditions</h2>
     <p className="text-gray-500">Last updated: February 23, 2021</p>
     <TermsCard />
