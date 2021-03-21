@@ -42,6 +42,6 @@ export const WhyChummy = () => (
     </p>
     <br />
     <br />
-    <p className="text-lg text-left md:text-base sm:text-sm">- Alex and Jane</p>
+    <p className="text-lg text-left md:text-base sm:text-sm">- Alex</p>
   </>
 );
