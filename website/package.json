@@ -1,7 +1,7 @@
 {
   "name": "Chummy",
-  "motto": "Use Github, But Productively",
-  "description": "Unclutter your daily Github workflow with Chummy, a browser extension that brings an IDE-like experience to Github.",
+  "motto": "The missing browser extension for Github",
+  "description": "Unclutter your daily Github workflow with Chummy, a browser extension helps you move faster on Github.",
   "chromeExtensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
   "edgeExtensionId": "bpobpfbpikaikajipjoaoiijnkjikpfe",
   "operaExtensionId": "ijomncicjamfmbjaghaippfjejjghejg",
@@ -32,6 +32,7 @@
     "lint": "eslint --fix --ext .js,.jsx .",
     "status": "git status && amplify status",
     "preload-fonts": "gatsby-preload-fonts",
+    "giffy": "./scripts/vid-to-gif.sh -f 20 -w 800",
     "checkout:dev": "git checkout website/dev && git pull && amplify env checkout dev && amplify pull --yes",
     "checkout:gamma": "git checkout website/gamma && git pull && amplify env checkout gamma && amplify pull --yes",
     "checkout:prod": "git checkout website/prod && git pull && amplify env checkout prod && amplify pull --yes",
