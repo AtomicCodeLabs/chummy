@@ -96,7 +96,7 @@ module.exports = {
       resolve: `gatsby-plugin-google-gtag`,
       options: {
         trackingIds: [
-          'UA-192721026-1' // Google Analytics / GA
+          'G-P2HKL8LCTM' // Google Analytics / GA
         ]
       }
     }
