@@ -1,6 +1,8 @@
 # [Chummy](https://www.chummy.atomiccode.io) - The Missing Github Extension
 
-<img src="https://i.imgur.com/CalZtQe.gif" style="margin-bottom: 1rem;"/>
+<div style="display: flex;justify-content: center;">
+  <img src="https://i.imgur.com/CalZtQe.gif" style="margin-bottom: 1rem;"/>
+</div>
 
 <p align="center" style="margin-bottom: 1rem;">
   <a href="https://chrome.google.com/webstore/detail/chummy/ocmdenamdoeigigibgjfnconlhpekfgb">  
@@ -40,53 +42,70 @@
 
 ---
 
-### 🏠 [Home Website](https://www.chummy.atomiccode.io)
+## Table of Contents
 
-### 📹 [90 second demo](https://www.youtube.com/watch?v=sKid01-p09s)
-
-### 🎯 [Product Hunt](https://www.producthunt.com/posts/chummy-3)
-
-### 💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)
-
-### 📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)
-
-###
+- [⏱️ Quick Links](#️⏱️-quick-links)
+- [🚀 Core Features](#🚀-core-features)
+  - [Repository Management](#📓-repository-management)
+  - [Tab Management](#️🗂️-tab-management)
+  - [Project Tree](#🌲-project-tree)
+  - [Powerful Search](#🔍-powerful-search)
+  - [Bookmarks](#🔖-bookmarks)
+  - [Distraction Free Mode](#🌙-distraction-free-mode)
+  - [Light and Dark Themes](#🎨-light-and-dark-themes)
+  - [Sticky Window](#🩹-sticky-window)
+- [❓ Why use Chummy?](#❓-why-use-chummy)
+- [✊ Motivation](#✊-motivation)
+- [📟 Tech Stack](#📟-tech-stack)
+  - [Dependencies](#dependencies)
 
 ---
+
+## ⏱️ Quick Links
+
+**🏠 [Home Website](https://www.chummy.atomiccode.io)**
+
+**📹 [90 second demo](https://www.youtube.com/watch?v=sKid01-p09s)**
+
+**🎯 [Product Hunt](https://www.producthunt.com/posts/chummy-3)**
+
+**💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)**
+
+**📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)**
 
 ## 🚀 Core Features
 
 ### 📓 Repository Management
 
-<img src="https://i.imgur.com/dhQNFp2.gif" />
+<img src="https://i.imgur.com/dhQNFp2.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🗂️ Tab Management
 
-<img src="https://i.imgur.com/F3pfVlW.gif" />
+<img src="https://i.imgur.com/F3pfVlW.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🌲 Project Tree
 
-<img src="https://i.imgur.com/CRGju8L.gif" />
+<img src="https://i.imgur.com/CRGju8L.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🔍 Powerful Search
 
-<img src="https://i.imgur.com/FOXvqQJ.gif" />
+<img src="https://i.imgur.com/FOXvqQJ.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🔖 Bookmarks
 
-<img src="https://i.imgur.com/LWp8hTp.gif" />
+<img src="https://i.imgur.com/LWp8hTp.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🌙 Distraction Free Mode
 
-<img src="https://i.imgur.com/D1JBmZk.gif" />
+<img src="https://i.imgur.com/D1JBmZk.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🎨 Light and Dark Themes
 
-<img src="https://i.imgur.com/GGKVDhs.gif" />
+<img src="https://i.imgur.com/GGKVDhs.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### 🩹 Sticky Window
 
-<img src="https://i.imgur.com/ILbZ4cg.gif" />
+<img src="https://i.imgur.com/ILbZ4cg.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
 
 ### + more [here](https://www.chummy.atomiccode.io/)!
 
