@@ -37,7 +37,7 @@ const reasons = [
     Icon: <CgCheckO />,
     title: 'No Tracking',
     description:
-      'Chummy does not (and will never!) track, store, or sell your private information in any shape or form. See our privacy page for more detail.'
+      'Chummy does not (and will never!) track or sell your private information in any shape or form. See our privacy page for more detail.'
   },
   {
     Icon: <CgLockUnlock />,
