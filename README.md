@@ -1,6 +1,21 @@
-# [Chummy](https://www.chummy.atomiccode.io) - Use Github with 🔋's included
+# [Chummy](https://www.chummy.atomiccode.io) - The Missing Github Extension
 
-![splash](extension/public/social/social1200_628.png)
+<img src="https://i.imgur.com/CalZtQe.gif" style="margin-bottom: 1rem;"/>
+
+<p align="center" style="margin-bottom: 1rem;">
+  <a href="https://chrome.google.com/webstore/detail/chummy/ocmdenamdoeigigibgjfnconlhpekfgb">  
+    <img alt="Chrome" src="https://img.shields.io/badge/chrome-4C8BF5?style=for-the-badge&logo=google-chrome&logoColor=FFFFFF" />
+  </a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/chummy/">  
+    <img alt="Firefox" src="https://img.shields.io/badge/firefox-ff9400?style=for-the-badge&logo=firefox&logoColor=FFFFFF" />
+  </a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/bpobpfbpikaikajipjoaoiijnkjikpfe">
+    <img alt="Microsoft Edge" src="https://img.shields.io/badge/edge-3277BC?style=for-the-badge&logo=microsoft-edge&logoColor=FFFFFF" />
+  </a>
+  <a href="https://addons.opera.com/en/extensions/details/chummy/">
+    <img alt="GitHub last commit" src="https://img.shields.io/badge/opera-FF1B2D?style=for-the-badge&logo=opera&logoColor=FFFFFF" />
+  </a>
+</p>
 
 <p align="center">
   <a href="http://commitizen.github.io/cz-cli/">  
@@ -25,18 +40,82 @@
 
 ---
 
-[![Chrome](https://img.shields.io/badge/download-chrome-4C8BF5?style=for-the-badge&logo=google-chrome)](https://chrome.google.com/webstore/detail/chummy/ocmdenamdoeigigibgjfnconlhpekfgb)
+### 🏠 [Home Website](https://www.chummy.atomiccode.io)
 
-[![Firefox](https://img.shields.io/badge/download-firefox-ff9400?style=for-the-badge&logo=firefox)](https://addons.mozilla.org/en-US/firefox/addon/chummy/)
+### 📹 [90 second demo](https://www.youtube.com/watch?v=sKid01-p09s)
 
-[![Microsoft Edge](https://img.shields.io/badge/download-edge-3277BC?style=for-the-badge&logo=microsoft-edge)](https://microsoftedge.microsoft.com/addons/detail/bpobpfbpikaikajipjoaoiijnkjikpfe)
+### 🎯 [Product Hunt](https://www.producthunt.com/posts/chummy-3)
 
-[![Opera](https://img.shields.io/badge/download-opera-FF1B2D?style=for-the-badge&logo=opera)](https://addons.opera.com/en/extensions/details/chummy/)
+### 💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)
+
+### 📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)
+
+###
 
 ---
 
-Visit [chummy.atomiccode.io](https://www.chummy.atomiccode.io) for more information!
+## 🚀 Core Features
 
-Chummy is a browser extension that helps you stay focused on what matters to you, whether that’s developing, contributing, browsing, or stargazing a bunch of random repositories. You'll feel right at home with its IDE-like design and easy-to-use interface.
+### 📓 Repository Management
 
-Get started with Chummy for free in just one click!
+<img src="https://i.imgur.com/dhQNFp2.gif" />
+
+### 🗂️ Tab Management
+
+<img src="https://i.imgur.com/F3pfVlW.gif" />
+
+### 🌲 Project Tree
+
+<img src="https://i.imgur.com/CRGju8L.gif" />
+
+### 🔍 Powerful Search
+
+<img src="https://i.imgur.com/FOXvqQJ.gif" />
+
+### 🔖 Bookmarks
+
+<img src="https://i.imgur.com/LWp8hTp.gif" />
+
+### 🌙 Distraction Free Mode
+
+<img src="https://i.imgur.com/D1JBmZk.gif" />
+
+### 🎨 Light and Dark Themes
+
+<img src="https://i.imgur.com/GGKVDhs.gif" />
+
+### 🩹 Sticky Window
+
+<img src="https://i.imgur.com/ILbZ4cg.gif" />
+
+### + more [here](https://www.chummy.atomiccode.io/)!
+
+## ❓ Why use Chummy?
+
+1. **_One Click Setup_** - Use your existing Github account. No sign up, no credit card required to get started.
+2. **_Cross Browser Compatible_** - Available on your favorite browsers. Support for Safari coming soon!
+3. **_Simple and Flexible_** - A simple and clean user experience with modular features makes the app a joy to use.
+
+## ✊ Motivation
+
+Read [MOTIVATION.md](https://github.com/AtomicCodeLabs/chummy/blob/docs/docs/MOTIVATION.md).
+
+## 📟 Tech Stack
+
+- **Webpack** for bundling JS files
+- **Express** as server framework
+- **React** as extension web app framework
+- **MobX** for state management in the extension
+- **Gatsby/React** for website framework
+
+### Dependencies
+
+- **AWS Amplify Cognito** for federated user authentication
+- **AWS DynamoDB** for user data storage
+- **AWS S3** for storage of CDN's assets
+- **AWS Cloudfront** for delivery of CDN's
+- **AWS CodeBuild** for CI/CD
+- **AWS Lambda** for serverless API
+- **AWS API Gateway** for exposing Lambda functions
+- **AWS Parameter Store** for secure access of tokens
+- **Stripe** for payments integration
