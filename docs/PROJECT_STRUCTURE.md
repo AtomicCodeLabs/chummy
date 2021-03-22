@@ -37,6 +37,7 @@ This repository is separated into two branches, `master` and `website`.
 - **AWS Lambda** for serverless API
 - **AWS API Gateway** for exposing Lambda functions
 - **AWS Parameter Store** for secure access of tokens
+- **Stripe** for payments integration
 
 #### Local
 
@@ -44,7 +45,6 @@ This repository is separated into two branches, `master` and `website`.
 - **Express** as server framework
 - **React** as extension web app framework
 - **Gatsby/React** for website framework
-- **Docker** custom images for CI/CD
 
 We use Amplify Cognito for authentication with a Github provider and DynamoDB to persist relevant information about users (i.e. keeping track of a user's bookmarks). React is used as the frontend framework for both the extension and the website to keep things consistent.
 
