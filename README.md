@@ -77,11 +77,11 @@
 
 ### 📓 Repository Management
 
-<img src="https://i.imgur.com/dhQNFp2.gif" height="500"/>
+<img src="https://i.imgur.com/dhQNFp2.gif"/>
 
 ### 🗂️ Tab Management
 
-<img src="https://i.imgur.com/F3pfVlW.gif" height="500"/>
+<img src="https://i.imgur.com/F3pfVlW.gif"/>
 
 ### 🌲 Project Tree
 
@@ -97,7 +97,7 @@
 
 ### 🌙 Distraction Free Mode
 
-<img src="https://i.imgur.com/D1JBmZk.gif" height="500"/>
+<img src="https://i.imgur.com/D1JBmZk.gif"/>
 
 ### 🎨 Light and Dark Themes
 
@@ -105,7 +105,7 @@
 
 ### 🩹 Sticky Window
 
-<img src="https://i.imgur.com/ILbZ4cg.gif" height="500"/>
+<img src="https://i.imgur.com/ILbZ4cg.gif" />
 
 ### + more [here](https://www.chummy.atomiccode.io/)!
 
