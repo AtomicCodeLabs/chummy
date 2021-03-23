@@ -77,35 +77,35 @@
 
 ### 📓 Repository Management
 
-<img src="https://i.imgur.com/dhQNFp2.gif" height="500px"/>
+<img src="https://i.imgur.com/dhQNFp2.gif" height="500"/>
 
 ### 🗂️ Tab Management
 
-<img src="https://i.imgur.com/F3pfVlW.gif" height="500px"/>
+<img src="https://i.imgur.com/F3pfVlW.gif" height="500"/>
 
 ### 🌲 Project Tree
 
-<img src="https://i.imgur.com/CRGju8L.gif" height="500px"/>
+<img src="https://i.imgur.com/CRGju8L.gif" height="500"/>
 
 ### 🔍 Powerful Search
 
-<img src="https://i.imgur.com/FOXvqQJ.gif" height="500px"/>
+<img src="https://i.imgur.com/FOXvqQJ.gif" height="500"/>
 
 ### 🔖 Bookmarks
 
-<img src="https://i.imgur.com/LWp8hTp.gif" height="500px"/>
+<img src="https://i.imgur.com/LWp8hTp.gif" height="500"/>
 
 ### 🌙 Distraction Free Mode
 
-<img src="https://i.imgur.com/D1JBmZk.gif" height="500px"/>
+<img src="https://i.imgur.com/D1JBmZk.gif" height="500"/>
 
 ### 🎨 Light and Dark Themes
 
-<img src="https://i.imgur.com/GGKVDhs.gif" height="500px"/>
+<img src="https://i.imgur.com/GGKVDhs.gif" height="500"/>
 
 ### 🩹 Sticky Window
 
-<img src="https://i.imgur.com/ILbZ4cg.gif" height="500px"/>
+<img src="https://i.imgur.com/ILbZ4cg.gif" height="500"/>
 
 ### + more [here](https://www.chummy.atomiccode.io/)!
 
