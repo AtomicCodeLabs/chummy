@@ -44,19 +44,19 @@
 
 ## Table of Contents
 
-- [⏱️ Quick Links](#️⏱️-quick-links)
-- [🚀 Core Features](#🚀-core-features)
-  - [Repository Management](#📓-repository-management)
-  - [Tab Management](#️🗂️-tab-management)
-  - [Project Tree](#🌲-project-tree)
-  - [Powerful Search](#🔍-powerful-search)
-  - [Bookmarks](#🔖-bookmarks)
-  - [Distraction Free Mode](#🌙-distraction-free-mode)
-  - [Light and Dark Themes](#🎨-light-and-dark-themes)
-  - [Sticky Window](#🩹-sticky-window)
-- [❓ Why use Chummy?](#❓-why-use-chummy)
-- [✊ Motivation](#✊-motivation)
-- [📟 Tech Stack](#📟-tech-stack)
+- [⏱️ Quick Links](#️-quick-links)
+- [🚀 Core Features](#-core-features)
+  - [📓 Repository Management](#-repository-management)
+  - [🗂️ Tab Management](#️-tab-management)
+  - [🌲 Project Tree](#-project-tree)
+  - [🔍 Powerful Search](#-powerful-search)
+  - [🔖 Bookmarks](#-bookmarks)
+  - [🌙 Distraction Free Mode](#-distraction-free-mode)
+  - [🎨 Light and Dark Themes](#-light-and-dark-themes)
+  - [🩹 Sticky Window](#-sticky-window)
+- [❓ Why use Chummy?](#-why-use-chummy)
+- [✊ Motivation](#-motivation)
+- [📟 Tech Stack](#-tech-stack)
   - [Dependencies](#dependencies)
 
 ---
@@ -77,35 +77,35 @@
 
 ### 📓 Repository Management
 
-<img src="https://i.imgur.com/dhQNFp2.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/dhQNFp2.gif"/>
 
 ### 🗂️ Tab Management
 
-<img src="https://i.imgur.com/F3pfVlW.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/F3pfVlW.gif"/>
 
 ### 🌲 Project Tree
 
-<img src="https://i.imgur.com/CRGju8L.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/CRGju8L.gif" height="500"/>
 
 ### 🔍 Powerful Search
 
-<img src="https://i.imgur.com/FOXvqQJ.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/FOXvqQJ.gif" height="500"/>
 
 ### 🔖 Bookmarks
 
-<img src="https://i.imgur.com/LWp8hTp.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/LWp8hTp.gif" height="500"/>
 
 ### 🌙 Distraction Free Mode
 
-<img src="https://i.imgur.com/D1JBmZk.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/D1JBmZk.gif"/>
 
 ### 🎨 Light and Dark Themes
 
-<img src="https://i.imgur.com/GGKVDhs.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/GGKVDhs.gif" height="500"/>
 
 ### 🩹 Sticky Window
 
-<img src="https://i.imgur.com/ILbZ4cg.gif" style="max-height: 500px;margin-bottom: 1rem;"/>
+<img src="https://i.imgur.com/ILbZ4cg.gif" />
 
 ### + more [here](https://www.chummy.atomiccode.io/)!
 
