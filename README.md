@@ -1,4 +1,4 @@
-# [Chummy](https://www.chummy.atomiccode.io) - The Missing Github Extension
+# [Chummy](https://www.chummy.atomiccode.io) - The Missing GitHub Extension
 
 <div style="display: flex;justify-content: center;">
   <img src="https://i.imgur.com/CalZtQe.gif" style="margin-bottom: 1rem;"/>
@@ -24,10 +24,10 @@
     <img alt="Commitizen friendly" src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square" />
   </a>
   <a href="">  
-    <img alt="Github stars" src="https://img.shields.io/github/stars/AtomicCodeLabs/chummy?style=flat-square" />
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/AtomicCodeLabs/chummy?style=flat-square" />
   </a>
   <a href="">
-    <img alt="Github forks" src="https://img.shields.io/github/forks/AtomicCodeLabs/chummy?style=flat-square" />
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/AtomicCodeLabs/chummy?style=flat-square" />
   </a>
   <a href="">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/AtomicCodeLabs/chummy?style=flat-square" />
@@ -111,7 +111,7 @@
 
 ## ❓ Why use Chummy?
 
-1. **_One Click Setup_** - Use your existing Github account. No sign up, no credit card required to get started.
+1. **_One Click Setup_** - Use your existing GitHub account. No sign up, no credit card required to get started.
 2. **_Cross Browser Compatible_** - Available on your favorite browsers. Support for Safari coming soon!
 3. **_Simple and Flexible_** - A simple and clean user experience with modular features makes the app a joy to use.
 

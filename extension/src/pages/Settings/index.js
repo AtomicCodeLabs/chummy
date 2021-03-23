@@ -52,7 +52,7 @@ export default observer(() => {
       <PanelsContainer>
         <Panel
           title="Color Theme"
-          description="Specify which color theme to use in the extension popup and Github window."
+          description="Specify which color theme to use in the extension popup and GitHub window."
           flag={!themeConfig.browsers.includes(browserName) && <ChromiumOnly />}
         >
           <Select
@@ -126,7 +126,7 @@ export default observer(() => {
         <PanelDivider />
         <Panel
           title="Distraction Free Mode"
-          description="Toggle to hide distractions when browsing files on Github."
+          description="Toggle to hide distractions when browsing files on GitHub."
           flag={
             !isDistractionFreeModeConfig.browsers.includes(browserName) && (
               <ChromiumOnly />
