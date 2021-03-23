@@ -45,6 +45,7 @@
 ## Table of Contents
 
 - [⏱️ Quick Links](#️-quick-links)
+- [🦕 What is Chummy?](#-what-is-chummy)
 - [🚀 Core Features](#-core-features)
   - [📓 Repository Management](#-repository-management)
   - [🗂️ Tab Management](#️-tab-management)
@@ -72,6 +73,12 @@
 **💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)**
 
 **📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)**
+
+## 🦕 What is Chummy?
+
+Don't want to clone another Github repository just to browse its contents? Github's clunky browsing interface slowing you down? Having a bad time, overall? Chummy is a browser extension for Github that helps you use Github quickly and efficiently. Get started in just one click!
+
+Learn more about what Chummy has to offer at [chummy.atomiccode.io](https://www.chummy.atomiccode.io).
 
 ## 🚀 Core Features
 
