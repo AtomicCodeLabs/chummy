@@ -92,7 +92,7 @@ export default observer(() => {
         <PanelDivider />
         {/* <Panel
           title="Share the love!"
-          description="If one of your Github Chummies"
+          description="If one of your GitHub Chummies"
           center
           onClick={() => {
             redirectToUrl(GITHUB_URLS.FEEDBACK);

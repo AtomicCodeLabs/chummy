@@ -1,7 +1,7 @@
 {
   "name": "chummy",
   "version": "1.1.2",
-  "description": "The missing browser extension for Github",
+  "description": "The missing browser extension for GitHub",
   "chromeExtensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
   "edgeExtensionId": "bpobpfbpikaikajipjoaoiijnkjikpfe",
   "operaExtensionId": "ijomncicjamfmbjaghaippfjejjghejg",

@@ -194,7 +194,7 @@ const Name = styled.div`
   }
 
   span.mono {
-    /* Github's monospace stack */
+    /* GitHub's monospace stack */
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
       monospace;
     user-select: text;

@@ -22,7 +22,7 @@ const redirectPageListeners = () => {
       if (!repoLink) {
         window.location.href = `https://github.com/${owner}/${repo}/${type}/${branch}/${nodePath}`;
       } else {
-        // Sometimes ajax redirect will be treated as a normal redirect by Github
+        // Sometimes ajax redirect will be treated as a normal redirect by GitHub
         repoLink.setAttribute(
           'href',
           `/${owner}/${repo}/${type}/${branch}/${nodePath}`
