@@ -75,7 +75,7 @@ export default observer(() => {
             PlaceholderIcon={<PersonIcon />}
           />
           <Title>Chummy</Title>
-          <Subtitle>Github made easy</Subtitle>
+          <Subtitle>GitHub made easy</Subtitle>
           <Spacer />
           <IconAndTextButton
             Icon={<MarkGithubIcon />}
@@ -86,7 +86,7 @@ export default observer(() => {
               dao.signIn();
             }}
           >
-            <H3>Sign in with Github</H3>
+            <H3>Sign in with GitHub</H3>
           </IconAndTextButton>
         </SignInContainer>
       </>

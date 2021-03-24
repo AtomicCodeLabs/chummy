@@ -53,7 +53,7 @@ const OpenTabsSection = observer(() => {
       <HelpContainer>
         <div className="section">It&apos;s quiet here...</div>
         <div className="section">
-          Open <A onClick={handleGetStartedClick}>any</A> Github repository to
+          Open <A onClick={handleGetStartedClick}>any</A> GitHub repository to
           get started.
         </div>
         <div className="section">
