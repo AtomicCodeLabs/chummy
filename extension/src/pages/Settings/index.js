@@ -15,7 +15,8 @@ import {
   isStickyWindowConfig,
   sidebarSideConfig,
   spacingConfig,
-  themeConfig
+  themeConfig,
+  isPopupConfig
 } from './options';
 import { updateSidebarSide } from '../../utils/browser';
 import { browserName } from '../../config/browser';
@@ -32,6 +33,8 @@ export default observer(() => {
     setSpacing,
     isStickyWindow,
     setIsStickyWindow,
+    isPopup,
+    setIsPopup,
     isDistractionFreeMode,
     setIsDistractionFreeMode,
     sidebarSide,
@@ -119,6 +122,30 @@ export default observer(() => {
             }}
             isOptionDisabled={(option) =>
               !isStickyWindowConfig.browsers.includes(browserName) ||
+              !option.tiers.includes(user.accountType)
+            }
+          />
+        </Panel>
+        <PanelDivider />
+        <Panel
+          title="Windowed Mode"
+          description="Toggle to embed the extension in the browser or pop it out in its separate window."
+          flag={
+            !isPopupConfig.browsers.includes(browserName) && <ChromiumOnly />
+          }
+        >
+          <Select
+            name="isPopupSetting"
+            value={injectInfoIntoOption(
+              isPopupConfig.options.find((o) => o.value === isPopup)
+            )}
+            placeholder="Windowed Mode"
+            options={isPopupConfig.options}
+            onChange={(option) => {
+              setIsPopup(option.value);
+            }}
+            isOptionDisabled={(option) =>
+              !isPopupConfig.browsers.includes(browserName) ||
               !option.tiers.includes(user.accountType)
             }
           />

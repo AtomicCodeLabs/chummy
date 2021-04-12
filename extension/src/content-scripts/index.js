@@ -1,13 +1,12 @@
-import { isGithubRepoUrl } from './util';
+import render from '../utils/render';
 
-const initListeners = () => {};
+const EXTENSION_ID = 'content-extension-root';
 
-const checkUrl = () => {
-  // eslint-disable-next-line no-restricted-globals
-  const isGRUrl = isGithubRepoUrl(location.href);
-  if (isGRUrl) {
-    initListeners();
+function init() {
+  const extensionLoaded = document.getElementById(EXTENSION_ID);
+  if (!extensionLoaded) {
+    render(EXTENSION_ID);
   }
-};
+}
 
-checkUrl();
+init();

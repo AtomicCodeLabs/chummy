@@ -75,3 +75,21 @@ export const unproxifyBookmark = (bookmark) => {
     repo: toJS(bookmark.repo)
   };
 };
+
+// https://stackoverflow.com/questions/16267668/can-js-code-in-chrome-extension-detect-that-its-executed-as-content-script
+export const isContentScript = () => {
+  // eslint-disable-next-line no-restricted-globals
+  return location.protocol !== 'chrome-extension:';
+};
+
+// Used to get emotion styles from head into the iframe for libraries like react-select
+// https://github.com/ryanseddon/react-frame-component/issues/114
+export const getStyles = () => {
+  console.log(
+    'data-emotion',
+    document.querySelectorAll('head style[data-emotion=css]')
+  );
+  Array.from(document.querySelectorAll('head style[data-emotion=css]')).join(
+    ''
+  );
+};
