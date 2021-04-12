@@ -64,7 +64,7 @@ export default {
     features: [
       'Everything in Professional, plus:',
       // 'License management portal for teams',
-      'Github Enterprise integration',
+      'GitHub Enterprise integration',
       'Priority Support'
     ]
   }

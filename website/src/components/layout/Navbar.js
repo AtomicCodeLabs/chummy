@@ -160,7 +160,7 @@ const Navbar = ({
                   to="/signin"
                   className="my-4 mt-2 ml-4"
                 >
-                  Sign in with Github
+                  Sign in with GitHub
                 </ActionButton>
               )}
             </div>

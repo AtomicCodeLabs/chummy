@@ -1,7 +1,7 @@
 {
   "name": "Chummy",
-  "motto": "The missing browser extension for Github",
-  "description": "Unclutter your daily Github workflow with Chummy, a browser extension helps you move faster on Github.",
+  "motto": "The missing browser extension for GitHub",
+  "description": "Unclutter your daily GitHub workflow with Chummy, a browser extension helps you move faster on GitHub.",
   "chromeExtensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
   "edgeExtensionId": "bpobpfbpikaikajipjoaoiijnkjikpfe",
   "operaExtensionId": "ijomncicjamfmbjaghaippfjejjghejg",
@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "author": "Alex Kim",
   "twitter": "@alexgyujinkim",
-  "email": "hello@atomiccode.io",
+  "email": "alexatatomiccode@gmail.com",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",

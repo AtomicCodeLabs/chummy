@@ -168,7 +168,7 @@ const FeaturesSection = () => (
     <ColumnSection
       title={
         <h2 className="leading-tight">
-          Github can be <span className="text-red-500">difficult</span> to
+          GitHub can be <span className="text-red-500">difficult</span> to
           navigate. <br />
           Chummy comes packed with features that make it{' '}
           <span className="text-green-500">easy</span>.
