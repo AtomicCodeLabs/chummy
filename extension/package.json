@@ -1,11 +1,13 @@
 {
   "name": "chummy",
   "version": "1.1.2",
-  "description": "Github with batteries included",
-  "extensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
+  "description": "The missing browser extension for GitHub",
+  "chromeExtensionId": "ocmdenamdoeigigibgjfnconlhpekfgb",
+  "edgeExtensionId": "bpobpfbpikaikajipjoaoiijnkjikpfe",
+  "operaExtensionId": "ijomncicjamfmbjaghaippfjejjghejg",
   "main": "index.js",
   "author": "Alex Kim",
-  "email": "alexatatomiccode@gmail.com",
+  "email": "hello@atomiccode.io",
   "license": "AGPL-3.0-only",
   "scripts": {
     "creds": "aws s3 cp s3://chummy-credentials/.env.development .env.development && aws s3 cp s3://chummy-credentials/key.pem key.pem",
