@@ -1,4 +1,4 @@
-# [Chummy](https://www.chummy.atomiccode.io) - The Missing Github Extension
+# [Chummy](https://www.chummy.atomiccode.io) - The Missing GitHub Extension
 
 <div style="display: flex;justify-content: center;">
   <img src="https://i.imgur.com/CalZtQe.gif" style="margin-bottom: 1rem;"/>
@@ -24,10 +24,10 @@
     <img alt="Commitizen friendly" src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square" />
   </a>
   <a href="">  
-    <img alt="Github stars" src="https://img.shields.io/github/stars/AtomicCodeLabs/chummy?style=flat-square" />
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/AtomicCodeLabs/chummy?style=flat-square" />
   </a>
   <a href="">
-    <img alt="Github forks" src="https://img.shields.io/github/forks/AtomicCodeLabs/chummy?style=flat-square" />
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/AtomicCodeLabs/chummy?style=flat-square" />
   </a>
   <a href="">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/AtomicCodeLabs/chummy?style=flat-square" />
@@ -45,6 +45,7 @@
 ## Table of Contents
 
 - [⏱️ Quick Links](#️-quick-links)
+- [🦕 What is Chummy?](#-what-is-chummy)
 - [🚀 Core Features](#-core-features)
   - [📓 Repository Management](#-repository-management)
   - [🗂️ Tab Management](#️-tab-management)
@@ -71,7 +72,13 @@
 
 **💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)**
 
-**📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)**
+**📧 [alexatatomiccode@gmail.com](mailto:alexatatomiccode@gmail.com)**
+
+## 🦕 What is Chummy?
+
+Don't want to clone another GitHub repository just to browse its contents? GitHub's clunky browsing interface slowing you down? Having a bad time, overall? Chummy is a browser extension for GitHub that helps you use GitHub quickly and efficiently. Get started in just one click!
+
+Learn more about what Chummy has to offer at [chummy.atomiccode.io](https://www.chummy.atomiccode.io).
 
 ## 🚀 Core Features
 
@@ -111,7 +118,7 @@
 
 ## ❓ Why use Chummy?
 
-1. **_One Click Setup_** - Use your existing Github account. No sign up, no credit card required to get started.
+1. **_One Click Setup_** - Use your existing GitHub account. No sign up, no credit card required to get started.
 2. **_Cross Browser Compatible_** - Available on your favorite browsers. Support for Safari coming soon!
 3. **_Simple and Flexible_** - A simple and clean user experience with modular features makes the app a joy to use.
 

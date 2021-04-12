@@ -25,7 +25,7 @@ function renderDevPanel() {
     <RootStoreContext.Provider value={rootStore}>
       {/* MobX store for general data */}
       <OctoProvider store={rootStore}>
-        {/* Github DAO for making requests */}
+        {/* GitHub DAO for making requests */}
         <DAOProvider store={rootStore}>
           {/* Firebase store for auth */}
           <Router>

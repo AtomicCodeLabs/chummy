@@ -378,7 +378,7 @@ class DAO {
         }
       });
     } catch (error) {
-      log.error('Error signing in with Github', error);
+      log.error('Error signing in with GitHub', error);
       throw UserError.from(error);
     }
   };
