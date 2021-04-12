@@ -6,7 +6,7 @@ import useUser from '../../hooks/useUser';
 const SigninButton = ({
   className,
   signedInText = 'Go to my account',
-  signedOutText = 'Sign in with Github',
+  signedOutText = 'Sign in with GitHub',
   ...props
 }) => {
   const user = useUser();

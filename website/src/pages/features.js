@@ -14,7 +14,7 @@ const FeaturesPage = () => (
   >
     <SEO
       title="Features"
-      description="Wondering what features Chummy has to offer? Explore the growing list of features that Chummy brings to your Github experience."
+      description="Wondering what features Chummy has to offer? Explore the growing list of features that Chummy brings to your GitHub experience."
     />
     <div className="text-center">
       <h1>

@@ -34,7 +34,7 @@ export const features = [
         Icon: <CgListTree />,
         title: 'Project Tree',
         description:
-          "Get to your files faster. Navigate repository files using the ergonomic file explorer that should've been included with Github."
+          "Get to your files faster. Navigate repository files using the ergonomic file explorer that should've been included with GitHub."
       }
     ],
     leftImages: ['full'],
@@ -46,7 +46,7 @@ export const features = [
         Icon: <CgSearch />,
         title: 'Powerful Search',
         description:
-          'Search for anything. Leverage Github’s powerful search API to search in code, by filename, by extension, and more.'
+          'Search for anything. Leverage GitHub’s powerful search API to search in code, by filename, by extension, and more.'
       }
     ],
     leftImages: ['search']

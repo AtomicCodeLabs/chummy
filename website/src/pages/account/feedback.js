@@ -24,17 +24,17 @@ const Feedback = () => (
         {
           label: 'I have a feature request.',
           value: ['feature', false],
-          buttonText: <ButtonText>Open an issue on Github</ButtonText>
+          buttonText: <ButtonText>Open an issue on GitHub</ButtonText>
         },
         {
           label: 'I spy a bug.',
           value: ['bug', false],
-          buttonText: <ButtonText>Open an issue on Github</ButtonText>
+          buttonText: <ButtonText>Open an issue on GitHub</ButtonText>
         },
         {
           label: 'I have a general question.',
           value: ['general', false],
-          buttonText: <ButtonText>Start a conversation on Github</ButtonText>
+          buttonText: <ButtonText>Start a conversation on GitHub</ButtonText>
         },
         {
           label: 'I have a question about my subscription.',
@@ -66,7 +66,7 @@ const Feedback = () => (
           win.focus();
         }
         if (selectedOption === 'question') {
-          window.location.href = 'mailto:hello@atomiccode.io';
+          window.location.href = 'mailto:alexatatomiccode@gmail.com';
           // const win = window.open(
           //   'https://github.com/AtomicCodeLabs/chummy/issues/new?assignees=&labels=question&template=question.md&title=%5BQ%5D+',
           //   '_blank'

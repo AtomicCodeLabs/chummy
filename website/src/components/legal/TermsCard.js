@@ -177,7 +177,7 @@ const TermsCard = () => (
 
     <P>
       If you are unsatisfied with our services, please email us at
-      hello@atomiccode.io.
+      alexatatomiccode@gmail.com.
     </P>
 
     <h3 id="software">Software</h3>
@@ -902,7 +902,7 @@ const TermsCard = () => (
     <P>
       In order to resolve a complaint regarding the Site or to receive further
       information regarding use of the Site, please contact us at
-      hello@atomiccode.io.
+      alexatatomiccode@gmail.com.
     </P>
   </div>
 );

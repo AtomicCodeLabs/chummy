@@ -66,7 +66,7 @@ const footerRoutes = {
   ],
   'Contact Us': [
     {
-      name: 'Github',
+      name: 'GitHub',
       pathname: 'https://github.com/AtomicCodeLabs/chummy'
     },
     {
@@ -81,7 +81,7 @@ const footerRoutes = {
     },
     {
       name: 'Email us',
-      pathname: 'mailto: hello@atomiccode.io'
+      pathname: 'mailto: alexatatomiccode@gmail.com'
     },
     {
       name: 'Community',

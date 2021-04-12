@@ -121,7 +121,7 @@ const Account = ({ location }) => {
         hasBottomBorder
       />
       <InfoSection
-        title="Github Email"
+        title="GitHub Email"
         leftText={user?.email}
         hasBottomBorder
       />

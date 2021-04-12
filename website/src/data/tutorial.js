@@ -55,7 +55,7 @@ export const Steps = () => {
           className="shadow-xl-center rounded-xl w-96"
         />
       </div>
-      <h2 className="mt-16 mb-10">Step 3. Visit any Github repository.</h2>
+      <h2 className="mt-16 mb-10">Step 3. Visit any GitHub repository.</h2>
       <p className="text-lg text-center md:text-base sm:text-sm">
         <Link to="https://github.com/AtomicCodeLabs/chummy">
           Here&apos;s a nice one called AtomicCodeLabs/chummy.
