@@ -157,7 +157,9 @@ const EditionBox = ({
               //         )
               //     : null
               // }
-              to={!isLoggedIn ? '/signin' : 'mailto: hello@atomiccode.io'}
+              to={
+                !isLoggedIn ? '/signin' : 'mailto: alexatatomiccode@gmail.com'
+              }
               className="my-auto"
               isLoading={loading}
             >

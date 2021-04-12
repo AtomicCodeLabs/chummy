@@ -13,7 +13,7 @@ const PrivacyCard = () => (
       <strong>our</strong>"). We are committed to protecting your personal
       information and your right to privacy. If you have any questions or
       concerns about this privacy notice, or our practices with regards to your
-      personal information, please contact us at hello@atomiccode.io.
+      personal information, please contact us at alexatatomiccode@gmail.com.
     </P>
 
     <P>
@@ -285,8 +285,9 @@ const PrivacyCard = () => (
           Website that may contain personal information. Prior to posting a
           testimonial, we will obtain your consent to use your name and the
           content of the testimonial. If you wish to update, or delete your
-          testimonial, please contact us at hello@atomiccode.io and be sure to
-          include your name, testimonial location, and contact information.
+          testimonial, please contact us at alexatatomiccode@gmail.com and be
+          sure to include your name, testimonial location, and contact
+          information.
         </P>
       </Li>
 
@@ -553,7 +554,7 @@ const PrivacyCard = () => (
       </Li>
     </ul>
 
-    <P>Github account</P>
+    <P>GitHub account</P>
 
     <ul>
       <Li>
@@ -747,7 +748,7 @@ const PrivacyCard = () => (
 
     <P>
       If you have questions or comments about your privacy rights, you may email
-      us at hello@atomiccode.io.
+      us at alexatatomiccode@gmail.com.
     </P>
 
     <h4 id="accountinformation">Account Information</h4>
@@ -873,7 +874,7 @@ const PrivacyCard = () => (
 
     <P>
       If you have questions or comments about this notice, you may email us at
-      hello@atomiccode.io.
+      alexatatomiccode@gmail.com.
     </P>
 
     <h3 id="request">

@@ -15,7 +15,7 @@ import BoxSpinner from '../components/spinners/BoxSpinner';
  *
  * This page is automatically opened by the extension during the sign in
  * flow. The sign in button is automatically clicked, and the page redirects
- * to Github's Auth 2.0 sign in form. The user then signs in, then the website
+ * to GitHub's Auth 2.0 sign in form. The user then signs in, then the website
  * redirects to the account page of the signed in user. On load, this account page
  * will send a message to the extension.
  */
@@ -51,7 +51,7 @@ const SignIn = ({ location }) => {
     >
       <SEO
         title="Sign In"
-        description="Sign into Chummy using your existing Github account."
+        description="Sign into Chummy using your existing GitHub account."
       />
       <h1 className="hidden">Sign In</h1>
       <div className="flex items-center justify-center bg-white rounded-lg shadow-lg">
@@ -62,7 +62,7 @@ const SignIn = ({ location }) => {
             className="flex flex-col items-center justify-center w-84 md:w-full"
           >
             <div className="text-base text-gray-500 md:text-sm sm:text-xs">
-              Redirecting to Github...
+              Redirecting to GitHub...
             </div>
           </AuthBox>
         ) : (
@@ -77,7 +77,7 @@ const SignIn = ({ location }) => {
                 className="my-auto"
                 isLoading={loading}
               >
-                Sign in with Github
+                Sign in with GitHub
               </ActionButton>
             </div>
             {error && (

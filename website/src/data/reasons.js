@@ -13,7 +13,7 @@ const reasons = [
     Icon: <CgBolt />,
     title: 'One Click Setup',
     description:
-      'Use your existing Github account to get started. No extra configuration, no sign up, no credit card required. '
+      'Use your existing GitHub account to get started. No extra configuration, no sign up, no credit card required. '
   },
   {
     Icon: <CgArrowsExchange />,

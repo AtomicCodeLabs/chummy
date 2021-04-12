@@ -22,7 +22,7 @@ export const WhyChummy = () => (
     </p>
     <br />
     <p className="text-lg text-left md:text-base sm:text-sm">
-      There&apos;s a place for everyone, but using Github isn&apos;t the
+      There&apos;s a place for everyone, but using GitHub isn&apos;t the
       friendliest experience for everyone. When I used it for my projects, I was
       jumping between tabs, repositories, getting lost in my branches, etc. and
       I wished there was a more streamlined process for working with a fairly
@@ -30,11 +30,11 @@ export const WhyChummy = () => (
     </p>
     <br />
     <p className="text-lg text-left md:text-base sm:text-sm">
-      I started Chummy to address my own pain points with Github, but it has
+      I started Chummy to address my own pain points with GitHub, but it has
       become a collection of features that I&apos;ve had requested from friends
-      and coworkers who&apos;ve validated my own frustrations with Github.
+      and coworkers who&apos;ve validated my own frustrations with GitHub.
       Chummy&apos;s a continuously growing toolbox, so please leave some
-      feedback so that we can make Github work for you.
+      feedback so that we can make GitHub work for you.
     </p>
     <br />
     <p className="text-lg text-left md:text-base sm:text-sm">
