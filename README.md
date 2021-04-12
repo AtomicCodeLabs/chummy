@@ -72,11 +72,11 @@
 
 **💻 [Indie Hackers](https://www.indiehackers.com/product/chummy)**
 
-**📧 [hello@atomiccode.io](mailto:hello@atomiccode.io)**
+**📧 [alexatatomiccode@gmail.com](mailto:alexatatomiccode@gmail.com)**
 
 ## 🦕 What is Chummy?
 
-Don't want to clone another Github repository just to browse its contents? Github's clunky browsing interface slowing you down? Having a bad time, overall? Chummy is a browser extension for Github that helps you use Github quickly and efficiently. Get started in just one click!
+Don't want to clone another GitHub repository just to browse its contents? GitHub's clunky browsing interface slowing you down? Having a bad time, overall? Chummy is a browser extension for GitHub that helps you use GitHub quickly and efficiently. Get started in just one click!
 
 Learn more about what Chummy has to offer at [chummy.atomiccode.io](https://www.chummy.atomiccode.io).
 

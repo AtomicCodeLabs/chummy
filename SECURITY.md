@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please email hello@atomiccode.io if you find any security vulnerabilities.
+Please email alexatatomiccode@gmail.com if you find any security vulnerabilities.
