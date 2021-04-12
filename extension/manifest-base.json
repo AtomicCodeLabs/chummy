@@ -13,12 +13,6 @@
     "page": "background.html",
     "persistent": false
   },
-  "content_scripts": [
-    {
-      "matches": ["https://github.com/*"],
-      "js": ["content-script.js"]
-    }
-  ],
   "web_accessible_resources": [
     "background.redirect.inject.js",
     "background.signin.inject.js",

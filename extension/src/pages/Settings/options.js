@@ -10,42 +10,6 @@ import { kebabify } from '../../utils';
 
 const COMMUNITY_THEMES = ['vanilla-light'];
 
-export const isStickyWindowConfig = {
-  browsers: CHROMIUM,
-  options: [
-    { value: true, label: 'Yes', tiers: NOT_COMMUNITY },
-    {
-      value: false,
-      label: 'No',
-      tiers: ALL_TIERS
-    }
-  ]
-};
-
-export const sidebarSideConfig = {
-  browsers: ALL_BROWSERS,
-  options: [
-    { value: SIDEBAR_SIDE.Left, label: 'Left', tiers: ALL_TIERS },
-    {
-      value: SIDEBAR_SIDE.Right,
-      label: 'Right',
-      tiers: NOT_COMMUNITY
-    }
-  ]
-};
-
-export const isPopupConfig = {
-  browsers: ALL_BROWSERS,
-  options: [
-    { value: true, label: 'Yes', tiers: ALL_TIERS },
-    {
-      value: false,
-      label: 'No',
-      tiers: ALL_TIERS
-    }
-  ]
-};
-
 export const themeConfig = {
   browsers: ALL_BROWSERS,
   options: THEME_NAMES.map((themeName) => ({
@@ -84,6 +48,30 @@ export const isDistractionFreeModeConfig = {
       value: false,
       label: 'No',
       tiers: ALL_TIERS
+    }
+  ]
+};
+
+export const isStickyWindowConfig = {
+  browsers: CHROMIUM,
+  options: [
+    { value: true, label: 'Yes', tiers: NOT_COMMUNITY },
+    {
+      value: false,
+      label: 'No',
+      tiers: ALL_TIERS
+    }
+  ]
+};
+
+export const sidebarSideConfig = {
+  browsers: ALL_BROWSERS,
+  options: [
+    { value: SIDEBAR_SIDE.Left, label: 'Left', tiers: ALL_TIERS },
+    {
+      value: SIDEBAR_SIDE.Right,
+      label: 'Right',
+      tiers: NOT_COMMUNITY
     }
   ]
 };

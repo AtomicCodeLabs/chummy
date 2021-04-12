@@ -44,7 +44,6 @@ export const STORE_DEFAULTS: any = {
     isDistractionFreeMode: false,
     pendingNotifications: new Map(), // frontend pops from queue until map is empty
     notifications: new Map(), // notificationsToShow end up here once processed
-    isPopup: true,
     sidebarView: SidebarView.Project,
     sidebarWidth: EXTENSION_WIDTH.INITIAL, // Last seen sidebar width, not 0 when sidebar is minimized
     sidebarSide: SIDEBAR_SIDE.Left,

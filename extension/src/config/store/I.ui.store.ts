@@ -75,9 +75,6 @@ class CUiStore {
   pendingNotifications: Map<string, Notification>;
   notifications: Map<string, Notification>;
 
-  // General
-  isPopup: boolean;
-
   // Sidebar
   sidebarView: SidebarView;
   sidebarWidth: number;

@@ -32,7 +32,6 @@ export default class UiStore implements IUiStore {
   @observable isDistractionFreeMode: boolean;
   @observable pendingNotifications: Map<string, Notification>;
   @observable notifications: Map<string, Notification>;
-  @observable isPopup: boolean;
   @observable sidebarView: SidebarView;
   @observable sidebarWidth: number;
   @observable sidebarSide: SIDEBAR_SIDE;
@@ -224,12 +223,7 @@ export default class UiStore implements IUiStore {
     return this.notifications.size;
   }
 
-  @action.bound setIsPopup = (isPopup: boolean) => {
-    setInChromeStorage({ isPopup });
-    this.isPopup = isPopup;
-  };
-
-  @action.bound setSidebarSide = (sidebarSide: SIDEBAR_SIDE) => {
+  @action.bound setSidebarSide = (sidebarSide: SIDEBAR_SIDE): void => {
     setInChromeStorage({ sidebarSide });
     this.sidebarSide = sidebarSide;
   };
@@ -237,7 +231,7 @@ export default class UiStore implements IUiStore {
   @action.bound setSidebarWidth = (
     width: number,
     setInChrome: boolean = false
-  ) => {
+  ): void => {
     if (setInChrome) setInChromeStorage({ sidebarWidth: width });
     this.sidebarWidth = width;
   };
